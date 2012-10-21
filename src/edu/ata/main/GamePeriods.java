@@ -28,6 +28,6 @@ public class GamePeriods extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-	Hello
+	Goodbye Cruel World
     }
 }
