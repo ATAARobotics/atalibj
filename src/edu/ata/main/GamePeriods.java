@@ -28,6 +28,5 @@ public class GamePeriods extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-	System.out.println("Testing");
     }
 }
