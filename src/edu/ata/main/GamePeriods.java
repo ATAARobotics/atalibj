@@ -24,8 +24,6 @@
  */
 package edu.ata.main;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
-
 /**
  * This is the 'main' class of the robot code. All instructions are rooted to
  * this class. The VM will automatically instantiate and call the methods within
@@ -39,7 +37,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class GamePeriods extends IterativeRobot {
+public class GamePeriods extends edu.wpi.first.wpilibj.IterativeRobot {
 
     {
         // Initialisation code
