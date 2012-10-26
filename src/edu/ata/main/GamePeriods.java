@@ -31,32 +31,42 @@ package edu.ata.main;
  * as the WPIlibj uses the default public (no arguments) constructor by
  * convention.
  *
- * <p> <b>The VM is configured to automatically run this class, and to call the
+ * <p> <b> The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
- * documentation.</b> If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * documentation. </b>
+ *
+ * If you change the name of this class or the package after creating this
+ * project, you must also update the manifest file in the resource directory.
  */
 public class GamePeriods extends edu.wpi.first.wpilibj.IterativeRobot {
 
     {
-        // Initialisation code
+        // Initialisation code - Create member field objects here.
     }
 
     /**
      * Method that is run once before disabled period starts.
+     *
+     * <p> Should not be necessary, but exists just in case. (Possible use -
+     * displaying data from the robot)
      */
     public void disabledInit() {
     }
 
     /**
      * Method that is run once before autonomous period starts.
+     *
+     * <p> Should be used to start autonomous mode. Is only run once when
+     * autonomous is started.
      */
     public void autonomousInit() {
     }
 
     /**
      * Method that is run once teleoperated disabled period starts.
+     *
+     * <p> Should be used to start teleoperated mode. Is only run once when
+     * teleop is started.
      */
     public void teleopInit() {
     }
