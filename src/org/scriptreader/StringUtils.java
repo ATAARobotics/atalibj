@@ -1,11 +1,29 @@
 package org.scriptreader;
 
+/**
+ * A basic utility library for manipulating strings.
+ *
+ * @author joel
+ */
 public class StringUtils {
 
+    /**
+     * Determines if the string does not contain anything.
+     *
+     * @param string string to test
+     * @return whether the string is empty
+     */
     public static boolean isEmpty(String string) {
         return string.length() == 0;
     }
 
+    /**
+     * Splits the string into different parts by a character.
+     *
+     * @param string string to test
+     * @param split where to split the string
+     * @return array of strings split by the char
+     */
     public static String[] split(String string, char split) {
         return _split(new String[0], string, split);
     }
@@ -27,10 +45,25 @@ public class StringUtils {
         return _split(current, string, split);
     }
 
+    /**
+     * Determines whether a string contains a different string.
+     *
+     * @param string string to test
+     * @param contains the string it could contain
+     * @return whether the string contains the other
+     */
     public static boolean contains(String string, String contains) {
         return string.indexOf(contains) > -1;
     }
 
+    /**
+     * Replaces all instances of a character with a string
+     *
+     * @param string string to test
+     * @param replace character to replace
+     * @param replacement string of replacement
+     * @return string with all characters replaced
+     */
     public static String replace(String string, char replace, String replacement) {
         String[] s = split(string, replace);
 

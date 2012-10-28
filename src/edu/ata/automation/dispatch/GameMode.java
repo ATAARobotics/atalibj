@@ -5,10 +5,9 @@ package edu.ata.automation.dispatch;
  *
  * @author joel
  */
-public abstract class GameMode {
+public abstract class GameMode implements Runnable {
 
     private final String name;
-    private final Runnable runnable;
     private Thread thread;
     private int priority = Thread.NORM_PRIORITY;
 
@@ -17,22 +16,19 @@ public abstract class GameMode {
      * {@link Thread#NORM_PRIORITY}.
      *
      * @param name name of the thread
-     * @param runnable runnable to run for the game mode
      */
-    public GameMode(String name, Runnable runnable) {
+    public GameMode(String name) {
         this.name = name;
-        this.runnable = runnable;
     }
 
     /**
      * Creates the game mode with a name, priority and it's runnable.
      *
      * @param name name of the thread
-     * @param runnable runnable to run for the game mode
      * @param priority priority of the thread (1 - 10)
      */
-    public GameMode(String name, Runnable runnable, int priority) {
-        this(name, runnable);
+    public GameMode(String name, int priority) {
+        this(name);
         this.priority = priority;
     }
 
@@ -66,7 +62,7 @@ public abstract class GameMode {
         if (thread != null && thread.isAlive()) {
             return;
         }
-        thread = new Thread(runnable, name);
+        thread = new Thread(this, name);
         thread.setPriority(priority);
         thread.start();
     }

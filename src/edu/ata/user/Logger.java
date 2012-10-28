@@ -95,6 +95,12 @@ public class Logger {
         }
     }
 
+    /**
+     * Logs a message to the log file.
+     *
+     * @param msg message to write
+     * @throws IOException thrown when writing throws an error
+     */
     public static void logFile(String msg) throws IOException {
         if (logFile == null) {
             logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
@@ -102,6 +108,13 @@ public class Logger {
         appendToFile(msg, logFile);
     }
 
+    /**
+     * Adds a new part to a text file.
+     *
+     * @param msg message to add
+     * @param fileConnection connection to the file
+     * @throws IOException thrown when problem writing occurs
+     */
     public static void appendToFile(String msg, FileConnection fileConnection) throws IOException {
         fileConnection.create();
         DataOutputStream outputStream = fileConnection.openDataOutputStream();
@@ -128,6 +141,13 @@ public class Logger {
         return getTextFromFile(logFile);
     }
 
+    /**
+     * Returns text from a file, using {@link FileConnection}.
+     *
+     * @param fileConnection connection to the file
+     * @return string representation of contents of the file
+     * @throws IOException thrown when file occurs a problem
+     */
     public static String getTextFromFile(FileConnection fileConnection) throws IOException {
         fileConnection.create();
         DataInputStream inputStream = fileConnection.openDataInputStream();

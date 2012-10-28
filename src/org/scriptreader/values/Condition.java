@@ -10,6 +10,12 @@ import org.scriptreader.Value;
  */
 public final class Condition {
 
+    /**
+     * Determines whether the statement is a condition.
+     *
+     * @param value the statement to test
+     * @return whether the statement is a condition
+     */
     public static boolean isCondition(String value) {
         return StringUtils.contains(value, "==") || StringUtils.contains(value, "!=")
                 || StringUtils.contains(value, ">") || StringUtils.contains(value, "<")
@@ -32,6 +38,11 @@ public final class Condition {
         this.statement = condition;
     }
 
+    /**
+     * Transfers the condition to a string.
+     *
+     * @return statement (condition)
+     */
     public String toString() {
         return statement;
     }
