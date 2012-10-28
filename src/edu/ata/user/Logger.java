@@ -25,9 +25,7 @@ public class Logger {
     private static final String PATH = "file:///log.txt";
     private static boolean fileLoggingOn = true;
     private static int lineNum = 1;
-    private static DataOutputStream outputStream;
-    private static DataInputStream inputStream;
-    private static FileConnection fileConnection;
+    private static FileConnection logFile;
 
     /**
      * Class representing the urgency of the log. The reason for this
@@ -97,12 +95,16 @@ public class Logger {
         }
     }
 
-    private static void logFile(String msg) throws IOException {
-        if (fileConnection == null) {
-            fileConnection = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+    public static void logFile(String msg) throws IOException {
+        if (logFile == null) {
+            logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
         }
+        appendToFile(msg, logFile);
+    }
+
+    public static void appendToFile(String msg, FileConnection fileConnection) throws IOException {
         fileConnection.create();
-        outputStream = fileConnection.openDataOutputStream();
+        DataOutputStream outputStream = fileConnection.openDataOutputStream();
         byte[] data = msg.getBytes();
         try {
             outputStream.write(data, 0, data.length);
@@ -120,11 +122,15 @@ public class Logger {
      * @throws IOException thrown when problem connecting occurs
      */
     public static String getLog() throws IOException {
-        if (fileConnection == null) {
-            fileConnection = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+        if (logFile == null) {
+            logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
         }
+        return getTextFromFile(logFile);
+    }
+
+    public static String getTextFromFile(FileConnection fileConnection) throws IOException {
         fileConnection.create();
-        inputStream = fileConnection.openDataInputStream();
+        DataInputStream inputStream = fileConnection.openDataInputStream();
         String tmp = "";
         byte cur;
         try {
@@ -133,7 +139,7 @@ public class Logger {
             }
             return tmp;
         } finally {
-            outputStream.close();
+            inputStream.close();
         }
     }
 

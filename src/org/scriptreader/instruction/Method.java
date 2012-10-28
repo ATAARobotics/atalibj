@@ -48,7 +48,7 @@ public abstract class Method extends Instruction {
      *
      * @param statement the statement to analyze
      * @return a {@link Statement} object of the type
-     * @throws org.reader.Statement.InvalidStatementException
+     * @throws InvalidStatementException thrown when statement is unrecognizable
      */
     public static Statement getStatementFrom(String statement) throws InvalidStatementException {
         final String s1 = statement.substring(0, statement.indexOf("("));
@@ -72,7 +72,7 @@ public abstract class Method extends Instruction {
      * @param name name of the method
      * @param args arguments of the method
      * @return method from the name and argument
-     * @throws NoSuchFieldException thrown when no method exists
+     * @throws Exception thrown when method does not exist
      */
     public static Method getMethod(String name, Value[] args) throws Exception {
         if (Keywords.contains(name)) {
@@ -178,10 +178,20 @@ public abstract class Method extends Instruction {
         run(arguments);
     }
 
+    /**
+     * Returns the name of the method.
+     *
+     * @return method name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the arguments of the method in {@link Value} form.
+     *
+     * @return arguments of method
+     */
     public Value[] getArguments() {
         return arguments;
     }

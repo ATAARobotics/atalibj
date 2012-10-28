@@ -40,7 +40,7 @@ public class ForLoop extends Instruction {
      *
      * @param statement the statement to analyze
      * @return a {@link Statement} object of the type
-     * @throws org.reader.Statement.InvalidStatementException
+     * @throws InvalidStatementException thrown when statement is unrecognizable
      */
     public static Statement getStatementFrom(String statement) throws InvalidStatementException {
         return new ForLoop(new Value(statement.substring(statement.indexOf("(") + 1, statement.indexOf(")"))));
@@ -78,7 +78,7 @@ public class ForLoop extends Instruction {
             forLoop += instructions[++currentLine] + ScriptReader.LINE_SEPARATOR;
         }
         for (int x = 0; x < repititions; x++) {
-            ScriptReader.runScript(forLoop);
+            ScriptReader.runFullScript(forLoop);
         }
     }
 }

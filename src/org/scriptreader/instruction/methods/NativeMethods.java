@@ -16,7 +16,7 @@ public class NativeMethods {
      * @param method method name
      * @param args arguments
      * @return method based on method name
-     * @throws NoSuchFieldException thrown when method does not exist
+     * @throws Exception thrown when method does not exist
      */
     public static Method getMethod(String method, Value[] args) throws Exception {
         if (method.equals("PRINT")) {

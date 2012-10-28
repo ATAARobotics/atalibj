@@ -23,7 +23,7 @@ public class WhileLoop extends Instruction {
      * @return whether it is a valid instruction
      */
     public static boolean isValid(String statement) {
-        statement =StringUtils.replace(statement, '{', "").trim();
+        statement = StringUtils.replace(statement, '{', "").trim();
         return statement.startsWith("WHILE(") && statement.endsWith(")");
     }
 
@@ -38,7 +38,7 @@ public class WhileLoop extends Instruction {
      *
      * @param statement the statement to analyze
      * @return a {@link Statement} object of the type
-     * @throws org.reader.Statement.InvalidStatementException
+     * @throws InvalidStatementException thrown when statement is unrecognizable
      */
     public static Statement getStatementFrom(String statement) throws InvalidStatementException {
         return new WhileLoop(statement.substring(statement.indexOf("(") + 1, statement.indexOf(")")));
@@ -68,7 +68,7 @@ public class WhileLoop extends Instruction {
         }
         Condition condition = Condition.getConditionFrom(evaluation);
         while (condition.isTrue()) {
-            ScriptReader.runScript(whileLoop);
+            ScriptReader.runFullScript(whileLoop);
         }
     }
 }

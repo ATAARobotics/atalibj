@@ -1,5 +1,10 @@
 package org.scriptreader;
 
+import com.sun.squawk.microedition.io.FileConnection;
+import edu.ata.user.Logger;
+import java.io.IOException;
+import javax.microedition.io.Connector;
+
 /**
  * Main reader of the script. Uses {@code runScript} as a class method to run a
  * string.
@@ -8,14 +13,28 @@ package org.scriptreader;
  */
 public class ScriptReader {
 
+    /**
+     * The character symbolizing a line change in the text file. Is not platform
+     * dependant.
+     */
     public static final char LINE_SEPARATOR = '\n';
+
+    /**
+     * Runs a script from a file.
+     *
+     * @param path path of the file
+     * @throws IOException thrown when file has errors when being accessed
+     */
+    public static void runScript(String path) throws IOException {
+        runFullScript(Logger.getTextFromFile((FileConnection) Connector.open(path)));
+    }
 
     /**
      * Runs a script. Instructions are split by line separators.
      *
      * @param fullScript string of the full script
      */
-    public static void runScript(String fullScript) {
+    public static void runFullScript(String fullScript) {
         int line = 0;
         String[] s = StringUtils.split(fullScript, LINE_SEPARATOR);
         while (line < s.length) {
