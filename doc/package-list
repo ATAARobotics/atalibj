@@ -1,1 +1,8 @@
+edu.ata.automation.dispatch
 edu.ata.main
+edu.ata.user
+org.scriptreader
+org.scriptreader.blocks
+org.scriptreader.instruction
+org.scriptreader.instruction.methods
+org.scriptreader.values

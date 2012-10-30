@@ -1,7 +1,7 @@
 package edu.ata.user;
 
 import com.sun.squawk.microedition.io.FileConnection;
-import edu.ata.main.Driverstation;
+import edu.ata.main.DriverstationInfo;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -72,20 +72,20 @@ public class Logger {
     public static void log(Urgency urgency, String msg) {
         String usrMsg = null;
         if (urgency == Urgency.URGENT) {
-            usrMsg = "Urgent@" + Driverstation.getMatchTime() + "- " + msg;
+            usrMsg = "Urgent@" + DriverstationInfo.getMatchTime() + "- " + msg;
             displayLCDMessage(usrMsg);
         } else if (urgency == Urgency.WARNING) {
-            usrMsg = "Warning@" + Driverstation.getMatchTime() + "- " + msg;
+            usrMsg = "Warning@" + DriverstationInfo.getMatchTime() + "- " + msg;
             displayLCDMessage(usrMsg);
         } else if (urgency == Urgency.USERMESSAGE) {
             usrMsg = "User Message - " + msg;
             displayLCDMessage(usrMsg);
         } else if (urgency == Urgency.STATUSREPORT) {
-            usrMsg = "Status@" + Driverstation.getMatchTime() + "- " + msg;
+            usrMsg = "Status@" + DriverstationInfo.getMatchTime() + "- " + msg;
         } else if (urgency == Urgency.LOG) {
-            usrMsg = "Log@" + Driverstation.getMatchTime() + "- " + msg;
+            usrMsg = "Log@" + DriverstationInfo.getMatchTime() + "- " + msg;
         }
-        System.out.println(usrMsg.concat("\n"));
+        System.out.print(usrMsg.concat("\n"));
         try {
             if (fileLoggingOn) {
                 logFile(msg.concat("\n"));
@@ -178,7 +178,7 @@ public class Logger {
         DriverStationLCD.Line line;
         switch (lineNum) {
             case (1):
-                line = DriverStationLCD.Line.kMain6;
+                line = DriverStationLCD.Line.kUser1;
                 break;
             case (2):
                 line = DriverStationLCD.Line.kUser2;
@@ -196,7 +196,7 @@ public class Logger {
                 line = DriverStationLCD.Line.kUser6;
                 break;
             default:
-                line = DriverStationLCD.Line.kMain6;
+                line = DriverStationLCD.Line.kUser1;
         }
         DriverStationLCD.getInstance().println(line, lineNum, msg + "\n");
         DriverStationLCD.getInstance().updateLCD();

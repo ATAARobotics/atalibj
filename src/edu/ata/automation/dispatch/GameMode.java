@@ -3,32 +3,38 @@ package edu.ata.automation.dispatch;
 /**
  * Basic class representing game modes. Handles running by itself.
  *
+ * <p> Implemented by running in a new separate thread. Instantiates a new
+ * thread each time it is started. This is done because threads are implicitly
+ * only runnable once. This creates the need to re-create the {@link Thread}
+ * object each time. Another bonus of this is that priority of the thread is
+ * adjustable between runs if needed. ({@link GameMode#setPriority(int)}).
+ *
  * @author joel
  */
 public abstract class GameMode implements Runnable {
 
     private final String name;
     private Thread thread;
-    private int priority = Thread.NORM_PRIORITY;
+    private int priority;
 
     /**
-     * Creates the game mode with a name and it's runnable. Priority is set to
+     * Creates the game mode with a name. Priority is set to
      * {@link Thread#NORM_PRIORITY}.
      *
      * @param name name of the thread
      */
     public GameMode(String name) {
-        this.name = name;
+        this(name, Thread.NORM_PRIORITY);
     }
 
     /**
-     * Creates the game mode with a name, priority and it's runnable.
+     * Creates the game mode with a name and priority.
      *
      * @param name name of the thread
      * @param priority priority of the thread (1 - 10)
      */
     public GameMode(String name, int priority) {
-        this(name);
+        this.name = name;
         this.priority = priority;
     }
 
@@ -37,7 +43,7 @@ public abstract class GameMode implements Runnable {
      *
      * @return name of game mode
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
@@ -46,19 +52,33 @@ public abstract class GameMode implements Runnable {
      *
      * @return string representation
      */
-    public String toString() {
+    public final String toString() {
         return "GameMode:" + name;
     }
 
     /**
-     * Starts the thread.
+     * Checks to see if the thread is still alive. If it is not running / is
+     * null / is not registered as 'alive', returns false.
+     *
+     * @return whether the thread is alive
+     * @see Thread#isAlive()
+     */
+    public final boolean isAlive() {
+        if (thread == null) {
+            return false;
+        }
+        return thread.isAlive();
+    }
+
+    /**
+     * Starts the thread (Game Mode).
      *
      * <p> <i>Caution :</i> Thread will not be started if
      * {@link Thread#isAlive()} does not return false. This prevents the game
      * mode from running more than once at the same time, but is prone to
      * concurrency problems.
      */
-    public void start() {
+    public final void start() {
         if (thread != null && thread.isAlive()) {
             return;
         }
@@ -71,9 +91,10 @@ public abstract class GameMode implements Runnable {
      * Sets the priority of the thread. Will take effect the next time you run
      * the game mode. ({@link GameMode#start()})
      *
-     * @param priority priority of the thread
+     * @param priority priority of the thread (1-10)
+     * @see Thread#setPriority(int)
      */
-    public void setPriority(int priority) {
+    public final void setPriority(int priority) {
         this.priority = priority;
     }
 

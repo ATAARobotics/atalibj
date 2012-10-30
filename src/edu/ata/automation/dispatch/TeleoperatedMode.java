@@ -1,10 +1,7 @@
 package edu.ata.automation.dispatch;
 
 /**
- * {@link GameMode} object designed for teleoperated modes. <b>Can only be run
- * once by convention.</b>
- *
- * <p> Create new object to restart mode.
+ * {@link GameMode} object designed for teleoperated modes.
  *
  * @author joel
  */
@@ -32,7 +29,7 @@ public abstract class TeleoperatedMode extends InterruptableGameMode {
      * Method to be run when teleoperated mode is started. Handles it's inner methods.
      */
     public void run() {
-        while (!interrupted) {
+        while (!isInterrupted()) {
             loop();
         }
     }

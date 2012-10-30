@@ -24,6 +24,8 @@
  */
 package edu.ata.main;
 
+import edu.wpi.first.wpilibj.IterativeRobot;
+
 /**
  * This is the 'main' class of the robot code. All instructions are rooted to
  * this class. The VM will automatically instantiate and call the methods within
@@ -35,10 +37,18 @@ package edu.ata.main;
  * functions corresponding to each mode, as described in the IterativeRobot
  * documentation. </b>
  *
- * If you change the name of this class or the package after creating this
+ * <p> If you change the name of this class or the package after creating this
  * project, you must also update the manifest file in the resource directory.
  */
-public class GamePeriods extends edu.wpi.first.wpilibj.IterativeRobot {
+public final class GamePeriods extends IterativeRobot {
+
+    /**
+     * Keep this constructor private. {@link GamePeriods} should never be
+     * instantiated.
+     */
+    private GamePeriods() {
+        super();
+    }
 
     {
         // Initialisation code - Create member field objects here.

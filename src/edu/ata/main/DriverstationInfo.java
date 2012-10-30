@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.DriverStation;
  *
  * @author Joel Gallant
  */
-public final class Driverstation {
+public final class DriverstationInfo {
+
+    private static final DriverStation DS = DriverStation.getInstance();
 
     /**
      * Gets the location of the team's driver station controls.
@@ -20,7 +22,7 @@ public final class Driverstation {
      * @return the location of the team's driver station controls: 1, 2, or 3
      */
     public static int getAllianceLocation() {
-        return DriverStation.getInstance().getLocation();
+        return DS.getLocation();
     }
 
     /**
@@ -29,7 +31,7 @@ public final class Driverstation {
      * @return The team number
      */
     public static int getTeamNumber() {
-        return DriverStation.getInstance().getTeamNumber();
+        return DS.getTeamNumber();
     }
 
     /**
@@ -40,7 +42,7 @@ public final class Driverstation {
      * @return The DS packet number.
      */
     public static int getPacketCount() {
-        return DriverStation.getInstance().getPacketNumber();
+        return DS.getPacketNumber();
     }
 
     /**
@@ -51,7 +53,7 @@ public final class Driverstation {
      * Field Management System
      */
     public static boolean FMSattached() {
-        return DriverStation.getInstance().isFMSAttached();
+        return DS.isFMSAttached();
     }
 
     /**
@@ -63,7 +65,7 @@ public final class Driverstation {
      * @return The battery voltage.
      */
     public static double getBatteryVoltage() {
-        return DriverStation.getInstance().getBatteryVoltage();
+        return DS.getBatteryVoltage();
     }
 
     /**
@@ -73,13 +75,13 @@ public final class Driverstation {
      * time is reset to 0.0 seconds At the beginning of teleop, the time is
      * reset to +15.0 seconds If the robot is disabled, this returns 0.0 seconds
      *
-     * <p> Warning: This is not an official time (so it cannot be used to argue
-     * with referees)
+     * <p> <b> Warning: This is not an official time (so it cannot be used to argue
+     * with referees) </b>
      *
      * @return Match time in seconds since the beginning of autonomous
      */
     public static double getMatchTime() {
-        return DriverStation.getInstance().getMatchTime();
+        return DS.getMatchTime();
     }
 
     /**
@@ -88,10 +90,10 @@ public final class Driverstation {
      * @return String "Teleop" , "Autonomous" or "Disabled".
      */
     public static String getGamePeriod() {
-        if (DriverStation.getInstance().isEnabled()) {
-            if (DriverStation.getInstance().isOperatorControl()) {
+        if (DS.isEnabled()) {
+            if (DS.isOperatorControl()) {
                 return "Teleop";
-            } else if (DriverStation.getInstance().isAutonomous()) {
+            } else if (DS.isAutonomous()) {
                 return "Autonomous";
             } else {
                 return "Disabled";
@@ -104,9 +106,11 @@ public final class Driverstation {
     /**
      * The Alliance name.
      *
+     * <p> <i>"Red"</i>, <i>"Blue"</i> or <i>"invalid"</i>.
+     *
      * @return Alliance name
      */
     public static String getAllianceName() {
-        return DriverStation.getInstance().getAlliance().name;
+        return DS.getAlliance().name;
     }
 }

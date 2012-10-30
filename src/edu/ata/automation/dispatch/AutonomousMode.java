@@ -1,35 +1,13 @@
 package edu.ata.automation.dispatch;
 
 /**
- * {@link GameMode} object designed for autonomous modes. <b>Can only be run
- * once by convention.</b>
- *
- * <p> Create new object to restart mode.
+ * {@link GameMode} object designed for autonomous modes.
  *
  * @author joel
  */
-public abstract class AutonomousMode extends InterruptableGameMode {
+public abstract class AutonomousMode extends InterruptableGameMode implements Autonomous {
 
-    /**
-     * Whether the autonomous mode is finished. Is only true after being run and
-     * closed.
-     */
-    public boolean finished = false;
-
-    /**
-     * Initializes the mode.
-     */
-    public abstract void init();
-
-    /**
-     * Runs the mode.
-     */
-    public abstract void main();
-
-    /**
-     * Closes the mode.
-     */
-    public abstract void close();
+    private boolean finished = false;
 
     /**
      * Creates the autonomous mode with a name.
@@ -41,20 +19,21 @@ public abstract class AutonomousMode extends InterruptableGameMode {
     }
 
     /**
-     * Returns whether the mode is finished.
+     * Returns whether the mode is finished running.
      *
      * @return whether it is finished.
      */
-    public boolean isFinished() {
+    public final boolean isFinished() {
         return finished;
     }
 
     /**
      * Method to be run when autonomous mode is run. Handles it's inner methods.
      */
-    public void run() {
+    public final void run() {
+        finished = false;
         init();
-        if (!interrupted) {
+        if (!isInterrupted()) {
             main();
         }
         close();

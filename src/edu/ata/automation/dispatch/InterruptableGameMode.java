@@ -1,9 +1,7 @@
 package edu.ata.automation.dispatch;
 
 /**
- * Game mode that can be interrupted. <b>Can only be run once by convention.</b>
- *
- * <p> Create new object to restart mode.
+ * Game mode that can be interrupted.
  *
  * @author joel
  */
@@ -12,7 +10,7 @@ public abstract class InterruptableGameMode extends GameMode {
     /**
      * Whether the game mode is interrupted. Is volatile to keep thread safe.
      */
-    protected volatile boolean interrupted = false;
+    private volatile boolean interrupted = false;
 
     /**
      * Creates the game mode with a name and it's runnable. Priority is set to
@@ -32,6 +30,15 @@ public abstract class InterruptableGameMode extends GameMode {
      */
     public InterruptableGameMode(String name, int priority) {
         super(name, priority);
+    }
+
+    /**
+     * Gets whether or not the mode has been interrupted.
+     *
+     * @return thread is interrupted
+     */
+    protected final boolean isInterrupted() {
+        return interrupted;
     }
 
     public final void stop() {

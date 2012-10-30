@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package edu.ata.automation.dispatch;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>/**<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * Basic class representing game modes. Handles running by itself.<a name="line.4"></a>
+<span class="sourceLineNo">005</span> *<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * &lt;p&gt; Implemented by running in a new separate thread. Instantiates a new<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * thread each time it is started. This is done because threads are implicitly<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * only runnable once. This creates the need to re-create the {@link Thread}<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * object each time. Another bonus of this is that priority of the thread is<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * adjustable between runs if needed. ({@link GameMode#setPriority(int)}).<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * @author joel<a name="line.12"></a>
+<span class="sourceLineNo">013</span> */<a name="line.13"></a>
+<span class="sourceLineNo">014</span>public abstract class GameMode implements Runnable {<a name="line.14"></a>
+<span class="sourceLineNo">015</span><a name="line.15"></a>
+<span class="sourceLineNo">016</span>    private final String name;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>    private Thread thread;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>    private int priority;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>    /**<a name="line.20"></a>
+<span class="sourceLineNo">021</span>     * Creates the game mode with a name. Priority is set to<a name="line.21"></a>
+<span class="sourceLineNo">022</span>     * {@link Thread#NORM_PRIORITY}.<a name="line.22"></a>
+<span class="sourceLineNo">023</span>     *<a name="line.23"></a>
+<span class="sourceLineNo">024</span>     * @param name name of the thread<a name="line.24"></a>
+<span class="sourceLineNo">025</span>     */<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    public GameMode(String name) {<a name="line.26"></a>
+<span class="sourceLineNo">027</span>        this(name, Thread.NORM_PRIORITY);<a name="line.27"></a>
+<span class="sourceLineNo">028</span>    }<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>    /**<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * Creates the game mode with a name and priority.<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     *<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     * @param name name of the thread<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * @param priority priority of the thread (1 - 10)<a name="line.34"></a>
+<span class="sourceLineNo">035</span>     */<a name="line.35"></a>
+<span class="sourceLineNo">036</span>    public GameMode(String name, int priority) {<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        this.name = name;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        this.priority = priority;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>    }<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>    /**<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * Gets the name of the thread.<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     *<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * @return name of game mode<a name="line.44"></a>
+<span class="sourceLineNo">045</span>     */<a name="line.45"></a>
+<span class="sourceLineNo">046</span>    public final String getName() {<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        return name;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>    }<a name="line.48"></a>
+<span class="sourceLineNo">049</span><a name="line.49"></a>
+<span class="sourceLineNo">050</span>    /**<a name="line.50"></a>
+<span class="sourceLineNo">051</span>     * Creates a string representation of the thread.<a name="line.51"></a>
+<span class="sourceLineNo">052</span>     *<a name="line.52"></a>
+<span class="sourceLineNo">053</span>     * @return string representation<a name="line.53"></a>
+<span class="sourceLineNo">054</span>     */<a name="line.54"></a>
+<span class="sourceLineNo">055</span>    public final String toString() {<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        return "GameMode:" + name;<a name="line.56"></a>
+<span class="sourceLineNo">057</span>    }<a name="line.57"></a>
+<span class="sourceLineNo">058</span><a name="line.58"></a>
+<span class="sourceLineNo">059</span>    /**<a name="line.59"></a>
+<span class="sourceLineNo">060</span>     * Checks to see if the thread is still alive. If it is not running / is<a name="line.60"></a>
+<span class="sourceLineNo">061</span>     * null / is not registered as 'alive', returns false.<a name="line.61"></a>
+<span class="sourceLineNo">062</span>     *<a name="line.62"></a>
+<span class="sourceLineNo">063</span>     * @return whether the thread is alive<a name="line.63"></a>
+<span class="sourceLineNo">064</span>     * @see Thread#isAlive()<a name="line.64"></a>
+<span class="sourceLineNo">065</span>     */<a name="line.65"></a>
+<span class="sourceLineNo">066</span>    public final boolean isAlive() {<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        if (thread == null) {<a name="line.67"></a>
+<span class="sourceLineNo">068</span>            return false;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        }<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        return thread.isAlive();<a name="line.70"></a>
+<span class="sourceLineNo">071</span>    }<a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72"></a>
+<span class="sourceLineNo">073</span>    /**<a name="line.73"></a>
+<span class="sourceLineNo">074</span>     * Starts the thread (Game Mode).<a name="line.74"></a>
+<span class="sourceLineNo">075</span>     *<a name="line.75"></a>
+<span class="sourceLineNo">076</span>     * &lt;p&gt; &lt;i&gt;Caution :&lt;/i&gt; Thread will not be started if<a name="line.76"></a>
+<span class="sourceLineNo">077</span>     * {@link Thread#isAlive()} does not return false. This prevents the game<a name="line.77"></a>
+<span class="sourceLineNo">078</span>     * mode from running more than once at the same time, but is prone to<a name="line.78"></a>
+<span class="sourceLineNo">079</span>     * concurrency problems.<a name="line.79"></a>
+<span class="sourceLineNo">080</span>     */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>    public final void start() {<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        if (thread != null &amp;&amp; thread.isAlive()) {<a name="line.82"></a>
+<span class="sourceLineNo">083</span>            return;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        }<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        thread = new Thread(this, name);<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        thread.setPriority(priority);<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        thread.start();<a name="line.87"></a>
+<span class="sourceLineNo">088</span>    }<a name="line.88"></a>
+<span class="sourceLineNo">089</span><a name="line.89"></a>
+<span class="sourceLineNo">090</span>    /**<a name="line.90"></a>
+<span class="sourceLineNo">091</span>     * Sets the priority of the thread. Will take effect the next time you run<a name="line.91"></a>
+<span class="sourceLineNo">092</span>     * the game mode. ({@link GameMode#start()})<a name="line.92"></a>
+<span class="sourceLineNo">093</span>     *<a name="line.93"></a>
+<span class="sourceLineNo">094</span>     * @param priority priority of the thread (1-10)<a name="line.94"></a>
+<span class="sourceLineNo">095</span>     * @see Thread#setPriority(int)<a name="line.95"></a>
+<span class="sourceLineNo">096</span>     */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>    public final void setPriority(int priority) {<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        this.priority = priority;<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    }<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>    /**<a name="line.101"></a>
+<span class="sourceLineNo">102</span>     * Stops the game mode. Is overridden, and thus cannot be entirely trusted.<a name="line.102"></a>
+<span class="sourceLineNo">103</span>     */<a name="line.103"></a>
+<span class="sourceLineNo">104</span>    public abstract void stop();<a name="line.104"></a>
+<span class="sourceLineNo">105</span>}<a name="line.105"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
