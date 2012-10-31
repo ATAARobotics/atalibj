@@ -1,6 +1,6 @@
-###Team 4334 - Alberta Tech Alliance
-Main Code Repository
-Git Version Control System###
+###Team 4334 - Alberta Tech Alliance###
+###Main Code Repository###
+###Git Version Control System###
 
 ##Java Code##
 
