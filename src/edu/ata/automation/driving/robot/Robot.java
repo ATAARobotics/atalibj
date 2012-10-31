@@ -17,7 +17,7 @@ import java.util.Hashtable;
  */
 public abstract class Robot {
 
-    private static final Robot MAIN_ROBOT = new Robot(null, "Fake Robot") {
+    private static final Robot DEFAULT_ROBOT = new Robot(null, "Fake Robot") {
         public void init() {
         }
 
@@ -58,8 +58,8 @@ public abstract class Robot {
      * replaceable part of the code that completely changes the behavior of the
      * robot.
      */
-    public static Robot getMainRobot() {
-        return MAIN_ROBOT;
+    public static Robot getDefaultRobot() {
+        return DEFAULT_ROBOT;
     }
 
     /**

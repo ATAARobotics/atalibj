@@ -51,7 +51,7 @@ public final class GamePeriods extends IterativeRobot {
      */
     private GamePeriods() {
         super();
-        robot = Robot.getMainRobot();
+        robot = Robot.getDefaultRobot();
         robot.init();
     }
 
