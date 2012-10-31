@@ -1,9 +1,11 @@
 package edu.ata.automation.dispatch;
 
 /**
- * Game mode that can be interrupted.
+ * Game mode that can be interrupted. Does not implicitly tell anything to stop
+ * when it is interrupted. It is simply for the purpose of being able to get out
+ * of deadlocks that last beyond the correct amount of time.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public abstract class InterruptableGameMode extends GameMode {
 
@@ -13,7 +15,7 @@ public abstract class InterruptableGameMode extends GameMode {
     private volatile boolean interrupted = false;
 
     /**
-     * Creates the game mode with a name and it's runnable. Priority is set to
+     * Creates the game mode with a name. Priority is set to
      * {@link Thread#NORM_PRIORITY}.
      *
      * @param name name of the thread
@@ -23,7 +25,7 @@ public abstract class InterruptableGameMode extends GameMode {
     }
 
     /**
-     * Creates the game mode with a name, priority and it's runnable.
+     * Creates the game mode with a name and its priority.
      *
      * @param name name of the thread
      * @param priority priority of the thread (1 - 10)
@@ -33,7 +35,8 @@ public abstract class InterruptableGameMode extends GameMode {
     }
 
     /**
-     * Gets whether or not the mode has been interrupted.
+     * Gets whether or not the mode has been interrupted. Should be used to
+     * check whether the mode is finished when it is possible to stop the mode.
      *
      * @return thread is interrupted
      */

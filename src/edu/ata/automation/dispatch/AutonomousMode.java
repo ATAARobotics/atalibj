@@ -1,9 +1,11 @@
 package edu.ata.automation.dispatch;
 
+import edu.ata.automation.autonomous.Autonomous;
+
 /**
  * {@link GameMode} object designed for autonomous modes.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public abstract class AutonomousMode extends InterruptableGameMode implements Autonomous {
 

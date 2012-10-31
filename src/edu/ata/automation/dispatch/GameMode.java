@@ -9,7 +9,7 @@ package edu.ata.automation.dispatch;
  * object each time. Another bonus of this is that priority of the thread is
  * adjustable between runs if needed. ({@link GameMode#setPriority(int)}).
  *
- * @author joel
+ * @author Joel Gallant
  */
 public abstract class GameMode implements Runnable {
 
@@ -100,6 +100,9 @@ public abstract class GameMode implements Runnable {
 
     /**
      * Stops the game mode. Is overridden, and thus cannot be entirely trusted.
+     *
+     * <p> Should usually wait until it is verified to be done. It would be
+     * dangerous to just let things go on after calling {@code stop()}.
      */
     public abstract void stop();
 }

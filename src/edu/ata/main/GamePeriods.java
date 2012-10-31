@@ -24,6 +24,7 @@
  */
 package edu.ata.main;
 
+import edu.ata.automation.driving.robot.Robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -42,16 +43,26 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public final class GamePeriods extends IterativeRobot {
 
+    private final Robot robot;
+
     /**
      * Keep this constructor private. {@link GamePeriods} should never be
      * instantiated.
      */
     private GamePeriods() {
         super();
+        robot = Robot.getMainRobot();
+        robot.init();
     }
 
-    {
-        // Initialisation code - Create member field objects here.
+    /**
+     * For testing purposes. Can run a robot that is passed from the
+     * constructor.
+     *
+     * @param robot robot to use
+     */
+    public GamePeriods(Robot robot) {
+        this.robot = robot;
     }
 
     /**
@@ -61,6 +72,7 @@ public final class GamePeriods extends IterativeRobot {
      * displaying data from the robot)
      */
     public void disabledInit() {
+        robot.disabled();
     }
 
     /**
@@ -70,6 +82,7 @@ public final class GamePeriods extends IterativeRobot {
      * autonomous is started.
      */
     public void autonomousInit() {
+        robot.autonomous();
     }
 
     /**
@@ -79,5 +92,6 @@ public final class GamePeriods extends IterativeRobot {
      * teleop is started.
      */
     public void teleopInit() {
+        robot.teleop();
     }
 }

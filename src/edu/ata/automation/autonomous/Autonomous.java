@@ -1,4 +1,4 @@
-package edu.ata.automation.dispatch;
+package edu.ata.automation.autonomous;
 
 /**
  * Basic interface for autonomous modes. Initializes, does things, then closes.
