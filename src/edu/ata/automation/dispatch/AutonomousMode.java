@@ -9,8 +9,6 @@ import edu.ata.automation.autonomous.Autonomous;
  */
 public abstract class AutonomousMode extends InterruptableGameMode implements Autonomous {
 
-    private boolean finished = false;
-
     /**
      * Creates the autonomous mode with a name.
      *
@@ -26,19 +24,16 @@ public abstract class AutonomousMode extends InterruptableGameMode implements Au
      * @return whether it is finished.
      */
     public final boolean isFinished() {
-        return finished;
+        return !isAlive();
     }
 
     /**
      * Method to be run when autonomous mode is run. Handles it's inner methods.
      */
-    public final void run() {
-        finished = false;
-        init();
+    public final void open() {
         if (!isInterrupted()) {
+            init();
             main();
         }
-        close();
-        finished = true;
     }
 }

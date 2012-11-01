@@ -3,7 +3,6 @@ package edu.ata.automation.driving.robot;
 import edu.ata.automation.dispatch.GameMode;
 import edu.ata.automation.driving.modules.Module;
 import edu.ata.main.GamePeriods;
-import edu.ata.user.Logger;
 
 /**
  * {@link Robot} object used as the default for code. It abstracts the
@@ -45,21 +44,21 @@ public abstract class DefaultRobot extends Robot {
     public final void disabled() {
         autonomous.stop();
         teleop.stop();
-        Logger.log(Logger.Urgency.STATUSREPORT,"Starting disabled mode  - ".concat(disabled.getName()));
+        System.out.println("Starting disabled mode  - ".concat(disabled.getName()));
         disabled.start();
     }
 
     public final void teleop() {
         disabled.stop();
         autonomous.stop();
-        Logger.log(Logger.Urgency.STATUSREPORT,"Starting teleop mode - ".concat(teleop.getName()));
+        System.out.println("Starting teleop mode - ".concat(teleop.getName()));
         teleop.start();
     }
 
     public final void autonomous() {
         disabled.stop();
         teleop.stop();
-        Logger.log(Logger.Urgency.STATUSREPORT,"Starting autonomous mode - ".concat(autonomous.getName()));
+        System.out.println("Starting autonomous mode - ".concat(autonomous.getName()));
         autonomous.start();
     }
 }

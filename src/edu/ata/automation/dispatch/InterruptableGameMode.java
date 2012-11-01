@@ -44,7 +44,24 @@ public abstract class InterruptableGameMode extends GameMode {
         return interrupted;
     }
 
+    /**
+     * Starts the game mode. Is run within a new thread.
+     */
+    public abstract void open();
+
+    /**
+     * Stops the game mode. Is run when {@link InterruptableGameMode#stop()} is
+     * called.
+     */
+    public abstract void close();
+
+    public void run() {
+        interrupted = false;
+        open();
+    }
+
     public final void stop() {
         interrupted = true;
+        close();
     }
 }

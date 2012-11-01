@@ -46,13 +46,10 @@ public final class GamePeriods extends IterativeRobot {
     private final Robot robot;
 
     /**
-     * Keep this constructor private. {@link GamePeriods} should never be
-     * instantiated.
+     * Creates the object. <i> Should only be used by the VM.</i>
      */
-    private GamePeriods() {
-        super();
-        robot = Robot.getDefaultRobot();
-        robot.init();
+    public GamePeriods() {
+        this(Robot.getDefaultRobot());
     }
 
     /**
@@ -62,7 +59,9 @@ public final class GamePeriods extends IterativeRobot {
      * @param robot robot to use
      */
     public GamePeriods(Robot robot) {
+        super();
         this.robot = robot;
+        this.robot.init();
     }
 
     /**

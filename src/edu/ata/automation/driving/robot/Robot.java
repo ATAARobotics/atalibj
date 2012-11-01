@@ -17,7 +17,7 @@ import java.util.Hashtable;
  */
 public abstract class Robot {
 
-    private static final Robot DEFAULT_ROBOT = new Robot(null, "Fake Robot") {
+    private static final Robot DEFAULT_ROBOT = new Robot(new Module[0], "Fake Robot") {
         public void init() {
         }
 
@@ -49,7 +49,7 @@ public abstract class Robot {
     }
 
     /**
-     * Returns the main robot object. This field is the object used to do
+     * Returns the default robot object. This field is the object used to do
      * everything with.
      *
      * <p> This is useful because if you wanted to develop a completely
@@ -57,6 +57,8 @@ public abstract class Robot {
      * to do so without disrupting the actual running code. A {@link Robot} is a
      * replaceable part of the code that completely changes the behavior of the
      * robot.
+     *
+     * @return the default robot to use
      */
     public static Robot getDefaultRobot() {
         return DEFAULT_ROBOT;

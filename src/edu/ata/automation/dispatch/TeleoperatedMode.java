@@ -1,7 +1,5 @@
 package edu.ata.automation.dispatch;
 
-import edu.wpi.first.wpilibj.Timer;
-
 /**
  * {@link GameMode} object designed for teleoperated modes.
  *
@@ -31,11 +29,14 @@ public abstract class TeleoperatedMode extends InterruptableGameMode {
      * Method to be run when teleoperated mode is started. Handles it's inner
      * methods.
      */
-    public void run() {
+    public void open() {
         while (!isInterrupted()) {
             loop();
-            // Keeps loop from deadlocking (Does not always work, but stands in the way)
-            Timer.delay(0.001);
+            try {
+                // Keeps loop from deadlocking (Does not always work, but stands in the way)
+                Thread.sleep(1);
+            } catch (InterruptedException ex) {
+            }
         }
     }
 }

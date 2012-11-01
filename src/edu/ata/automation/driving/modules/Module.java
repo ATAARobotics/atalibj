@@ -26,10 +26,29 @@ import java.util.Random;
  * <p> The {@link Module} class uses 16 characters, making the odds 1 / (7.96 x
  * 10^24). Otherwise known as completely insane.
  *
+ * <p> The reason for this identifier to exist while hash codes exist already is
+ * to do two things.
+ *
+ * <p>1. To provide a far for accurate way to guarantee things are not the same.
+ *
+ * <p> 2. To eliminate the link between an object and its identifier. The two
+ * things are by definition completely separate (Unlike hash codes).
+ *
+ * <p> 3. To provide a way to access modules easily in {@link Module#MODULES}.
+ *
+ * <p> This makes it so that modules are separable by just if it was
+ * instantiated, rather than what it is.
+ *
+ * <p> {@code (new Module("Hello")).equals(new Module("Hello")) != true}
+ *
+ * <p> The above code is possible to give the same hash code to both (if the
+ * identifier did not exist).
+ *
  * @author Joel Gallant
  */
 public abstract class Module {
 
+    private static final RandomString RANDOM_STRING = new RandomString(16);
     /**
      * {@link Hashtable} object that stores all instantiated
      * {@link Module Modules}. Uses their identifier as the key, and their name
@@ -38,11 +57,17 @@ public abstract class Module {
      * module have accidentally been made (Seeing as they are different in their
      * identifier).
      *
-     * <p> Take caution in using this field. Removing elements from the table
-     * could cause bugs elsewhere. If this could be <i>read-only</i>, it would
-     * be. Treat it as such.
+     * <p> Take caution in using this field. Removing elements has been
+     * disabled.
      */
-    public final Hashtable MODULES = new Hashtable();
+    public static final Hashtable MODULES = new Hashtable() {
+        /**
+         * <b>READ ONLY. DOES NOT REMOVE ELEMENT.</b>
+         */
+        public synchronized Object remove(Object key) {
+            return null;
+        }
+    };
     private final String name;
     private final String identifier;
 
@@ -54,16 +79,16 @@ public abstract class Module {
      * is, and what it does. It's identifier is only good for knowing that
      * modules are different.
      *
-     * <p> The module's identifier is donew in the constructor of
-     * {@link Module}. It would be programmatically unsafe to allow construction
-     * of the identifier anywhere else.
+     * <p> The module's identifier is done in the constructor of {@link Module}.
+     * It would be programmatically unsafe to allow construction of the
+     * identifier anywhere else.
      *
      * @param name the user identifiable name of the module (eg. "left back
      * motor")
      */
     public Module(String name) {
         this.name = name;
-        this.identifier = new RandomString(16).nextString();
+        this.identifier = RANDOM_STRING.nextString();
         MODULES.put(identifier, name);
     }
 
@@ -85,6 +110,26 @@ public abstract class Module {
      *
      * <p> The {@link Module} class uses 16 characters, making the odds 1 /
      * (7.96 x 10^24). Otherwise known as completely insane.
+     *
+     * <p> The reason for this identifier to exist while hash codes exist
+     * already is to do two things.
+     *
+     * <p>1. To provide a far for accurate way to guarantee things are not the
+     * same.
+     *
+     * <p> 2. To eliminate the link between an object and its identifier. The
+     * two things are by definition completely separate (Unlike hash codes).
+     *
+     * <p> 3. To provide a way to access modules easily in
+     * {@link Module#MODULES}.
+     *
+     * <p> This makes it so that modules are separable by just if it was
+     * instantiated, rather than what it is.
+     *
+     * <p> {@code (new Module("Hello")).equals(new Module("Hello")) != true}
+     *
+     * <p> The above code is possible to give the same hash code to both (if the
+     * identifier did not exist).
      *
      * @return 16 character identifier of the module
      */
@@ -181,7 +226,7 @@ public abstract class Module {
      * @see java.util.HashMap
      */
     public boolean equals(Object obj) {
-        return obj instanceof Module && ((Module) obj).identifier.equals(this.identifier);
+        return (obj instanceof Module) && ((Module) obj).identifier.equals(this.identifier);
     }
 
     /**

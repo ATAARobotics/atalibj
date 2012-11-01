@@ -1,7 +1,6 @@
 package edu.ata.automation.dispatch;
 
 import edu.ata.automation.autonomous.Autonomous;
-import edu.ata.user.Logger;
 
 /**
  * Similar to {@link AutonomousMode}, but cannot be 'interrupted'. This is
@@ -75,7 +74,7 @@ public abstract class UninterruptableAutonomousMode extends GameMode implements 
                 try {
                     lock.wait(timeout);
                 } catch (InterruptedException ex) {
-                    Logger.log(Logger.Urgency.WARNING, ex.getMessage());
+                    System.out.println(ex.getMessage());
                 }
             }
         }
