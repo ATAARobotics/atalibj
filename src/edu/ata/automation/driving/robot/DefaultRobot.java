@@ -44,21 +44,21 @@ public abstract class DefaultRobot extends Robot {
     public final void disabled() {
         autonomous.stop();
         teleop.stop();
-        System.out.println("Starting disabled mode  - ".concat(disabled.getName()));
+        System.out.println("Starting disabled mode  - " + disabled);
         disabled.start();
     }
 
     public final void teleop() {
         disabled.stop();
         autonomous.stop();
-        System.out.println("Starting teleop mode - ".concat(teleop.getName()));
+        System.out.println("Starting teleop mode - " + teleop);
         teleop.start();
     }
 
     public final void autonomous() {
         disabled.stop();
         teleop.stop();
-        System.out.println("Starting autonomous mode - ".concat(autonomous.getName()));
+        System.out.println("Starting autonomous mode - " + autonomous);
         autonomous.start();
     }
 }

@@ -65,6 +65,12 @@ public final class GamePeriods extends IterativeRobot {
     }
 
     /**
+     * Method called when the robot is first started.
+     */
+    public void robotInit() {
+    }
+
+    /**
      * Method that is run once before disabled period starts.
      *
      * <p> Should not be necessary, but exists just in case. (Possible use -
