@@ -16,19 +16,7 @@ import java.util.Random;
  * {@link Module#MODULES}. This identifier is used to compare modules in
  * {@link Object#equals(java.lang.Object)}. It is a completely randomly
  * generated 16 character string that uses {@link RandomString} to generate
- * itself. It can pretty much be guaranteed to never produce the same string
- * twice, although it is completely impossible to ensure that is the case (at
- * least so unlikely that it should not be worried about).
- *
- * <p> The odds of two identifiers being the same are as follows :
- *
- * <pre> 1 / ( 36 ^ #length# ) </pre>
- *
- * <p> The {@link Module} class uses 16 characters, making the odds 1 / (7.96 x
- * 10^24). Otherwise known as completely insane. It would be considered a
- * miracle for it to effect us in the future. (And even if it did, confusing two
- * modules would probably only effect the user interface and not the actual
- * function of the robot)
+ * itself. It is guaranteed to never produce the same string twice.
  *
  * <p> The reason for this identifier to exist while hash codes exist already is
  * to do three things.
@@ -85,12 +73,18 @@ public abstract class Module {
      * It would be programmatically unsafe to allow construction of the
      * identifier anywhere else.
      *
+     * <p> The identifier is unique, and will not match any other identifiers.
+     *
      * @param name the user identifiable name of the module (eg. "left back
      * motor", "main robot drivetrain")
      */
     public Module(String name) {
         this.name = name;
-        this.identifier = RANDOM_STRING.nextString();
+        String id = RANDOM_STRING.nextString();
+        while (MODULES.containsKey(id)) {
+            id = RANDOM_STRING.nextString();
+        }
+        this.identifier = id;
         MODULES.put(identifier, name);
     }
 
@@ -111,19 +105,7 @@ public abstract class Module {
      * {@link Module#MODULES}. This identifier is used to compare modules in
      * {@link Object#equals(java.lang.Object)}. It is a completely randomly
      * generated 16 character string that uses {@link RandomString} to generate
-     * itself. It can pretty much be guaranteed to never produce the same string
-     * twice, although it is completely impossible to ensure that is the case
-     * (at least so unlikely that it should not be worried about).
-     *
-     * <p> The odds of two identifiers being the same are as follows :
-     *
-     * <pre> 1 / ( 36 ^ #length# ) </pre>
-     *
-     * <p> The {@link Module} class uses 16 characters, making the odds 1 /
-     * (7.96 x 10^24). Otherwise known as completely insane. It would be
-     * considered a miracle for it to effect us in the future. (And even if it
-     * did, confusing two modules would probably only effect the user interface
-     * and not the actual function of the robot)
+     * itself. It is guaranteed to never produce the same string twice.
      *
      * <p> The reason for this identifier to exist while hash codes exist
      * already is to do three things.
@@ -138,8 +120,8 @@ public abstract class Module {
      * {@link Module#MODULES}.
      *
      * <p> This makes it so that module identifiers have the same relation to
-     * one another as any other. (In A, B, C, A vs C is the same as B vs A and A
-     * vs B, etc.)
+     * one another as any other. (In A, B, C, {@code A vs C} is the same as
+     * {@code B vs A} and {@code A vs B}, etc.)
      *
      * <p> {@code (new Module("Hello")).equals(new Module("Hello")) != true}
      *
