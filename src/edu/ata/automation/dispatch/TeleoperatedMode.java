@@ -1,11 +1,14 @@
 package edu.ata.automation.dispatch;
 
 /**
- * {@link GameMode} object designed for teleoperated modes.
+ * {@link GameMode} object designed for teleoperated modes. Runs one method in a
+ * loop until the end. When it is finished, calls the
+ * {@link TeleoperatedMode#close()} method.
  *
+ * @see InterruptibleGameMode
  * @author Joel Gallant
  */
-public abstract class TeleoperatedMode extends InterruptableGameMode {
+public abstract class TeleoperatedMode extends InterruptibleGameMode {
 
     /**
      * Method called during teleoperated period in a loop. Is called constantly
@@ -17,7 +20,9 @@ public abstract class TeleoperatedMode extends InterruptableGameMode {
     public abstract void loop();
 
     /**
-     * Creates the mode with a name.
+     * Creates the mode with a name. Thread priority is set to 8
+     * (high-medium-high). It should be the biggest concern for the robot to
+     * keep the teleop thread running (as opposed to data, etc.).
      *
      * @param name name of the teleoperated mode
      */

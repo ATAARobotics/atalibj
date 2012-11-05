@@ -17,6 +17,7 @@ import java.util.Hashtable;
  */
 public abstract class Robot {
 
+    // Use this field to choose the robot to use in the code. (Is chosen by default)
     private static final Robot DEFAULT_ROBOT = new Robot(new Module[0], "Fake Robot") {
         public void init() {
         }
@@ -34,8 +35,8 @@ public abstract class Robot {
     private final String name;
 
     /**
-     * Creates robot with its modules and name. This name of the robot is its
-     * identifier to the user.
+     * Creates robot with its modules and name. The name of the robot should be
+     * identifiable to the user.
      *
      * @param modules its necessary modules
      * @param name the robot configuration's name
@@ -78,7 +79,7 @@ public abstract class Robot {
      * Returns the {@link Hashtable} object used to store modules. This should
      * be used to display to the user, and typically nothing else. Interaction
      * with a {@link Robot} object should happen through its methods, and not
-     * this table. (This would be very inefficient.)
+     * this table. (The latter would be very inefficient.)
      *
      * @return the hash table of modules
      */

@@ -9,6 +9,7 @@ package edu.ata.automation.dispatch;
  * object each time. Another bonus of this is that priority of the thread is
  * adjustable between runs if needed. ({@link GameMode#setPriority(int)}).
  *
+ * @see Thread
  * @author Joel Gallant
  */
 public abstract class GameMode implements Runnable {
@@ -32,6 +33,7 @@ public abstract class GameMode implements Runnable {
      *
      * @param name name of the thread
      * @param priority priority of the thread (1 - 10)
+     * @see Thread#setPriority()
      */
     public GameMode(String name, int priority) {
         this.name = name;
@@ -48,7 +50,8 @@ public abstract class GameMode implements Runnable {
     }
 
     /**
-     * Creates a string representation of the thread.
+     * Creates a string representation of the thread. Is equal to:
+     * <pre> "GameMode:"+obj.getName() </pre>
      *
      * @return string representation
      */
@@ -74,12 +77,15 @@ public abstract class GameMode implements Runnable {
      * Starts the thread (Game Mode).
      *
      * <p> <i>Caution :</i> Thread will not be started if
-     * {@link Thread#isAlive()} does not return false. This prevents the game
+     * {@link GameMode#isAlive()} does not return false. This prevents the game
      * mode from running more than once at the same time, but is prone to
-     * concurrency problems.
+     * concurrency problems. (If your program assumes that {@code start()}
+     * actually starts the mode.)
+     *
+     * @see Thread
      */
     public final void start() {
-        if (thread != null && thread.isAlive()) {
+        if (isAlive()) {
             return;
         }
         thread = new Thread(this, name);

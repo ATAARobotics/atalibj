@@ -5,8 +5,23 @@ import java.util.Hashtable;
 
 /**
  * Class used to set an autonomous mode, to enable dynamic switching between
- * modes. Contains a stash of ready autonomous modes that are callable by name
- * if wanted.
+ * modes.
+ *
+ * <p> There are two implementation possibilities for
+ * {@link AutonomousModeChooser}.
+ *
+ * <pre> 1. Using a pre-made stash of {@link AutonomousMode Autonomous modes}
+ * and picking them by name </pre>
+ * <pre> 2. Using this as a way to determine which {@link AutonomousMode} to
+ * run, using
+ * {@link AutonomousModeChooser#setAutonomousMode(edu.ata.automation.dispatch.AutonomousMode)}
+ * and {@link AutonomousModeChooser#getAutonomousMode()}. </pre>
+ * <pre> 3. Using a combination of #1 and #2, and having a stash, and being able to set it manually.
+ * </pre>
+ *
+ * <p> #3 is the most flexible option, but allows for the most incorrect and
+ * buggy code. Please make sure to use this class correctly.
+ *
  *
  * @author Joel Gallant
  */
@@ -16,7 +31,8 @@ public class AutonomousModeChooser {
     private final Hashtable modes;
 
     /**
-     * Creates the chooser with an array of modes used. These modes are usable
+     * Creates the chooser with an array of
+     * {@link AutonomousMode Autonomous modes} available. These modes are usable
      * with {@link AutonomousModeChooser#setAutonomousMode(java.lang.String)},
      * but it is completely possible to set the autonomous mode outside of the
      * modes array with
@@ -25,7 +41,7 @@ public class AutonomousModeChooser {
      * <p> <i>Warning: If two autonomous modes have the same name, the furthest
      * one in the array will be taken, and the first one ignored.</i>
      *
-     * @param modes
+     * @param modes array of modes possible
      */
     public AutonomousModeChooser(AutonomousMode[] modes) {
         this.modes = new Hashtable(modes.length);
@@ -38,13 +54,20 @@ public class AutonomousModeChooser {
      * Creates chooser with nothing pre-defined.
      * {@link AutonomousModeChooser#setAutonomousMode(java.lang.String)} is
      * rendered functionless if this constructor is called.
+     *
+     * <p> It is still perfectly valid to use
+     * {@link AutonomousModeChooser#setAutonomousMode(edu.ata.automation.dispatch.AutonomousMode)}
+     * and {@link AutonomousModeChooser#getAutonomousMode()} will still work as
+     * expected.
      */
     public AutonomousModeChooser() {
         this.modes = new Hashtable();
     }
 
     /**
-     * Sets the current autonomous mode. Is able to set it to anything.
+     * Sets the current autonomous mode. Is able to set it to any
+     * {@link AutonomousMode}. Is not limited by choices given in the
+     * constructor.
      *
      * @param autonomousMode new autonomous mode
      */

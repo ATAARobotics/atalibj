@@ -33,6 +33,9 @@ public class Logger {
      * looking at its urgency. (Ex. int could be out of range, etc.) This keeps
      * the only possible values to be pre-approved by this class. (No errors
      * when logging)
+     *
+     * <p> <b> Null urgency objects are possible, but should throw an error
+     * anyways. </b>
      */
     public final static class Urgency {
 
@@ -66,7 +69,7 @@ public class Logger {
      * <p> By default, sends messages to the log file at file:///log.txt.
      *
      * @param urgency Urgency of the log. Urgencies are available as static
-     * variables in the {@link Logger Log} class.
+     * variables in the {@link Urgency} class.
      * @param msg Message to send to the user.
      */
     public static void log(Urgency urgency, String msg) {
@@ -120,6 +123,7 @@ public class Logger {
         DataOutputStream outputStream = fileConnection.openDataOutputStream();
         byte[] data = msg.getBytes();
         try {
+            // Need to test to find out if offset should be saved to append
             outputStream.write(data, 0, data.length);
         } finally {
             outputStream.close();
@@ -171,6 +175,8 @@ public class Logger {
      * {@link Logger#log(edu.ata.user.Logger.Urgency, java.lang.String)}
      * provides a better solution to displaying information to the user. This
      * method is available for public use just in case (It can't hurt).
+     * 
+     * <p> As of 2012, the DriverStation has a limit of 20 characters.
      *
      * @param msg message to display to the user
      */
@@ -198,7 +204,7 @@ public class Logger {
             default:
                 line = DriverStationLCD.Line.kUser1;
         }
-        DriverStationLCD.getInstance().println(line, lineNum, msg + "\n");
+        DriverStationLCD.getInstance().println(line, lineNum, msg);
         DriverStationLCD.getInstance().updateLCD();
         lineNum++;
         if (lineNum > 6) {

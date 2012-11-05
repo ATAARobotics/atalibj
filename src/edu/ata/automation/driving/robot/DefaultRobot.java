@@ -3,6 +3,7 @@ package edu.ata.automation.driving.robot;
 import edu.ata.automation.dispatch.GameMode;
 import edu.ata.automation.driving.modules.Module;
 import edu.ata.main.GamePeriods;
+import edu.ata.user.Logger;
 
 /**
  * {@link Robot} object used as the default for code. It abstracts the
@@ -31,7 +32,7 @@ public abstract class DefaultRobot extends Robot {
      * @param disabled disabled mode
      */
     public DefaultRobot(Module[] modules, String name, GameMode autonomous,
-            GameMode teleop, GameMode disabled) {
+            GameMode teleop, GameMode disabled) throws NullPointerException {
         super(modules, name);
         if (autonomous == null || teleop == null || disabled == null) {
             throw new NullPointerException("Gave null game mode in robot - " + name);
@@ -44,21 +45,21 @@ public abstract class DefaultRobot extends Robot {
     public final void disabled() {
         autonomous.stop();
         teleop.stop();
-        System.out.println("Starting disabled mode  - " + disabled);
+        Logger.log(Logger.Urgency.STATUSREPORT, "Starting disabled mode  - " + disabled);
         disabled.start();
     }
 
     public final void teleop() {
         disabled.stop();
         autonomous.stop();
-        System.out.println("Starting teleop mode - " + teleop);
+        Logger.log(Logger.Urgency.STATUSREPORT, "Starting teleop mode - " + teleop);
         teleop.start();
     }
 
     public final void autonomous() {
         disabled.stop();
         teleop.stop();
-        System.out.println("Starting autonomous mode - " + autonomous);
+        Logger.log(Logger.Urgency.STATUSREPORT, "Starting autonomous mode - " + autonomous);
         autonomous.start();
     }
 }

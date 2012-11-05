@@ -26,7 +26,7 @@ public final class DriverstationInfo {
     }
 
     /**
-     * Return the team number that the Driver Station is configured for
+     * Return the team number that the Driver Station is configured for.
      *
      * @return The team number
      */
