@@ -21,7 +21,7 @@
  * be given as a parameter." - Nathaniel Borenstein
  *
  * Please write code properly, and have fun doing so!
- * 
+ *
  * The liscense for the code is available at robot-code/license.txt
  */
 package edu.ata.main;
@@ -48,7 +48,9 @@ public final class GamePeriods extends IterativeRobot {
     private final Robot robot;
 
     /**
-     * Creates the object. <i> Should only be used by the VM.</i>
+     * Creates the object. <i> Should only be used by the VM.</i> The
+     * {@link GamePeriods} object is automatically instantiated by the class
+     * loader. It assumes a public constructor with no arguments.
      */
     public GamePeriods() {
         this(Robot.getDefaultRobot());
@@ -63,13 +65,13 @@ public final class GamePeriods extends IterativeRobot {
     public GamePeriods(Robot robot) {
         super();
         this.robot = robot;
-        this.robot.init();
     }
 
     /**
      * Method called when the robot is first started.
      */
     public void robotInit() {
+        this.robot.init();
     }
 
     /**

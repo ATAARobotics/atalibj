@@ -43,22 +43,22 @@ public abstract class DefaultRobot extends Robot {
     }
 
     public final void disabled() {
-        autonomous.stop();
-        teleop.stop();
+        autonomous.interrupt();
+        teleop.interrupt();
         Logger.log(Logger.Urgency.STATUSREPORT, "Starting disabled mode  - " + disabled);
         disabled.start();
     }
 
     public final void teleop() {
-        disabled.stop();
-        autonomous.stop();
+        disabled.interrupt();
+        autonomous.interrupt();
         Logger.log(Logger.Urgency.STATUSREPORT, "Starting teleop mode - " + teleop);
         teleop.start();
     }
 
     public final void autonomous() {
-        disabled.stop();
-        teleop.stop();
+        disabled.interrupt();
+        teleop.interrupt();
         Logger.log(Logger.Urgency.STATUSREPORT, "Starting autonomous mode - " + autonomous);
         autonomous.start();
     }

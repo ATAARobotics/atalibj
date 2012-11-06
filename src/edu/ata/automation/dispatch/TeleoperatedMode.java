@@ -1,46 +1,75 @@
 package edu.ata.automation.dispatch;
 
 /**
- * {@link GameMode} object designed for teleoperated modes. Runs one method in a
- * loop until the end. When it is finished, calls the
- * {@link TeleoperatedMode#close()} method.
+ * Basic class used for representing different teleoperated modes. Has a basic
+ * looping structure that can be interrupted easily using the
+ * {@code interrupted} field. Is thread safe interrupting, so the mode can be
+ * stopped from anywhere in the code. (Even though it's definitely not
+ * recommended)
  *
- * @see InterruptibleGameMode
+ * <p> Stops the loop from deadlocking by sleeping the thread each loop for 1-5
+ * milliseconds.
+ *
+ * @see GameMode
  * @author Joel Gallant
  */
-public abstract class TeleoperatedMode extends InterruptibleGameMode {
+public abstract class TeleoperatedMode extends GameMode {
+
+    private boolean interrupted = false;
 
     /**
-     * Method called during teleoperated period in a loop. Is called constantly
-     * during teleoperated period.
+     * Creates the teleop mode with a name. Using the thread priority of 9.
+     * (Very high)
      *
-     * <p> It is recommended that you keep this method short, because
-     * interruptions only occur after this method finishes.
-     */
-    public abstract void loop();
-
-    /**
-     * Creates the mode with a name. Thread priority is set to 8
-     * (high-medium-high). It should be the biggest concern for the robot to
-     * keep the teleop thread running (as opposed to data, etc.).
-     *
-     * @param name name of the teleoperated mode
+     * @see GameMode
+     * @see Thread#getPriority()
+     * @param name name of the mode
      */
     public TeleoperatedMode(String name) {
-        super(name, 8);
+        super(name, 9);
     }
 
     /**
-     * Method to be run when teleoperated mode is started. Handles it's inner
-     * methods.
+     * Main method for the teleoperated game mode. Goes in a loop continuously,
+     * with a delay of 1-5 milliseconds. Is <b>not</b> guaranteed to be periodic
+     * in any sense other than on the processor, which is completely dependant
+     * on the network connection.
      */
-    public void open() {
-        while (!isInterrupted()) {
-            loop();
+    public abstract void loop();
+
+    /*
+
+     Is not final so that if you wanted to have something happen at the end,
+     you could overide the method using:
+
+     public void interrupt() {
+     super.interrupt();
+     ... Business code ...
+     }
+
+     */
+    public void interrupt() {
+        synchronized (this) {
+            interrupted = true;
+        }
+    }
+
+    /**
+     * Runs the mode. Is used in {@link GameMode}, and should not be used
+     * anywhere else.
+     */
+    public final void run() {
+        interrupted = false;
+        boolean c = false;
+        while (!c) {
             try {
-                // Keeps loop from deadlocking (Does not always work, but stands in the way)
-                Thread.sleep(1);
+                Thread.sleep(5);
             } catch (InterruptedException ex) {
+                // Impossible - a 1 millisecond sleep is only there to prevent deadlock
+            }
+            loop();
+            synchronized (this) {
+                c = interrupted;
             }
         }
     }

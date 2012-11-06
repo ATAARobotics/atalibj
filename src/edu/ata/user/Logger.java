@@ -175,7 +175,7 @@ public class Logger {
      * {@link Logger#log(edu.ata.user.Logger.Urgency, java.lang.String)}
      * provides a better solution to displaying information to the user. This
      * method is available for public use just in case (It can't hurt).
-     * 
+     *
      * <p> As of 2012, the DriverStation has a limit of 20 characters.
      *
      * @param msg message to display to the user

@@ -105,10 +105,11 @@ public abstract class GameMode implements Runnable {
     }
 
     /**
-     * Stops the game mode. Is overridden, and thus cannot be entirely trusted.
+     * Interrupts the game mode. Is overridden, and thus cannot be entirely
+     * trusted.
      *
      * <p> Should usually wait until it is verified to be done. It would be
-     * dangerous to just let things go on after calling {@code stop()}.
+     * dangerous to just let things go on after calling {@code interrupt()}.
      */
-    public abstract void stop();
+    public abstract void interrupt();
 }
