@@ -94,6 +94,19 @@ public abstract class GameMode implements Runnable {
     }
 
     /**
+     * Waits for this thread to die.
+     *
+     * @throws InterruptedException if any thread has interrupted the current
+     * thread. The <i>interrupted status</i> of the current thread is cleared
+     * when this exception is thrown.
+     */
+    public final void join() throws InterruptedException {
+        if(isAlive()) {
+            thread.join();
+        }
+    }
+
+    /**
      * Sets the priority of the thread. Will take effect the next time you run
      * the game mode. ({@link GameMode#start()})
      *

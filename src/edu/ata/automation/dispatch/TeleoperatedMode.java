@@ -52,6 +52,10 @@ public abstract class TeleoperatedMode extends GameMode {
         synchronized (this) {
             interrupted = true;
         }
+        try {
+            join();
+        } catch (InterruptedException ex) {
+        }
     }
 
     /**
@@ -59,8 +63,11 @@ public abstract class TeleoperatedMode extends GameMode {
      * anywhere else.
      */
     public final void run() {
-        interrupted = false;
-        boolean c = false;
+        boolean c;
+        synchronized (this) {
+            interrupted = false;
+            c = interrupted;
+        }
         while (!c) {
             try {
                 Thread.sleep(5);
