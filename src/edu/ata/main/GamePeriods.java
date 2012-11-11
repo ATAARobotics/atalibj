@@ -7,7 +7,7 @@
  * more about the programming team, rules, conventions or any other information about
  * our code, please contact Joel (joelgallant236@gmail.com).
  *
- * This code is hosted on github on https://github.com/joelg236/4334
+ * This code is hosted on github on https://github.com/Team4334/robot-code
  *
  * Before making changes, adding files or doing anything on git, please ensure that
  * you are authorized to do so, and know what you are doing.
