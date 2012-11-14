@@ -22,7 +22,7 @@
  *
  * Please write code properly, and have fun doing so!
  *
- * The liscense for the code is available at robot-code/license.txt
+ * The license for the code is available at robot-code/license.txt
  */
 package edu.ata.main;
 
