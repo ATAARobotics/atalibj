@@ -1,69 +1,35 @@
 package edu.ata.auto;
 
 import edu.ata.commands.Command;
-import edu.ata.commands.Scheduler;
-import edu.wpi.first.wpilibj.Timer;
-import java.util.Vector;
+import edu.ata.commands.CommandGroup;
 
 /**
+ * Basic autonomous mode that takes {@link Command commands} and runs them
+ * inside of {@link AutonomousMode#run()}. Is able to call these commands
+ * simultaneously (concurrent) or sequentially (sequential).
  *
  * @author Joel Gallant
  */
-public class AutonomousMode {
+public class AutonomousMode extends CommandGroup {
 
-    static final int SEQUENTIAL = 0, CONCURRENT = 1;
-    Vector autoBuffer = new Vector();
-    int[] typesBuffer = new int[0];
+    private final String name;
 
-    protected void addSequencial(Command command) {
-        addCommand(SEQUENTIAL, command);
+    /**
+     * Creates the autonomous mode with its name. Should add commands in
+     * constructor.
+     *
+     * @param name name of the mode (displayed to user)
+     */
+    public AutonomousMode(String name) {
+        this.name = name;
     }
 
-    protected void addConcurrent(Command command) {
-        addCommand(CONCURRENT, command);
-    }
-
-    private void addCommand(final int type, Command command) {
-        int[] tmp = typesBuffer;
-        typesBuffer = new int[typesBuffer.length + 1];
-        System.arraycopy(tmp, 0, typesBuffer, 0, tmp.length);
-        typesBuffer[typesBuffer.length - 1] = type;
-        autoBuffer.addElement(command);
-    }
-
-    protected void addPause(final double time) {
-        addSequencial(new Command() {
-            public void run() {
-                Timer.delay(time);
-            }
-        });
-    }
-
-    public void run() {
-        Command[] concurrentBuffer = null;
-        for (int x = 0; x < typesBuffer.length; ++x) {
-            if (typesBuffer[x] == SEQUENTIAL) {
-                if (concurrentBuffer != null) {
-                    Scheduler.runConcurrently(concurrentBuffer);
-                    concurrentBuffer = null;
-                }
-                Scheduler.run((Command) autoBuffer.elementAt(x));
-            } else if (typesBuffer[x] == CONCURRENT) {
-                if (concurrentBuffer != null) {
-                    Command[] tmp = concurrentBuffer;
-                    concurrentBuffer = new Command[concurrentBuffer.length + 1];
-                    System.arraycopy(tmp, 0, concurrentBuffer, 0, tmp.length);
-                    concurrentBuffer[concurrentBuffer.length - 1] =
-                            (Command) autoBuffer.elementAt(x);
-                } else {
-                    concurrentBuffer = new Command[1];
-                    concurrentBuffer[0] = (Command) autoBuffer.elementAt(x);
-                }
-            }
-        }
-        // Runs remaining if they exist
-        if(concurrentBuffer != null) {
-            Scheduler.runConcurrently(concurrentBuffer);
-        }
+    /**
+     * Gets the name of the autonomous mode. The name can never change.
+     * 
+     * @return name of the autonomous mode
+     */
+    public String getName() {
+        return name;
     }
 }
