@@ -28,6 +28,9 @@ public abstract class Robot {
      * @param name the robot configuration's name
      */
     public Robot(Module[] modules, String name) {
+        if (modules == null) {
+            throw new NullPointerException("Modules were null in robot - " + name);
+        }
         this.modules = new Hashtable(modules.length);
         for (int x = 0; x < modules.length; x++) {
             this.modules.put(modules[x].getIdentifier(), modules[x]);
@@ -77,9 +80,9 @@ public abstract class Robot {
      * This is the teleop method of the robot. Typically, this should start user
      * control, and get the robot driving.
      *
-     * <p> This is run once when the robot is starting teleop mode.
+     * <p> This is run periodically when the robot is in teleop mode.
      */
-    public abstract void teleop();
+    public abstract void teleopLoop();
 
     /**
      * This is the autonomous method of the robot. Typically, this should start
