@@ -15,7 +15,7 @@ When working in this repository, be sure to commit to the correct branch. Branch
 Branches have been revamped to three main branches. Descriptions are available below.
 
 ###Branches###
-There are 9 branches. These branches are organized in a way that different sub-teams can work on code individually pretty well.
+There are 3 branches. These branches are organized in a way that different sub-teams can work on code individually pretty well.
 It is worth noting that all branches use underscore letters, and they are capitalized just to look nicer.
 
 * **Depreciated**: Used to store history of master. Is usually one of two commits behind master. does not serve any purpose other than letting master get messed up and being able to rebase master to its preferred configuration.
