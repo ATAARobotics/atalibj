@@ -1,4 +1,4 @@
-package edu.ata.automation.driving.modules;
+package edu.ata.driving.modules;
 
 import java.util.Hashtable;
 import java.util.Random;

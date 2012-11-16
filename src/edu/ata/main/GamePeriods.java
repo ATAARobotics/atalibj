@@ -26,7 +26,7 @@
  */
 package edu.ata.main;
 
-import edu.ata.automation.driving.robot.Robot;
+import edu.ata.driving.robot.Robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
