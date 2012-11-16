@@ -1,6 +1,6 @@
-package edu.ata.automation.driving.robot;
+package edu.ata.driving.robot;
 
-import edu.ata.automation.driving.modules.Module;
+import edu.ata.driving.modules.Module;
 import java.util.Hashtable;
 
 /**
