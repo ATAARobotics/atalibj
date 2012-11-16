@@ -17,20 +17,6 @@ import java.util.Hashtable;
  */
 public abstract class Robot {
 
-    // Use this field to choose the robot to use in the code. (Is chosen by default)
-    private static final Robot DEFAULT_ROBOT = new Robot(new Module[0], "Fake Robot") {
-        public void init() {
-        }
-
-        public void disabled() {
-        }
-
-        public void teleop() {
-        }
-
-        public void autonomous() {
-        }
-    };
     private final Hashtable modules;
     private final String name;
 
@@ -47,22 +33,6 @@ public abstract class Robot {
             this.modules.put(modules[x].getIdentifier(), modules[x]);
         }
         this.name = name;
-    }
-
-    /**
-     * Returns the default robot object. This field is the object used to do
-     * everything with.
-     *
-     * <p> This is useful because if you wanted to develop a completely
-     * different control system for the robot, it would be completely possible
-     * to do so without disrupting the actual running code. A {@link Robot} is a
-     * replaceable part of the code that completely changes the behavior of the
-     * robot.
-     *
-     * @return the default robot to use
-     */
-    public static Robot getDefaultRobot() {
-        return DEFAULT_ROBOT;
     }
 
     /**

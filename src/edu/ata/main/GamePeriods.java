@@ -26,8 +26,9 @@
  */
 package edu.ata.main;
 
+import edu.ata.driving.modules.Module;
 import edu.ata.driving.robot.Robot;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SimpleRobot;
 
 /**
  * This is the 'main' class of the robot code. All instructions are rooted to
@@ -43,9 +44,23 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * <p> If you change the name of this class or the package after creating this
  * project, you must also update the manifest file in the resource directory.
  */
-public final class GamePeriods extends IterativeRobot {
+public final class GamePeriods extends SimpleRobot {
 
     private final Robot robot;
+    // Use this field to choose the robot to use in the code. (Is chosen by default)
+    private static final Robot DEFAULT_ROBOT = new Robot(new Module[0], "Fake Robot") {
+        public void init() {
+        }
+
+        public void disabled() {
+        }
+
+        public void teleop() {
+        }
+
+        public void autonomous() {
+        }
+    };
 
     /**
      * Creates the object. <i> Should only be used by the VM.</i> The
@@ -53,7 +68,7 @@ public final class GamePeriods extends IterativeRobot {
      * loader. It assumes a public constructor with no arguments.
      */
     public GamePeriods() {
-        this(Robot.getDefaultRobot());
+        this(DEFAULT_ROBOT);
     }
 
     /**
@@ -75,32 +90,29 @@ public final class GamePeriods extends IterativeRobot {
     }
 
     /**
-     * Method that is run once before disabled period starts.
+     * Disabled mode goes here.
      *
-     * <p> Should not be necessary, but exists just in case. (Possible use -
-     * displaying data from the robot)
+     * Called once each time the robot enters the disabled state.
      */
-    public void disabledInit() {
+    public void disabled() {
         robot.disabled();
     }
 
     /**
-     * Method that is run once before autonomous period starts.
+     * Autonomous goes here.
      *
-     * <p> Should be used to start autonomous mode. Is only run once when
-     * autonomous is started.
+     * Called once each time the robot enters the autonomous state.
      */
-    public void autonomousInit() {
+    public void autonomous() {
         robot.autonomous();
     }
 
     /**
-     * Method that is run once teleoperated disabled period starts.
+     * Operator control (tele-operated) code goes here.
      *
-     * <p> Should be used to start teleoperated mode. Is only run once when
-     * teleop is started.
+     * Called once each time the robot enters the operator-controlled state.
      */
-    public void teleopInit() {
+    public void operatorControl() {
         robot.teleop();
     }
 }
