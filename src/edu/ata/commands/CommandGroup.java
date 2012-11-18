@@ -49,11 +49,7 @@ public class CommandGroup extends Command {
      * @param time time to wait
      */
     protected void addPause(final double time) {
-        addSequential(new Command() {
-            public void run() {
-                Timer.delay(time);
-            }
-        });
+        addSequential(new CommandGroup.Pause(time));
     }
 
     /**
@@ -84,6 +80,27 @@ public class CommandGroup extends Command {
         // Runs remaining if they exist
         if (concurrentBuffer != null) {
             Scheduler.runConcurrently(concurrentBuffer);
+        }
+    }
+
+    /**
+     * Basic command that waits for a certain amount of time.
+     */
+    public static class Pause extends Command {
+
+        private final double pause;
+
+        /**
+         * Constructs command with timeout.
+         *
+         * @param seconds seconds to wait
+         */
+        public Pause(double seconds) {
+            this.pause = seconds;
+        }
+
+        public void run() {
+            Timer.delay(pause);
         }
     }
 }
