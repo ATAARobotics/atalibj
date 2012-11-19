@@ -38,7 +38,6 @@ import java.util.Random;
  */
 public abstract class Module {
 
-    private static final RandomString RANDOM_STRING = new RandomString(16);
     /**
      * {@link Hashtable} object that stores all instantiated
      * {@link Module Modules}. Uses their identifier as the key, and their name
@@ -49,6 +48,8 @@ public abstract class Module {
      *
      * <p> Take caution in using this field. Removing elements has been
      * disabled.
+     *
+     * <p> <b>READ ONLY. DOES NOT REMOVE ELEMENTS.</b>
      */
     public static final Hashtable MODULES = new Hashtable() {
         /**
@@ -58,6 +59,7 @@ public abstract class Module {
             return key;
         }
     };
+    private static int count = 0;
     private final String name;
     private final String identifier;
 
@@ -80,16 +82,15 @@ public abstract class Module {
      */
     public Module(String name) {
         this.name = name;
-        String id = RANDOM_STRING.newString();
-        while (MODULES.containsKey(id)) {
-            id = RANDOM_STRING.newString();
-        }
-        this.identifier = id;
+        this.identifier = String.valueOf(++count);
         MODULES.put(identifier, name);
     }
 
     /**
-     * Returns the name given to the module. A name cannot be changed.
+     * Returns the name given to the module. A name cannot be changed. Do not
+     * rely on names however, since two separate but similar modules can have
+     * the same name. Instead, use the {@code getIdentifier()} method to
+     * distinguish between modules.
      *
      * @return the user identifiable name of the module (eg. "left back motor",
      * "main robot drivetrain")
@@ -158,56 +159,5 @@ public abstract class Module {
 
     public boolean equals(Object obj) {
         return (obj instanceof Module) && ((Module) obj).identifier.equals(this.identifier);
-    }
-
-    /**
-     * Generator for a random string. Is <b>not</b> guaranteed to produce a
-     * completely new sequence.
-     *
-     * <p> Is not secure, and should <i>only</i> be used to produce identifiers
-     * for {@link Module Modules}.
-     *
-     * <p> Good way to generate random string cheaply and easily.
-     */
-    private static final class RandomString {
-
-        private static final char[] symbols = new char[36];
-
-        static {
-            for (int x = 0; x < 10; ++x) {
-                symbols[x] = (char) ('0' + x);
-            }
-            for (int x = 10; x < 36; ++x) {
-                symbols[x] = (char) ('a' + x - 10);
-            }
-        }
-        private final Random random = new Random();
-        private final char[] buf;
-
-        /**
-         * Creates a new {@link RandomString} object. Checks for the length to
-         * be less than 1.
-         *
-         * @param length length of the string
-         */
-        public RandomString(int length) {
-            if (length < 1) {
-                throw new IllegalArgumentException("length < 1: " + length);
-            }
-            buf = new char[length];
-        }
-
-        /**
-         * Produces a random string with the length given containing characters
-         * and numbers. Is cheap and non-secure.
-         *
-         * @return new random string
-         */
-        public String newString() {
-            for (int x = 0; x < buf.length; ++x) {
-                buf[x] = symbols[random.nextInt(symbols.length)];
-            }
-            return new String(buf);
-        }
     }
 }
