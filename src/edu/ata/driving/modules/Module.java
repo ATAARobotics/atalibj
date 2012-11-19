@@ -80,9 +80,9 @@ public abstract class Module {
      */
     public Module(String name) {
         this.name = name;
-        String id = RANDOM_STRING.nextString();
+        String id = RANDOM_STRING.newString();
         while (MODULES.containsKey(id)) {
-            id = RANDOM_STRING.nextString();
+            id = RANDOM_STRING.newString();
         }
         this.identifier = id;
         MODULES.put(identifier, name);
@@ -166,6 +166,8 @@ public abstract class Module {
      *
      * <p> Is not secure, and should <i>only</i> be used to produce identifiers
      * for {@link Module Modules}.
+     *
+     * <p> Good way to generate random string cheaply and easily.
      */
     private static final class RandomString {
 
@@ -201,7 +203,7 @@ public abstract class Module {
          *
          * @return new random string
          */
-        public String nextString() {
+        public String newString() {
             for (int x = 0; x < buf.length; ++x) {
                 buf[x] = symbols[random.nextInt(symbols.length)];
             }
