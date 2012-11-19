@@ -1,7 +1,6 @@
 package edu.ata.driving.modules;
 
 import java.util.Hashtable;
-import java.util.Random;
 
 /**
  * Base class used to represent all elements of the robot. Whether it be an arm,
@@ -12,27 +11,12 @@ import java.util.Random;
  * will, by convention, enable modules. There are many possibilities of how to
  * use modules, and how they should behave.
  *
- * <p> All modules use identifiers, and are stored within
- * {@link Module#MODULES}. This identifier is used to compare modules in
- * {@link Object#equals(java.lang.Object)}. It is a completely randomly
- * generated 16 character string that uses {@link RandomString} to generate
- * itself. It is guaranteed to never produce the same string twice.
- *
- * <p> The reason for this identifier to exist while hash codes exist already is
- * to do three things.
- *
- * <p>1. To provide a far for accurate way to guarantee things are not the same.
- *
- * <p> 2. To eliminate the link between an object and its identifier. The two
- * things are by definition completely separate (Unlike hash codes).
- *
- * <p> 3. To provide a way to access modules easily in {@link Module#MODULES}.
- *
- * <p> This makes it so that module identifiers have the same relation to one
- * another as any other. (In A, B, C, {@code A vs C} is the same as
- * {@code B vs A} and {@code A vs B}, etc.)
- *
- * <p> {@code (new Module("Hello")).equals(new Module("Hello")) != true}
+ * <p> Modules have identifiers that are all unique. They can be used to
+ * identify which module object you are using because even two objects of the
+ * same module have different identifiers. The identifier is just an
+ * incrementing value, so each module you create has an identifier of how many
+ * modules were created beforehand. (first modules created is 1, second is 2,
+ * etc.)
  *
  * @author Joel Gallant
  */
@@ -46,9 +30,6 @@ public abstract class Module {
      * module have accidentally been made (Seeing as they are different in their
      * identifier).
      *
-     * <p> Take caution in using this field. Removing elements has been
-     * disabled.
-     *
      * <p> <b>READ ONLY. DOES NOT REMOVE ELEMENTS.</b>
      */
     public static final Hashtable MODULES = new Hashtable() {
@@ -59,7 +40,6 @@ public abstract class Module {
             return key;
         }
     };
-    private static int count = 0;
     private final String name;
     private final String identifier;
 
@@ -82,8 +62,11 @@ public abstract class Module {
      */
     public Module(String name) {
         this.name = name;
-        this.identifier = String.valueOf(++count);
-        MODULES.put(identifier, name);
+        synchronized (MODULES) {
+            // Set the identifier to the size of modules (1 higher than others)
+            this.identifier = String.valueOf(MODULES.size());
+            MODULES.put(identifier, name);
+        }
     }
 
     /**
@@ -100,33 +83,11 @@ public abstract class Module {
     }
 
     /**
-     * Returns the unique identifier of the module.
+     * Returns the unique identifier of the module. Is an integer set when
+     * constructed in the order of modules created. (first modules created is 1,
+     * second is 2, etc.)
      *
-     * <p> All modules use identifiers, and are stored within
-     * {@link Module#MODULES}. This identifier is used to compare modules in
-     * {@link Object#equals(java.lang.Object)}. It is a completely randomly
-     * generated 16 character string that uses {@link RandomString} to generate
-     * itself. It is guaranteed to never produce the same string twice.
-     *
-     * <p> The reason for this identifier to exist while hash codes exist
-     * already is to do three things.
-     *
-     * <p>1. To provide a far for accurate way to guarantee things are not the
-     * same.
-     *
-     * <p> 2. To eliminate the link between an object and its identifier. The
-     * two things are by definition completely separate (Unlike hash codes).
-     *
-     * <p> 3. To provide a way to access modules easily in
-     * {@link Module#MODULES}.
-     *
-     * <p> This makes it so that module identifiers have the same relation to
-     * one another as any other. (In A, B, C, {@code A vs C} is the same as
-     * {@code B vs A} and {@code A vs B}, etc.)
-     *
-     * <p> {@code (new Module("Hello")).equals(new Module("Hello")) != true}
-     *
-     * @return 16 character identifier of the module
+     * @return unique identifier
      */
     public String getIdentifier() {
         return identifier;
