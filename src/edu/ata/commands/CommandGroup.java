@@ -9,7 +9,7 @@ import java.util.Vector;
  *
  * @author Joel Gallant
  */
-public class CommandGroup extends Command {
+public class CommandGroup implements Command {
 
     static final int SEQUENTIAL = 0, CONCURRENT = 1;
     Vector autoBuffer = new Vector();
@@ -86,7 +86,7 @@ public class CommandGroup extends Command {
     /**
      * Basic command that waits for a certain amount of time.
      */
-    public static class Pause extends Command {
+    public static class Pause implements Command {
 
         private final double pause;
 
