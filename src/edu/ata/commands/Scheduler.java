@@ -54,7 +54,7 @@ public class Scheduler {
 
     /**
      * Runs the commands in the order of the index of the array within a new
-     * thread.
+     * thread. Is not done when this method is.
      *
      * @param commands commands to run
      */
@@ -86,7 +86,8 @@ public class Scheduler {
     }
 
     /**
-     * Runs all the commands at the same time within a new thread.
+     * Runs all the commands at the same time within a new thread. Is not done
+     * when this method is.
      *
      * @param commands commands to run
      */
