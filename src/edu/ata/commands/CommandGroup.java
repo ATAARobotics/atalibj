@@ -7,7 +7,7 @@ import java.util.Vector;
  * Basic {@link Command} that contains multiple commands within itself. Is
  * capable of running them concurrently or sequentially.
  *
- * In practice, it is a command that has commands within itself. It is important
+ * <p> In practice, it is a command that has commands within itself. It is important
  * not to recursively add {@link CommandGroup Command groups} to each other,
  * since that would cause a stack overflow.
  *
