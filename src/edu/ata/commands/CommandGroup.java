@@ -7,17 +7,22 @@ import java.util.Vector;
  * Basic {@link Command} that contains multiple commands within itself. Is
  * capable of running them concurrently or sequentially.
  *
+ * In practice, it is a command that has commands within itself. It is important
+ * not to recursively add {@link CommandGroup Command groups} to each other,
+ * since that would cause a stack overflow.
+ *
  * @author Joel Gallant
  */
 public class CommandGroup implements Command {
 
-    static final int SEQUENTIAL = 0, CONCURRENT = 1;
-    Vector autoBuffer = new Vector();
-    int[] typesBuffer = new int[0];
+    private static final int SEQUENTIAL = 0, CONCURRENT = 1;
+    private Vector autoBuffer = new Vector();
+    private int[] typesBuffer = new int[0];
 
     /**
      * Adds a command to be run, and stop the next command from running until it
-     * is done.
+     * is complete. All previous commands will be run beforehand, and all the
+     * next commands will be run afterwards.
      *
      * @param command command to add
      */
@@ -27,7 +32,9 @@ public class CommandGroup implements Command {
 
     /**
      * Adds a command to be run with all other concurrent commands around
-     * itself.
+     * itself. All previous sequential commands will be run beforehand, and all
+     * the next sequential commands will be run afterwards. All concurrent
+     * commands beforehand and afterwards are run at the same time.
      *
      * @param command command to add
      */
@@ -44,8 +51,9 @@ public class CommandGroup implements Command {
     }
 
     /**
-     * Adds a waiting period between two commands.
+     * Adds a waiting period between two commands. Is a sequential command.
      *
+     * @see Pause
      * @param time time to wait
      */
     protected void addPause(final double time) {
@@ -84,7 +92,8 @@ public class CommandGroup implements Command {
     }
 
     /**
-     * Basic command that waits for a certain amount of time.
+     * Basic command that waits for a certain amount of time. Is accessible to
+     * anywhere in the code.
      */
     public static class Pause implements Command {
 
