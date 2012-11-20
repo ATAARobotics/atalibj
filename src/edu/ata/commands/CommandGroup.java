@@ -13,7 +13,7 @@ import java.util.Vector;
  *
  * @author Joel Gallant
  */
-public class CommandGroup implements Command {
+public class CommandGroup extends Command {
 
     private static final int SEQUENTIAL = 0, CONCURRENT = 1;
     private Vector autoBuffer = new Vector();
@@ -95,7 +95,7 @@ public class CommandGroup implements Command {
      * Basic command that waits for a certain amount of time. Is accessible to
      * anywhere in the code.
      */
-    public static class Pause implements Command {
+    public static class Pause extends Command {
 
         private final double pause;
 
@@ -105,6 +105,7 @@ public class CommandGroup implements Command {
          * @param seconds seconds to wait
          */
         public Pause(double seconds) {
+            super("Pause");
             this.pause = seconds;
         }
 

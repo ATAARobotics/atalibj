@@ -14,5 +14,16 @@ package edu.ata.commands;
  * @see Scheduler
  * @author Joel Gallant
  */
-public interface Command extends Runnable {
+public abstract class Command implements Runnable {
+
+    private final String name;
+
+    public Command() {
+        this.name = "Unamed command";
+    }
+
+    public Command(String name) {
+        this.name = name;
+    }
+
 }
