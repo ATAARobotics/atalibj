@@ -28,7 +28,9 @@ package edu.ata.main;
 
 import edu.ata.driving.robot.DefaultRobot;
 import edu.ata.driving.robot.Robot;
+import edu.ata.user.UserInfo;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * This is the 'main' class of the robot code. All instructions are rooted to
@@ -77,6 +79,7 @@ public final class GamePeriods extends IterativeRobot {
      */
     public void robotInit() {
         this.robot.init();
+        UserInfo.getInstance().updateAll();
     }
 
     /**
@@ -86,6 +89,7 @@ public final class GamePeriods extends IterativeRobot {
      * displaying data from the robot)
      */
     public void disabledInit() {
+        UserInfo.getInstance().updateAll();
         robot.disabled();
     }
 
@@ -96,7 +100,17 @@ public final class GamePeriods extends IterativeRobot {
      * autonomous is started.
      */
     public void autonomousInit() {
+        UserInfo.getInstance().updateAutonomous();
         robot.autonomous();
+    }
+
+    /**
+     * Periodic code for autonomous mode.
+     * 
+     * <p> We do not use this method.
+     */
+    public void autonomousPeriodic() {
+        Timer.delay(0.001);
     }
 
     /**

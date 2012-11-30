@@ -18,12 +18,30 @@ public abstract class Command implements Runnable {
 
     private final String name;
 
+    /**
+     * Creates the command without a name. Identical to calling :
+     *
+     * <pre>this("Unamed command");</pre>
+     */
     public Command() {
-        this.name = "Unamed command";
+        this("Unamed command");
     }
 
+    /**
+     * Creates the command with the given name.
+     *
+     * @param name name of the command
+     */
     public Command(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns the given name. When the name is not set, it is "Unamed command".
+     *
+     * @return name of the command
+     */
+    public String getName() {
+        return name;
+    }
 }

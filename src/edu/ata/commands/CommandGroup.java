@@ -109,6 +109,9 @@ public class CommandGroup extends Command {
             this.pause = seconds;
         }
 
+        /**
+         * Waits the the given amount of time.
+         */
         public void run() {
             Timer.delay(pause);
         }
