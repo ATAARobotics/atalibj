@@ -1,6 +1,8 @@
 package edu.ata.user;
 
+import edu.ata.auto.AutonomousMode;
 import edu.ata.auto.AutonomousSelector;
+import edu.ata.auto.ScriptAutonomousMode;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -44,7 +46,14 @@ public class UserInfo {
      * Updates all data - input and output.
      */
     public void updateAll() {
+        updateInfo();
         updateAutonomous();
+    }
+
+    /**
+     * Receives all info about robot.
+     */
+    public void updateInfo() {
     }
 
     /**
@@ -62,6 +71,7 @@ public class UserInfo {
     private void getAutonomous() {
         if (scriptOn()) {
             // Make autonomous mode the script
+            AutonomousSelector.getInstance().set(new ScriptAutonomousMode(userScript()));
         } else {
             // Make autonomous mode the current selected mode
             AutonomousSelector.getInstance().set(currentAutonomousMode());
@@ -69,18 +79,23 @@ public class UserInfo {
     }
 
     private String currentAutonomousMode() {
+        if (!preferences.containsKey("currentAuto")) {
+            preferences.putString("currentAuto", "DEFAULT");
+        }
         return preferences.getString("currentAuto", null);
     }
 
-    private String autoChoices() {
-        return SmartDashboard.getString("autoChoices", null);
-    }
-
     private boolean scriptOn() {
+        if (!preferences.containsKey("scriptOn")) {
+            preferences.putBoolean("scriptOn", true);
+        }
         return preferences.getBoolean("scriptOn", userScript() != null);
     }
 
     private String userScript() {
+        if (!preferences.containsKey("userScript")) {
+            preferences.putString("userScript", "#INSERT SCRIPT HERE");
+        }
         return preferences.getString("userScript", null);
     }
 }
