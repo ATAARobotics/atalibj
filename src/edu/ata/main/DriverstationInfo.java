@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public final class DriverstationInfo {
 
     private static final DriverStation DS = DriverStation.getInstance();
+    public static final String DISABLED = "Disabled", TELEOP = "Teleop", AUTONOMOUS = "Autonomous";
 
     /**
      * Gets the location of the team's driver station controls.
@@ -75,8 +76,8 @@ public final class DriverstationInfo {
      * time is reset to 0.0 seconds At the beginning of teleop, the time is
      * reset to +15.0 seconds If the robot is disabled, this returns 0.0 seconds
      *
-     * <p> <b> Warning: This is not an official time (so it cannot be used to argue
-     * with referees) </b>
+     * <p> <b> Warning: This is not an official time (so it cannot be used to
+     * argue with referees) </b>
      *
      * @return Match time in seconds since the beginning of autonomous
      */
@@ -90,17 +91,8 @@ public final class DriverstationInfo {
      * @return String "Teleop" , "Autonomous" or "Disabled".
      */
     public static String getGamePeriod() {
-        if (DS.isEnabled()) {
-            if (DS.isOperatorControl()) {
-                return "Teleop";
-            } else if (DS.isAutonomous()) {
-                return "Autonomous";
-            } else {
-                return "Disabled";
-            }
-        } else {
-            return "Disabled";
-        }
+        return DS.isEnabled() ? (DS.isOperatorControl() ? TELEOP
+                : (DS.isAutonomous() ? AUTONOMOUS : DISABLED)) : DISABLED;
     }
 
     /**
