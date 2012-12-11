@@ -1,8 +1,7 @@
 package edu.ata.user;
 
-import edu.ata.auto.AutonomousMode;
 import edu.ata.auto.AutonomousSelector;
-import edu.ata.auto.ScriptAutonomousMode;
+import edu.ata.auto.modes.ScriptAutonomousMode;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
