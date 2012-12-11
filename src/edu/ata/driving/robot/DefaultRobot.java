@@ -11,11 +11,11 @@ import edu.ata.driving.modules.Module;
  */
 public abstract class DefaultRobot extends Robot {
 
-    private final AutonomousMode autonomousMode;
+    private AutonomousMode autonomousMode;
 
     /**
      * Constructs the robot with its modules, a name and autonomous mode.
-     * 
+     *
      * @param modules modules used in the robot
      * @param name name of the robot
      * @param autonomousMode autonomous mode to be used
@@ -35,5 +35,9 @@ public abstract class DefaultRobot extends Robot {
 
     public void autonomous() {
         autonomousMode.run();
+    }
+
+    public void setAutonomous(AutonomousMode autonomousMode) {
+        this.autonomousMode = autonomousMode;
     }
 }
