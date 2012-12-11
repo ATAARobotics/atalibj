@@ -8,16 +8,6 @@ package edu.ata.commands;
 public class Scheduler {
 
     /**
-     * Runs the command within the same thread. Same as calling
-     * {@code command.run()}.
-     *
-     * @param command command to run
-     */
-    public static void run(Command command) {
-        command.run();
-    }
-
-    /**
      * Runs the command within a new thread. Is not finished when this method
      * is.
      *
@@ -67,7 +57,8 @@ public class Scheduler {
     }
 
     /**
-     * Runs all the commands at the same time within the current thread.
+     * Runs all the commands at the same time within the current thread. Starts
+     * them in the order of the index.
      *
      * @param commands commands to run
      */
