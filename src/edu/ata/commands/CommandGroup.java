@@ -7,10 +7,11 @@ import java.util.Vector;
  * Basic {@link Command} that contains multiple commands within itself. Is
  * capable of running them concurrently or sequentially.
  *
- * <p> In practice, it is a command that has commands within itself. It is important
- * not to recursively add {@link CommandGroup Command groups} to each other,
- * since that would cause a stack overflow.
+ * <p> In practice, it is a command that has commands within itself. It is
+ * important not to add a command group into itself, seeing as that would cause
+ * a stack overflow.
  *
+ * @see Command
  * @author Joel Gallant
  */
 public class CommandGroup extends Command {
@@ -20,9 +21,30 @@ public class CommandGroup extends Command {
     private int[] typesBuffer = new int[0];
 
     /**
+     * Creates group with it's default name (name of the class).
+     *
+     * @see Command#Command()
+     */
+    public CommandGroup() {
+    }
+
+    /**
+     * Creates group with a name.
+     *
+     * @param name name representing group
+     * @see Command#Command(java.lang.String)
+     */
+    public CommandGroup(String name) {
+        super(name);
+    }
+
+    /**
      * Adds a command to be run, and stop the next command from running until it
      * is complete. All previous commands will be run beforehand, and all the
      * next commands will be run afterwards.
+     *
+     * <p> <i> Does not run the command. Adds it to the 'queue', meaning that it
+     * will be run in {@link CommandGroup#run()}. </i>
      *
      * @param command command to add
      */
@@ -35,6 +57,9 @@ public class CommandGroup extends Command {
      * itself. All previous sequential commands will be run beforehand, and all
      * the next sequential commands will be run afterwards. All concurrent
      * commands beforehand and afterwards are run at the same time.
+     *
+     * <p> <i> Does not run the command. Adds it to the 'queue', meaning that it
+     * will be run in {@link CommandGroup#run()}. </i>
      *
      * @param command command to add
      */
@@ -71,7 +96,7 @@ public class CommandGroup extends Command {
                     Scheduler.runConcurrently(concurrentBuffer);
                     concurrentBuffer = null;
                 }
-                Scheduler.run((Command) autoBuffer.elementAt(x));
+                ((Command) autoBuffer.elementAt(x)).run();
             } else if (typesBuffer[x] == CONCURRENT) {
                 if (concurrentBuffer != null) {
                     Command[] tmp = concurrentBuffer;
