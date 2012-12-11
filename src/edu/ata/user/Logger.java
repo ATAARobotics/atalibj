@@ -206,8 +206,7 @@ public class Logger {
         }
         DriverStationLCD.getInstance().println(line, lineNum, msg);
         DriverStationLCD.getInstance().updateLCD();
-        lineNum++;
-        if (lineNum > 6) {
+        if (++lineNum > 6) {
             lineNum = 1;
         }
     }
