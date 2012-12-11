@@ -5,7 +5,8 @@ package edu.ata.commands;
  * but is used to make the intention of sub-classes clearer.
  *
  * <p> No real general structure applies to all commands, and it is to the
- * discretion of the programmer to apply it in a meaningful way.
+ * discretion of the programmer to apply it in a meaningful way. Be sure to
+ * clarify in documentation.
  *
  * <p> To use commands successfully (not using {@code command.run()}), use the
  * {@link Scheduler} class to properly call commands in the robot's context.
@@ -19,12 +20,10 @@ public abstract class Command implements Runnable {
     private final String name;
 
     /**
-     * Creates the command without a name. Identical to calling :
-     *
-     * <pre>this("Unamed command");</pre>
+     * Creates the command without a name. Uses the class' name as its name.
      */
     public Command() {
-        this("Unamed command");
+        this.name = getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1);
     }
 
     /**
@@ -37,7 +36,8 @@ public abstract class Command implements Runnable {
     }
 
     /**
-     * Returns the given name. When the name is not set, it is "Unamed command".
+     * Returns the given name. When the name is explicitly set, it will be the
+     * "Simple Name" (Class name) of the class.
      *
      * @return name of the command
      */
