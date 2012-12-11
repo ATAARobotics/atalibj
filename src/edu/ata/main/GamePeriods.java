@@ -26,6 +26,8 @@
  */
 package edu.ata.main;
 
+import edu.ata.auto.AutonomousMode;
+import edu.ata.driving.modules.Module;
 import edu.ata.driving.robot.DefaultRobot;
 import edu.ata.driving.robot.Robot;
 import edu.ata.user.UserInfo;
@@ -48,8 +50,9 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public final class GamePeriods extends IterativeRobot {
 
-    private static final Robot DEFAULT_ROBOT = new DefaultRobot(null, "Fake Robot", null) {
+    private static final Robot DEFAULT_ROBOT = new DefaultRobot(new Module[0], "Fake Robot", new AutonomousMode("Fake Auto")) {
         public void teleopLoop() {
+            System.out.println("Default robot running... Overload me!");
         }
     };
     private final Robot robot;
@@ -84,9 +87,6 @@ public final class GamePeriods extends IterativeRobot {
 
     /**
      * Method that is run once before disabled period starts.
-     *
-     * <p> Should not be necessary, but exists just in case. (Possible use -
-     * displaying data from the robot)
      */
     public void disabledInit() {
         UserInfo.getInstance().updateAll();
@@ -106,7 +106,7 @@ public final class GamePeriods extends IterativeRobot {
 
     /**
      * Periodic code for autonomous mode.
-     * 
+     *
      * <p> We do not use this method.
      */
     public void autonomousPeriodic() {
