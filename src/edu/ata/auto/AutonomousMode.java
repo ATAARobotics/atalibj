@@ -1,7 +1,7 @@
 package edu.ata.auto;
 
-import edu.ata.commands.Command;
-import edu.ata.commands.CommandGroup;
+import edu.ata.command.Command;
+import edu.ata.command.CommandGroup;
 
 /**
  * Basic autonomous mode that takes {@link Command commands} and runs them
