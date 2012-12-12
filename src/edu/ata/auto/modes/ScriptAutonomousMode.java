@@ -1,7 +1,7 @@
 package edu.ata.auto.modes;
 
 import edu.ata.auto.AutonomousMode;
-import edu.ata.commands.Command;
+import edu.ata.commands.ScriptCommand;
 import edu.ata.gordian.Script;
 
 /**
@@ -15,27 +15,14 @@ import edu.ata.gordian.Script;
  */
 public class ScriptAutonomousMode extends AutonomousMode {
 
-    private final String script;
-
     /**
      * Creates the autonomous mode with the full script. The script is
      * 'unchangeable', meaning that it cannot change values at any time.
      *
      * @param script string representation of script
      */
-    public ScriptAutonomousMode(final String script) {
+    public ScriptAutonomousMode(String script) {
         super("Script Autonomous Mode");
-        this.script = script;
-        addSequential(new ScriptCommand());
-    }
-
-    private class ScriptCommand extends Command {
-
-        private ScriptCommand() {
-        }
-
-        public void run() {
-            Script.run(script);
-        }
+        addSequential(new ScriptCommand(script));
     }
 }

@@ -1,4 +1,4 @@
-package edu.ata.commands;
+package edu.ata.command;
 
 /**
  * Static utility class used to manipulate {@link Command commands}.

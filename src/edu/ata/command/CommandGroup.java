@@ -1,4 +1,4 @@
-package edu.ata.commands;
+package edu.ata.command;
 
 import edu.wpi.first.wpilibj.Timer;
 import java.util.Vector;

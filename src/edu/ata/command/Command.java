@@ -1,4 +1,4 @@
-package edu.ata.commands;
+package edu.ata.command;
 
 /**
  * Command used for running. Is semantically the exact same as {@link Runnable},
