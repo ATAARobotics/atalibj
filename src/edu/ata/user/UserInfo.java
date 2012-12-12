@@ -2,6 +2,7 @@ package edu.ata.user;
 
 import edu.ata.auto.AutonomousSelector;
 import edu.ata.auto.modes.ScriptAutonomousMode;
+import edu.ata.main.DriverstationInfo;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -37,6 +38,8 @@ public class UserInfo {
         return instance;
     }
     private final Preferences preferences = Preferences.getInstance();
+    private long lastPPSCheck = System.currentTimeMillis();
+    private int lastPacketsCheck = DriverstationInfo.getPacketCount();
 
     private UserInfo() {
     }
@@ -53,6 +56,7 @@ public class UserInfo {
      * Receives all info about robot.
      */
     public void updateInfo() {
+        SmartDashboard.putNumber("Packets Per Second", packetsPerSecond());
     }
 
     /**
@@ -75,6 +79,22 @@ public class UserInfo {
             // Make autonomous mode the current selected mode
             AutonomousSelector.getInstance().set(currentAutonomousMode());
         }
+    }
+    
+    private double packetsPerSecond() {
+        return packetsSinceLastCheck() / secondsSinceLastCheck();
+    }
+
+    private long secondsSinceLastCheck() {
+        long s = (lastPPSCheck - System.currentTimeMillis());
+        lastPPSCheck = System.currentTimeMillis();
+        return s / 1000;
+    }
+
+    private int packetsSinceLastCheck() {
+        int s = DriverstationInfo.getPacketCount() - lastPacketsCheck;
+        lastPacketsCheck = DriverstationInfo.getPacketCount();
+        return s;
     }
 
     private String currentAutonomousMode() {
