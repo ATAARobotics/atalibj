@@ -15,13 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class UserInfo {
 
-    // Fields:
-    // #SmartDashboard
-    // autoChoices = A list of the currently available autonomous modes seperated by commas (uses widget)
-    // #Preferences
-    // currentAuto = The current autonomous mode's name that will be run
-    // scriptOn = A boolean telling the program whether or not to use the script
-    // userScript = The script that the user has inputed into the script box
     private static UserInfo instance;
 
     /**
