@@ -2,6 +2,7 @@ package edu.ata.user;
 
 import edu.ata.auto.AutonomousSelector;
 import edu.ata.auto.modes.ScriptAutonomousMode;
+import edu.ata.driving.modules.Module;
 import edu.ata.main.DriverstationInfo;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -57,6 +58,7 @@ public class UserInfo {
      */
     public void updateInfo() {
         SmartDashboard.putNumber("Packets Per Second", packetsPerSecond());
+        SmartDashboard.putString("Modules", Module.MODULES.toString());
     }
 
     /**
