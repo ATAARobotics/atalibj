@@ -73,7 +73,7 @@ public class Logger {
      * @param msg Message to send to the user.
      */
     public static void log(Urgency urgency, String msg) {
-        String usrMsg = null;
+        String usrMsg = "";
         if (urgency == Urgency.URGENT) {
             usrMsg = "Urgent@" + DriverstationInfo.getMatchTime() + "- " + msg;
             displayLCDMessage(usrMsg);
