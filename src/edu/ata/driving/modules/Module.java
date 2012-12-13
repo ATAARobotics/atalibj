@@ -78,7 +78,7 @@ public abstract class Module {
         synchronized (MODULES) {
             // Set the identifier to the size of modules (1 higher than others)
             this.identifier = String.valueOf(MODULES.size());
-            MODULES.put(identifier, name);
+            MODULES.put(identifier, toString());
         }
     }
 
@@ -204,7 +204,7 @@ public abstract class Module {
         return (obj instanceof Module) && ((Module) obj).identifier.equals(this.identifier);
     }
 
-    public String toString() {
+    public final String toString() {
         return getName() + "@" + getIdentifier();
     }
 }
