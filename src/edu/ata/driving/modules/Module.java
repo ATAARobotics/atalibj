@@ -1,5 +1,6 @@
 package edu.ata.driving.modules;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 /**
@@ -38,6 +39,18 @@ public abstract class Module {
          */
         public synchronized Object remove(Object key) {
             return key;
+        }
+
+        public synchronized String toString() {
+            String s = "";
+            if(isEmpty()) {
+                return s;
+            }
+            Enumeration e = elements();
+            while (e.hasMoreElements()) {
+                s += e.nextElement().toString() + " | ";
+            }
+            return s.substring(0, s.length() - 3);
         }
     };
     private final String name;
@@ -189,5 +202,9 @@ public abstract class Module {
      */
     public boolean equals(Object obj) {
         return (obj instanceof Module) && ((Module) obj).identifier.equals(this.identifier);
+    }
+
+    public String toString() {
+        return getName() + "@" + getIdentifier();
     }
 }
