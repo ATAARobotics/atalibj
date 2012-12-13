@@ -26,7 +26,7 @@
  */
 package edu.ata.main;
 
-import edu.ata.auto.AutonomousMode;
+import edu.ata.auto.AutonomousSelector;
 import edu.ata.driving.modules.Module;
 import edu.ata.driving.robot.DefaultRobot;
 import edu.ata.driving.robot.Robot;
@@ -50,7 +50,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public final class GamePeriods extends IterativeRobot {
 
-    private static final Robot DEFAULT_ROBOT = new DefaultRobot(new Module[0], "Fake Robot", new AutonomousMode("Fake Auto")) {
+    private static final Robot DEFAULT_ROBOT = new DefaultRobot(new Module[0], "Fake Robot", AutonomousSelector.getInstance()) {
         public void teleopLoop() {
             System.out.println("Default robot running... Overload me!");
         }
