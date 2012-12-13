@@ -78,6 +78,15 @@ public final class GamePeriods extends IterativeRobot {
     }
 
     /**
+     * Returns the currently running robot.
+     *
+     * @return robot being used
+     */
+    public Robot getRobot() {
+        return robot;
+    }
+
+    /**
      * Method called when the robot is first started.
      */
     public void robotInit() {
