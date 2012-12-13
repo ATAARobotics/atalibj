@@ -1,5 +1,6 @@
 package edu.ata.driving.robot;
 
+import edu.ata.auto.AutonomousSelector;
 import edu.ata.driving.modules.Module;
 import java.util.Hashtable;
 
@@ -17,8 +18,20 @@ import java.util.Hashtable;
  */
 public abstract class Robot {
 
+    private static Robot robot;
     private final Hashtable modules;
     private final String name;
+
+    public static Robot getRobot() {
+        if (robot == null) {
+            robot = new DefaultRobot(new Module[0], "Fake Robot", AutonomousSelector.getInstance()) {
+                public void teleopLoop() {
+                    System.out.println("Default robot running... Overload me!");
+                }
+            };
+        }
+        return robot;
+    }
 
     /**
      * Creates robot with its modules and name. The name of the robot should be
