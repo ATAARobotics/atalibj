@@ -26,9 +26,6 @@
  */
 package edu.ata.main;
 
-import edu.ata.auto.AutonomousSelector;
-import edu.ata.driving.modules.Module;
-import edu.ata.driving.robot.DefaultRobot;
 import edu.ata.driving.robot.Robot;
 import edu.ata.user.UserInfo;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -50,32 +47,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public final class GamePeriods extends IterativeRobot {
 
-    private static final Robot DEFAULT_ROBOT = new DefaultRobot(new Module[0], "Fake Robot", AutonomousSelector.getInstance()) {
-        public void teleopLoop() {
-            System.out.println("Default robot running... Overload me!");
-        }
-    };
-    private final Robot robot;
-
-    /**
-     * Creates the object. <i> Should only be used by the VM.</i> The
-     * {@link GamePeriods} object is automatically instantiated by the class
-     * loader. It assumes a public constructor with no arguments.
-     */
-    public GamePeriods() {
-        this(DEFAULT_ROBOT);
-    }
-
-    /**
-     * For testing purposes. Can run a robot that is passed from the
-     * constructor.
-     *
-     * @param robot robot to use
-     */
-    public GamePeriods(Robot robot) {
-        super();
-        this.robot = robot;
-    }
+    private static final Robot robot = Robot.getRobot();
 
     /**
      * Returns the currently running robot.
@@ -90,7 +62,7 @@ public final class GamePeriods extends IterativeRobot {
      * Method called when the robot is first started.
      */
     public void robotInit() {
-        this.robot.init();
+        robot.init();
         UserInfo.getInstance().updateAll();
     }
 
