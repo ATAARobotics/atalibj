@@ -43,7 +43,7 @@ public abstract class Module {
 
         public synchronized String toString() {
             String s = "";
-            if(isEmpty()) {
+            if (isEmpty()) {
                 return s;
             }
             Enumeration e = elements();
@@ -204,6 +204,12 @@ public abstract class Module {
         return (obj instanceof Module) && ((Module) obj).identifier.equals(this.identifier);
     }
 
+    /**
+     * Returns a string representation of the object. Is equivalent to:
+     * <p><code>getName() + (char)64 + getIdentifier()</code>
+     *
+     * @return a string representation of the object.
+     */
     public final String toString() {
         return getName() + "@" + getIdentifier();
     }
