@@ -91,7 +91,7 @@ public class XboxController extends Module {
      *
      * @return joystick if it exists
      */
-    public Joystick toController() {
+    public Joystick toJoystick() {
         return controller;
     }
 
