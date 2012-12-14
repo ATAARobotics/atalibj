@@ -15,7 +15,20 @@ import edu.wpi.first.wpilibj.DriverStation;
 public final class DriverstationInfo {
 
     private static final DriverStation DS = DriverStation.getInstance();
-    public static final String DISABLED = "Disabled", TELEOP = "Teleop", AUTONOMOUS = "Autonomous";
+    /**
+     * Disabled mode. Used in {@link DriverstationInfo#getGamePeriod()}.
+     */
+    public static final String DISABLED = "Disabled",
+            /**
+             * Teleoperated mode. Used in
+             * {@link DriverstationInfo#getGamePeriod()}.
+             */
+            TELEOP = "Teleop",
+            /**
+             * Autonomous mode. Used in
+             * {@link DriverstationInfo#getGamePeriod()}.
+             */
+            AUTONOMOUS = "Autonomous";
 
     /**
      * Gets the location of the team's driver station controls.

@@ -22,6 +22,11 @@ public abstract class Robot {
     private final Hashtable modules;
     private final String name;
 
+    /**
+     * Returns the currently used robot.
+     *
+     * @return running robot
+     */
     public static Robot getRobot() {
         if (robot == null) {
             robot = new DefaultRobot(new Module[0], "Fake Robot", AutonomousSelector.getInstance()) {
