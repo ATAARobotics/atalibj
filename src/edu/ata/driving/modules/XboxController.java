@@ -46,10 +46,23 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author Joel Gallant
  */
 // Does not extend Joystick because joystick should not be created before enable()
-public class XboxController extends Module {
+public class XboxController extends Module implements Module.Disableable {
 
-    private Joystick controller;
-    private final int port;
+    private final Joystick controller;
+    private boolean enabled;
+
+    /**
+     * Creates the Xbox Controller object on the specified port. If another
+     * {@link Joystick} object exists on the port, an error will be thrown (very
+     * low level).
+     *
+     * @param name name of the module
+     * @param port port of joystick on DriverStation
+     */
+    public XboxController(String name, int port) {
+        super(name);
+        this.controller = new Joystick(port);
+    }
 
     /**
      * Creates the Xbox Controller object on the specified port. If another
@@ -59,140 +72,165 @@ public class XboxController extends Module {
      * @param port port of joystick on DriverStation
      */
     public XboxController(int port) {
-        super("XboxController Port " + port);
-        this.port = port;
+        this("XboxController Port " + port, port);
     }
 
-    /**
-     * Enables features of this class. Nothing can be used before calling this
-     * method.
-     */
     public void enable() {
-        if (controller == null) {
-            controller = new Joystick(port);
-        }
+        enabled = true;
     }
 
-    /**
-     * Checks to see if the joystick is usable. If this returns true, you should
-     * be safe to use methods in this class (assuming not in concurrent
-     * context).
-     *
-     * @return whether joystick is usable
-     */
+    public void disable() {
+        enabled = false;
+    }
+
     public boolean isEnabled() {
-        return controller != null;
+        return enabled;
     }
 
     /**
-     * 'Converts' the controller into the native {@link Joystick} object that
-     * lays underneath this class. If the controller has not been enabled yet,
-     * this will return null.
+     * Returns the {@link Joystick} object underneath this class.
      *
-     * @return joystick if it exists
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
+     * @return joystick object being used
      */
-    public Joystick toJoystick() {
-        return controller;
+    public Joystick getJoystick() {
+        if (isEnabled()) {
+            return controller;
+        } else {
+            throw new IllegalStateException("XboxController module accessed has not been enabled - " + getName());
+        }
     }
 
     /**
      * Returns whether or not the A button is currently being pressed by the
      * user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether A button is pressed
      */
     public boolean getAButton() {
-        return controller.getRawButton(1);
+        return getJoystick().getRawButton(1);
     }
 
     /**
      * Returns whether or not the B button is currently being pressed by the
      * user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether B button is pressed
      */
     public boolean getBButton() {
-        return controller.getRawButton(2);
+        return getJoystick().getRawButton(2);
     }
 
     /**
      * Returns whether or not the X button is currently being pressed by the
      * user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether X button is pressed
      */
     public boolean getXButton() {
-        return controller.getRawButton(3);
+        return getJoystick().getRawButton(3);
     }
 
     /**
      * Returns whether or not the Y button is currently being pressed by the
      * user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether Y button is pressed
      */
     public boolean getYButton() {
-        return controller.getRawButton(4);
+        return getJoystick().getRawButton(4);
     }
 
     /**
      * Returns whether or not the left bumper button is currently being pressed
      * by the user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether left bumper button is pressed
      */
     public boolean getLeftBumper() {
-        return controller.getRawButton(5);
+        return getJoystick().getRawButton(5);
     }
 
     /**
      * Returns whether or not the right bumper button is currently being pressed
      * by the user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether right bumper button is pressed
      */
     public boolean getRightBumper() {
-        return controller.getRawButton(6);
+        return getJoystick().getRawButton(6);
     }
 
     /**
      * Returns whether or not the back button is currently being pressed by the
      * user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether back button is pressed
      */
     public boolean getBackButton() {
-        return controller.getRawButton(7);
+        return getJoystick().getRawButton(7);
     }
 
     /**
      * Returns whether or not the start button is currently being pressed by the
      * user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether start button is pressed
      */
     public boolean getStartButton() {
-        return controller.getRawButton(8);
+        return getJoystick().getRawButton(8);
     }
 
     /**
      * Returns whether or not the left analog stick is currently being pressed
      * by the user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether left analog stick is pressed
      */
     public boolean getLeftJoystickButton() {
-        return controller.getRawButton(9);
+        return getJoystick().getRawButton(9);
     }
 
     /**
      * Returns whether or not the right analog stick is currently being pressed
      * by the user.
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return whether right analog stick is pressed
      */
     public boolean getRightJoystickButton() {
-        return controller.getRawButton(10);
+        return getJoystick().getRawButton(10);
     }
 
     /**
@@ -200,10 +238,13 @@ public class XboxController extends Module {
      *
      * <p> Left = Negative, Right = Positive
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return left joystick x axis
      */
     public double getLeftX() {
-        return controller.getRawAxis(1);
+        return getJoystick().getRawAxis(1);
     }
 
     /**
@@ -211,10 +252,13 @@ public class XboxController extends Module {
      *
      * <p> Up = Negative, Down = Positive
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return left joystick y axis
      */
     public double getLeftY() {
-        return controller.getRawAxis(2);
+        return getJoystick().getRawAxis(2);
     }
 
     /**
@@ -222,10 +266,13 @@ public class XboxController extends Module {
      *
      * <p> Left = Negative, Right = Positive
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return right joystick x axis
      */
     public double getRightX() {
-        return controller.getRawAxis(4);
+        return getJoystick().getRawAxis(4);
     }
 
     /**
@@ -233,10 +280,13 @@ public class XboxController extends Module {
      *
      * <p> Up = Negative, Down = Positive
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return right joystick y axis
      */
     public double getRightY() {
-        return controller.getRawAxis(5);
+        return getJoystick().getRawAxis(5);
     }
 
     /**
@@ -245,10 +295,13 @@ public class XboxController extends Module {
      *
      * <p> Left = Positive, Right = Negative
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return triggers
      */
     public double getTriggers() {
-        return controller.getRawAxis(3);
+        return getJoystick().getRawAxis(3);
     }
 
     /**
@@ -256,9 +309,12 @@ public class XboxController extends Module {
      *
      * <p><i> Apparently very buggy - not tested. </i>
      *
+     * <p> <i> Throws an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()})</i>
+     *
      * @return directional pad's axis
      */
     public double getDirectionalPad() {
-        return controller.getRawAxis(6);
+        return getJoystick().getRawAxis(6);
     }
 }

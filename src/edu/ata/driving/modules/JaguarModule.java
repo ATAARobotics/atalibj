@@ -11,26 +11,65 @@ import edu.wpi.first.wpilibj.Jaguar;
 public class JaguarModule extends SpeedControllerModule {
 
     /**
-     * Creates a jaguar and sets the object up to be enabled.
+     * Creates the module using the {@link Jaguar} object.
+     *
+     * @param name name of the module
+     * @param jaguar jaguar to use
+     */
+    public JaguarModule(String name, Jaguar jaguar) {
+        super(name, jaguar);
+    }
+
+    /**
+     * Creates the module using the {@link Jaguar} object.
+     *
+     * @param jaguar jaguar to use
+     */
+    public JaguarModule(Jaguar jaguar) {
+        super("Jaguar Port " + jaguar.getChannel(), jaguar);
+    }
+
+    /**
+     * Creates jaguar speed controller object on a port and an automatic slot.
      *
      * @see Jaguar#Jaguar(int)
-     * @param port port of the digital sidecar
+     * @param name name of the module
+     * @param port channel on the digital sidecar
+     */
+    public JaguarModule(String name, int port) {
+        super(name, new Jaguar(port));
+    }
+
+    /**
+     * Creates jaguar speed controller object on a port and an automatic slot.
+     *
+     * @see Jaguar#Jaguar(int)
+     * @param port channel on the digital sidecar
      */
     public JaguarModule(int port) {
         super("Jaguar Port " + port, new Jaguar(port));
     }
 
-    public void feed() {
-        getJaguar().Feed();
+    /**
+     * Creates jaguar speed controller object on a port and a slot.
+     *
+     * @see Jaguar#Jaguar(int, int)
+     * @param name name of the module
+     * @param slot slot in the CRIO
+     * @param port channel on the digital sidecar
+     */
+    public JaguarModule(String name, int slot, int port) {
+        super(name, new Jaguar(slot, port));
     }
 
     /**
-     * Returns the jaguar object. Is just a type-casted
-     * {@link JaguarModule#getSpeedController()}.
+     * Creates jaguar speed controller object on a port and a slot.
      *
-     * @return jaguar object underneath
+     * @see Jaguar#Jaguar(int, int)
+     * @param slot slot in the CRIO
+     * @param port channel on the digital sidecar
      */
-    public Jaguar getJaguar() {
-        return (Jaguar) getSpeedController();
+    public JaguarModule(int slot, int port) {
+        super("Jaguar Slot " + slot + " Port " + port, new Jaguar(slot, port));
     }
 }

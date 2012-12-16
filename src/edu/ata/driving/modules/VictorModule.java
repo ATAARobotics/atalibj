@@ -11,26 +11,65 @@ import edu.wpi.first.wpilibj.Victor;
 public class VictorModule extends SpeedControllerModule {
 
     /**
-     * Creates victor and sets the object up to be enabled.
+     * Creates the module using the victor object.
+     *
+     * @param name name of the module
+     * @param victor victor object to use
+     */
+    public VictorModule(String name, Victor victor) {
+        super(name, victor);
+    }
+
+    /**
+     * Creates the module using the victor object.
+     *
+     * @param victor victor object to use
+     */
+    public VictorModule(Victor victor) {
+        super("Victor Port " + victor.getChannel(), victor);
+    }
+
+    /**
+     * Creates victor speed controller object on a port and an automatic slot.
      *
      * @see Victor#Victor(int)
-     * @param port port on the digital sidecar
+     * @param name name of the module
+     * @param port channel on the digital sidecar
+     */
+    public VictorModule(String name, int port) {
+        super(name, new Victor(port));
+    }
+
+    /**
+     * Creates victor speed controller object on a port and an automatic slot.
+     *
+     * @see Victor#Victor(int)
+     * @param port channel on the digital sidecar
      */
     public VictorModule(int port) {
         super("Victor Port " + port, new Victor(port));
     }
 
-    public void feed() {
-        getVictor().Feed();
+    /**
+     * Creates victor speed controller object on a port and a slot.
+     *
+     * @see Victor#Victor(int, int)
+     * @param name name of the module
+     * @param slot slot in the CRIO
+     * @param port channel on the digital sidecar
+     */
+    public VictorModule(String name, int slot, int port) {
+        super(name, new Victor(slot, port));
     }
 
     /**
-     * Returns the victor object. Is just a type-casted
-     * {@link VictorModule#getSpeedController()}.
+     * Creates victor speed controller object on a port and a slot.
      *
-     * @return victor object underneath
+     * @see Victor#Victor(int, int)
+     * @param slot slot in the CRIO
+     * @param port channel on the digital sidecar
      */
-    public Victor getVictor() {
-        return (Victor) getSpeedController();
+    public VictorModule(int slot, int port) {
+        super("Victor Slot " + slot + " Port " + port, new Victor(slot, port));
     }
 }

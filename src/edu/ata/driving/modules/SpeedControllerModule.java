@@ -1,5 +1,6 @@
 package edu.ata.driving.modules;
 
+import edu.wpi.first.wpilibj.SafePWM;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
@@ -10,67 +11,94 @@ import edu.wpi.first.wpilibj.SpeedController;
  *
  * @author Joel Gallant
  */
-public abstract class SpeedControllerModule extends Module {
+public abstract class SpeedControllerModule extends Module implements Module.Disableable {
 
-    private SpeedController sc;
+    private final SpeedController speedController;
+    private boolean enabled = false;
 
     /**
-     * Creates module with its name and {@link SpeedController} object.
+     * Creates the speed controller with a name and its associated
+     * {@link SpeedController} object.
      *
-     * @param name name of the module
-     * @param speedController speed controller
+     * @param name name of the module displayed to user
+     * @param speedController speed controller object to use
      */
     public SpeedControllerModule(String name, SpeedController speedController) {
         super(name);
-        this.sc = speedController;
+        this.speedController = speedController;
     }
 
     public void enable() {
+        enabled = true;
+    }
+    
+    public void disable() {
+        enabled = false;
     }
 
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     /**
-     * Returns the original speed controller.
+     * Returns the speed controller object being used underneath this class.
      *
-     * @return speed controller object
+     * <p> <i> Will throw an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()}) </i>
+     *
+     * @return speed controller being used
      */
     public SpeedController getSpeedController() {
-        return sc;
+        if (isEnabled()) {
+            return speedController;
+        } else {
+            throw new IllegalStateException("Speed Controller being accessed is not enabled - " + getName());
+        }
     }
 
     /**
-     * Sets the speed of the motor.
+     * Sets the speed of the specific speed controller.
      *
+     * <p> <i> Will throw an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()}) </i>
+     *
+     * @see SpeedController#set(double)
      * @param speed speed from -1 to +1
      */
     public void setSpeed(double speed) {
-        sc.set(speed);
+        getSpeedController().set(speed);
     }
 
     /**
-     * Stops the motor.
+     * Stops the motor. (Sets to 0)
+     *
+     * <p> <i> Will throw an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()}) </i>
      */
     public void stop() {
-        sc.set(0);
+        setSpeed(0);
     }
 
     /**
-     * Returns the currently set speed.
+     * Returns the current speed being set on the speed controller.
      *
-     * @return speed from -1 to +1
+     * <p> <i> Will throw an {@link IllegalStateException} if the module has not
+     * been enabled ({@link Module#enable()}) </i>
+     *
+     * @see SpeedController#get()
+     * @return speed of the motor
      */
     public double getSpeed() {
-        return sc.get();
+        return getSpeedController().get();
     }
 
     /**
-     * Feed the MotorSafety timer. This method is called by the subclass motor
-     * whenever it updates its speed, thereby reseting the timeout value. This
-     * method is here to allow user to set the speed and just periodically feed
-     * it rather than setting speed each time.
+     * If the speed controller is a {@link SafePWM}, it will feed the motor
+     * safety object. Otherwise does nothing.
      */
-    public abstract void feed();
+    public void feed() {
+        if (getSpeedController() instanceof SafePWM) {
+            ((SafePWM) getSpeedController()).Feed();
+        }
+    }
 }

@@ -213,4 +213,14 @@ public abstract class Module {
     public final String toString() {
         return getName() + "@" + getIdentifier();
     }
+    
+    /**
+     * Interface used to represent modules that can be disabled.
+     */
+    protected interface Disableable {
+        /**
+         * Disables the module.
+         */
+        public void disable();
+    }
 }
