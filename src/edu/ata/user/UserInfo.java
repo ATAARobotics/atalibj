@@ -79,7 +79,7 @@ public class UserInfo {
 
     private String currentAutonomousMode() {
         if (!preferences.containsKey("currentAuto")) {
-            preferences.putString("currentAuto", "DEFAULT");
+            preferences.putString("currentAuto", "NONE");
         }
         return preferences.getString("currentAuto", null);
     }
@@ -88,7 +88,7 @@ public class UserInfo {
         if (!preferences.containsKey("scriptOn")) {
             preferences.putBoolean("scriptOn", true);
         }
-        return preferences.getBoolean("scriptOn", userScript() != null);
+        return preferences.getBoolean("scriptOn", false);
     }
 
     private String userScript() {
