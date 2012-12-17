@@ -64,7 +64,7 @@ public abstract class DefaultRobot extends Robot {
      * {@link AutonomousSelector}, it is used to select the appropriate
      * autonomous mode.
      */
-    public void autonomous() {
+    public final void autonomous() {
         if (autonomousSelector != null) {
             autonomousMode = autonomousSelector.get();
         }
@@ -78,7 +78,7 @@ public abstract class DefaultRobot extends Robot {
      *
      * @param autonomousMode mode to run
      */
-    public void setAutonomous(AutonomousMode autonomousMode) {
+    public final void setAutonomous(AutonomousMode autonomousMode) {
         this.autonomousMode = autonomousMode;
     }
 }

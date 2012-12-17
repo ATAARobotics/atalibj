@@ -28,15 +28,15 @@ public class SpeedControllerModule extends Module implements Module.Disableable 
         this.speedController = speedController;
     }
 
-    public void enable() {
+    public final void enable() {
         enabled = true;
     }
     
-    public void disable() {
+    public final void disable() {
         enabled = false;
     }
 
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return enabled;
     }
 
@@ -48,7 +48,7 @@ public class SpeedControllerModule extends Module implements Module.Disableable 
      *
      * @return speed controller being used
      */
-    public SpeedController getSpeedController() {
+    public final SpeedController getSpeedController() {
         if (isEnabled()) {
             return speedController;
         } else {
@@ -65,7 +65,7 @@ public class SpeedControllerModule extends Module implements Module.Disableable 
      * @see SpeedController#set(double)
      * @param speed speed from -1 to +1
      */
-    public void setSpeed(double speed) {
+    public final void setSpeed(double speed) {
         getSpeedController().set(speed);
     }
 
@@ -75,7 +75,7 @@ public class SpeedControllerModule extends Module implements Module.Disableable 
      * <p> <i> Will throw an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()}) </i>
      */
-    public void stop() {
+    public final void stop() {
         setSpeed(0);
     }
 
@@ -88,7 +88,7 @@ public class SpeedControllerModule extends Module implements Module.Disableable 
      * @see SpeedController#get()
      * @return speed of the motor
      */
-    public double getSpeed() {
+    public final double getSpeed() {
         return getSpeedController().get();
     }
 
@@ -96,7 +96,7 @@ public class SpeedControllerModule extends Module implements Module.Disableable 
      * If the speed controller is a {@link SafePWM}, it will feed the motor
      * safety object. Otherwise does nothing.
      */
-    public void feed() {
+    public final void feed() {
         if (getSpeedController() instanceof SafePWM) {
             ((SafePWM) getSpeedController()).Feed();
         }

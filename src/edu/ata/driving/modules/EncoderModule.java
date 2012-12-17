@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Encoder;
  *
  * @author Joel Gallant
  */
-public class EncoderModule extends Module implements Module.Disableable {
+public final class EncoderModule extends Module implements Module.Disableable {
 
     private final Encoder encoder;
     private boolean enabled;

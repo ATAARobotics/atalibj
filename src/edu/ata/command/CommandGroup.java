@@ -48,7 +48,7 @@ public class CommandGroup extends Command {
      *
      * @param command command to add
      */
-    protected void addSequential(Command command) {
+    protected final void addSequential(Command command) {
         addCommand(SEQUENTIAL, command);
     }
 
@@ -63,8 +63,18 @@ public class CommandGroup extends Command {
      *
      * @param command command to add
      */
-    protected void addConcurrent(Command command) {
+    protected final void addConcurrent(Command command) {
         addCommand(CONCURRENT, command);
+    }
+
+    /**
+     * Adds a waiting period between two commands. Is a sequential command.
+     *
+     * @see Pause
+     * @param time time to wait
+     */
+    protected final void addPause(final double time) {
+        addSequential(new CommandGroup.Pause(time));
     }
 
     private void addCommand(final int type, Command command) {
@@ -76,19 +86,9 @@ public class CommandGroup extends Command {
     }
 
     /**
-     * Adds a waiting period between two commands. Is a sequential command.
-     *
-     * @see Pause
-     * @param time time to wait
-     */
-    protected void addPause(final double time) {
-        addSequential(new CommandGroup.Pause(time));
-    }
-
-    /**
      * Runs the group, and all of the commands added to it.
      */
-    public void run() {
+    public final void run() {
         Command[] concurrentBuffer = null;
         for (int x = 0; x < typesBuffer.length; ++x) {
             if (typesBuffer[x] == SEQUENTIAL) {
@@ -120,7 +120,7 @@ public class CommandGroup extends Command {
      * Basic command that waits for a certain amount of time. Is accessible to
      * anywhere in the code.
      */
-    public static class Pause extends Command {
+    public static final class Pause extends Command {
 
         private final double pause;
 

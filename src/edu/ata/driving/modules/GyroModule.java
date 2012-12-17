@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Gyro;
  *
  * @author Joel Gallant
  */
-public class GyroModule extends Module implements Module.Disableable {
+public final class GyroModule extends Module implements Module.Disableable {
 
     private final Gyro gyro;
     private boolean enabled = false;

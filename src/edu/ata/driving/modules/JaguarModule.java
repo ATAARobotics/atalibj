@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Jaguar;
  *
  * @author Joel Gallant
  */
-public class JaguarModule extends SpeedControllerModule {
+public final class JaguarModule extends SpeedControllerModule {
 
     /**
      * Creates the module using the {@link Jaguar} object.
@@ -71,5 +71,14 @@ public class JaguarModule extends SpeedControllerModule {
      */
     public JaguarModule(int slot, int port) {
         super("Jaguar Slot " + slot + " Port " + port, new Jaguar(slot, port));
+    }
+    
+    /**
+     * Returns the type-safe {@link Jaguar} object.
+     *
+     * @return jaguar being used
+     */
+    public Jaguar getJaguar() {
+        return (Jaguar) getSpeedController();
     }
 }

@@ -18,7 +18,7 @@ import java.util.Hashtable;
  * @see Hashtable
  * @author Joel Gallant
  */
-public class AutonomousSelector {
+public final class AutonomousSelector {
 
     private static AutonomousSelector instance;
 

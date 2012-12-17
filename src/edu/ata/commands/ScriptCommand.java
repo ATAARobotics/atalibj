@@ -9,7 +9,7 @@ import edu.ata.gordian.Script;
  *
  * @author Joel Gallant
  */
-public class ScriptCommand extends Command {
+public final class ScriptCommand extends Command {
 
     private final String script;
 

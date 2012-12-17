@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
  *
  * @author Joel Gallant
  */
-public class RobotDriveModule extends Module implements Module.Disableable {
+public final class RobotDriveModule extends Module implements Module.Disableable {
 
     private final RobotDrive robotDrive;
     private boolean enabled = false;

@@ -41,7 +41,7 @@ public abstract class Command implements Runnable {
      *
      * @return name of the command
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 }

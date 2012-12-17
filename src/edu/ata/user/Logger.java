@@ -20,7 +20,7 @@ import javax.microedition.io.Connector;
  *
  * @author Joel Gallant
  */
-public class Logger {
+public final class Logger {
 
     private static final String PATH = "file:///log.txt";
     private static boolean fileLoggingOn = true;

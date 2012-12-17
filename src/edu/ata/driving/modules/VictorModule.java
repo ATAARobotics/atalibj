@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Victor;
  *
  * @author Joel Gallant
  */
-public class VictorModule extends SpeedControllerModule {
+public final class VictorModule extends SpeedControllerModule {
 
     /**
      * Creates the module using the victor object.
@@ -71,5 +71,14 @@ public class VictorModule extends SpeedControllerModule {
      */
     public VictorModule(int slot, int port) {
         super("Victor Slot " + slot + " Port " + port, new Victor(slot, port));
+    }
+
+    /**
+     * Returns the type-safe {@link Victor} object.
+     *
+     * @return victor being used
+     */
+    public Victor getVictor() {
+        return (Victor) getSpeedController();
     }
 }

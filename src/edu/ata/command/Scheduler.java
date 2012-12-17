@@ -5,7 +5,7 @@ package edu.ata.command;
  *
  * @author Joel Gallant
  */
-public class Scheduler {
+public final class Scheduler {
 
     /**
      * Runs the command within a new thread. Is not finished when this method

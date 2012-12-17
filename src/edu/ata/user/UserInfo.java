@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author Joel Gallant
  */
-public class UserInfo {
+public final class UserInfo {
 
     private static UserInfo instance;
 

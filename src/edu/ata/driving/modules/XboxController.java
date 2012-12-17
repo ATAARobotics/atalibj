@@ -46,7 +46,7 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author Joel Gallant
  */
 // Does not extend Joystick because joystick should not be created before enable()
-public class XboxController extends Module implements Module.Disableable {
+public final class XboxController extends Module implements Module.Disableable {
 
     private final Joystick controller;
     private boolean enabled;

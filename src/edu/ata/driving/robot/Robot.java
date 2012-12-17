@@ -62,7 +62,7 @@ public abstract class Robot {
      *
      * @return name of robot
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
@@ -74,7 +74,7 @@ public abstract class Robot {
      *
      * @return the hash table of modules
      */
-    public Hashtable getModules() {
+    public final Hashtable getModules() {
         return modules;
     }
 
