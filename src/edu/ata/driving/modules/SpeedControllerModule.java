@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.SpeedController;
  *
  * @author Joel Gallant
  */
-public abstract class SpeedControllerModule extends Module implements Module.Disableable {
+public class SpeedControllerModule extends Module implements Module.Disableable {
 
     private final SpeedController speedController;
     private boolean enabled = false;
