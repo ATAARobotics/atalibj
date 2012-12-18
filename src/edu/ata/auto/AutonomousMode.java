@@ -7,7 +7,7 @@ import edu.ata.command.CommandGroup;
  * Basic autonomous mode that takes {@link Command commands} and runs them
  * inside of {@link AutonomousMode#run()}. Is able to call these commands
  * simultaneously (concurrent) or sequentially (sequential).
- *
+ * 
  * <p> To use {@link AutonomousMode}, create a new class that adds all of the
  * commands inside of the constructor. Creating a member {@link AutonomousMode}
  * will do nothing by default. For that reason, basically all uses of
