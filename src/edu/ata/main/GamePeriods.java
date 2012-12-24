@@ -70,8 +70,12 @@ public final class GamePeriods extends IterativeRobot {
      * Method that is run once before disabled period starts.
      */
     public void disabledInit() {
-        UserInfo.getInstance().updateAll();
-        robot.disabled();
+        try {
+            UserInfo.getInstance().updateAll();
+            robot.disabled();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     /**
@@ -81,8 +85,12 @@ public final class GamePeriods extends IterativeRobot {
      * autonomous is started.
      */
     public void autonomousInit() {
-        UserInfo.getInstance().updateAutonomous();
-        robot.autonomous();
+        try {
+            UserInfo.getInstance().updateAutonomous();
+            robot.autonomous();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     /**
@@ -100,6 +108,10 @@ public final class GamePeriods extends IterativeRobot {
      * Called periodically at a regular rate while the robot is in teleop mode.
      */
     public void teleopPeriodic() {
-        robot.teleopLoop();
+        try {
+            robot.teleopLoop();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 }
