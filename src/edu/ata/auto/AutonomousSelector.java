@@ -7,7 +7,7 @@ import java.util.Hashtable;
 /**
  * Singleton design pattern class that stores available autonomous modes and can
  * choose between them by name. Acts very similar to a {@link Hashtable},
- * because it stores data with {@link Hashtable}.
+ * because it stores data with one.
  *
  * <p> Stores one mode as the 'current' mode. This means that it is the
  * currently selected mode, otherwise known as the last mode to be passed
@@ -52,10 +52,10 @@ public final class AutonomousSelector {
      * @param name name of mode
      */
     public void set(String name) throws AutonomousModeNotSetException {
-        current = (AutonomousMode) modes.get(name);
-        if (current == null) {
+        if (!modes.containsKey(name)) {
             throw new AutonomousModeNotSetException("Set the autonomous mode to unavailable mode - " + name);
         }
+        current = (AutonomousMode) modes.get(name);
     }
 
     /**
