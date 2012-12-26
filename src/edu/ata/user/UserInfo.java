@@ -73,7 +73,11 @@ public final class UserInfo {
             AutonomousSelector.getInstance().set(new ScriptAutonomousMode(userScript()));
         } else {
             // Make autonomous mode the current selected mode
-            AutonomousSelector.getInstance().set(currentAutonomousMode());
+            try {
+                AutonomousSelector.getInstance().set(currentAutonomousMode());
+            } catch (AutonomousSelector.AutonomousModeNotSetException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -106,7 +110,7 @@ public final class UserInfo {
         public double packetsPerSecond() {
             return packetsSinceLastCheck() / secondsSinceLastCheck();
         }
-        
+
         public void reset() {
             lastPPSCheck = System.currentTimeMillis();
             lastPacketsCheck = 0;

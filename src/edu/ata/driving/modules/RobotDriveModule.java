@@ -67,9 +67,10 @@ public final class RobotDriveModule extends Module implements Module.Disableable
      * <p> <i> Will throw an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()}) </i>
      *
+     * @throws IllegalStateException thrown if module is not enabled
      * @return robot drive being used
      */
-    public RobotDrive getRobotDrive() {
+    public RobotDrive getRobotDrive() throws IllegalStateException {
         if (isEnabled()) {
             return robotDrive;
         } else {
@@ -90,10 +91,11 @@ public final class RobotDriveModule extends Module implements Module.Disableable
      * been enabled ({@link Module#enable()}) </i>
      *
      * @see RobotDrive#drive(double, double)
+     * @throws IllegalStateException thrown if module is not enabled
      * @param speed speed of the robot (-1 to +1)
      * @param curve curve to apply to path (-1 = Left to +1 = Right)
      */
-    public void drive(double speed, double curve) {
+    public void drive(double speed, double curve) throws IllegalStateException {
         getRobotDrive().drive(speed, curve);
     }
 
@@ -104,10 +106,11 @@ public final class RobotDriveModule extends Module implements Module.Disableable
      * been enabled ({@link Module#enable()}) </i>
      *
      * @see RobotDrive#arcadeDrive(double, double)
+     * @throws IllegalStateException thrown if module is not enabled
      * @param speed speed of the robot (-1 to +1)
      * @param turn rotation / turn of the robot (-1 = Left to +1 = Right)
      */
-    public void arcadeDrive(double speed, double turn) {
+    public void arcadeDrive(double speed, double turn) throws IllegalStateException {
         getRobotDrive().arcadeDrive(speed, turn);
     }
 
@@ -118,10 +121,11 @@ public final class RobotDriveModule extends Module implements Module.Disableable
      * been enabled ({@link Module#enable()}) </i>
      *
      * @see RobotDrive#tankDrive(double, double)
+     * @throws IllegalStateException thrown if module is not enabled
      * @param left speed of the left motor / motors
      * @param right speed of the right motor / motors
      */
-    public void tankDrive(double left, double right) {
+    public void tankDrive(double left, double right) throws IllegalStateException {
         getRobotDrive().tankDrive(left, right);
     }
 
@@ -130,8 +134,10 @@ public final class RobotDriveModule extends Module implements Module.Disableable
      *
      * <p> <i> Will throw an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()}) </i>
+     *
+     * @throws IllegalStateException thrown if module is not enabled
      */
-    public void brake() {
+    public void brake() throws IllegalStateException {
         getRobotDrive().stopMotor();
     }
 }

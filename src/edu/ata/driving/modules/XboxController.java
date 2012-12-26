@@ -75,6 +75,22 @@ public final class XboxController extends Module implements Module.Disableable {
         this("XboxController Port " + port, port);
     }
 
+    private XboxController(Joystick joystick) {
+        super("Converted XboxController");
+        this.controller = joystick;
+    }
+
+    /**
+     * Converts a {@link Joystick} object into an {@link XboxController} for
+     * module abilities.
+     *
+     * @param joystick joystick object to control
+     * @return new Xbox controller
+     */
+    public static XboxController toXboxController(Joystick joystick) {
+        return new XboxController(joystick);
+    }
+
     public void enable() {
         enabled = true;
     }
@@ -93,9 +109,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return joystick object being used
      */
-    public Joystick getJoystick() {
+    public Joystick getJoystick() throws IllegalStateException {
         if (isEnabled()) {
             return controller;
         } else {
@@ -110,9 +127,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether A button is pressed
      */
-    public boolean getAButton() {
+    public boolean getAButton() throws IllegalStateException {
         return getJoystick().getRawButton(1);
     }
 
@@ -123,9 +141,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether B button is pressed
      */
-    public boolean getBButton() {
+    public boolean getBButton() throws IllegalStateException {
         return getJoystick().getRawButton(2);
     }
 
@@ -136,9 +155,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether X button is pressed
      */
-    public boolean getXButton() {
+    public boolean getXButton() throws IllegalStateException {
         return getJoystick().getRawButton(3);
     }
 
@@ -149,9 +169,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether Y button is pressed
      */
-    public boolean getYButton() {
+    public boolean getYButton() throws IllegalStateException {
         return getJoystick().getRawButton(4);
     }
 
@@ -162,9 +183,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether left bumper button is pressed
      */
-    public boolean getLeftBumper() {
+    public boolean getLeftBumper() throws IllegalStateException {
         return getJoystick().getRawButton(5);
     }
 
@@ -175,9 +197,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether right bumper button is pressed
      */
-    public boolean getRightBumper() {
+    public boolean getRightBumper() throws IllegalStateException {
         return getJoystick().getRawButton(6);
     }
 
@@ -188,9 +211,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether back button is pressed
      */
-    public boolean getBackButton() {
+    public boolean getBackButton() throws IllegalStateException {
         return getJoystick().getRawButton(7);
     }
 
@@ -201,9 +225,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether start button is pressed
      */
-    public boolean getStartButton() {
+    public boolean getStartButton() throws IllegalStateException {
         return getJoystick().getRawButton(8);
     }
 
@@ -214,9 +239,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether left analog stick is pressed
      */
-    public boolean getLeftJoystickButton() {
+    public boolean getLeftJoystickButton() throws IllegalStateException {
         return getJoystick().getRawButton(9);
     }
 
@@ -227,9 +253,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return whether right analog stick is pressed
      */
-    public boolean getRightJoystickButton() {
+    public boolean getRightJoystickButton() throws IllegalStateException {
         return getJoystick().getRawButton(10);
     }
 
@@ -241,9 +268,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return left joystick x axis
      */
-    public double getLeftX() {
+    public double getLeftX() throws IllegalStateException {
         return getJoystick().getRawAxis(1);
     }
 
@@ -255,9 +283,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return left joystick y axis
      */
-    public double getLeftY() {
+    public double getLeftY() throws IllegalStateException {
         return getJoystick().getRawAxis(2);
     }
 
@@ -269,9 +298,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return right joystick x axis
      */
-    public double getRightX() {
+    public double getRightX() throws IllegalStateException {
         return getJoystick().getRawAxis(4);
     }
 
@@ -283,9 +313,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return right joystick y axis
      */
-    public double getRightY() {
+    public double getRightY() throws IllegalStateException {
         return getJoystick().getRawAxis(5);
     }
 
@@ -298,9 +329,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return triggers
      */
-    public double getTriggers() {
+    public double getTriggers() throws IllegalStateException {
         return getJoystick().getRawAxis(3);
     }
 
@@ -312,9 +344,10 @@ public final class XboxController extends Module implements Module.Disableable {
      * <p> <i> Throws an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()})</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return directional pad's axis
      */
-    public double getDirectionalPad() {
+    public double getDirectionalPad() throws IllegalStateException {
         return getJoystick().getRawAxis(6);
     }
 }

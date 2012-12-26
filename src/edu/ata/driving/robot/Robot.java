@@ -42,10 +42,11 @@ public abstract class Robot {
      * Creates robot with its modules and name. The name of the robot should be
      * identifiable to the user.
      *
+     * @throws NullPointerException thrown when modules array is null
      * @param modules its necessary modules
      * @param name the robot configuration's name
      */
-    public Robot(Module[] modules, String name) {
+    public Robot(Module[] modules, String name) throws NullPointerException {
         if (modules == null) {
             throw new NullPointerException("Modules were null in robot - " + name);
         }

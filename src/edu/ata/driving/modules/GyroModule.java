@@ -76,9 +76,10 @@ public final class GyroModule extends Module implements Module.Disableable {
      * <p> <i> Will throw an {@link IllegalStateException} if this module is not
      * enabled ({@link Module#enable()}).</i>
      *
+     * @throws IllegalStateException thrown when module is not enabled
      * @return gyro object used
      */
-    public Gyro getGyro() {
+    public Gyro getGyro() throws IllegalStateException {
         if (isEnabled()) {
             return gyro;
         } else {
@@ -90,9 +91,10 @@ public final class GyroModule extends Module implements Module.Disableable {
      * Returns the angle that the gyroscope has accumulated in degrees.
      *
      * @see Gyro#getAngle()
+     * @throws IllegalStateException thrown when module is not enabled
      * @return angle using degrees (negative = left, positive = right)
      */
-    public double getAngle() {
+    public double getAngle() throws IllegalStateException {
         return getGyro().getAngle();
     }
 }

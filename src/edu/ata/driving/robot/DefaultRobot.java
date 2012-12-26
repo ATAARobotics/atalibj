@@ -66,7 +66,10 @@ public abstract class DefaultRobot extends Robot {
      */
     public final void autonomous() {
         if (autonomousSelector != null) {
-            autonomousMode = autonomousSelector.get();
+            try {
+                autonomousMode = autonomousSelector.get();
+            } catch (AutonomousSelector.AutonomousModeNotSetException ex) {
+            }
         }
         if (autonomousMode != null) {
             autonomousMode.run();

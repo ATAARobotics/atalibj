@@ -152,8 +152,9 @@ public final class EncoderModule extends Module implements Module.Disableable {
      * been enabled ({@link Module#enable()}) </i>
      *
      * @return encoder being used
+     * @throws IllegalStateException thrown if the module has not been enabled
      */
-    public Encoder getEncoder() {
+    public Encoder getEncoder() throws IllegalStateException {
         if (isEnabled()) {
             return encoder;
         } else {
@@ -167,16 +168,18 @@ public final class EncoderModule extends Module implements Module.Disableable {
      * <p> <i> Will throw an {@link IllegalStateException} if the module has not
      * been enabled ({@link Module#enable()}) </i>
      *
+     * @throws IllegalStateException thrown if the module has not been enabled
      * @see Encoder#stop()
      */
-    public void pause() {
+    public void pause() throws IllegalStateException {
         getEncoder().stop();
     }
 
     /**
      * Resets the value of the accumulated distance to 0.
+     * @throws IllegalStateException thrown if the module has not been enabled
      */
-    public void reset() {
+    public void reset() throws IllegalStateException {
         getEncoder().reset();
     }
 
@@ -185,8 +188,9 @@ public final class EncoderModule extends Module implements Module.Disableable {
      *
      * @see Encoder#getRate()
      * @return rate of movement (speed)
+     * @throws IllegalStateException thrown if the module has not been enabled
      */
-    public double getRate() {
+    public double getRate() throws IllegalStateException {
         return getEncoder().getRate();
     }
 
@@ -195,8 +199,9 @@ public final class EncoderModule extends Module implements Module.Disableable {
      *
      * @see Encoder#getDistance()
      * @return distance since start
+     * @throws IllegalStateException thrown if the module has not been enabled
      */
-    public double getDistance() {
+    public double getDistance() throws IllegalStateException{
         return getEncoder().getDistance();
     }
 }
