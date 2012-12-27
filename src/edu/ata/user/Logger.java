@@ -27,6 +27,11 @@ public final class Logger {
     private static int lineNum = 1;
     private static FileConnection logFile;
 
+    // Non-instantialisable class
+    private Logger() throws IllegalAccessException {
+        throw new IllegalAccessException();
+    }
+
     /**
      * Class representing the urgency of the log. The reason for this
      * implementation is to ensure that logging does not encounter an error when
