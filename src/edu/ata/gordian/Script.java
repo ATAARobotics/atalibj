@@ -39,6 +39,7 @@ public class Script {
      * @param full full script
      */
     public Script(String full) {
+        full = StringUtils.replace(full, '}', "};");
         StringTokenizer tokenizer = new StringTokenizer(full, ";\n\r");
         Vector parts = new Vector();
         int bracesCount = 0;
