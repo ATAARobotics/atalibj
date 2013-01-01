@@ -31,6 +31,7 @@ public final class GordianScriptCache {
         return instance;
     }
 
+    // Should not be subclassed
     private GordianScriptCache() {
     }
 
