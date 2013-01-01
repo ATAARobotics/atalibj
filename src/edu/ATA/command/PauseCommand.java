@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
  * @see Timer#delay(double)
  * @author Joel Gallant
  */
-public class PauseCommand implements Command {
+public final class PauseCommand implements Command {
 
     private final double pauseLength;
 
