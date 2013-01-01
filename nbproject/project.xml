@@ -8,7 +8,7 @@
     <type>org.netbeans.modules.ant.freeform</type>
     <configuration>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
-            <name>4334</name>
+            <name>Team 4334</name>
             <properties>
                 <property-file>${user.home}/.sunspotfrc.properties</property-file>
                 <property-file>build.properties</property-file>
@@ -88,11 +88,5 @@
                 <source-level>1.4</source-level>
             </compilation-unit>
         </java-data>
-        <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
-            <word>accessor</word>
-            <word>class'</word>
-            <word>teleop</word>
-            <word>teleoperated</word>
-        </spellchecker-wordlist>
     </configuration>
 </project>
