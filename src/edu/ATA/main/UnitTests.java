@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 import java.util.Hashtable;
@@ -53,6 +54,8 @@ public final class UnitTests {
         }
     };
     public static final Robot shooter = new DefaultRobot() {
+        Timer timer = new Timer();
+        
         public String name() {
             return "Shooter";
         }
@@ -66,10 +69,16 @@ public final class UnitTests {
         public void autonomousPeriodic() throws Error {
         }
 
+        public void teleopInit() {
+            timer.reset();
+            timer.start();
+        }
+
         public void teleopPeriodic() throws Error {
             m1.set(xboxController.getRightDistanceFromMiddle());
             m2.set(xboxController.getRightDistanceFromMiddle());
             SmartDashboard.putNumber("Speed", xboxController.getRightDistanceFromMiddle());
+            solenoid.set(xboxController.getRightBumper());
         }
     };
     public static final Robot encoderTest = new DefaultRobot() {
