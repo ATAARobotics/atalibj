@@ -27,5 +27,5 @@ public interface Command {
      * class. This can involve many different possibilities, and it is typically
      * unsafe to assume any of them.
      */
-    void runCommand();
+    public void runCommand();
 }

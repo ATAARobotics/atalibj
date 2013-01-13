@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.Timer;
  * Command that runs in a loop. Runs every 10 milliseconds, looping as long as
  * {@link LoopingCommand#continueLoop() continueLoop()} returns true.
  *
+ * <p> Is designed to be sub-classed by using {@code continueLoop()} and
+ * {@code loop()} to control how many times to loop, and what to do each loop.
+ *
  * @author Joel Gallant
  */
 public abstract class LoopingCommand implements Command {

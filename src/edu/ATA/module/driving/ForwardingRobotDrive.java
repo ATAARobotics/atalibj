@@ -1,12 +1,14 @@
 package edu.ATA.module.driving;
 
+import edu.wpi.first.wpilibj.PIDOutput;
+
 /**
  * Forwarding class, as described in Effective Java: Second Edition, Item 16.
  * Forwards {@link edu.wpi.first.wpilibj.RobotDrive}.
  *
  * @author Joel Gallant
  */
-class ForwardingRobotDrive implements RobotDrive {
+class ForwardingRobotDrive implements RobotDrive , PIDOutput {
 
     private final edu.wpi.first.wpilibj.RobotDrive drive;
 
@@ -126,5 +128,12 @@ class ForwardingRobotDrive implements RobotDrive {
      */
     public void stopMotors() {
         drive.stopMotor();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void pidWrite(double d) {
+        arcadeDrive(d, 0);
     }
 }

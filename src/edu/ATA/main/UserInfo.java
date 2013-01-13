@@ -226,7 +226,7 @@ public final class UserInfo {
      * @return name of robot stored in SmartDashboard
      */
     public static String getRobotName() {
-        return SmartDashboard.getString(KEYS.ROBOT_NAME, Robot.MAIN_ROBOT.name());
+        return SmartDashboard.getString(KEYS.ROBOT_NAME, GamePeriods.MAIN_ROBOT.name());
     }
 
     /**
@@ -234,7 +234,7 @@ public final class UserInfo {
      * name. Uses {@link Robot#MAIN_ROBOT} and {@link Robot#name()}.
      */
     public static void updateRobotName() {
-        SmartDashboard.putString(KEYS.ROBOT_NAME, Robot.MAIN_ROBOT.name());
+        SmartDashboard.putString(KEYS.ROBOT_NAME, GamePeriods.MAIN_ROBOT.name());
     }
 
     private static class TransferRateCalculator {

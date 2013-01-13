@@ -28,13 +28,13 @@ import edu.wpi.first.wpilibj.Joystick;
  * 1: Left Stick X Axis
  *     Left:Negative; Right: Positive
  * 2: Left Stick Y Axis
- *     Up: Negative; Down: Positive
+ *     Up: Positive; Down: Negative
  * 3: Triggers
  *     Left: Positive; Right: Negative
  * 4: Right Stick X Axis
  *     Left: Negative; Right: Positive
  * 5: Right Stick Y Axis
- *     Up: Negative; Down: Positive
+ *     Up: Positive; Down: Negative
  * 6: Directional Pad (Not recommended, buggy)
  * </pre>
  *
@@ -47,7 +47,7 @@ public class XboxController extends JoystickModule {
      * The absolute smallest value for the all axises to return. If it is
      * smaller than this value, it will revert to 0.
      */
-    public static final double DEADZONE = 0.07;
+    public static final double DEADZONE = 0.19;
 
     /**
      * Constructs the object by using composition, using the given joystick
@@ -71,7 +71,7 @@ public class XboxController extends JoystickModule {
      */
     public double getAxis(int axis) {
         double a;
-        return (a = super.getAxis(axis)) < DEADZONE ? 0 : a;
+        return Math.abs(a = super.getAxis(axis)) < DEADZONE ? 0 : a;
     }
 
     /**
@@ -188,12 +188,12 @@ public class XboxController extends JoystickModule {
     /**
      * Returns the value from -1 to +1 of the left joystick's Y axis.
      *
-     * <p> Up = Negative, Down = Positive
+     * <p> Up = Positive, Down = Negative
      *
      * @return left joystick y axis
      */
     public double getLeftY() {
-        return getAxis(2);
+        return -getAxis(2);
     }
 
     /**
@@ -210,24 +210,24 @@ public class XboxController extends JoystickModule {
     /**
      * Returns the value from -1 to +1 of the right joystick's Y axis.
      *
-     * <p> Up = Negative, Down = Positive
+     * <p> Up = Positive, Down = Negative
      *
      * @return right joystick y axis
      */
     public double getRightY() {
-        return getAxis(5);
+        return -getAxis(5);
     }
 
     /**
      * Returns the value from -1 to +1 of the triggers. (Left value + Right
      * value)
      *
-     * <p> Left = Positive, Right = Negative
+     * <p> Left = Negative, Right = Positive
      *
      * @return sum of both triggers values
      */
     public double getTriggers() {
-        return getAxis(3);
+        return -getAxis(3);
     }
 
     /**
@@ -253,9 +253,8 @@ public class XboxController extends JoystickModule {
      * @return how far away stick is from center
      */
     public double getRightDistanceFromMiddle() {
-        double xS = (Math.abs(getRightX())) * (Math.abs(getRightX()));
-        double yS = (Math.abs(getRightY())) * (Math.abs(getRightY()));
-        return (Math.sqrt(xS + yS)) * (getRightY() > 0 ? 1 : -1);
+        double distance = Math.sqrt((getRightX()*getRightX()) + (getRightY()*getRightY()));
+        return (getRightY() > 0) ? distance : -distance;
     }
 
     /**
@@ -271,8 +270,7 @@ public class XboxController extends JoystickModule {
      * @return how far away stick is from center
      */
     public double getLeftDistanceFromMiddle() {
-        double xS = (Math.abs(getLeftX())) * (Math.abs(getLeftX()));
-        double yS = (Math.abs(getLeftY())) * (Math.abs(getLeftY()));
-        return (Math.sqrt(xS + yS)) * (getLeftY() > 0 ? 1 : -1);
+        double distance = Math.sqrt((getLeftX()*getLeftX()) + (getLeftY()*getLeftY()));
+        return (getLeftY() > 0) ? distance : -distance;
     }
 }
