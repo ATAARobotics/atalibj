@@ -27,6 +27,8 @@ public final class Logger {
     private static boolean fileLoggingOn = true;
     private static int lineNum = 1;
     private static FileConnection logFile;
+    private static DataOutputStream outputStream;
+    private static DataInputStream inputStream;
 
     // cannot be subclassed or instantiated
     private Logger() throws IllegalAccessException {
@@ -138,8 +140,9 @@ public final class Logger {
     public static void logFile(String msg) throws IOException {
         if (logFile == null) {
             logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+            outputStream = logFile.openDataOutputStream();
         }
-        appendToFile(msg, logFile);
+        appendToFile(msg, outputStream);
     }
 
     /**
@@ -152,15 +155,12 @@ public final class Logger {
      * @throws IOException thrown when file connection cannot be initiated or
      * writing to the file fails
      */
-    public static void appendToFile(String msg, FileConnection fileConnection) throws IOException {
-        fileConnection.create();
-        DataOutputStream outputStream = fileConnection.openDataOutputStream();
+    public static void appendToFile(String msg, DataOutputStream outputStream) throws IOException {
         byte[] data = msg.getBytes();
         try {
             // Need to test to find out if offset should be saved to append
             outputStream.write(data);
-        } finally {
-            outputStream.close();
+        } catch (IOException ex) {
         }
     }
 
@@ -175,8 +175,9 @@ public final class Logger {
     public static String getLog() throws IOException {
         if (logFile == null) {
             logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+            inputStream = logFile.openDataInputStream();
         }
-        return getTextFromFile(logFile);
+        return getTextFromFile(inputStream);
     }
 
     /**
@@ -188,19 +189,13 @@ public final class Logger {
      * @param fileConnection connection to the file
      * @return text text in the text file
      */
-    public static String getTextFromFile(FileConnection fileConnection) throws IOException {
-        fileConnection.create();
-        DataInputStream inputStream = fileConnection.openDataInputStream();
+    public static String getTextFromFile(DataInputStream inputStream) throws IOException {
         String tmp = "";
         byte cur;
-        try {
-            while ((cur = (byte) inputStream.read()) > 0) {
-                tmp += (char) cur;
-            }
-            return tmp;
-        } finally {
-            inputStream.close();
+        while ((cur = (byte) inputStream.read()) > 0) {
+            tmp += (char) cur;
         }
+        return tmp;
     }
 
     /**
@@ -237,7 +232,7 @@ public final class Logger {
             default:
                 line = DriverStationLCD.Line.kUser1;
         }
-        DriverStationLCD.getInstance().println(line, 1, msg);
+        DriverStationLCD.getInstance().println(line, 1, msg + "         ");
         DriverStationLCD.getInstance().updateLCD();
         if (++lineNum > 6) {
             lineNum = 1;

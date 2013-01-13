@@ -23,28 +23,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public interface Robot {
 
     /**
-     * The intentioned "default" or "main" robot object to use in
-     * {@link GamePeriods}. By no means should the expectation be that this is
-     * automatically used, but it is usually reasonable to assume that is the
-     * case. (especially with production code - there would not be multiple
-     * robots being used)
-     */
-    Robot MAIN_ROBOT = new Robot() {
-        public String name() {
-            return "Main Robot (edu.ATA.main.Robot.MAIN_ROBOT)";
-        }
-
-        public void robotInit() {
-        }
-
-        public void autonomousPeriodic() {
-        }
-
-        public void teleopPeriodic() {
-        }
-    };
-
-    /**
      * Returns the name of the robot. This method is called only for for user
      * displays / notifications. There are no presumptions or expectations
      * involved with the results of this method, but it might be helpful to
@@ -69,6 +47,13 @@ public interface Robot {
     void robotInit() throws Error;
 
     /**
+     * The function is called once at the start of autonomous mode.
+     *
+     * @see IterativeRobot#autonomousInit()
+     */
+    void autonomousInit();
+
+    /**
      * This function is called periodically during autonomous.
      *
      * <p> <i> Note: Please convert all {@link Throwable throwables} into
@@ -81,6 +66,13 @@ public interface Robot {
     void autonomousPeriodic() throws Error;
 
     /**
+     * This function is called once at the start of teleoperated mode.
+     *
+     * @see IterativeRobot#teleopInit()
+     */
+    void teleopInit();
+
+    /**
      * This function is called periodically during operator control.
      *
      * <p> <i> Note: Please convert all {@link Throwable throwables} into
@@ -91,4 +83,23 @@ public interface Robot {
      * @throws Error thrown when anything goes wrong
      */
     void teleopPeriodic() throws Error;
+
+    /**
+     * This function is called once at the start of test mode.
+     *
+     * @see IterativeRobot#testInit()
+     */
+    void testInit();
+
+    /**
+     * This function is called periodically in test mode.
+     *
+     * <p> <i> Note: Please convert all {@link Throwable throwables} into
+     * {@link Error} (or subclass) format, to ensure errors do not go unchecked
+     * and break low level API workings.</i>
+     *
+     * @see IterativeRobot#testPeriodic()
+     * @throws Error thrown when anything goes wrong
+     */
+    void testPeriodic() throws Error;
 }

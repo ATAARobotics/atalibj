@@ -36,6 +36,8 @@
 package edu.ATA.main;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 
 /**
  * This class is the 'main' class of the robot code. This is where everything is
@@ -50,7 +52,15 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class GamePeriods extends IterativeRobot {
 
-    private Robot robot = Robot.MAIN_ROBOT;
+    /**
+     * The intentioned "default" or "main" robot object to use in
+     * {@link GamePeriods}. By no means should the expectation be that this is
+     * automatically used, but it is usually reasonable to assume that is the
+     * case. (especially with production code - there would not be multiple
+     * robots being used)
+     */
+    public static Robot MAIN_ROBOT = null;
+    private Robot robot = MAIN_ROBOT;
 
     /**
      * This function is run when the robot is first started up and is used for
@@ -61,6 +71,23 @@ public class GamePeriods extends IterativeRobot {
      */
     public void robotInit() {
         System.out.println("Robot Init...");
+        /**
+         * **************************
+         */
+        String s;
+        try {
+            s = SmartDashboard.getString("RobotMode");
+        } catch (TableKeyNotDefinedException ex) {
+            s = "Shooter";
+            SmartDashboard.putString("RobotMode", s);
+        }
+
+        robot = ((Robot) UnitTests.robots.get(s));
+
+        Logger.displayLCDMessage("Robot set to " + robot.name());
+        /**
+         * ************************
+         */
         try {
             robot.robotInit();
         } catch (Error err) {
@@ -68,6 +95,14 @@ public class GamePeriods extends IterativeRobot {
             err.printStackTrace();
             System.exit(11);
         }
+    }
+
+    /**
+     * This function is called once before every autonomous mode. Calls
+     * {@link Robot#autonomousInit()}.
+     */
+    public void autonomousInit() {
+        robot.autonomousInit();
     }
 
     /**
@@ -87,6 +122,18 @@ public class GamePeriods extends IterativeRobot {
     }
 
     /**
+     * This function is calls once before every autonomous mode. Calls
+     * {@link Robot#teleopInit()}.
+     */
+    public void teleopInit() {
+        /**
+         * ********************************************
+         */
+        robotInit();
+        robot.teleopInit();
+    }
+
+    /**
      * This function is called periodically during operator control. Calls
      * {@link Robot#teleopPeriodic()}.
      *
@@ -98,6 +145,30 @@ public class GamePeriods extends IterativeRobot {
             robot.teleopPeriodic();
         } catch (Error err) {
             System.err.println("Error encountered in teleopPeriodic()!");
+            err.printStackTrace();
+        }
+    }
+
+    /**
+     * This function is calls once before every test mode. Calls
+     * {@link Robot#testInit()}.
+     */
+    public void testInit() {
+        robot.testInit();
+    }
+
+    /**
+     * This function is called periodically in test mode. Calls
+     * {@link Robot#testPeriodic()}.
+     *
+     * <p> If an error is encountered, the robot will print the error to the
+     * console.
+     */
+    public void testPeriodic() {
+        try {
+            robot.testPeriodic();
+        } catch (Error err) {
+            System.err.println("Error encountered in testPeriodic()!");
             err.printStackTrace();
         }
     }

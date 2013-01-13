@@ -61,6 +61,9 @@ public class CommandGroup implements Command {
     }
 
     private void add(Integer type, Command command) {
+        if (type == null || command == null) {
+            throw new NullPointerException();
+        }
         types.add(type);
         commands.add(command);
     }

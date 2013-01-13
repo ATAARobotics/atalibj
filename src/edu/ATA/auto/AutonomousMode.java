@@ -193,7 +193,7 @@ public class AutonomousMode extends CommandGroup {
      *
      * @return the name of the autonomous mode
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
