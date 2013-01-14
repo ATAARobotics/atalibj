@@ -77,7 +77,9 @@
                     <separator/>
                 </context-menu>
             </view>
-            <subprojects/>
+            <subprojects>
+                <project>/home/joel/Code/NetBeansProjects/gordian</project>
+            </subprojects>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1">
             <compilation-unit>

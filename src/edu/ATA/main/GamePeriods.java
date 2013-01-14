@@ -71,23 +71,6 @@ public class GamePeriods extends IterativeRobot {
      */
     public void robotInit() {
         System.out.println("Robot Init...");
-        /**
-         * **************************
-         */
-        String s;
-        try {
-            s = SmartDashboard.getString("RobotMode");
-        } catch (TableKeyNotDefinedException ex) {
-            s = "Shooter";
-            SmartDashboard.putString("RobotMode", s);
-        }
-
-        robot = ((Robot) UnitTests.robots.get(s));
-
-        Logger.displayLCDMessage("Robot set to " + robot.name());
-        /**
-         * ************************
-         */
         try {
             robot.robotInit();
         } catch (Error err) {
@@ -126,10 +109,6 @@ public class GamePeriods extends IterativeRobot {
      * {@link Robot#teleopInit()}.
      */
     public void teleopInit() {
-        /**
-         * ********************************************
-         */
-        robotInit();
         robot.teleopInit();
     }
 
