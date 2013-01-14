@@ -89,7 +89,7 @@ public final class DriverstationInfo {
     }
 
     /**
-     * Return the approximate match time The FMS does not currently send the
+     * Return the approximate match time. The FMS does not currently send the
      * official match time to the robots This returns the time since the enable
      * signal sent from the Driver Station At the beginning of autonomous, the
      * time is reset to 0.0 seconds At the beginning of teleoperated, the time
