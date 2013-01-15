@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.SpeedController;
  *
  * @author Joel Gallant
  */
-public class SpeedControllerModule implements Module, SpeedController {
+public final class SpeedControllerModule implements Module, SpeedController {
 
     private boolean enabled;
     private final SpeedController speedController;

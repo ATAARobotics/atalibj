@@ -71,14 +71,14 @@ interface PIDController {
     public void setOutputRange(double minimumOutput, double maximumOutput);
 
     /**
-     * Set the setpoint for the PIDController
+     * Set the setpoint for the PIDController.
      *
      * @param setpoint the desired setpoint
      */
     public void setSetpoint(double setpoint);
 
     /**
-     * Returns the current setpoint of the PIDController
+     * Returns the current setpoint of the PIDController.
      *
      * @return the current setpoint
      */
@@ -86,8 +86,7 @@ interface PIDController {
 
     /**
      * Return true if the error is within the percentage of the total input
-     * range, determined by setTolerance. This assumes that the maximum and
-     * minimum input were set using setInput.
+     * range, determined by setTolerance.
      *
      * @return true if the error is less than the tolerance
      */

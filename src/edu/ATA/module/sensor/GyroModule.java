@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Gyro;
  *
  * @author Joel Gallant
  */
-public class GyroModule extends ForwardingGyro implements Module.DisableableModule {
+public final class GyroModule extends ForwardingGyro implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -78,5 +78,69 @@ public class GyroModule extends ForwardingGyro implements Module.DisableableModu
      */
     public double pidGet() {
         return getAngle();
+    }
+}
+
+/**
+ * Forwarding class, as described in Effective Java: Second Edition, Item 16.
+ * Forwards {@link edu.wpi.first.wpilibj.Gyro}.
+ *
+ * @author Joel Gallant
+ */
+class ForwardingGyro implements edu.ATA.module.sensor.Gyro {
+
+    private final edu.wpi.first.wpilibj.Gyro gyro;
+
+    /**
+     * Constructs the object by using composition, using the given gyro object
+     * to control methods in this class.
+     *
+     * @param controller actual underlying object used
+     */
+    ForwardingGyro(edu.wpi.first.wpilibj.Gyro gyro) {
+        this.gyro = gyro;
+    }
+
+    /**
+     *
+     * Returns the instance of the underlying
+     * {@link edu.wpi.first.wpilibj.Gyro}.
+     *
+     * @return composition object under this one
+     */
+    protected edu.wpi.first.wpilibj.Gyro getGyro() {
+        return gyro;
+    }
+
+    /**
+     * Return the actual angle in degrees that the robot is currently facing.
+     *
+     * <p> The angle is based on the current accumulator value corrected by the
+     * oversampling rate, the gyro type and the A/D calibration values. The
+     * angle is continuous, that is can go beyond 360 degrees. This make
+     * algorithms that wouldn't want to see a discontinuity in the gyro output
+     * as it sweeps past 0 on the second time around.
+     *
+     * @return the current heading of the robot in degrees. This heading is
+     * based on integration of the returned rate from the gyro.
+     */
+    public double getAngle() {
+        return gyro.getAngle();
+    }
+
+    /**
+     * Resets the gyro to a heading of zero. This can be used if there is
+     * significant drift in the gyro and it needs to be calibrated after it has
+     * been running.
+     */
+    public void reset() {
+        gyro.reset();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public double pidGet() {
+        return gyro.pidGet();
     }
 }
