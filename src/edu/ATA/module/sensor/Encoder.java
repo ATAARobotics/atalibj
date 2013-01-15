@@ -30,8 +30,7 @@ interface Encoder extends PIDSource {
      * Sets the maximum period for stopped detection. Sets the value that
      * represents the maximum period of the Encoder before it will assume that
      * the attached device is stopped. This timeout allows users to determine if
-     * the wheels or other shaft has stopped rotating. This method compensates
-     * for the decoding type.
+     * the wheels or other shaft has stopped rotating.
      *
      * @param maxPeriod the maximum time between rising and falling edges before
      * the FPGA will report the device stopped in seconds
@@ -41,8 +40,7 @@ interface Encoder extends PIDSource {
     /**
      * Determine if the encoder is stopped. Using the MaxPeriod value, a boolean
      * is returned that is true if the encoder is considered stopped and false
-     * if it is still moving. A stopped encoder is one where the most recent
-     * pulse width exceeds the MaxPeriod.
+     * if it is still moving.
      *
      * @return true if the encoder is considered stopped
      */

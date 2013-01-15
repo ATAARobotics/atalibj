@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.PIDController;
  *
  * @author Joel Gallant
  */
-public class PIDModule extends ForwardingPIDController implements Module.DisableableModule {
+public final class PIDModule extends ForwardingPIDController implements Module.DisableableModule {
 
     /**
      * Constructs the object by using composition, using the given controller
@@ -87,84 +87,116 @@ class ForwardingPIDController implements edu.ATA.module.pid.PIDController {
     }
 
     /**
-     * {@inheritDoc}
+     * Set the PID Controller gain parameters. Set the proportional, integral,
+     * and differential coefficients.
+     *
+     * @param p proportional coefficient
+     * @param i integral coefficient
+     * @param d differential coefficient
      */
     public void setPID(double p, double i, double d) {
         controller.setPID(p, i, d);
     }
 
     /**
-     * {@inheritDoc}
+     * Set the PID Controller feel forward coefficient.
+     *
+     * @param f feed forward coefficient
      */
     public void setF(double f) {
         controller.setPID(getP(), getI(), getD(), f);
     }
 
     /**
-     * {@inheritDoc}
+     * Get the Proportional coefficient.
+     *
+     * @return proportional coefficient
      */
     public double getP() {
         return controller.getP();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the Integral coefficient.
+     *
+     * @return integral coefficient
      */
     public double getI() {
         return controller.getI();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the Differential coefficient.
+     *
+     * @return differential coefficient
      */
     public double getD() {
         return controller.getD();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the Feed forward coefficient.
+     *
+     * @return feed forward coefficient
      */
     public double getF() {
         return controller.getF();
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the maximum and minimum values expected from the input.
+     *
+     * @param minimumInput the minimum percentage expected from the input
+     * @param maximumInput the maximum percentage expected from the output
      */
     public void setInputRange(double minimumInput, double maximumInput) {
         controller.setInputRange(minimumInput, maximumInput);
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the minimum and maximum values to write.
+     *
+     * @param minimumOutput the minimum percentage to write to the output
+     * @param maximumOutput the maximum percentage to write to the output
      */
     public void setOutputRange(double minimumOutput, double maximumOutput) {
         controller.setOutputRange(minimumOutput, maximumOutput);
     }
 
     /**
-     * {@inheritDoc}
+     * Set the setpoint for the PIDController.
+     *
+     * @param setpoint the desired setpoint
      */
     public void setSetpoint(double setpoint) {
         controller.setSetpoint(setpoint);
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the current setpoint of the PIDController.
+     *
+     * @return the current setpoint
      */
     public double getSetpoint() {
         return controller.getSetpoint();
     }
 
     /**
-     * {@inheritDoc}
+     * Return true if the error is within the percentage of the total input
+     * range, determined by setTolerance. This assumes that the maximum and
+     * minimum input were set using setInput.
+     *
+     * @return true if the error is less than the tolerance
      */
     public boolean onTarget() {
         return controller.onTarget();
     }
 
     /**
-     * {@inheritDoc}
+     * Set the percentage error which is considered tolerable for use with
+     * OnTarget. (Input of 15.0 = 15 percent)
+     *
+     * @param percent error which is tolerable
      */
     public void setPercentTolerance(double percentage) {
         controller.setPercentTolerance(percentage);

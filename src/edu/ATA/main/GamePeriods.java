@@ -36,8 +36,14 @@
 package edu.ATA.main;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
+import test.BasicShooter;
+import test.MovingShooter;
+import test.PneumaticShooter;
+import test.RobotChooser;
+import test.TrackedShooter;
 
 /**
  * This class is the 'main' class of the robot code. This is where everything is
@@ -60,6 +66,19 @@ public class GamePeriods extends IterativeRobot {
      * robots being used)
      */
     public static Robot MAIN_ROBOT = null;
+    final SendableChooser robotChooser = new RobotChooser();
+    {
+        SmartDashboard.putData("RobotChooser", robotChooser);
+        if(robotChooser.getSelected().equals("BasicShooter")) {
+            MAIN_ROBOT = new BasicShooter();
+        }else if(robotChooser.getSelected().equals("TrackedShooter")) {
+            MAIN_ROBOT = new TrackedShooter();
+        }else if(robotChooser.getSelected().equals("MovingShooter")) {
+            MAIN_ROBOT = new MovingShooter();
+        }else if(robotChooser.getSelected().equals("PneumaticShooter")) {
+            MAIN_ROBOT = new PneumaticShooter();
+        }
+    }
     private Robot robot = MAIN_ROBOT;
 
     /**

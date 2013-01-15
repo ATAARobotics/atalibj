@@ -88,31 +88,29 @@ interface RobotDrive {
     public void setLeftRightMotorOutputs(double leftOutput, double rightOutput);
 
     /**
-     * Configure the scaling factor for using RobotDrive with motor controllers
-     * in a mode other than PercentVbus.
+     * Configure the scaling factor for using RobotDrive with motor controllers.
      *
      * @param maxOutput multiplied with the output percentage computed by the
-     * drive functions.
+     * drive functions
      */
     public void setMaxOutput(double maxOutput);
 
     /**
      * Set the expiration time for the corresponding motor safety object.
      *
-     * @param timeout the timeout value in seconds.
+     * @param timeout the timeout value in seconds
      */
     public void setExpiration(double timeout);
 
     /**
      * Retrieve the timeout value for the corresponding motor safety object.
      *
-     * @return the timeout value in seconds.
+     * @return the timeout value in seconds
      */
     public double getExpiration();
 
     /**
-     * Return the state of the motor safety enabled flag. Return if the motor
-     * safety is currently enabled for this device.
+     * Returns if the motor safety is currently enabled for this device.
      *
      * @return true if motor safety is enforced for this device
      */

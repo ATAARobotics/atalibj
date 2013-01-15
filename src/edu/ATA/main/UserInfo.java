@@ -147,7 +147,7 @@ public final class UserInfo {
      * @return packets per second
      */
     public static double getTransferRate() {
-        return TRC.packetsPerSecond();
+        return TRC.packetsPerMillisecond();
     }
 
     /**
@@ -155,7 +155,7 @@ public final class UserInfo {
      * described in {@link UserInfo#getTransferRate()}.
      */
     public static void updateTransferRate() {
-        SmartDashboard.putNumber(KEYS.TRANSFER_RATE, TRC.packetsPerSecond());
+        SmartDashboard.putNumber(KEYS.TRANSFER_RATE, TRC.packetsPerMillisecond());
     }
 
     /**
@@ -239,12 +239,17 @@ public final class UserInfo {
 
     private static class TransferRateCalculator {
 
+        private int packageCountAtStart = DriverstationInfo.getPacketCount();
         private long lastPPSCheck = System.currentTimeMillis();
-        private int lastPacketsCheck = DriverstationInfo.getPacketCount();
+        private int lastPacketsCheck = 0;
 
-        public double packetsPerSecond() {
+        public double packetsPerMillisecond() {
             // NaN guarantee
-            return packetsSinceLastCheck() / (secondsSinceLastCheck() > 0 ? secondsSinceLastCheck() : 0.000000001);
+            long s = millisecondsSinceLastCheck();
+            if (s == 0) {
+                return 0;
+            }
+            return (double) packetsSinceLastCheck() / (double) s;
         }
 
         public void reset() {
@@ -252,15 +257,16 @@ public final class UserInfo {
             lastPacketsCheck = 0;
         }
 
-        private long secondsSinceLastCheck() {
-            long s = (lastPPSCheck - System.currentTimeMillis());
+        private long millisecondsSinceLastCheck() {
+            long s = (System.currentTimeMillis() - lastPPSCheck);
             lastPPSCheck = System.currentTimeMillis();
-            return s / 1000;
+            return s;
         }
 
         private int packetsSinceLastCheck() {
-            int s = DriverstationInfo.getPacketCount() - lastPacketsCheck;
-            lastPacketsCheck = DriverstationInfo.getPacketCount();
+            int packetCount = DriverstationInfo.getPacketCount();
+            int s = packetCount - lastPacketsCheck - packageCountAtStart;
+            lastPacketsCheck = packetCount - packageCountAtStart;
             return s;
         }
     }

@@ -23,9 +23,7 @@ interface Gyro extends PIDSource {
     public void reset();
 
     /**
-     * Get the measurement of the gyro for use with PIDControllers.
-     *
-     * @return the current alignment according to the gyro
+     * {@inheritDoc}
      */
     public double pidGet();
 }

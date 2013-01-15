@@ -138,9 +138,7 @@ class ForwardingGyro implements edu.ATA.module.sensor.Gyro {
     }
 
     /**
-     * Get the angle of the gyro for use with PIDControllers
-     *
-     * @return the current angle according to the gyro
+     * {@inheritDoc}
      */
     public double pidGet() {
         return gyro.pidGet();

@@ -2,7 +2,6 @@ package edu.ATA.auto;
 
 import ATA.gordian.Data;
 import ATA.gordian.Script;
-import ATA.gordian.instructions.Method;
 import ATA.gordian.storage.Methods;
 import edu.ATA.command.Command;
 
