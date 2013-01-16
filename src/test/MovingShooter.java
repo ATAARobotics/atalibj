@@ -1,15 +1,10 @@
 package test;
 
-import edu.ATA.module.driving.RobotDriveModule;
-import edu.wpi.first.wpilibj.RobotDrive;
-
 /**
  *
  * @author Team 4334
  */
 public class MovingShooter extends TrackedShooter {
-
-    protected RobotDriveModule robotDrive = new RobotDriveModule(new RobotDrive(1, 2, 3, 4));
 
     public String name() {
         return "Moving Shooter";

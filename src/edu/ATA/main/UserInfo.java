@@ -46,6 +46,10 @@ public final class UserInfo {
          * The field that holds the current robot's name. ({@link Robot#name()})
          */
         public static final String ROBOT_NAME = "robotName";
+        /**
+         * The time into the current game mode.
+         */
+        public static final String GAME_TIME = "gameTime";
     }
     private static final Preferences PREFERENCES = Preferences.getInstance();
     private static final TransferRateCalculator TRC = new TransferRateCalculator();
@@ -195,6 +199,13 @@ public final class UserInfo {
      */
     public static void updateAutonomousModes() {
         setPreference(KEYS.AUTONOMOUS_MODES, AutonomousMode.getAutonomousModes());
+    }
+
+    /**
+     * Returns the percentage complete of the current game period.
+     */
+    public static void updateGameTime() {
+        SmartDashboard.putNumber(KEYS.GAME_TIME, DriverstationInfo.getMatchTime() / 135.0);
     }
 
     /**

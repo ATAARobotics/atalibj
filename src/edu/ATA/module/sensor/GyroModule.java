@@ -102,7 +102,6 @@ class ForwardingGyro implements edu.ATA.module.sensor.Gyro {
     }
 
     /**
-     *
      * Returns the instance of the underlying
      * {@link edu.wpi.first.wpilibj.Gyro}.
      *
