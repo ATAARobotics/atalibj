@@ -14,10 +14,11 @@ import java.util.TimerTask;
  *
  * @author Team 4334
  */
-public class BangBangModule implements Module.DisableableModule {
+public class BangBangModule implements Module.DisableableModule, BangBangController {
 
     private boolean enabled;
     private double setpoint = 0;
+    private double maxSpeed;
     private final PIDSource source;
     private final PIDOutput output;
     private Timer timer = new Timer();
@@ -28,32 +29,86 @@ public class BangBangModule implements Module.DisableableModule {
                     if (source.pidGet() > setpoint) {
                         output.pidWrite(0);
                     } else {
-                        output.pidWrite(1);
+                        output.pidWrite(maxSpeed);
                     }
                 }
             }
         }
     };
 
+    /**
+     * Constructs and begins the thread. This will not start moving, but rather
+     * be "ready" to move when enabled.
+     *
+     * @param source the source to check setpoints
+     * @param output output of the controller
+     * @param maxSpeed maximum speed to set the output
+     */
     public BangBangModule(PIDSource source, PIDOutput output) {
         this.source = source;
         this.output = output;
         timer.scheduleAtFixedRate(task, (long) 0.0, (long) 0.02);
     }
 
+    /**
+     * Stops the controller from changing output on the output object.
+     *
+     * @return if module is disabled successfully
+     */
     public synchronized boolean disable() {
         return !(enabled = false);
     }
 
+    /**
+     * Starts the controller. If and when a setpoint is set, the controller will
+     * set the corresponding output.
+     *
+     * @return if module is enabled successfully
+     */
     public synchronized boolean enable() {
         return (enabled = true);
     }
 
+    /**
+     * Checks to see if the controller is currently actively pursuing the
+     * setpoint. Even if the module is enabled, it will not work in disabled
+     * mode.
+     *
+     * @return if module is enabled
+     */
     public synchronized boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Sets the speed / position that the controller is aiming for.
+     *
+     * @param setpoint position / speed to stop going at
+     */
     public synchronized void setSetpoint(double setpoint) {
         this.setpoint = setpoint;
+    }
+
+    /**
+     * Sets the maximum speed to set the output. If this value is negative, the
+     * absolute value is used. To reverse the output direction, use
+     * {@code reverse()}.
+     *
+     * @param maxSpeed maximum speed of output
+     */
+    public synchronized void setMaxSpeed(double maxSpeed) {
+        if (this.maxSpeed < 0) {
+            this.maxSpeed = -Math.abs(maxSpeed);
+        } else {
+            this.maxSpeed = Math.abs(maxSpeed);
+        }
+    }
+
+    /**
+     * Reverses the direction of the output. This is useful because bang bang
+     * only goes in one direction.
+     */
+    public synchronized void reverse() {
+        maxSpeed = -maxSpeed;
     }
 }
