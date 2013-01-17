@@ -1,4 +1,4 @@
-package edu.ATA.module.pid;
+package edu.ATA.module.target;
 
 /**
  * Interface that represents full functionality of a PID controller (see

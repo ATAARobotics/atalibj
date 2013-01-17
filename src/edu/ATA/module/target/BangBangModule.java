@@ -1,5 +1,6 @@
-package edu.ATA.module.pid;
+package edu.ATA.module.target;
 
+import edu.ATA.main.DriverstationInfo;
 import edu.ATA.module.Module;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -23,10 +24,12 @@ public class BangBangModule implements Module.DisableableModule {
     private TimerTask task = new TimerTask() {
         public void run() {
             if (enabled) {
-                if (source.pidGet() > setpoint) {
-                    output.pidWrite(0);
-                } else {
-                    output.pidWrite(1);
+                if (!DriverstationInfo.getGamePeriod().equals(DriverstationInfo.DISABLED)) {
+                    if (source.pidGet() > setpoint) {
+                        output.pidWrite(0);
+                    } else {
+                        output.pidWrite(1);
+                    }
                 }
             }
         }
@@ -35,7 +38,7 @@ public class BangBangModule implements Module.DisableableModule {
     public BangBangModule(PIDSource source, PIDOutput output) {
         this.source = source;
         this.output = output;
-        timer.scheduleAtFixedRate(task, (long) 0.0, (long) 0.05);
+        timer.scheduleAtFixedRate(task, (long) 0.0, (long) 0.02);
     }
 
     public synchronized boolean disable() {

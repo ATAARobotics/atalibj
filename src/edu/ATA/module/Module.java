@@ -1,6 +1,6 @@
 package edu.ATA.module;
 
-import edu.ATA.module.pid.PIDModule;
+import edu.ATA.module.target.PIDModule;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.networktables2.util.List;

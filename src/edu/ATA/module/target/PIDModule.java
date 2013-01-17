@@ -1,4 +1,4 @@
-package edu.ATA.module.pid;
+package edu.ATA.module.target;
 
 import edu.ATA.module.Module;
 import edu.wpi.first.wpilibj.PIDController;
@@ -62,7 +62,7 @@ public final class PIDModule extends ForwardingPIDController implements Module.D
  *
  * @author Joel Gallant
  */
-class ForwardingPIDController implements edu.ATA.module.pid.PIDController {
+class ForwardingPIDController implements edu.ATA.module.target.PIDController {
 
     private final edu.wpi.first.wpilibj.PIDController controller;
 
