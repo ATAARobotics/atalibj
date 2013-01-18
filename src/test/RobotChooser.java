@@ -9,9 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 public class RobotChooser extends SendableChooser {
 
     public RobotChooser() {
-        addObject("BasicShooter", "BasicShooter");
-        addObject("TrackedShooter", "TrackedShooter");
-        addObject("MovingShooter", "MovingShooter");
-        addObject("PneumaticShooter", "PneumaticShooter");
+        addObject("BasicDrive", "BasicDrive");
     }
 }
