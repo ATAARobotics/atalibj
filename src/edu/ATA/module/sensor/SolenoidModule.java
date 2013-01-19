@@ -81,6 +81,9 @@ class ForwardingSolenoid implements Solenoid {
      * @param controller actual underlying object used
      */
     ForwardingSolenoid(edu.wpi.first.wpilibj.Solenoid solenoid) {
+        if(solenoid == null) {
+            throw new NullPointerException();
+        }
         this.solenoid = solenoid;
     }
 

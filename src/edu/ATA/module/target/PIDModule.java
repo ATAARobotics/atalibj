@@ -73,6 +73,9 @@ class ForwardingPIDController implements edu.ATA.module.target.PIDController {
      * @param controller actual underlying object used
      */
     ForwardingPIDController(edu.wpi.first.wpilibj.PIDController controller) {
+        if (controller == null) {
+            throw new NullPointerException();
+        }
         this.controller = controller;
     }
 

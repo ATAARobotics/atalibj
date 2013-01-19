@@ -129,6 +129,9 @@ public class AutonomousMode extends CommandGroup {
      * @param mode the autonomous mode to add to storage
      */
     public static void addAutonomousMode(AutonomousMode mode) {
+        if (mode == null) {
+            throw new NullPointerException();
+        }
         autoModes.put(mode.getName(), mode);
     }
 

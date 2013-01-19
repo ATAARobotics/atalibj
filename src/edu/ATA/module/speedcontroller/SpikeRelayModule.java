@@ -93,6 +93,9 @@ class ForwardingSpikeRelay implements SpikeRelay {
      * @param controller actual underlying object used
      */
     ForwardingSpikeRelay(Relay spikeRelay) {
+        if(spikeRelay == null) {
+            throw new NullPointerException();
+        }
         this.spikeRelay = spikeRelay;
     }
 

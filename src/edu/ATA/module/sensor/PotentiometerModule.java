@@ -86,6 +86,9 @@ class ForwardingPotentiometer implements Potentiometer {
      * @param controller actual underlying object used
      */
     ForwardingPotentiometer(AnalogChannel potentiometer) {
+        if(potentiometer == null) {
+            throw new NullPointerException();
+        }
         this.potentiometer = potentiometer;
     }
 

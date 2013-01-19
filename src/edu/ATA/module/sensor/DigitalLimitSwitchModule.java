@@ -84,6 +84,9 @@ class ForwardingDigitalLimitSwitch implements DigitalLimitSwitch {
      * @param controller actual underlying object used
      */
     ForwardingDigitalLimitSwitch(DigitalInput button) {
+        if (button == null) {
+            throw new NullPointerException();
+        }
         this.button = button;
     }
 

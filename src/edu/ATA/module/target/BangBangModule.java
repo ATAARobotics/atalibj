@@ -45,6 +45,9 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
      * @param maxSpeed maximum speed to set the output
      */
     public BangBangModule(PIDSource source, PIDOutput output) {
+        if(source == null || output == null) {
+            throw new NullPointerException();
+        }
         this.source = source;
         this.output = output;
         timer.scheduleAtFixedRate(task, (long) 0.0, (long) 0.02);

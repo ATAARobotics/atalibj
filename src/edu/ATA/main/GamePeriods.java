@@ -85,7 +85,7 @@ public class GamePeriods extends IterativeRobot {
         System.out.println("Robot Init...");
         try {
             robot.robotInit();
-        } catch (Error err) {
+        } catch (Throwable err) {
             System.err.println("Error encountered in robotInit()! Shutting down!");
             err.printStackTrace();
             System.exit(11);
@@ -110,7 +110,7 @@ public class GamePeriods extends IterativeRobot {
     public void autonomousPeriodic() {
         try {
             robot.autonomousPeriodic();
-        } catch (Error err) {
+        } catch (Throwable err) {
             System.err.println("Error encountered in autonomousPeriodic()!");
             err.printStackTrace();
         }
@@ -134,7 +134,7 @@ public class GamePeriods extends IterativeRobot {
     public void teleopPeriodic() {
         try {
             robot.teleopPeriodic();
-        } catch (Error err) {
+        } catch (Throwable err) {
             System.err.println("Error encountered in teleopPeriodic()!");
             err.printStackTrace();
         }
@@ -158,7 +158,7 @@ public class GamePeriods extends IterativeRobot {
     public void testPeriodic() {
         try {
             robot.testPeriodic();
-        } catch (Error err) {
+        } catch (Throwable err) {
             System.err.println("Error encountered in testPeriodic()!");
             err.printStackTrace();
         }

@@ -99,6 +99,8 @@ public final class Logger {
      * {@link Urgency#LOG} - 2
      * </pre>
      *
+     * <p> Use a null urgency to just send the message to log file and console.
+     *
      * @param urgency representation of how the message should be delivered
      * @param msg message to log
      */
@@ -156,6 +158,9 @@ public final class Logger {
      * writing to the file fails
      */
     public static void appendToFile(String msg, DataOutputStream outputStream) throws IOException {
+        if (msg == null || outputStream == null) {
+            throw new NullPointerException();
+        }
         byte[] data = msg.getBytes();
         try {
             // Need to test to find out if offset should be saved to append
@@ -190,6 +195,9 @@ public final class Logger {
      * @return text text in the text file
      */
     public static String getTextFromFile(DataInputStream inputStream) throws IOException {
+        if(inputStream == null) {
+            throw new NullPointerException();
+        }
         String tmp = "";
         byte cur;
         while ((cur = (byte) inputStream.read()) > 0) {
@@ -209,6 +217,9 @@ public final class Logger {
      * @param msg message to display on next line
      */
     public static void displayLCDMessage(String msg) {
+        if(msg == null) {
+            throw new NullPointerException();
+        }
         DriverStationLCD.Line line;
         switch (lineNum) {
             case (1):

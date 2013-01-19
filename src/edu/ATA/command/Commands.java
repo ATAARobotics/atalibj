@@ -21,6 +21,9 @@ public final class Commands {
      * @return a runnable instance that will run the command
      */
     public static Runnable convertToRunnable(final Command command) {
+        if (command == null) {
+            throw new NullPointerException();
+        }
         return new RunnableCommand(command);
     }
 
@@ -31,6 +34,9 @@ public final class Commands {
      * @return thread that runs the command
      */
     public static Thread convertToThread(final Command command) {
+        if (command == null) {
+            throw new NullPointerException();
+        }
         return new Thread(convertToRunnable(command));
     }
 
@@ -40,6 +46,9 @@ public final class Commands {
      * @param command command to run in new thread
      */
     public static void runInNewThread(final Command command) {
+        if (command == null) {
+            throw new NullPointerException();
+        }
         convertToThread(command).start();
     }
 
@@ -51,6 +60,9 @@ public final class Commands {
      * @param commands commands to run concurrently
      */
     public static void runConcurrently(final Command[] commands) {
+        if (commands == null) {
+            throw new NullPointerException();
+        }
         Thread[] threads = new Thread[commands.length];
         for (int x = 0; x < threads.length; x++) {
             threads[x] = new Thread(convertToRunnable(commands[x]));
@@ -71,6 +83,9 @@ public final class Commands {
         private final Command command;
 
         private RunnableCommand(Command command) {
+            if(command == null) {
+                throw new NullPointerException();
+            }
             this.command = command;
         }
 
