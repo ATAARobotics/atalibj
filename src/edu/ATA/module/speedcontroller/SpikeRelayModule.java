@@ -116,6 +116,17 @@ class ForwardingSpikeRelay implements SpikeRelay {
     }
 
     /**
+     * Turns the output on or off. This uses the last set direction, and turns
+     * the spike on or off in that direction. Is virtually identical to calling
+     * {@code set(SpikeRelay.ON)} or {@code set(SpikeRelay.OFF)}.
+     *
+     * @param on whether spike should be on
+     */
+    public void set(boolean on) {
+        set(on ? ON : OFF);
+    }
+
+    /**
      * Set the Relay Direction.
      *
      * <p> Changes which values the relay can be set to depending on which
