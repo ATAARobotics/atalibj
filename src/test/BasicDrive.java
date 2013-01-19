@@ -16,7 +16,8 @@ public class BasicDrive extends DefaultRobot implements Modules {
     }
 
     public void teleopPeriodic() throws Error {
-        robotDrive.arcadeDrive(controller.getRightDistanceFromMiddle(), controller.getLeftX());
+        robotDrive.tankDrive(controller.getLeftDistanceFromMiddle(), 
+                controller.getRightDistanceFromMiddle());
         if(System.currentTimeMillis() % 1000 < 15) {
             UserInfo.updateTransferRate();
         }

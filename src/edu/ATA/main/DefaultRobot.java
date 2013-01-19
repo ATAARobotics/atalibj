@@ -60,4 +60,10 @@ public abstract class DefaultRobot implements Robot {
      */
     public void testPeriodic() throws Error {
     }
+
+    /**
+     * Method meant to be overriden that runs once before disabled mode.
+     */
+    public void disabled() throws Error {
+    }
 }

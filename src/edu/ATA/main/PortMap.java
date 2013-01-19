@@ -10,4 +10,6 @@ public interface PortMap {
 
     int JOYSTICK = 1;
     int DRIVE[] = {4, 3, 1, 2};
+    int RELAY = 6;
+    int SOLENOID = 1;
 }

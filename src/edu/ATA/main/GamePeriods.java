@@ -163,4 +163,17 @@ public class GamePeriods extends IterativeRobot {
             err.printStackTrace();
         }
     }
+
+    /**
+     * This function is calls once before every disabled mode. Calls
+     * {@link Robot#disabled()}.
+     */
+    public void disabledInit() {
+        try {
+            robot.disabled();
+        } catch (Throwable err) {
+            System.err.println("Error encountered in disabledInit()!");
+            err.printStackTrace();
+        }
+    }
 }
