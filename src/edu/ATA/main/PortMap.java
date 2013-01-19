@@ -12,4 +12,5 @@ public interface PortMap {
     int DRIVE[] = {4, 3, 1, 2};
     int RELAY = 6;
     int SOLENOID = 1;
+    int SHOOTER = 5;
 }

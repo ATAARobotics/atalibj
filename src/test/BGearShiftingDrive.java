@@ -2,7 +2,7 @@ package test;
 
 import edu.ATA.module.speedcontroller.SpikeRelay;
 
-public class GearShiftingDrive extends BasicDrive {
+public class BGearShiftingDrive extends ABasicDrive {
 
     public void robotInit() throws Error {
         super.robotInit();

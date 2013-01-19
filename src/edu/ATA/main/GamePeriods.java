@@ -38,7 +38,7 @@ package edu.ATA.main;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import test.BasicDrive;
+import test.ABasicDrive;
 import test.RobotChooser;
 
 /**
@@ -67,9 +67,9 @@ public class GamePeriods extends IterativeRobot {
     {
         SmartDashboard.putData("RobotChooser", robotChooser);
         if (robotChooser.getSelected().equals("BasicDrive")) {
-            MAIN_ROBOT = new BasicDrive();
+            MAIN_ROBOT = new ABasicDrive();
         } else {
-            MAIN_ROBOT = new BasicDrive();
+            MAIN_ROBOT = new ABasicDrive();
         }
     }
     private Robot robot = MAIN_ROBOT;
