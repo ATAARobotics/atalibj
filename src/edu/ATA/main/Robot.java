@@ -107,6 +107,7 @@ public interface Robot {
      * This function is called once at the start of disabled mode.
      *
      * @see IterativeRobot#disabledInit()
+     * @throws Error thrown when anything goes wrong
      */
     void disabled() throws Error;
 }

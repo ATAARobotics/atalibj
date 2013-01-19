@@ -20,14 +20,41 @@ import edu.wpi.first.wpilibj.Victor;
  */
 public interface Modules extends PortMap {
 
+    /**
+     *
+     */
     XboxController controller = new XboxController(new Joystick(JOYSTICK));
+    /**
+     *
+     */
     RobotDriveModule robotDrive = new RobotDriveModule(new RobotDrive(DRIVE[0], DRIVE[1], DRIVE[2], DRIVE[3]));
+    /**
+     *
+     */
     SpikeRelayModule spikeRelay = new SpikeRelayModule(new Relay(RELAY));
+    /**
+     *
+     */
     SolenoidModule gearShifter1 = new SolenoidModule(new Solenoid(SOLENOID[0]));
+    /**
+     *
+     */
     SolenoidModule gearShifter2 = new SolenoidModule(new Solenoid(SOLENOID[1]));
+    /**
+     *
+     */
     SolenoidModule gearShifter3 = new SolenoidModule(new Solenoid(SOLENOID[2]));
+    /**
+     *
+     */
     SolenoidModule gearShifter4 = new SolenoidModule(new Solenoid(SOLENOID[3]));
+    /**
+     *
+     */
     Victor shooterMotor = new Victor(SHOOTER);
+    /**
+     *
+     */
     SpeedControllerModule shooter = new SpeedControllerModule(shooterMotor);
 
 }

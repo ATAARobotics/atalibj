@@ -4,6 +4,10 @@ import edu.ATA.main.DefaultRobot;
 import edu.ATA.main.UserInfo;
 import edu.ATA.module.Modules;
 
+/**
+ *
+ * @author Team 4334
+ */
 public class ABasicDrive extends DefaultRobot implements Modules {
 
     public String name() {

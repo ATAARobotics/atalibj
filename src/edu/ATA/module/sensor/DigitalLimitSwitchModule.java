@@ -18,7 +18,7 @@ public final class DigitalLimitSwitchModule extends ForwardingDigitalLimitSwitch
      * Constructs the object by using composition, using the given digital input
      * object to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param button actual underlying object used
      */
     public DigitalLimitSwitchModule(DigitalInput button) {
         super(button);
@@ -81,7 +81,7 @@ class ForwardingDigitalLimitSwitch implements DigitalLimitSwitch {
      * Constructs the object by using composition, using the given digital input
      * object to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param button actual underlying object used
      */
     ForwardingDigitalLimitSwitch(DigitalInput button) {
         if (button == null) {

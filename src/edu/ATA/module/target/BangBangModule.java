@@ -42,7 +42,6 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
      *
      * @param source the source to check setpoints
      * @param output output of the controller
-     * @param maxSpeed maximum speed to set the output
      */
     public BangBangModule(PIDSource source, PIDOutput output) {
         if(source == null || output == null) {

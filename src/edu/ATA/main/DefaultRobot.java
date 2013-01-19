@@ -63,6 +63,7 @@ public abstract class DefaultRobot implements Robot {
 
     /**
      * Method meant to be overriden that runs once before disabled mode.
+     * @throws Error thrown when anything goes wrong
      */
     public void disabled() throws Error {
     }

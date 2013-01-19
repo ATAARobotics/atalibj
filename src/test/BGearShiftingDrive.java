@@ -2,6 +2,10 @@ package test;
 
 import edu.ATA.module.speedcontroller.SpikeRelay;
 
+/**
+ *
+ * @author Team 4334
+ */
 public class BGearShiftingDrive extends ABasicDrive {
     
     private boolean first = true;
@@ -9,6 +13,7 @@ public class BGearShiftingDrive extends ABasicDrive {
     public void robotInit() throws Error {
         super.robotInit();
         spikeRelay.enable();
+        spikeRelay.setDirection(SpikeRelay.FORWARDS_ONLY);
         gearShifter1.enable();
         gearShifter2.enable();
         gearShifter3.enable();
@@ -17,7 +22,6 @@ public class BGearShiftingDrive extends ABasicDrive {
 
     public void teleopInit() {
         super.teleopInit();
-        spikeRelay.set(SpikeRelay.FORWARD);
         spikeRelay.set(SpikeRelay.ON);
     }
 

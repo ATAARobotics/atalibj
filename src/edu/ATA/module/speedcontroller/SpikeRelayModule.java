@@ -19,7 +19,7 @@ public class SpikeRelayModule extends ForwardingSpikeRelay implements Module.Dis
      * Constructs the object by using composition, using the given relay object
      * to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param spikeRelay actual underlying object used
      */
     public SpikeRelayModule(Relay spikeRelay) {
         super(spikeRelay);
@@ -90,7 +90,7 @@ class ForwardingSpikeRelay implements SpikeRelay {
      * Constructs the object by using composition, using the given relay object
      * to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param spikeRelay actual underlying object used
      */
     ForwardingSpikeRelay(Relay spikeRelay) {
         if(spikeRelay == null) {
