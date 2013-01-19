@@ -36,10 +36,7 @@
 package edu.ATA.main;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import test.ABasicDrive;
-import test.RobotChooser;
+import test.BGearShiftingDrive;
 
 /**
  * This class is the 'main' class of the robot code. This is where everything is
@@ -61,17 +58,7 @@ public class GamePeriods extends IterativeRobot {
      * case. (especially with production code - there would not be multiple
      * robots being used)
      */
-    public static Robot MAIN_ROBOT = null;
-    final SendableChooser robotChooser = new RobotChooser();
-
-    {
-        SmartDashboard.putData("RobotChooser", robotChooser);
-        if (robotChooser.getSelected().equals("BasicDrive")) {
-            MAIN_ROBOT = new ABasicDrive();
-        } else {
-            MAIN_ROBOT = new ABasicDrive();
-        }
-    }
+    public static Robot MAIN_ROBOT = new BGearShiftingDrive();
     private Robot robot = MAIN_ROBOT;
 
     /**
