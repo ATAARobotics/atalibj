@@ -92,6 +92,9 @@ class ForwardingJoystick implements Joystick {
      * @param joystick actual underlying object used
      */
     ForwardingJoystick(edu.wpi.first.wpilibj.Joystick joystick) {
+        if (joystick == null) {
+            throw new NullPointerException();
+        }
         this.joystick = joystick;
     }
 

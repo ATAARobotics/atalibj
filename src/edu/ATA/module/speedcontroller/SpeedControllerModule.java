@@ -22,6 +22,9 @@ public final class SpeedControllerModule implements Module, SpeedController {
      * @param speedController object to use underneath this class
      */
     public SpeedControllerModule(SpeedController speedController) {
+        if(speedController == null) {
+            throw new NullPointerException();
+        }
         this.speedController = speedController;
     }
 

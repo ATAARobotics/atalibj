@@ -8,6 +8,24 @@ package edu.ATA.main;
  */
 public interface PortMap {
 
+    /**
+     *
+     */
     int JOYSTICK = 1;
+    /**
+     *
+     */
     int DRIVE[] = {4, 3, 1, 2};
+    /**
+     *
+     */
+    int RELAY = 7;
+    /**
+     *
+     */
+    int SOLENOID[] = {5,6,7,8};
+    /**
+     *
+     */
+    int SHOOTER = 5;
 }

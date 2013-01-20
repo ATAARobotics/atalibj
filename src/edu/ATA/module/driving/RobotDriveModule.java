@@ -85,6 +85,9 @@ class ForwardingRobotDrive implements edu.ATA.module.driving.RobotDrive, PIDOutp
      * @param drive actual underlying object used
      */
     ForwardingRobotDrive(edu.wpi.first.wpilibj.RobotDrive drive) {
+        if (drive == null) {
+            throw new NullPointerException();
+        }
         this.drive = drive;
     }
 

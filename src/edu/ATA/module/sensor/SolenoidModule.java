@@ -16,7 +16,7 @@ public class SolenoidModule extends ForwardingSolenoid implements Module.Disable
      * Constructs the object by using composition, using the given solenoid
      * object to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param solenoid actual underlying object used
      */
     public SolenoidModule(edu.wpi.first.wpilibj.Solenoid solenoid) {
         super(solenoid);
@@ -78,9 +78,12 @@ class ForwardingSolenoid implements Solenoid {
      * Constructs the object by using composition, using the given solenoid
      * object to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param solenoid actual underlying object used
      */
     ForwardingSolenoid(edu.wpi.first.wpilibj.Solenoid solenoid) {
+        if(solenoid == null) {
+            throw new NullPointerException();
+        }
         this.solenoid = solenoid;
     }
 

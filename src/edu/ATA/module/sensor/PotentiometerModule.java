@@ -19,7 +19,7 @@ public final class PotentiometerModule extends ForwardingPotentiometer implement
      * Constructs the object by using composition, using the given analog
      * channel object to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param potentiometer actual underlying object used
      */
     public PotentiometerModule(AnalogChannel potentiometer) {
         super(potentiometer);
@@ -83,9 +83,12 @@ class ForwardingPotentiometer implements Potentiometer {
      * Constructs the object by using composition, using the given analog
      * channel object to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param potentiometer actual underlying object used
      */
     ForwardingPotentiometer(AnalogChannel potentiometer) {
+        if(potentiometer == null) {
+            throw new NullPointerException();
+        }
         this.potentiometer = potentiometer;
     }
 

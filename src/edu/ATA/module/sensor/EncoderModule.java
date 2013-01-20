@@ -110,6 +110,9 @@ class ForwardingEncoder implements edu.ATA.module.sensor.Encoder {
      * @param encoder actual underlying object used
      */
     ForwardingEncoder(edu.wpi.first.wpilibj.Encoder encoder, edu.wpi.first.wpilibj.Encoder.PIDSourceParameter pidSource) {
+        if(encoder == null || pidSource == null) {
+            throw new NullPointerException();
+        }
         this.encoder = encoder;
         encoder.setPIDSourceParameter(pidSource);
     }

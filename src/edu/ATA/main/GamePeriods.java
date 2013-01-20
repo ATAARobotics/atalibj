@@ -36,10 +36,7 @@
 package edu.ATA.main;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import test.BasicDrive;
-import test.RobotChooser;
+import test.BGearShiftingDrive;
 
 /**
  * This class is the 'main' class of the robot code. This is where everything is
@@ -61,17 +58,7 @@ public class GamePeriods extends IterativeRobot {
      * case. (especially with production code - there would not be multiple
      * robots being used)
      */
-    public static Robot MAIN_ROBOT = null;
-    final SendableChooser robotChooser = new RobotChooser();
-
-    {
-        SmartDashboard.putData("RobotChooser", robotChooser);
-        if (robotChooser.getSelected().equals("BasicDrive")) {
-            MAIN_ROBOT = new BasicDrive();
-        } else {
-            MAIN_ROBOT = new BasicDrive();
-        }
-    }
+    public static Robot MAIN_ROBOT = new BGearShiftingDrive();
     private Robot robot = MAIN_ROBOT;
 
     /**
@@ -85,7 +72,7 @@ public class GamePeriods extends IterativeRobot {
         System.out.println("Robot Init...");
         try {
             robot.robotInit();
-        } catch (Error err) {
+        } catch (Throwable err) {
             System.err.println("Error encountered in robotInit()! Shutting down!");
             err.printStackTrace();
             System.exit(11);
@@ -110,7 +97,7 @@ public class GamePeriods extends IterativeRobot {
     public void autonomousPeriodic() {
         try {
             robot.autonomousPeriodic();
-        } catch (Error err) {
+        } catch (Throwable err) {
             System.err.println("Error encountered in autonomousPeriodic()!");
             err.printStackTrace();
         }
@@ -134,7 +121,7 @@ public class GamePeriods extends IterativeRobot {
     public void teleopPeriodic() {
         try {
             robot.teleopPeriodic();
-        } catch (Error err) {
+        } catch (Throwable err) {
             System.err.println("Error encountered in teleopPeriodic()!");
             err.printStackTrace();
         }
@@ -158,8 +145,21 @@ public class GamePeriods extends IterativeRobot {
     public void testPeriodic() {
         try {
             robot.testPeriodic();
-        } catch (Error err) {
+        } catch (Throwable err) {
             System.err.println("Error encountered in testPeriodic()!");
+            err.printStackTrace();
+        }
+    }
+
+    /**
+     * This function is calls once before every disabled mode. Calls
+     * {@link Robot#disabled()}.
+     */
+    public void disabledInit() {
+        try {
+            robot.disabled();
+        } catch (Throwable err) {
+            System.err.println("Error encountered in disabledInit()!");
             err.printStackTrace();
         }
     }

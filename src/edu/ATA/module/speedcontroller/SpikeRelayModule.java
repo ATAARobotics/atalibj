@@ -19,7 +19,7 @@ public class SpikeRelayModule extends ForwardingSpikeRelay implements Module.Dis
      * Constructs the object by using composition, using the given relay object
      * to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param spikeRelay actual underlying object used
      */
     public SpikeRelayModule(Relay spikeRelay) {
         super(spikeRelay);
@@ -90,9 +90,12 @@ class ForwardingSpikeRelay implements SpikeRelay {
      * Constructs the object by using composition, using the given relay object
      * to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param spikeRelay actual underlying object used
      */
     ForwardingSpikeRelay(Relay spikeRelay) {
+        if(spikeRelay == null) {
+            throw new NullPointerException();
+        }
         this.spikeRelay = spikeRelay;
     }
 
@@ -113,6 +116,17 @@ class ForwardingSpikeRelay implements SpikeRelay {
      */
     public void set(Value value) {
         spikeRelay.set(value);
+    }
+
+    /**
+     * Turns the output on or off. This uses the last set direction, and turns
+     * the spike on or off in that direction. Is virtually identical to calling
+     * {@code set(SpikeRelay.ON)} or {@code set(SpikeRelay.OFF)}.
+     *
+     * @param on whether spike should be on
+     */
+    public void set(boolean on) {
+        set(on ? ON : OFF);
     }
 
     /**

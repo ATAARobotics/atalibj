@@ -99,10 +99,16 @@ public class CommandGroup implements Command {
         private final Command[] commands;
 
         private ConcurrentCommandGroup(Command[] commands) {
+            if (commands == null) {
+                throw new NullPointerException();
+            }
             this.commands = commands;
         }
 
         private ConcurrentCommandGroup(List list) {
+            if(list == null) {
+                throw new NullPointerException();
+            }
             commands = new Command[list.size()];
             for (int x = 0; x < list.size(); x++) {
                 commands[x] = (Command) list.get(x);

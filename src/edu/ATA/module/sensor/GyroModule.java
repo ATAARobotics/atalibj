@@ -95,9 +95,12 @@ class ForwardingGyro implements edu.ATA.module.sensor.Gyro {
      * Constructs the object by using composition, using the given gyro object
      * to control methods in this class.
      *
-     * @param controller actual underlying object used
+     * @param gyro actual underlying object used
      */
     ForwardingGyro(edu.wpi.first.wpilibj.Gyro gyro) {
+        if(gyro == null) {
+            throw new NullPointerException();
+        }
         this.gyro = gyro;
     }
 
