@@ -44,7 +44,7 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
      * @param output output of the controller
      */
     public BangBangModule(PIDSource source, PIDOutput output) {
-        if(source == null || output == null) {
+        if (source == null || output == null) {
             throw new NullPointerException();
         }
         this.source = source;

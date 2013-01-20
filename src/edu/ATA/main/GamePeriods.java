@@ -36,7 +36,6 @@
 package edu.ATA.main;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import test.BGearShiftingDrive;
 
 /**
  * This class is the 'main' class of the robot code. This is where everything is
@@ -58,7 +57,7 @@ public class GamePeriods extends IterativeRobot {
      * case. (especially with production code - there would not be multiple
      * robots being used)
      */
-    public static Robot MAIN_ROBOT = new BGearShiftingDrive();
+    public static Robot MAIN_ROBOT = null;
     private Robot robot = MAIN_ROBOT;
 
     /**

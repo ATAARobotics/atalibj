@@ -8,7 +8,7 @@ import edu.ATA.module.Module;
  *
  * @author Team 4334
  */
-public class SolenoidModule extends ForwardingSolenoid implements Module.DisableableModule {
+public final class SolenoidModule extends ForwardingSolenoid implements Module.DisableableModule {
 
     private boolean enabled;
 

@@ -1,7 +1,6 @@
 package edu.ATA.auto;
 
 import edu.ATA.command.CommandGroup;
-import edu.ATA.main.UserInfo;
 import java.util.Enumeration;
 import java.util.Hashtable;
 

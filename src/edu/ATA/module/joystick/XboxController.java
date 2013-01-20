@@ -41,7 +41,7 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  * @author Joel Gallant
  */
-public class XboxController extends JoystickModule {
+public final class XboxController extends JoystickModule {
 
     /**
      * The absolute smallest value for the all axises to return. If it is

@@ -1,22 +1,19 @@
 package test;
 
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-
 /**
  *
- * @author Team 4334
+ * @author joel
  */
-public class CShootingDrive extends BGearShiftingDrive {
+public class GearedShooter extends GearedDrive {
 
     public void robotInit() throws Error {
         super.robotInit();
         shooter.enable();
-        LiveWindow.addActuator("N/A", "Shooter", shooterMotor);
+        controller.enable();
     }
 
     public void teleopPeriodic() throws Error {
         super.teleopPeriodic();
         shooter.set(controller.getTriggers());
-        LiveWindow.run();
     }
 }

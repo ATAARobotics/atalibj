@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Relay.Value;
  *
  * @author Joel Gallant
  */
-public class SpikeRelayModule extends ForwardingSpikeRelay implements Module.DisableableModule {
+public final class SpikeRelayModule extends ForwardingSpikeRelay implements Module.DisableableModule {
 
     private boolean enabled;
 
