@@ -17,9 +17,12 @@ public final class GearedDrivetrain extends Drivetrain {
 
     /**
      * Constructs the drivetrain using all of its modules. If you are not using
-     * arcade drive, this defaults to tank drive. It's generally advisable to
-     * only use the modules here, and not use them elsewhere, as references to
-     * the same objects can cause conflicts.
+     * arcade drive, this defaults to tank drive. Requires them to be modules so
+     * that enabling and disabling can be guaranteed. The module aspect of the
+     * given objects is handled by the inner methods of this class. (enabling,
+     * disabling) It's generally advisable to only use the modules here, and not
+     * use them elsewhere, as references to the same objects can cause
+     * conflicts.
      *
      * @param left1 left solenoid to set gear 1
      * @param left2 left solenoid to set gear 2
@@ -45,11 +48,7 @@ public final class GearedDrivetrain extends Drivetrain {
      * @return whether all modules are enabled successfully
      */
     public boolean enable() {
-        left1.enable();
-        left2.enable();
-        right1.enable();
-        right2.enable();
-        return super.enable() && isEnabled();
+        return super.enable() && left1.enable() && left2.enable() && right1.enable() && right2.enable();
     }
 
     /**
@@ -58,11 +57,7 @@ public final class GearedDrivetrain extends Drivetrain {
      * @return whether all modules are disabled successfully
      */
     public boolean disable() {
-        left1.disable();
-        left2.disable();
-        right1.disable();
-        right2.disable();
-        return super.disable() && !isEnabled();
+        return super.disable() && left1.disable() && left2.enable() && right1.enable() && right2.enable();
     }
 
     /**

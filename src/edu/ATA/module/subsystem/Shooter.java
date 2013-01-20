@@ -35,24 +35,22 @@ public class Shooter extends BangBangModule {
         this.motor = motor;
     }
 
+    /**
+     * Enables all modules.
+     *
+     * @return if all modules are enabled
+     */
     public synchronized boolean enable() {
-        encoder.enable();
-        motor.enable();
-        return super.enable();
-    }
-
-    public synchronized boolean disable() {
-        encoder.disable();
-        motor.disable();
-        return super.disable();
+        return super.enable() && encoder.enable() && motor.enable();
     }
 
     /**
-     * Changes the speed of the motor.
+     * Disables all modules.
      *
-     * @param speed speed to shoot at
+     * @return if all modules are disabled
      */
-    public void setSpeed(double speed) {
-        motor.set(speed);
+    public synchronized boolean disable() {
+        motor.disable();
+        return super.disable() && encoder.disable();
     }
 }

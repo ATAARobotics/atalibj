@@ -19,9 +19,11 @@ public class Drivetrain implements Module.DisableableModule {
     /**
      * Constructs the drivetrain using a {@link RobotDriveModule} and
      * {@link XboxController}. If you are not using arcade drive, this defaults
-     * to tank drive. It's generally advisable to only use the modules here, and
-     * not use them elsewhere, as references to the same objects can cause
-     * conflicts.
+     * to tank drive. Requires them to be modules so that enabling and disabling
+     * can be guaranteed. The module aspect of the given objects is handled by
+     * the inner methods of this class. (enabling, disabling) It's generally
+     * advisable to only use the modules here, and not use them elsewhere, as
+     * references to the same objects can cause conflicts.
      *
      * @param driveModule driving module
      * @param controller control to move robot with
@@ -69,9 +71,13 @@ public class Drivetrain implements Module.DisableableModule {
      */
     public void drive() {
         if (arcadeDrive) {
-            driveModule.arcadeDrive(controller.getLeftDistanceFromMiddle(), controller.getRightX());
+            driveModule.arcadeDrive(convertSpeed(controller.getRightDistanceFromMiddle()), controller.getRightX(), false);
         } else {
-            driveModule.tankDrive(controller.getLeftDistanceFromMiddle(), controller.getRightDistanceFromMiddle());
+            driveModule.tankDrive(convertSpeed(controller.getLeftDistanceFromMiddle()), convertSpeed(controller.getRightDistanceFromMiddle()), false);
         }
+    }
+
+    private double convertSpeed(double x) {
+        return -4.43 * (((x * x * x * x) * (x - 1.3) * (x - 1.3)) / (x - 1.4));
     }
 }
