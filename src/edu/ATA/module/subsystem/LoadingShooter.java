@@ -2,6 +2,7 @@ package edu.ATA.module.subsystem;
 
 import edu.ATA.command.Command;
 import edu.ATA.command.Commands;
+import edu.ATA.module.Module;
 import edu.ATA.module.sensor.EncoderModule;
 import edu.ATA.module.sensor.SolenoidModule;
 import edu.ATA.module.speedcontroller.SpeedControllerModule;
@@ -15,10 +16,10 @@ import edu.wpi.first.wpilibj.Timer;
  *
  * @author joel
  */
-public class LoadingShooter extends Shooter {
+public class LoadingShooter extends Subsystem {
 
+    private final Shooter shooter;
     private final SolenoidModule load, reload;
-    private final Object lock = new Object();
 
     /**
      * Constructs the subsystem using its two solenoids, an encoder for speed
@@ -37,31 +38,11 @@ public class LoadingShooter extends Shooter {
      * @param encoder encoder to measure speed
      * @param motor motor to control
      */
-    public LoadingShooter(SolenoidModule load, SolenoidModule reload, EncoderModule encoder, SpeedControllerModule motor) {
-        super(encoder, motor);
+    public LoadingShooter(SolenoidModule load, SolenoidModule reload, Shooter shooter) {
+        super(new Module[]{load, reload, shooter});
+        this.shooter = shooter;
         this.load = load;
         this.reload = reload;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public synchronized boolean enable() {
-        return super.enable() && load.enable() && reload.enable();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public synchronized boolean isEnabled() {
-        return super.isEnabled() && load.isEnabled() && reload.isEnabled();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public synchronized boolean disable() {
-        return super.disable() && load.disable() && reload.disable();
     }
 
     /**
@@ -71,7 +52,7 @@ public class LoadingShooter extends Shooter {
      * @param waitTime time to wait for disc to be pushed
      */
     public void load(double loadTime, double waitTime) {
-        synchronized (lock) {
+        synchronized (this) {
             Commands.runInNewThread(new Load(loadTime, waitTime));
         }
     }
@@ -86,7 +67,7 @@ public class LoadingShooter extends Shooter {
      * @param shootTime time to shoot for
      */
     public void loadAndShoot(double loadTime, double waitTime, double speed, double shootTime) {
-        synchronized (lock) {
+        synchronized (this) {
             Commands.runInNewThread(new LoadAndShoot(new Load(loadTime, waitTime), speed, shootTime));
         }
     }
@@ -128,9 +109,9 @@ public class LoadingShooter extends Shooter {
 
         public void runCommand() {
             load.runCommand();
-            setSetpoint(speed);
+            shooter.setSetpoint(speed);
             Timer.delay(shootTime);
-            setSetpoint(0);
+            shooter.setSetpoint(0);
         }
     }
 }

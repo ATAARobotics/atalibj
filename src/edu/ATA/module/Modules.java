@@ -37,9 +37,10 @@ public interface Modules extends PortMap {
     SpeedControllerModule shooter = new SpeedControllerModule(new Victor(SHOOTER));
     SolenoidModule loader = new SolenoidModule(new Solenoid(LOADER));
     SolenoidModule reloader = new SolenoidModule(new Solenoid(RELOADER));
+    
     // Subsystems
-    Drivetrain drivetrain = new Drivetrain(robotDrive, controller, true);
-    GearedDrivetrain gearedDrivetrain = new GearedDrivetrain(left1, left2, right1, right2, robotDrive, controller, true);
-    Shooter bangBangShooter = new Shooter(encoder, shooter);
-    LoadingShooter loadingShooter = new LoadingShooter(loader, reloader, encoder, shooter);
+    Drivetrain drivetrain = new Drivetrain(robotDrive, controller, false);
+    GearedDrivetrain gearedDrivetrain = new GearedDrivetrain(left1, left2, right1, right2, drivetrain, controller);
+    Shooter shooterSubsystem = new Shooter(encoder, shooter);
+    LoadingShooter loadingShooter = new LoadingShooter(loader, reloader, shooterSubsystem);
 }

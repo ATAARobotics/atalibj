@@ -49,7 +49,7 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
         }
         this.source = source;
         this.output = output;
-        timer.scheduleAtFixedRate(task, (long) 0.0, (long) 0.02);
+        timer.scheduleAtFixedRate(task, 0L, 20L);
     }
 
     /**

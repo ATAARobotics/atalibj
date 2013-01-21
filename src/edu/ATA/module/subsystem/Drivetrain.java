@@ -10,7 +10,7 @@ import edu.ATA.module.joystick.XboxController;
  *
  * @author joel
  */
-public class Drivetrain implements Module.DisableableModule {
+public class Drivetrain extends Subsystem implements Module.DisableableModule {
 
     protected final RobotDriveModule driveModule;
     protected final XboxController controller;
@@ -30,40 +30,10 @@ public class Drivetrain implements Module.DisableableModule {
      * @param arcadeDrive whether to use arcade or tank
      */
     public Drivetrain(RobotDriveModule driveModule, XboxController controller, boolean arcadeDrive) {
+        super(new Module[]{driveModule, controller});
         this.driveModule = driveModule;
         this.controller = controller;
         this.arcadeDrive = arcadeDrive;
-    }
-
-    /**
-     * Disables the driving module and controller.
-     *
-     * @return if they disabled correctly
-     */
-    public boolean disable() {
-        driveModule.disable();
-        controller.disable();
-        return !isEnabled();
-    }
-
-    /**
-     * Enables the driving module and controller.
-     *
-     * @return if they enabled correctly
-     */
-    public boolean enable() {
-        driveModule.enable();
-        controller.enable();
-        return isEnabled();
-    }
-
-    /**
-     * Returns whether or not both modules are enabled.
-     *
-     * @return if both modules are enabled
-     */
-    public boolean isEnabled() {
-        return driveModule.isEnabled() && controller.isEnabled();
     }
 
     /**

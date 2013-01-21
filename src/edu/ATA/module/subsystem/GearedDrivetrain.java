@@ -1,6 +1,6 @@
 package edu.ATA.module.subsystem;
 
-import edu.ATA.module.driving.RobotDriveModule;
+import edu.ATA.module.Module;
 import edu.ATA.module.joystick.XboxController;
 import edu.ATA.module.sensor.SolenoidModule;
 
@@ -9,8 +9,10 @@ import edu.ATA.module.sensor.SolenoidModule;
  *
  * @author joel
  */
-public final class GearedDrivetrain extends Drivetrain {
+public final class GearedDrivetrain extends Subsystem {
 
+    private final Drivetrain drivetrain;
+    private final XboxController controller;
     private final SolenoidModule left1, left2, right1, right2;
     private boolean geared = false;
     private boolean pressed = false;
@@ -33,41 +35,15 @@ public final class GearedDrivetrain extends Drivetrain {
      * @param arcadeDrive whether to use arcade or tank
      */
     public GearedDrivetrain(SolenoidModule left1, SolenoidModule left2,
-            SolenoidModule right1, SolenoidModule right2, RobotDriveModule driveModule,
-            XboxController controller, boolean arcadeDrive) {
-        super(driveModule, controller, arcadeDrive);
+            SolenoidModule right1, SolenoidModule right2, Drivetrain drivetrain,
+            XboxController controller) {
+        super(new Module[]{left1, left2, right1, right2, drivetrain, controller});
         this.left1 = left1;
         this.left2 = left2;
         this.right1 = right1;
         this.right2 = right2;
-    }
-
-    /**
-     * Enables all modules that are part of this class.
-     *
-     * @return whether all modules are enabled successfully
-     */
-    public boolean enable() {
-        return super.enable() && left1.enable() && left2.enable() && right1.enable() && right2.enable();
-    }
-
-    /**
-     * Disables all modules that are a part of this class.
-     *
-     * @return whether all modules are disabled successfully
-     */
-    public boolean disable() {
-        return super.disable() && left1.disable() && left2.enable() && right1.enable() && right2.enable();
-    }
-
-    /**
-     * Returns whether all of the modules are enabled.
-     *
-     * @return if all modules are enabled
-     */
-    public boolean isEnabled() {
-        return super.isEnabled() && left1.isEnabled() && left2.isEnabled()
-                && right1.isEnabled() && right2.isEnabled();
+        this.drivetrain = drivetrain;
+        this.controller = controller;
     }
 
     /**
@@ -75,7 +51,7 @@ public final class GearedDrivetrain extends Drivetrain {
      * toggle on the right bumper to switch between gear 1 and 2.
      */
     public void drive() {
-        super.drive();
+        drivetrain.drive();
         if (controller.getRightBumper() && !pressed) {
             pressed = true;
             geared = !geared;

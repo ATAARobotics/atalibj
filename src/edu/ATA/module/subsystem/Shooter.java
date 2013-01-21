@@ -1,7 +1,9 @@
 package edu.ATA.module.subsystem;
 
+import edu.ATA.module.Module;
 import edu.ATA.module.sensor.EncoderModule;
 import edu.ATA.module.speedcontroller.SpeedControllerModule;
+import edu.ATA.module.target.BangBangController;
 import edu.ATA.module.target.BangBangModule;
 
 /**
@@ -10,10 +12,9 @@ import edu.ATA.module.target.BangBangModule;
  *
  * @author joel
  */
-public class Shooter extends BangBangModule {
+public final class Shooter extends Subsystem implements BangBangController {
 
-    private final EncoderModule encoder;
-    private final SpeedControllerModule motor;
+    private final BangBangModule bangBangModule;
 
     /**
      * Constructs object using an encoder and speed controller. Requires them to
@@ -30,27 +31,23 @@ public class Shooter extends BangBangModule {
      * @param motor motor to control
      */
     public Shooter(EncoderModule encoder, SpeedControllerModule motor) {
-        super(encoder, motor);
-        this.encoder = encoder;
-        this.motor = motor;
+        this(new BangBangModule(encoder, motor));
     }
 
-    /**
-     * Enables all modules.
-     *
-     * @return if all modules are enabled
-     */
-    public synchronized boolean enable() {
-        return super.enable() && encoder.enable() && motor.enable();
+    private Shooter(BangBangModule bangBangModule) {
+        super(new Module[]{bangBangModule});
+        this.bangBangModule = bangBangModule;
     }
 
-    /**
-     * Disables all modules.
-     *
-     * @return if all modules are disabled
-     */
-    public synchronized boolean disable() {
-        motor.disable();
-        return super.disable() && encoder.disable();
+    public void setSetpoint(double setpoint) {
+        bangBangModule.setSetpoint(setpoint);
+    }
+
+    public void setMaxSpeed(double maxSpeed) {
+        bangBangModule.setMaxSpeed(maxSpeed);
+    }
+
+    public void reverse() {
+        bangBangModule.reverse();
     }
 }
