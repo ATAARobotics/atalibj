@@ -41,13 +41,17 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  * @author Joel Gallant
  */
-public final class XboxController extends JoystickModule {
+public final class XboxController extends BindableJoystick {
 
     /**
      * The absolute smallest value for the all axises to return. If it is
      * smaller than this value, it will revert to 0.
      */
     public static final double DEADZONE = 0.19;
+    public static final int A = 1, B = 2, X = 3, Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
+            BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10;
+    public static final int LEFT_X = 1, LEFT_Y = 2, TRIGGERS = 3, RIGHT_X = 4,
+            RIGHT_Y = 5, DIRECTIONAL_PAD = 6;
 
     /**
      * Constructs the object by using composition, using the given joystick
@@ -81,7 +85,7 @@ public final class XboxController extends JoystickModule {
      * @return whether A button is pressed
      */
     public boolean getAButton() {
-        return getButton(1);
+        return getButton(A);
     }
 
     /**
@@ -91,7 +95,7 @@ public final class XboxController extends JoystickModule {
      * @return whether B button is pressed
      */
     public boolean getBButton() {
-        return getButton(2);
+        return getButton(B);
     }
 
     /**
@@ -101,7 +105,7 @@ public final class XboxController extends JoystickModule {
      * @return whether X button is pressed
      */
     public boolean getXButton() {
-        return getButton(3);
+        return getButton(X);
     }
 
     /**
@@ -111,7 +115,7 @@ public final class XboxController extends JoystickModule {
      * @return whether Y button is pressed
      */
     public boolean getYButton() {
-        return getButton(4);
+        return getButton(Y);
     }
 
     /**
@@ -121,7 +125,7 @@ public final class XboxController extends JoystickModule {
      * @return whether left bumper button is pressed
      */
     public boolean getLeftBumper() {
-        return getButton(5);
+        return getButton(LEFT_BUMPER);
     }
 
     /**
@@ -131,7 +135,7 @@ public final class XboxController extends JoystickModule {
      * @return whether right bumper button is pressed
      */
     public boolean getRightBumper() {
-        return getButton(6);
+        return getButton(RIGHT_BUMPER);
     }
 
     /**
@@ -141,7 +145,7 @@ public final class XboxController extends JoystickModule {
      * @return whether back button is pressed
      */
     public boolean getBackButton() {
-        return getButton(7);
+        return getButton(BACK);
     }
 
     /**
@@ -151,7 +155,7 @@ public final class XboxController extends JoystickModule {
      * @return whether start button is pressed
      */
     public boolean getStartButton() {
-        return getButton(8);
+        return getButton(START);
     }
 
     /**
@@ -161,7 +165,7 @@ public final class XboxController extends JoystickModule {
      * @return whether left analog stick is pressed
      */
     public boolean getLeftJoystickButton() {
-        return getButton(9);
+        return getButton(LEFT_STICK);
     }
 
     /**
@@ -171,7 +175,7 @@ public final class XboxController extends JoystickModule {
      * @return whether right analog stick is pressed
      */
     public boolean getRightJoystickButton() {
-        return getButton(10);
+        return getButton(RIGHT_STICK);
     }
 
     /**
@@ -182,7 +186,7 @@ public final class XboxController extends JoystickModule {
      * @return left joystick x axis
      */
     public double getLeftX() {
-        return getAxis(1);
+        return getAxis(LEFT_X);
     }
 
     /**
@@ -193,7 +197,7 @@ public final class XboxController extends JoystickModule {
      * @return left joystick y axis
      */
     public double getLeftY() {
-        return -getAxis(2);
+        return -getAxis(LEFT_Y);
     }
 
     /**
@@ -204,7 +208,7 @@ public final class XboxController extends JoystickModule {
      * @return right joystick x axis
      */
     public double getRightX() {
-        return getAxis(4);
+        return getAxis(RIGHT_X);
     }
 
     /**
@@ -215,7 +219,7 @@ public final class XboxController extends JoystickModule {
      * @return right joystick y axis
      */
     public double getRightY() {
-        return -getAxis(5);
+        return -getAxis(RIGHT_Y);
     }
 
     /**
@@ -227,7 +231,7 @@ public final class XboxController extends JoystickModule {
      * @return sum of both triggers values
      */
     public double getTriggers() {
-        return -getAxis(3);
+        return -getAxis(TRIGGERS);
     }
 
     /**
@@ -238,7 +242,7 @@ public final class XboxController extends JoystickModule {
      * @return directional pad's axis
      */
     public double getDirectionalPad() {
-        return getAxis(6);
+        return getAxis(DIRECTIONAL_PAD);
     }
 
     /**

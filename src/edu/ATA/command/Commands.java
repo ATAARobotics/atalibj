@@ -1,4 +1,4 @@
-package edu.ATA.commands;
+package edu.ATA.command;
 
 /**
  * Static utility class used to add functionality to commands.

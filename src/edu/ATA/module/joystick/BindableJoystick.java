@@ -1,6 +1,6 @@
-package edu.ATA.joystick;
+package edu.ATA.module.joystick;
 
-import edu.ATA.commands.Command;
+import edu.ATA.command.Command;
 import edu.ATA.commands.ConcurrentCommandGroup;
 import edu.wpi.first.wpilibj.Joystick;
 import java.util.Enumeration;
@@ -30,9 +30,29 @@ import java.util.Hashtable;
  *
  * @author joel
  */
-public final class BindableJoystick {
+public class BindableJoystick extends JoystickModule {
 
-    private static final String WHEN_PRESSED = "WNP", WHILE_PRESSED = "WLP";
+    private static final String WHEN_PRESSED = "WNP", WHILE_PRESSED = "WLP", AXIS = "AXS";
+
+    public static interface BindedAxis {
+
+        public void set(double axisValue);
+    }
+
+    private static class MultipleBindingAxis implements BindedAxis {
+
+        private final BindedAxis[] axises;
+
+        public MultipleBindingAxis(BindedAxis[] axises) {
+            this.axises = axises;
+        }
+
+        public void set(double axisValue) {
+            for (int x = 0; x < axises.length; x++) {
+                axises[x].set(axisValue);
+            }
+        }
+    }
 
     private final class Key {
 
@@ -62,7 +82,6 @@ public final class BindableJoystick {
     }
     private final Hashtable bindings = new Hashtable();
     private final Hashtable pressed = new Hashtable();
-    private final Joystick joystick;
 
     /**
      * Constructs the joystick using composition to get input from it. It is
@@ -72,17 +91,14 @@ public final class BindableJoystick {
      * @param joystick joystick to get input from
      */
     public BindableJoystick(Joystick joystick) {
-        if (joystick == null) {
-            throw new NullPointerException();
-        }
-        this.joystick = joystick;
+        super(joystick);
     }
 
     /**
      * Performs the necessary checks and commands that were assigned in binding.
      * This method should be called periodically.
      */
-    public void doBinds() {
+    public final void doBinds() {
         Enumeration keys = bindings.keys();
         while (keys.hasMoreElements()) {
             Key key = (Key) keys.nextElement();
@@ -98,7 +114,7 @@ public final class BindableJoystick {
      * @param button button port in {@link Joystick#getRawAxis(int)}
      * @param command command to run when button is pressed
      */
-    public void bindWhenPressed(final int button, Command command) {
+    public final void bindWhenPressed(final int button, Command command) {
         if (command == null) {
             throw new NullPointerException();
         }
@@ -114,11 +130,32 @@ public final class BindableJoystick {
      * @param button button port in {@link Joystick#getRawAxis(int)}
      * @param command command to run while button is pressed
      */
-    public void bindWhilePressed(final int button, Command command) {
+    public final void bindWhilePressed(final int button, Command command) {
         if (command == null) {
             throw new NullPointerException();
         }
         bindButton(new Key(WHILE_PRESSED, button), command);
+    }
+
+    /**
+     * Binds an axis on the joystick to a {@link BindedAxis} object. This mean
+     * it will send the value of {@link Joystick#getRawAxis(int)} to
+     * {@link BindedAxis#set(double)} every time
+     * {@link BindableJoystick#doBinds()} is called.
+     *
+     * @param port number used in {@link Joystick#getRawAxis(int)}
+     * @param axis binded axis object that values are sent to
+     */
+    public final void bindAxis(final int port, BindedAxis axis) {
+        if (axis == null) {
+            throw new NullPointerException();
+        }
+        Key key = new Key(AXIS, port);
+        if (bindings.containsKey(key)) {
+            BindedAxis prev = (BindedAxis) bindings.get(key);
+            axis = new MultipleBindingAxis(new BindedAxis[]{prev, axis});
+        }
+        bind(key, axis);
     }
 
     private void bindButton(Key key, Command command) {
@@ -134,6 +171,10 @@ public final class BindableJoystick {
         pressed.put(key, Boolean.FALSE);
     }
 
+    private void bind(final Key key, final BindedAxis axis) {
+        bindings.put(key, axis);
+    }
+
     private void doBind(Key key) {
         if (key.type.equals(WHEN_PRESSED)) {
             if (pressed.get(key).equals(Boolean.FALSE)) {
@@ -141,13 +182,15 @@ public final class BindableJoystick {
             } else if (!check(key.port)) {
                 pressed.put(key, Boolean.FALSE);
             }
-        } else {
+        } else if (key.type.equals(WHILE_PRESSED)) {
             checkAndDo(key.port, (Command) bindings.get(key));
+        } else if (key.type.equals(AXIS)) {
+            doAxis(key.port, (BindedAxis) bindings.get(key));
         }
     }
 
     private boolean check(int port) {
-        return joystick.getRawButton(port);
+        return getButton(port);
     }
 
     private boolean checkAndDo(int port, Command command) {
@@ -157,5 +200,9 @@ public final class BindableJoystick {
         } else {
             return false;
         }
+    }
+
+    private void doAxis(int port, BindedAxis axis) {
+        axis.set(getAxis(port));
     }
 }

@@ -1,4 +1,4 @@
-package edu.ATA.commands;
+package edu.ATA.command;
 
 /**
  * Framework for all things that perform a specific action. Used prominently in

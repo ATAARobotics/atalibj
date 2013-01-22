@@ -33,5 +33,6 @@ public interface Modules extends PortMap {
     SpeedControllerModule shooter = new SpeedControllerModule(new Victor(SHOOTER));
     SolenoidModule loader = new SolenoidModule(new Solenoid(LOADER));
     SolenoidModule reloader = new SolenoidModule(new Solenoid(RELOADER));
-   
+    
+    // Subsystems
 }

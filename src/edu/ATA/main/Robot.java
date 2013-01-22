@@ -1,14 +1,12 @@
 package edu.ATA.main;
 
-import edu.ATA.module.Modules;
-
 /**
  * Adapter class for robot objects. None of the methods do anything. To run your
  * robot object, use {@link GamePeriods#setRobot(edu.ATA.main.Robot)}.
  *
  * @author joel
  */
-public class Robot implements Modules {
+public class Robot {
 
     public void robotInit() {
     }

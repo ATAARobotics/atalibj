@@ -30,14 +30,33 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
  * that could be regarded as an entity by itself is a good candidate for being a
  * module. State machines are another good example.
  *
- * <p> The module class also contains an implementation within itself that adds
- * slightly more functionality. {@link DisableableModule}, which is exactly as
- * its name suggests. It adds a disable method, making another standard for
- * things that can be "turned off".
+ * <p> The module class also contains two implementations within itself that add
+ * slightly more functionality. The first one is {@link DisableableModule},
+ * which is exactly as its name suggests. It adds a disable method, making
+ * another standard for things that can be "turned off". The second
+ * implementation is {@link TrackedModule}. This makes the module something that
+ * is added to {@link Module#MODULES} when it is constructed. Part of the
+ * initial design of this interface (Module was originally a class that was
+ * basically equivalent to {@link TrackedModule}), tracked modules make it easy
+ * for instances to be tracked by checking mechanisms outside of the module to
+ * understand why errors may be occurring. This feature has been changed from
+ * mandatory to optional for two specific reasons: <b>1.</b> It is significantly
+ * easier to program modules that extend their real underlying counterparts
+ * <b>2.</b> Tracking module instances lends itself to unwanted safety hazards
+ * from unknown code - it should be opt-in to lend your module object to
+ * {@link Module#MODULES}. You don't want people messing with instances of your
+ * module.
  *
  * @author Joel Gallant
  */
 public interface Module {
+
+    /**
+     * A globally available list of all {@link TrackedModule} modules. This
+     * object is not thread-safe, and uses an unsynchronized list. Extreme
+     * precaution should be taken when using this object.
+     */
+    List MODULES = new List();
 
     /**
      * "Enables" the module. This has very loose standards, and could mean many
@@ -78,5 +97,29 @@ public interface Module {
          * @return whether the module successfully disabled
          */
         boolean disable();
+    }
+
+    /**
+     * This makes the module something that is added to {@link Module#MODULES}
+     * when it is constructed. Part of the initial design of this interface
+     * (Module was originally a class that was basically equivalent to
+     * {@link TrackedModule}), tracked modules make it easy for instances to be
+     * tracked by checking mechanisms outside of the module to understand why
+     * errors may be occurring. This feature has been changed from mandatory to
+     * optional for two specific reasons: <b>1.</b> It is significantly easier
+     * to program modules that extend their real underlying counterparts
+     * <b>2.</b> Tracking module instances lends itself to unwanted safety
+     * hazards from unknown code - it should be opt-in to lend your module
+     * object to {@link Module#MODULES}. You don't want people messing with
+     * instances of your module.
+     *
+     * <p> For this reason, use this class sparingly, and understand what
+     * extending this class means.
+     */
+    public static abstract class TrackedModule implements Module {
+
+        {
+            MODULES.add(this);
+        }
     }
 }

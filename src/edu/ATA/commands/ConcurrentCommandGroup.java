@@ -1,5 +1,8 @@
 package edu.ATA.commands;
 
+import edu.ATA.command.Command;
+import edu.wpi.first.wpilibj.networktables2.util.List;
+
 /**
  * Basic command group that runs multiple commands in parallel. Each command is
  * run inside of a different thread.
@@ -7,8 +10,8 @@ package edu.ATA.commands;
  * @author joel
  */
 public class ConcurrentCommandGroup implements Command {
-    
-    private Command[] commands;
+
+    private final Command[] commands;
 
     /**
      * Constructs the command group using an array of commands to be run at the
@@ -18,10 +21,27 @@ public class ConcurrentCommandGroup implements Command {
      * @param commands commands to run concurrently
      */
     public ConcurrentCommandGroup(Command[] commands) {
-        if(commands == null) {
+        if (commands == null) {
             throw new NullPointerException();
         }
         this.commands = commands;
+    }
+
+    /**
+     * Constructs the command group using an array of commands to be run at the
+     * same time. There is no limit on how many commands can be run. The list
+     * cannot be null, and cannot contain elements that are not commands.
+     *
+     * @param commands commands to run concurrently
+     */
+    public ConcurrentCommandGroup(List commands) {
+        if (commands == null) {
+            throw new NullPointerException();
+        }
+        this.commands = new Command[commands.size()];
+        for (int x = 0; x < commands.size(); x++) {
+            this.commands[x] = (Command) commands.get(x);
+        }
     }
 
     /**
