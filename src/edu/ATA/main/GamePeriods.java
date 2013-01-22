@@ -47,6 +47,47 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * creating this project, you must also update the manifest file in the resource
  * directory. (<i>/resources/META-INF/MANIFEST.MF</i> under "MIDlet-1")</b>
  */
-public class GamePeriods extends IterativeRobot {
+public final class GamePeriods extends IterativeRobot {
 
+    private static Robot robot = new Robot();
+
+    public static void setRobot(Robot robot) {
+        GamePeriods.robot = robot;
+    }
+
+    public void robotInit() {
+        robot.robotInit();
+    }
+
+    public void disabledInit() {
+        robot.disabledInit();
+    }
+
+    public void disabledPeriodic() {
+        robot.disabledPeriodic();
+    }
+
+    public void autonomousInit() {
+        robot.autonomousInit();
+    }
+
+    public void autonomousPeriodic() {
+        robot.autonomousPeriodic();
+    }
+
+    public void teleopInit() {
+        robot.teleopInit();
+    }
+
+    public void teleopPeriodic() {
+        robot.teleopPeriodic();
+    }
+
+    public void testInit() {
+        robot.testInit();
+    }
+
+    public void testPeriodic() {
+        robot.testPeriodic();
+    }
 }
