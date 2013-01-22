@@ -39,8 +39,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
  * This class is the 'main' class of the robot code. This is where everything is
- * started by the DriverStation and WPIlibj code. It controls the 'main' robot
- * object, {@link Robot#MAIN_ROBOT}.
+ * started by the DriverStation and WPIlibj code.
  *
  * <p> <b> The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -50,116 +49,4 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class GamePeriods extends IterativeRobot {
 
-    /**
-     * The intentioned "default" or "main" robot object to use in
-     * {@link GamePeriods}. By no means should the expectation be that this is
-     * automatically used, but it is usually reasonable to assume that is the
-     * case. (especially with production code - there would not be multiple
-     * robots being used)
-     */
-    public static Robot MAIN_ROBOT = null;
-    private Robot robot = MAIN_ROBOT;
-
-    /**
-     * This function is run when the robot is first started up and is used for
-     * any initialization code. Calls {@link Robot#robotInit()}.
-     *
-     * <p> If an error is encountered, the entire program will shut down. (Error
-     * code 11)
-     */
-    public void robotInit() {
-        System.out.println("Robot Init...");
-        try {
-            robot.robotInit();
-        } catch (Throwable err) {
-            System.err.println("Error encountered in robotInit()! Shutting down!");
-            err.printStackTrace();
-            System.exit(11);
-        }
-    }
-
-    /**
-     * This function is called once before every autonomous mode. Calls
-     * {@link Robot#autonomousInit()}.
-     */
-    public void autonomousInit() {
-        robot.autonomousInit();
-    }
-
-    /**
-     * This function is called periodically during autonomous. Calls
-     * {@link Robot#autonomousPeriodic()}.
-     *
-     * <p> If an error is encountered, the robot will print the error to the
-     * console.
-     */
-    public void autonomousPeriodic() {
-        try {
-            robot.autonomousPeriodic();
-        } catch (Throwable err) {
-            System.err.println("Error encountered in autonomousPeriodic()!");
-            err.printStackTrace();
-        }
-    }
-
-    /**
-     * This function is calls once before every autonomous mode. Calls
-     * {@link Robot#teleopInit()}.
-     */
-    public void teleopInit() {
-        robot.teleopInit();
-    }
-
-    /**
-     * This function is called periodically during operator control. Calls
-     * {@link Robot#teleopPeriodic()}.
-     *
-     * <p> If an error is encountered, the robot will print the error to the
-     * console.
-     */
-    public void teleopPeriodic() {
-        try {
-            robot.teleopPeriodic();
-        } catch (Throwable err) {
-            System.err.println("Error encountered in teleopPeriodic()!");
-            err.printStackTrace();
-        }
-    }
-
-    /**
-     * This function is calls once before every test mode. Calls
-     * {@link Robot#testInit()}.
-     */
-    public void testInit() {
-        robot.testInit();
-    }
-
-    /**
-     * This function is called periodically in test mode. Calls
-     * {@link Robot#testPeriodic()}.
-     *
-     * <p> If an error is encountered, the robot will print the error to the
-     * console.
-     */
-    public void testPeriodic() {
-        try {
-            robot.testPeriodic();
-        } catch (Throwable err) {
-            System.err.println("Error encountered in testPeriodic()!");
-            err.printStackTrace();
-        }
-    }
-
-    /**
-     * This function is calls once before every disabled mode. Calls
-     * {@link Robot#disabled()}.
-     */
-    public void disabledInit() {
-        try {
-            robot.disabled();
-        } catch (Throwable err) {
-            System.err.println("Error encountered in disabledInit()!");
-            err.printStackTrace();
-        }
-    }
 }

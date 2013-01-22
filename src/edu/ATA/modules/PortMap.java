@@ -1,4 +1,4 @@
-package edu.ATA.main;
+package edu.ATA.modules;
 
 /**
  * Interface that carries all of the port numbers of the various components on
@@ -10,7 +10,7 @@ public interface PortMap {
 
     int JOYSTICK = 1;
     int DRIVE[] = {4, 3, 1, 2};
-    int RELAY = 7;
+    int RELAY = 1;
     int SOLENOID[] = {5, 6, 7, 8};
     int ENCODER[] = {1, 2};
     int SHOOTER = 5;
