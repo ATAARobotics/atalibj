@@ -4,7 +4,7 @@ package edu.ATA.main;
  * Info class that keeps track of how quickly packets arrive. This can be useful
  * if packets seem to be lagging or being lost.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public final class TransferRateCalculator {
 

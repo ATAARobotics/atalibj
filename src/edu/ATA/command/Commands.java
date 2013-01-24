@@ -3,7 +3,7 @@ package edu.ATA.command;
 /**
  * Static utility class used to add functionality to commands.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public final class Commands {
 

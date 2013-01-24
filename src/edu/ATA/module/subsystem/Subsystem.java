@@ -15,7 +15,7 @@ import edu.ATA.module.Module;
  *
  * <p> C(modules) !> A <p> C(modules) *(never enabled)
  *
- * @author joel
+ * @author Joel Gallant
  */
 public class Subsystem implements Module.DisableableModule {
 
@@ -46,7 +46,7 @@ public class Subsystem implements Module.DisableableModule {
      * Disables all modules that were submitted in
      * {@link Subsystem#Subsystem(edu.ATA.module.Module[])}.
      *
-     * @return if all modules are disabled
+     * @return if there are modules disabled
      */
     public final boolean disable() {
         for (int x = 0; x < modules.length; x++) {

@@ -4,7 +4,7 @@ package edu.ATA.command;
  * Framework for all things that perform a specific action. Used prominently in
  * autonomous and bindings.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public interface Command extends Runnable {
 

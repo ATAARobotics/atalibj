@@ -3,7 +3,7 @@ package ATA.gordian;
 /**
  * A basic utility library for manipulating strings.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public class StringUtils {
 

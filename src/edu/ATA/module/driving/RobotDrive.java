@@ -88,6 +88,22 @@ interface RobotDrive {
     public void setLeftRightMotorOutputs(double leftOutput, double rightOutput);
 
     /**
+     * Set the speed of the left side motors. Other motors should remain at the
+     * same speed.
+     *
+     * @param leftOutput the speed to send to the left side of the robot
+     */
+    public void setLeftMotorOutput(double leftOutput);
+
+    /**
+     * Set the speed of the right side motors. Other motors should remain at the
+     * same speed.
+     *
+     * @param rightOutput the speed to send to the right side of the robot
+     */
+    public void setRightMotorOutput(double rightOutput);
+
+    /**
      * Configure the scaling factor for using RobotDrive with motor controllers.
      *
      * @param maxOutput multiplied with the output percentage computed by the

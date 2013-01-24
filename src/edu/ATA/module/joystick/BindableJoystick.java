@@ -28,7 +28,7 @@ import java.util.Hashtable;
  * program. This is meant as a superior alternative with more functionality and
  * flexibility. It has very little outer class requirements.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public class BindableJoystick extends JoystickModule {
 

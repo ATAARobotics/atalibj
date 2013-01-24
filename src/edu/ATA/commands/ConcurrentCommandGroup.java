@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
  * Basic command group that runs multiple commands in parallel. Each command is
  * run inside of a different thread.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public class ConcurrentCommandGroup implements Command {
 

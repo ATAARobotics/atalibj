@@ -1,6 +1,7 @@
 package edu.ATA.module.driving;
 
 import edu.ATA.module.Module;
+import edu.ATA.module.joystick.BindableJoystick;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
 
@@ -77,6 +78,7 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
 class ForwardingRobotDrive implements edu.ATA.module.driving.RobotDrive, PIDOutput {
 
     private final edu.wpi.first.wpilibj.RobotDrive drive;
+    private double lastLeft, lastRight;
 
     /**
      * Constructs the object by using composition, using the given robot drive
@@ -214,7 +216,35 @@ class ForwardingRobotDrive implements edu.ATA.module.driving.RobotDrive, PIDOutp
      * @param rightOutput the speed to send to the right side of the robot.
      */
     public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
+        lastLeft = leftOutput;
+        lastRight = rightOutput;
         drive.setLeftRightMotorOutputs(leftOutput, rightOutput);
+    }
+
+    /**
+     * Individually sets the left motors. Will set right side to 0 unless
+     * {@link ForwardingRobotDrive#setRightMotorOutput(double)} or
+     * {@link ForwardingRobotDrive#setLeftRightMotorOutputs(double, double)} is
+     * called, in which case it will set the right speed to the last right input
+     * given.
+     *
+     * @param leftOutput speed to set left side
+     */
+    public void setLeftMotorOutput(double leftOutput) {
+        setLeftRightMotorOutputs(leftOutput, lastRight);
+    }
+
+    /**
+     * Individually sets the right motors. Will set left side to 0 unless
+     * {@link ForwardingRobotDrive#setLeftMotorOutput(double)} or
+     * {@link ForwardingRobotDrive#setLeftRightMotorOutputs(double, double)} is
+     * called, in which case it will set the left speed to the last left input
+     * given.
+     *
+     * @param rightOutput speed to set right side
+     */
+    public void setRightMotorOutput(double rightOutput) {
+        setLeftRightMotorOutputs(lastLeft, rightOutput);
     }
 
     /**

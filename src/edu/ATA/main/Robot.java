@@ -4,7 +4,7 @@ package edu.ATA.main;
  * Adapter class for robot objects. None of the methods do anything. To run your
  * robot object, use {@link GamePeriods#setRobot(edu.ATA.main.Robot)}.
  *
- * @author joel
+ * @author Joel Gallant
  */
 public class Robot {
 
