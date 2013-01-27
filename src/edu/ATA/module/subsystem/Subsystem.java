@@ -48,7 +48,7 @@ public class Subsystem implements Module.DisableableModule {
      *
      * @return if there are modules disabled
      */
-    public final boolean disable() {
+    public boolean disable() {
         for (int x = 0; x < modules.length; x++) {
             if (modules[x] instanceof DisableableModule) {
                 ((DisableableModule) modules[x]).disable();
@@ -63,7 +63,7 @@ public class Subsystem implements Module.DisableableModule {
      *
      * @return if all modules are enabled
      */
-    public final boolean enable() {
+    public  boolean enable() {
         for (int x = 0; x < modules.length; x++) {
             modules[x].enable();
         }
@@ -75,7 +75,7 @@ public class Subsystem implements Module.DisableableModule {
      *
      * @return if all modules are enabled
      */
-    public final boolean isEnabled() {
+    public boolean isEnabled() {
         for (int x = 0; x < modules.length; x++) {
             if (!modules[x].isEnabled()) {
                 return false;

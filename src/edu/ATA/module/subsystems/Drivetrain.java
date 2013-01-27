@@ -1,6 +1,6 @@
 package edu.ATA.module.subsystems;
 
-import edu.ATA.command.Command;
+import edu.ATA.bindings.CommandBind;
 import edu.ATA.module.Module;
 import edu.ATA.module.driving.RobotDriveModule;
 import edu.ATA.module.driving.SideBinding;
@@ -28,15 +28,19 @@ public class Drivetrain extends Subsystem {
         this.left2 = left2;
         this.right1 = right1;
         this.right2 = right2;
+    }
+
+    public boolean enable() {
         init();
+        return super.enable();
     }
 
     private void init() {
-        controller.bindAxis(XboxController.RIGHT_Y, new SideBinding(driveModule, SideBinding.RIGHT));
-        controller.bindAxis(XboxController.LEFT_Y, new SideBinding(driveModule, SideBinding.LEFT));
-        controller.bindWhenPressed(XboxController.RIGHT_BUMPER, new Command() {
+        controller.bindAxis(XboxController.RIGHT_FROM_MIDDLE, new SideBinding(driveModule, SideBinding.RIGHT));
+        controller.bindAxis(XboxController.LEFT_FROM_MIDDLE, new SideBinding(driveModule, SideBinding.LEFT));
+        controller.bindWhenPressed(XboxController.RIGHT_BUMPER, new CommandBind() {
             public void run() {
-                if(left1.get() && right1.get()) {
+                if (left1.get() && right1.get()) {
                     left1.set(false);
                     left2.set(true);
                     right1.set(false);
@@ -50,7 +54,7 @@ public class Drivetrain extends Subsystem {
             }
         });
     }
-    
+
     public void teleop() {
         compressor.set(SpikeRelay.FORWARD);
         controller.doBinds();

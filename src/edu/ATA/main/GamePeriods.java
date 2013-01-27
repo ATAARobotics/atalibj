@@ -35,7 +35,7 @@
 /*----------------------------------------------------------------------------*/
 package edu.ATA.main;
 
-import edu.ATA.testing.ShootingTest;
+import edu.ATA.test.RobotSelector;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -50,7 +50,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public final class GamePeriods extends IterativeRobot {
 
-    private static Robot robot = new ShootingTest();
+    private static Robot robot = new RobotSelector();
 
     public static void setRobot(Robot robot) {
         GamePeriods.robot = robot;

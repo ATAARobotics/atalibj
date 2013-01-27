@@ -1,7 +1,9 @@
 package edu.ATA.module.subsystems;
 
-import edu.ATA.command.Command;
+import edu.ATA.bindings.CommandBind;
 import edu.ATA.commands.SpeedControllerCommand;
+import edu.ATA.commands.StopCommand;
+import edu.ATA.main.Logger;
 import edu.ATA.module.Module;
 import edu.ATA.module.joystick.XboxController;
 import edu.ATA.module.sensor.SolenoidModule;
@@ -28,12 +30,17 @@ public class Shooter extends Subsystem {
         this.shooter = shooter;
         this.loader = loader;
         this.reloader = reloader;
+    }
+
+    public boolean enable() {
         init();
+        return super.enable();
     }
 
     private void init() {
-        controller.bindWhenPressed(XboxController.RIGHT_BUMPER, new Command() {
+        controller.bindWhenPressed(XboxController.RIGHT_BUMPER, new CommandBind() {
             public void run() {
+                Logger.log(Logger.Urgency.STATUSREPORT, "Shooter fired.");
                 loader.set(true);
                 reloader.set(false);
                 Timer.delay(0.8);
@@ -47,7 +54,7 @@ public class Shooter extends Subsystem {
         controller.bindWhilePressed(XboxController.Y, new SpeedControllerCommand(shooter, 0.7));
         controller.bindWhilePressed(XboxController.X, new SpeedControllerCommand(shooter, 0.6));
         controller.bindWhilePressed(XboxController.LEFT_BUMPER, new SpeedControllerCommand(shooter, 0.5));
-        controller.bindWhenPressed(XboxController.LEFT_STICK, new SpeedControllerCommand(shooter, 0));
+        controller.bindWhenPressed(XboxController.LEFT_STICK, new StopCommand(shooter));
     }
 
     public void teleop() {

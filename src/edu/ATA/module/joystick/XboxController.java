@@ -36,6 +36,10 @@ import edu.wpi.first.wpilibj.Joystick;
  * 5: Right Stick Y Axis
  *     Up: Positive; Down: Negative
  * 6: Directional Pad (Not recommended, buggy)
+ * 7: Right distance from the middle
+ *     Up: Positive; Down: Negative
+ * 8: Left distance from the middle
+ *     Up: Positive; Down: Negative
  * </pre>
  *
  *
@@ -51,7 +55,7 @@ public final class XboxController extends BindableJoystick {
     public static final int A = 1, B = 2, X = 3, Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
             BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10;
     public static final int LEFT_X = 1, LEFT_Y = 2, TRIGGERS = 3, RIGHT_X = 4,
-            RIGHT_Y = 5, DIRECTIONAL_PAD = 6;
+            RIGHT_Y = 5, DIRECTIONAL_PAD = 6, RIGHT_FROM_MIDDLE = 7, LEFT_FROM_MIDDLE = 8;
 
     /**
      * Constructs the object by using composition, using the given joystick
@@ -64,9 +68,8 @@ public final class XboxController extends BindableJoystick {
     }
 
     /**
-     * If the module is enabled, returns the equivalent of
-     * {@link edu.wpi.first.wpilibj.Joystick#getRawAxis(int)}. If it is not,
-     * returns 0.
+     * If the module is enabled, returns the equivalent of the axis (port
+     * numbers are static fields in this class). If it is not, returns 0.
      *
      * <p> Takes the {@link XboxController#DEADZONE} into account.
      *
@@ -74,8 +77,21 @@ public final class XboxController extends BindableJoystick {
      * @return value of where the joystick is (usually -1 to +1)
      */
     public double getAxis(int axis) {
+        if (!isEnabled()) {
+            return 0;
+        }
         double a;
-        return Math.abs(a = super.getAxis(axis)) < DEADZONE ? 0 : a;
+        switch (axis) {
+            case (RIGHT_FROM_MIDDLE):
+                a = getRightDistanceFromMiddle();
+                break;
+            case (LEFT_FROM_MIDDLE):
+                a = getLeftDistanceFromMiddle();
+                break;
+            default:
+                a = getAxisValue(axis);
+        }
+        return (Math.abs(a) < DEADZONE) ? 0 : a;
     }
 
     /**
@@ -257,7 +273,7 @@ public final class XboxController extends BindableJoystick {
      * @return how far away stick is from center
      */
     public double getRightDistanceFromMiddle() {
-        double distance = Math.sqrt((getRightX()*getRightX()) + (getRightY()*getRightY()));
+        double distance = Math.sqrt((getRightX() * getRightX()) + (getRightY() * getRightY()));
         return (getRightY() > 0) ? distance : -distance;
     }
 
@@ -274,7 +290,7 @@ public final class XboxController extends BindableJoystick {
      * @return how far away stick is from center
      */
     public double getLeftDistanceFromMiddle() {
-        double distance = Math.sqrt((getLeftX()*getLeftX()) + (getLeftY()*getLeftY()));
+        double distance = Math.sqrt((getLeftX() * getLeftX()) + (getLeftY() * getLeftY()));
         return (getLeftY() > 0) ? distance : -distance;
     }
 }

@@ -1,5 +1,6 @@
 package edu.ATA.commands;
 
+import edu.ATA.bindings.CommandBind;
 import edu.ATA.command.Command;
 import edu.ATA.module.joystick.BindableJoystick;
 import edu.ATA.module.speedcontroller.SpeedControllerModule;
@@ -10,7 +11,7 @@ import edu.ATA.module.speedcontroller.SpeedControllerModule;
  *
  * @author Joel Gallant <joel.gallant236@gmail.com>
  */
-public class SpeedControllerCommand implements Command {
+public class SpeedControllerCommand implements CommandBind {
 
     private final SpeedControllerModule speedControllerModule;
     private final double speed;

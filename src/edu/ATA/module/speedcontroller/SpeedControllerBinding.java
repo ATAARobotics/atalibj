@@ -1,12 +1,12 @@
 package edu.ATA.module.speedcontroller;
 
-import edu.ATA.module.joystick.BindableJoystick;
+import edu.ATA.bindings.AxisBind;
 
 /**
  *
  * @author Joel Gallant <joel.gallant236@gmail.com>
  */
-public class SpeedControllerBinding implements BindableJoystick.BindedAxis {
+public class SpeedControllerBinding implements AxisBind {
 
     private final SpeedControllerModule speedController;
 
