@@ -76,7 +76,7 @@ public final class XboxController extends BindableJoystick {
      * @param axis axis number defined in windows
      * @return value of where the joystick is (usually -1 to +1)
      */
-    public double getAxis(int axis) {
+    public double getAxis(final int axis) {
         if (!isEnabled()) {
             return 0;
         }
@@ -89,7 +89,7 @@ public final class XboxController extends BindableJoystick {
                 a = getLeftDistanceFromMiddle();
                 break;
             default:
-                a = getAxisValue(axis);
+                a = joystick.getAxis(axis);
         }
         return (Math.abs(a) < DEADZONE) ? 0 : a;
     }

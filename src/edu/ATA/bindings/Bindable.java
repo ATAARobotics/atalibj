@@ -70,6 +70,7 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
     private void doBind(BindKey key) {
         Bind bind = (Bind) bindings.get(key);
         String type = key.type;
+
         if (type.equals(WHEN_PRESSED)) {
             doWhenPressed(key, (CommandBind) bind);
         } else if (type.equals(WHILE_PRESSED)) {

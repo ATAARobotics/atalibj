@@ -36,6 +36,7 @@ public class Drivetrain extends Subsystem {
     }
 
     private void init() {
+        controller.removeAllBinds();
         controller.bindAxis(XboxController.RIGHT_FROM_MIDDLE, new SideBinding(driveModule, SideBinding.RIGHT));
         controller.bindAxis(XboxController.LEFT_FROM_MIDDLE, new SideBinding(driveModule, SideBinding.LEFT));
         controller.bindWhenPressed(XboxController.RIGHT_BUMPER, new CommandBind() {

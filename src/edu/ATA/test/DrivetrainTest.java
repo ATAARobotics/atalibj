@@ -9,7 +9,7 @@ import edu.ATA.module.Modules;
  */
 public class DrivetrainTest extends Robot implements Modules {
 
-    public void robotInit() {
+    public void teleopInit() {
         drivetrain.enable();
     }
 
