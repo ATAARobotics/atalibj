@@ -50,45 +50,89 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public final class GamePeriods extends IterativeRobot {
 
-    private static Robot robot = new RobotSelector();
+    private static Robot robot;
 
     public static void setRobot(Robot robot) {
         GamePeriods.robot = robot;
     }
 
+    {
+        try {
+            robot = new RobotSelector();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
     public void robotInit() {
-        robot.robotInit();
+        try {
+            robot.robotInit();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void disabledInit() {
-        robot.disabledInit();
+        try {
+            robot.disabledInit();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void disabledPeriodic() {
-        robot.disabledPeriodic();
+        try {
+            robot.disabledPeriodic();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void autonomousInit() {
-        robot.autonomousInit();
+        try {
+            robot.autonomousInit();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void autonomousPeriodic() {
-        robot.autonomousPeriodic();
+        try {
+            robot.autonomousPeriodic();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void teleopInit() {
-        robot.teleopInit();
+        try {
+            robot.teleopInit();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void teleopPeriodic() {
-        robot.teleopPeriodic();
+        try {
+            robot.teleopPeriodic();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void testInit() {
-        robot.testInit();
+        try {
+            robot.testInit();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
     public void testPeriodic() {
-        robot.testPeriodic();
+        try {
+            robot.testPeriodic();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 }

@@ -1,6 +1,8 @@
 package edu.ATA.test;
 
+import edu.ATA.main.Logger;
 import edu.ATA.main.Robot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,47 +20,62 @@ public class RobotSelector extends Robot {
         robotSelector.addObject("Voltage", new VoltageTest());
         SmartDashboard.putData("RobotSelector", robotSelector);
     }
+    private Robot current;
 
     public RobotSelector() {
     }
-    
-    private Robot getSelected() {
-        return (Robot) robotSelector.getSelected();
+
+    private void update() {
+        Robot prev = current;
+        current = (Robot) robotSelector.getSelected();
+        if(prev == null || !prev.equals(current)) {
+            if(prev != null) {
+                prev.disabledInit();
+            }
+            current.robotInit();
+        }
+        Logger.log(Logger.Urgency.STATUSREPORT, "Robot="+current.getClass().getName());
     }
 
     public void robotInit() {
-        getSelected().robotInit();
+        Timer.delay(4);
+        update();
+        current.robotInit();
     }
 
     public void disabledInit() {
-        getSelected().disabledInit();
+        update();
+        current.disabledInit();
     }
 
     public void disabledPeriodic() {
-        getSelected().disabledPeriodic();
+        current.disabledPeriodic();
     }
 
     public void autonomousInit() {
-        getSelected().autonomousInit();
+        update();
+        current.autonomousInit();
     }
 
     public void autonomousPeriodic() {
-        getSelected().autonomousPeriodic();
+        current.autonomousPeriodic();
     }
 
     public void teleopInit() {
-        getSelected().teleopInit();
+        update();
+        current.teleopInit();
     }
 
     public void teleopPeriodic() {
-        getSelected().teleopPeriodic();
+        current.teleopPeriodic();
     }
 
     public void testInit() {
-        getSelected().testInit();
+        update();
+        current.testInit();
     }
 
     public void testPeriodic() {
-        getSelected().testPeriodic();
+        current.testPeriodic();
     }
 }

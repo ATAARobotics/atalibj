@@ -38,6 +38,7 @@ public class Shooter extends Subsystem {
     }
 
     private void init() {
+        controller.removeAllBinds();
         controller.bindWhenPressed(XboxController.RIGHT_BUMPER, new CommandBind() {
             public void run() {
                 Logger.log(Logger.Urgency.STATUSREPORT, "Shooter fired.");

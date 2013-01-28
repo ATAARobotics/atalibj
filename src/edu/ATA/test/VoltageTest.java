@@ -9,7 +9,7 @@ import edu.ATA.module.Modules;
  */
 public class VoltageTest extends Robot implements Modules {
 
-    public void robotInit() {
+    public void teleopInit() {
         test.enable();
     }
 

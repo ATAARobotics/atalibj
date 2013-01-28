@@ -9,7 +9,7 @@ import edu.ATA.module.Module;
  */
 public class BindableJoystick extends Bindable implements Joystick, Module.DisableableModule {
 
-    private final JoystickModule joystick;
+    protected final JoystickModule joystick;
 
     public BindableJoystick(edu.wpi.first.wpilibj.Joystick joystick) {
         this.joystick = new JoystickModule(joystick);
@@ -35,11 +35,11 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
         return joystick.getButton(button);
     }
 
-    public final boolean getPressed(int port) {
-        return getButton(port);
+    public final boolean getPressed(final int port) {
+        return this.getButton(port);
     }
 
-    public final double getAxisValue(int port) {
+    public final double getAxisValue(final int port) {
         return getAxis(port);
     }
 }

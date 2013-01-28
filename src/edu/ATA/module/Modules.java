@@ -39,5 +39,5 @@ public interface Modules extends PortMap {
     // Subsystems
     Drivetrain drivetrain = new Drivetrain(robotDrive, controller, compressor, left1, left2, right1, right2);
     Shooter shooter = new Shooter(controller, compressor, shooterMotor, loader, reloader);
-    Test test = new Test(controller, shooterMotor);
+    Test test = new Test(controller, shooterMotor, compressor, loader, reloader);
 }

@@ -28,7 +28,7 @@ public class SideBinding implements AxisBind {
     }
 
     public void set(double axisValue) {
-        if (side.equals(RIGHT)) {
+        if (side.side == Side.RIGHT) {
             driveModule.setRightMotorOutput(axisValue);
         } else {
             driveModule.setLeftMotorOutput(axisValue);
