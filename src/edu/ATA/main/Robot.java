@@ -8,30 +8,57 @@ package edu.ATA.main;
  */
 public class Robot {
 
+    /**
+     * Run once when robot starts.
+     */
     public void robotInit() {
     }
 
+    /**
+     * Runs once before disabled mode.
+     */
     public void disabledInit() {
     }
 
+    /**
+     * Runs periodically (20ms) during disabled mode.
+     */
     public void disabledPeriodic() {
     }
 
+    /**
+     * Runs once before autonomous mode.
+     */
     public void autonomousInit() {
     }
 
+    /**
+     * Runs periodically (20ms) during autonomous mode.
+     */
     public void autonomousPeriodic() {
     }
 
+    /**
+     * Runs once before teleoperated mode.
+     */
     public void teleopInit() {
     }
 
+    /**
+     * Runs periodically (20ms) during teleoperated mode.
+     */
     public void teleopPeriodic() {
     }
 
+    /**
+     * Runs once before test mode.
+     */
     public void testInit() {
     }
 
+    /**
+     * Runs periodically (20ms) during test mode.
+     */
     public void testPeriodic() {
     }
 }
