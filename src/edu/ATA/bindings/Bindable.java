@@ -4,6 +4,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 /**
+ * Object representing a joystick (although not explictly) that can bind axises
+ * and buttons to commands and outputs respectively. To check and perform the
+ * binds given through the various methods, use {@link Bindable#doBinds()}.
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
@@ -13,26 +16,61 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
     private final Hashtable bindings = new Hashtable();
     private final Hashtable pressed = new Hashtable();
 
+    /**
+     * Binds the button to run the command when it is pressed. This only works
+     * when it is not pressed before. (has to be false before true)
+     *
+     * @param port port on the joystick
+     * @param command command to run
+     */
     public final void bindWhenPressed(int port, CommandBind command) {
         addBind(new BindKey(WHEN_PRESSED, port), command);
     }
 
+    /**
+     * Binds the button to run the command in a loop while it is pressed.
+     *
+     * @param port port on the joystick
+     * @param command command to run
+     */
     public final void bindWhilePressed(int port, CommandBind command) {
         addBind(new BindKey(WHILE_PRESSED, port), command);
     }
 
+    /**
+     * Binds the button to run the command when it is released. This only works
+     * when it is pressed before. (has to be true before false)
+     *
+     * @param port port on the joystick
+     * @param command command to run
+     */
     public final void bindWhenReleased(int port, CommandBind command) {
         addBind(new BindKey(WHEN_RELEASED, port), command);
     }
 
+    /**
+     * Binds the button to run the command in a loop while it is not pressed.
+     *
+     * @param port port on the joystick
+     * @param command command to run
+     */
     public final void bindWhileReleased(int port, CommandBind command) {
         addBind(new BindKey(WHILE_RELEASED, port), command);
     }
 
+    /**
+     * Binds an axis to an output ({@link AxisBind}).
+     *
+     * @param port port on the joystick
+     * @param axisBind output to send axis value to
+     */
     public final void bindAxis(int port, AxisBind axisBind) {
         addBind(new BindKey(AXIS, port), axisBind);
     }
 
+    /**
+     * Runs all given binds and performs their actions. No order is guaranteed.
+     */
     public final void doBinds() {
         Enumeration e = bindings.keys();
         while (e.hasMoreElements()) {
@@ -40,6 +78,11 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
         }
     }
 
+    /**
+     * Removes all binds on a port.
+     *
+     * @param port port to remove binds from
+     */
     public final void removeBinds(int port) {
         Enumeration e = bindings.keys();
         while (e.hasMoreElements()) {
@@ -51,6 +94,9 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
         }
     }
 
+    /**
+     * Removes all given binds.
+     */
     public final void removeAllBinds() {
         Enumeration e = bindings.keys();
         while (e.hasMoreElements()) {

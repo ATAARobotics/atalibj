@@ -64,6 +64,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Run once when robot starts.
+     */
     public void robotInit() {
         try {
             robot.robotInit();
@@ -72,6 +75,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Runs once before disabled mode.
+     */
     public void disabledInit() {
         try {
             robot.disabledInit();
@@ -80,6 +86,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Runs periodically (20ms) during disabled mode.
+     */
     public void disabledPeriodic() {
         try {
             robot.disabledPeriodic();
@@ -88,6 +97,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Runs once before autonomous mode.
+     */
     public void autonomousInit() {
         try {
             robot.autonomousInit();
@@ -96,6 +108,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Runs periodically (20ms) during autonomous mode.
+     */
     public void autonomousPeriodic() {
         try {
             robot.autonomousPeriodic();
@@ -104,6 +119,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Runs once before teleoperated mode.
+     */
     public void teleopInit() {
         try {
             robot.teleopInit();
@@ -112,6 +130,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Runs periodically (20ms) during teleoperated mode.
+     */
     public void teleopPeriodic() {
         try {
             robot.teleopPeriodic();
@@ -120,6 +141,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Runs once before test mode.
+     */
     public void testInit() {
         try {
             robot.testInit();
@@ -128,6 +152,9 @@ public final class GamePeriods extends IterativeRobot {
         }
     }
 
+    /**
+     * Runs periodically (20ms) during test mode.
+     */
     public void testPeriodic() {
         try {
             robot.testPeriodic();

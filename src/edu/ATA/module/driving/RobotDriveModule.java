@@ -1,7 +1,6 @@
 package edu.ATA.module.driving;
 
 import edu.ATA.module.Module;
-import edu.ATA.module.joystick.BindableJoystick;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
 
