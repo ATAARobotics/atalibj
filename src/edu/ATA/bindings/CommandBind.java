@@ -3,8 +3,8 @@ package edu.ATA.bindings;
 import edu.ATA.command.Command;
 
 /**
- * Bind that is a command and a bind. This means it is used for bindable
- * joysticks, as well as command structures.
+ * Bind that performs a command when something happens. This means it is used
+ * for bindable joysticks, usually running when a button is pressed or released.
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */

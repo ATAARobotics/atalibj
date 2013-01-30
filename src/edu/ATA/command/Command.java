@@ -2,7 +2,9 @@ package edu.ATA.command;
 
 /**
  * Framework for all things that perform a specific action. Used prominently in
- * autonomous and bindings.
+ * autonomous and bindings. Has similar but more open expectations as
+ * {@link Runnable} in that a command can do anything, even something
+ * non-finished. (does not complete an action)
  *
  * @author Joel Gallant
  */

@@ -12,13 +12,15 @@ import java.util.Hashtable;
  */
 public abstract class Bindable implements BindableAxises, BindableButtons {
 
-    protected static final String WHEN_PRESSED = "WNP", WHILE_PRESSED = "WLP", WHEN_RELEASED = "WNR", WHILE_RELEASED = "WLR", AXIS = "AXS";
+    private static final String WHEN_PRESSED = "WNP", WHILE_PRESSED = "WLP", WHEN_RELEASED = "WNR", WHILE_RELEASED = "WLR", AXIS = "AXS";
     private final Hashtable bindings = new Hashtable();
     private final Hashtable pressed = new Hashtable();
 
     /**
      * Binds the button to run the command when it is pressed. This only works
      * when it is not pressed before. (has to be false before true)
+     *
+     * <p> Perform all binds in {@link Bindable#doBinds()}.
      *
      * @param port port on the joystick
      * @param command command to run
@@ -29,6 +31,8 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
 
     /**
      * Binds the button to run the command in a loop while it is pressed.
+     *
+     * <p> Perform all binds in {@link Bindable#doBinds()}.
      *
      * @param port port on the joystick
      * @param command command to run
@@ -41,6 +45,8 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
      * Binds the button to run the command when it is released. This only works
      * when it is pressed before. (has to be true before false)
      *
+     * <p> Perform all binds in {@link Bindable#doBinds()}.
+     *
      * @param port port on the joystick
      * @param command command to run
      */
@@ -51,6 +57,8 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
     /**
      * Binds the button to run the command in a loop while it is not pressed.
      *
+     * <p> Perform all binds in {@link Bindable#doBinds()}.
+     *
      * @param port port on the joystick
      * @param command command to run
      */
@@ -60,6 +68,8 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
 
     /**
      * Binds an axis to an output ({@link AxisBind}).
+     *
+     * <p> Perform all binds in {@link Bindable#doBinds()}.
      *
      * @param port port on the joystick
      * @param axisBind output to send axis value to
@@ -79,7 +89,7 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
     }
 
     /**
-     * Removes all binds on a port.
+     * Removes all binds on a port. This applies to both axises and buttons.
      *
      * @param port port to remove binds from
      */
@@ -90,6 +100,33 @@ public abstract class Bindable implements BindableAxises, BindableButtons {
             if (key.port == port) {
                 bindings.remove(key);
                 pressed.remove(key);
+            }
+        }
+    }
+
+    /**
+     * Removes all binds on buttons.
+     */
+    public final void removeButtonBinds() {
+        Enumeration e = bindings.keys();
+        while (e.hasMoreElements()) {
+            BindKey key = (BindKey) e.nextElement();
+            if (!key.type.equals(AXIS)) {
+                bindings.remove(key);
+                pressed.remove(key);
+            }
+        }
+    }
+    
+    /**
+     * Removes all binds on axises.
+     */
+    public final void removeAxisBinds() {
+        Enumeration e = bindings.keys();
+        while (e.hasMoreElements()) {
+            BindKey key = (BindKey) e.nextElement();
+            if (key.type.equals(AXIS)) {
+                bindings.remove(key);
             }
         }
     }
