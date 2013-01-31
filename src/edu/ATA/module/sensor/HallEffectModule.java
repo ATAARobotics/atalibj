@@ -108,6 +108,7 @@ class ForwardingHallEffectModule implements HallEffect {
     private final DigitalInput hallEffect;
     private final Counter counter;
     private final int sampleRate;
+    private double lastRate = 0;
     private int lastCount = 0;
     private long lastTime = System.currentTimeMillis();
 
@@ -185,7 +186,13 @@ class ForwardingHallEffectModule implements HallEffect {
             lastTime = System.currentTimeMillis();
             lastCount = count;
         }
-        return (((double) currentCount) / current) * 60000.0;
+        double rate = (((double) currentCount) / current) * 60000.0;
+        if (rate > 2) {
+            lastRate = rate;
+            return rate;
+        } else {
+            return lastRate;
+        }
     }
 
     /**
