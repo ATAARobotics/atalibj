@@ -187,7 +187,7 @@ class ForwardingHallEffectModule implements HallEffect {
             lastCount = count;
         }
         double rate = (((double) currentCount) / current) * 60000.0;
-        return rate > 2 ? (lastRate = rate) : lastRate;
+        return current > sampleRate ? (lastRate = rate) : lastRate;
     }
 
     /**
