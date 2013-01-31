@@ -6,11 +6,13 @@ import edu.wpi.first.wpilibj.DigitalInput;
 /**
  * Module representing hall effect sensors. To get the current rate use
  * {@link HallEffectModule#getRate()} When enabled, can receive input from the
- * sensor, but otherwise will always return 0 if it is disabled.
+ * sensor, but otherwise will always return 0.
  *
  * @author Team 4334
  */
-public class HallEffectModule extends ForwardingHallEffectModule {
+public final class HallEffectModule extends ForwardingHallEffectModule {
+
+    private boolean enabled;
 
     /**
      * Constructs the object by using composition, using the given digital input
@@ -24,7 +26,7 @@ public class HallEffectModule extends ForwardingHallEffectModule {
 
     /**
      * Constructs the object by using composition, using the given digital input
-     * object to control methods in this class.
+     * object and a custom counter to control methods in this class.
      *
      * @param hallEffect actual underlying object used
      * @param counter the counter object it uses
@@ -32,7 +34,6 @@ public class HallEffectModule extends ForwardingHallEffectModule {
     public HallEffectModule(DigitalInput hallEffect, Counter counter) {
         super(hallEffect, counter);
     }
-    private boolean enabled;
 
     /**
      * Disables the module. This prevents the class from returning values.
@@ -58,8 +59,8 @@ public class HallEffectModule extends ForwardingHallEffectModule {
 
     /**
      * Returns whether or not the module has been enabled yet. If it is not
-     * enabled, The methods of this class will not function if disabled
-     * properly. (will always return false)
+     * enabled, the methods of this class will not function. (will always return
+     * false or 0)
      *
      * @return whether module is enabled
      */
@@ -106,7 +107,9 @@ class ForwardingHallEffectModule implements HallEffect {
 
     private final DigitalInput hallEffect;
     private final Counter counter;
-    private long start = System.currentTimeMillis();
+    private final int sampleRate;
+    private int lastCount = 0;
+    private long lastTime = System.currentTimeMillis();
 
     /**
      * Constructs the object by using composition, using the given digital input
@@ -115,60 +118,80 @@ class ForwardingHallEffectModule implements HallEffect {
      * @param hallEffect underlying hallEffect object used
      */
     public ForwardingHallEffectModule(DigitalInput hallEffect) {
-        this.hallEffect = hallEffect;
-        this.counter = new Counter(hallEffect);
+        this(hallEffect, new Counter(hallEffect));
     }
 
     /**
      * Constructs the object by using composition, using the given digital input
-     * object to control methods in this class.
+     * object and a custom counter to control methods in this class.
      *
-     * @param counter Counter object being used
-     * @param hallEffect underlying hallEffect object used
+     * @param hallEffect actual underlying object used
+     * @param counter the counter object it uses
      */
     public ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter) {
-        this.hallEffect = hallEffect;
-        this.counter = counter;
+        this(hallEffect, counter, 20);
     }
 
     /**
-     * Starts the the counter and sets the start variable.
+     * Constructs the object by using composition, using the given digital input
+     * object and a custom counter to control methods in this class.
      *
+     * @param hallEffect actual underlying object used
+     * @param counter the counter object it uses
+     * @param sampleRate rate to check rate at (max allowed time to average rate
+     * over)
+     */
+    public ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter, int sampleRate) {
+        this.hallEffect = hallEffect;
+        this.counter = counter;
+        this.sampleRate = sampleRate;
+    }
+
+    /**
+     * Starts the the counter.
      */
     protected void start() {
         counter.start();
-        start = System.currentTimeMillis();
+        lastTime = System.currentTimeMillis();
     }
 
     /**
-     *Stops and resets the Counter.
-     *
+     * Stops and resets the counter.
      */
     protected void stop() {
         counter.stop();
         counter.reset();
     }
-/**
- * Returns the current timer value.
- * @return the current counter value 
- */
-    
+
+    /**
+     * Returns the current count of pulses.
+     *
+     * @return current count of pulses
+     */
     public int getCount() {
         return counter.get();
     }
-    /**
-     * Returns the counter rate.
-     * 
-     * @return the current counter rate
-     */
 
-    public double getRate() {
-        return getCount() / (System.currentTimeMillis() - start);
-    }
     /**
-     * Returns boolean polarity of the Hall Effect sensor.
+     * Returns the counter rate in rotations per minute.
      *
-     * @return the Hall Effect sensor polarity
+     * @return current counter rate
+     */
+    public double getRate() {
+        long current = System.currentTimeMillis() - lastTime;
+        int count = getCount();
+        int currentCount = count - lastCount;
+        if (current > sampleRate) {
+            lastTime = System.currentTimeMillis();
+            lastCount = count;
+        }
+        return (((double) currentCount) / current) * 60000.0;
+    }
+
+    /**
+     * Returns boolean polarity of the hall effect sensor.
+     *
+     * @return the hall effect sensor polarity
      */
     public boolean isPolarized() {
         return hallEffect.get();
