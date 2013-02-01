@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author joel
  */
-public class Test extends Subsystem {
+public class VoltageTest extends Subsystem {
 
     private final XboxController controller;
     private final SpeedControllerModule victor;
@@ -25,7 +25,7 @@ public class Test extends Subsystem {
     private final SolenoidModule reloader;
     private double speed = 0;
 
-    public Test(XboxController controller, SpeedControllerModule victor, SpikeRelayModule spikeRelay, SolenoidModule loader, SolenoidModule reloader) {
+    public VoltageTest(XboxController controller, SpeedControllerModule victor, SpikeRelayModule spikeRelay, SolenoidModule loader, SolenoidModule reloader) {
         super(new Module[]{controller, victor, spikeRelay, loader, reloader});
         this.controller = controller;
         this.victor = victor;

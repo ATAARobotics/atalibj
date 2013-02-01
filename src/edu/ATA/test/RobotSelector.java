@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class RobotSelector extends Robot {
+public final class RobotSelector extends Robot {
 
     private static final SendableChooser robotSelector = new SendableChooser();
 
@@ -19,6 +19,7 @@ public class RobotSelector extends Robot {
         robotSelector.addObject("Shooter", new ShooterTest());
         robotSelector.addObject("Voltage", new VoltageTest());
         robotSelector.addObject("HallEffect", new HallEffectTest());
+        robotSelector.addObject("SpeedControllerTest", new SpeedControllersTest());
         SmartDashboard.putData("RobotSelector", robotSelector);
     }
     private Robot current;
