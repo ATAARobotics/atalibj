@@ -87,7 +87,7 @@ public final class HallEffectModule extends ForwardingHallEffectModule {
     }
 
     /**
-     * If the module is enabled, returns the current rate of the counter.
+     * If the module is enabled, returns the current rate of the counter in rotations per minute.
      *
      * @return the rate of sensor
      */
