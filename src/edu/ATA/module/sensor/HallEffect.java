@@ -10,7 +10,7 @@ public interface HallEffect {
     int getCount();
 
     /**
-     * Returns the counter rate.
+     * Returns the counter rate in rotations per minute.
      *
      * @return the current counter rate
      */
