@@ -19,7 +19,6 @@ public final class RobotSelector extends Robot {
         robotSelector.addObject("Shooter", new ShooterTest());
         robotSelector.addObject("Voltage", new VoltageTest());
         robotSelector.addObject("HallEffect", new HallEffectTest());
-        robotSelector.addObject("SpeedControllerTest", new SpeedControllersTest());
         SmartDashboard.putData("RobotSelector", robotSelector);
     }
     private Robot current;
