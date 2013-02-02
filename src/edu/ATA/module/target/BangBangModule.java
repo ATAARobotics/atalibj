@@ -18,7 +18,8 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
 
     private boolean enabled;
     private double setpoint = 0;
-    private double maxSpeed;
+    private double maxSpeed = 1;
+    private final double defaultSpeed;
     private final PIDSource source;
     private final PIDOutput output;
     private Timer timer = new Timer();
@@ -26,8 +27,8 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
         public void run() {
             if (enabled) {
                 if (!DriverstationInfo.getGamePeriod().equals(DriverstationInfo.DISABLED)) {
-                    if (source.pidGet() > setpoint) {
-                        output.pidWrite(0);
+                    if (source.pidGet() >= setpoint) {
+                        output.pidWrite(defaultSpeed);
                     } else {
                         output.pidWrite(maxSpeed);
                     }
@@ -44,13 +45,28 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
      * @param output output of the controller
      */
     public BangBangModule(PIDSource source, PIDOutput output) {
+        this(source, output, 0);
+    }
+
+    /**
+     * Constructs and begins the thread. This will not start moving, but rather
+     * be "ready" to move when enabled.
+     *
+     * @param source the source to check setpoints
+     * @param output output of the controller
+     * @param defaultSpeed speed to run when above setpoint
+     */
+    public BangBangModule(PIDSource source, PIDOutput output, double defaultSpeed) {
         if (source == null || output == null) {
             throw new NullPointerException();
         }
         this.source = source;
         this.output = output;
-        timer.scheduleAtFixedRate(task, 0L, 20L);
+        this.defaultSpeed = defaultSpeed;
+        timer.scheduleAtFixedRate(task, 0L, 10L);
     }
+    
+    
 
     /**
      * Stops the controller from changing output on the output object.

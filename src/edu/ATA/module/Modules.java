@@ -8,9 +8,10 @@ import edu.ATA.module.sensor.HallEffectModule;
 import edu.ATA.module.sensor.SolenoidModule;
 import edu.ATA.module.speedcontroller.SpeedControllerModule;
 import edu.ATA.module.speedcontroller.SpikeRelayModule;
-import edu.ATA.module.subsystems.Drivetrain;
+import edu.ATA.module.subsystems.ShiftingDrivetrain;
 import edu.ATA.module.subsystems.Shooter;
 import edu.ATA.module.subsystems.VoltageTest;
+import edu.ATA.module.target.BangBangModule;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -40,7 +41,8 @@ public interface Modules extends PortMap {
     SolenoidModule reloader = new SolenoidModule(new Solenoid(RELOADER));
     HallEffectModule hallEffect = new HallEffectModule(new DigitalInput(HALLEFFECT));
     // Subsystems
-    Drivetrain drivetrain = new Drivetrain(robotDrive, controller, compressor, left1, left2, right1, right2);
+    ShiftingDrivetrain drivetrain = new ShiftingDrivetrain(robotDrive, controller, compressor, left1, left2, right1, right2);
     Shooter shooter = new Shooter(controller, compressor, shooterMotor, loader, reloader);
     VoltageTest test = new VoltageTest(controller, shooterMotor, compressor, loader, reloader);
+    BangBangModule bangbang = new BangBangModule(hallEffect, shooterMotor);
 }

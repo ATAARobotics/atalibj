@@ -77,7 +77,7 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
 class ForwardingRobotDrive implements edu.ATA.module.driving.RobotDrive, PIDOutput {
 
     private final edu.wpi.first.wpilibj.RobotDrive drive;
-    private double lastLeft, lastRight;
+    private double lastLeft, lastRight, lastForward, lastTurn;
 
     /**
      * Constructs the object by using composition, using the given robot drive
@@ -140,7 +140,7 @@ class ForwardingRobotDrive implements edu.ATA.module.driving.RobotDrive, PIDOutp
      * @param rightValue the value of the right stick.
      */
     public void tankDrive(double leftValue, double rightValue) {
-        drive.tankDrive(leftValue, rightValue);
+        tankDrive(leftValue, rightValue, false);
     }
 
     /**
@@ -152,6 +152,8 @@ class ForwardingRobotDrive implements edu.ATA.module.driving.RobotDrive, PIDOutp
      * @param squaredInputs if set, decreases the sensitivity at low speeds
      */
     public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
+        lastForward = moveValue;
+        lastTurn = rotateValue;
         drive.arcadeDrive(moveValue, rotateValue, squaredInputs);
     }
 
@@ -163,7 +165,61 @@ class ForwardingRobotDrive implements edu.ATA.module.driving.RobotDrive, PIDOutp
      * @param rotateValue the value to use for the rotate right/left
      */
     public void arcadeDrive(double moveValue, double rotateValue) {
-        drive.arcadeDrive(moveValue, rotateValue);
+        arcadeDrive(moveValue, rotateValue, false);
+    }
+
+    /**
+     * Sets the forwards/backwards speed. The last used turn value is used for
+     * rotation. ({@link RobotDriveModule#setRotateValue(double)}, {@link RobotDriveModule#setRotateValue(double, boolean)}
+     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
+     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
+     * turn value as "last used".)
+     *
+     * @param moveValue the value to use for forwards/backwards
+     */
+    public void setForwardValue(double moveValue) {
+        arcadeDrive(moveValue, lastTurn);
+    }
+
+    /**
+     * Sets the forwards/backwards speed. The last used turn value is used for
+     * rotation. ({@link RobotDriveModule#setRotateValue(double)}, {@link RobotDriveModule#setRotateValue(double, boolean)}
+     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
+     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
+     * turn value as "last used".)
+     *
+     * @param moveValue the value to use for forwards/backwards
+     * @param squaredInputs if set, decreases the sensitivity at low speeds
+     */
+    public void setForwardValue(double moveValue, boolean squaredInput) {
+        arcadeDrive(moveValue, lastTurn, squaredInput);
+    }
+
+    /**
+     * Sets the forwards/backwards speed. The last used forwards value is used
+     * for rotation. ({@link RobotDriveModule#setForwardValue(double)}, {@link RobotDriveModule#setForwardValue(double, boolean)}
+     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
+     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
+     * forward value as "last used".)
+     *
+     * @param rotateValue the value to use for the rotate right/left
+     */
+    public void setRotateValue(double rotateValue) {
+        arcadeDrive(lastForward, rotateValue);
+    }
+
+    /**
+     * Sets the forwards/backwards speed. The last used forwards value is used
+     * for rotation. ({@link RobotDriveModule#setForwardValue(double)}, {@link RobotDriveModule#setForwardValue(double, boolean)}
+     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
+     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
+     * forward value as "last used".)
+     *
+     * @param rotateValue the value to use for the rotate right/left
+     * @param squaredInputs if set, decreases the sensitivity at low speeds
+     */
+    public void setRotateValue(double rotateValue, boolean squaredInput) {
+        arcadeDrive(lastForward, rotateValue, squaredInput);
     }
 
     /**

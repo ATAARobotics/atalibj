@@ -10,14 +10,14 @@ import edu.ATA.module.speedcontroller.SpikeRelay;
 import edu.ATA.module.speedcontroller.SpikeRelayModule;
 import edu.ATA.module.subsystem.Subsystem;
 
-public class Drivetrain extends Subsystem {
+public class ShiftingDrivetrain extends Subsystem {
 
     private final RobotDriveModule driveModule;
     private final XboxController controller;
     private final SpikeRelayModule compressor;
     private final SolenoidModule left1, left2, right1, right2;
 
-    public Drivetrain(RobotDriveModule driveModule, XboxController controller,
+    public ShiftingDrivetrain(RobotDriveModule driveModule, XboxController controller,
             SpikeRelayModule compressor, SolenoidModule left1, SolenoidModule left2,
             SolenoidModule right1, SolenoidModule right2) {
         super(new Module[]{driveModule, controller, compressor, left1, left2, right1, right2});

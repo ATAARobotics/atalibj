@@ -2,6 +2,7 @@ package edu.ATA.module.sensor;
 
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PIDSource;
 
 /**
  * Module representing hall effect sensors. To get the current rate use
@@ -87,7 +88,8 @@ public final class HallEffectModule extends ForwardingHallEffectModule {
     }
 
     /**
-     * If the module is enabled, returns the current rate of the counter in rotations per minute.
+     * If the module is enabled, returns the current rate of the counter in
+     * rotations per minute.
      *
      * @return the rate of sensor
      */
@@ -103,8 +105,9 @@ public final class HallEffectModule extends ForwardingHallEffectModule {
  *
  * @author Denis Trailin
  */
-class ForwardingHallEffectModule implements HallEffect {
+class ForwardingHallEffectModule implements HallEffect, PIDSource {
 
+    private static final int defaultSampleRate = 50;
     private final DigitalInput hallEffect;
     private final Counter counter;
     private final int sampleRate;
@@ -130,7 +133,7 @@ class ForwardingHallEffectModule implements HallEffect {
      * @param counter the counter object it uses
      */
     public ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter) {
-        this(hallEffect, counter, 20);
+        this(hallEffect, counter, defaultSampleRate);
     }
 
     /**
@@ -197,5 +200,12 @@ class ForwardingHallEffectModule implements HallEffect {
      */
     public boolean isPolarized() {
         return hallEffect.get();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public double pidGet() {
+        return getRate();
     }
 }

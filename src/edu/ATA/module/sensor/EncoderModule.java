@@ -142,8 +142,7 @@ class ForwardingEncoder implements edu.ATA.module.sensor.Encoder {
     }
 
     /**
-     * Reset the Encoder distance to zero. Resets the current count to zero on
-     * the encoder.
+     * Reset the Encoder distance to zero.
      */
     public void reset() {
         encoder.reset();

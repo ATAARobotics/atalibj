@@ -11,12 +11,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class HallEffectTest extends Robot implements Modules {
 
     public void robotInit() {
+        shooterMotor.enable();
         hallEffect.enable();
+        bangbang.enable();
+        bangbang.setSetpoint(4500);
     }
 
     public void teleopPeriodic() {
-        SmartDashboard.putBoolean("HallEffect", hallEffect.isPolarized());
-        SmartDashboard.putNumber("HallEffectCount", hallEffect.getCount());
         SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
     }
 }

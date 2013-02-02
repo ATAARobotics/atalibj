@@ -9,11 +9,11 @@ package edu.ATA.main;
 public interface PortMap {
 
     int JOYSTICK = 1;
-    int DRIVE[] = {4, 3, 1, 2};
+    int DRIVE[] = {5, 4, 2, 3};
     int RELAY = 1;
     int SOLENOID[] = {5, 6, 7, 8};
     int ENCODER[] = {2, 3};
-    int SHOOTER = 5;
+    int SHOOTER = 1;
     int LOADER = 1;
     int RELOADER = 2;
     int HALLEFFECT = 1;
