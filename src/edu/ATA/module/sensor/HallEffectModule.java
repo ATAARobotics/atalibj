@@ -182,15 +182,7 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * @return current counter rate
      */
     public double getRate() {
-        long current = System.currentTimeMillis() - lastTime;
-        int count = getCount();
-        int currentCount = count - lastCount;
-        if (current > sampleRate) {
-            lastTime = System.currentTimeMillis();
-            lastCount = count;
-        }
-        double rate = (((double) currentCount) / current) * 60000.0;
-        return current > sampleRate ? (lastRate = rate) : lastRate;
+        return counter.getPeriod() / 60;
     }
 
     /**
