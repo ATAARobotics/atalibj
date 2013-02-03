@@ -262,10 +262,7 @@ class ForwardingRobotDrive implements edu.ATA.module.driving.RobotDrive, PIDOutp
     }
 
     /**
-     * Set the speed of the right and left motors. This is used once an
-     * appropriate drive setup function is called such as twoWheelDrive(). The
-     * motors are set to "leftSpeed" and "rightSpeed" and includes flipping the
-     * direction of one side for opposing motors.
+     * Set the speed of the right and left motors.
      *
      * @param leftOutput the speed to send to the left side of the robot.
      * @param rightOutput the speed to send to the right side of the robot.

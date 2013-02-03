@@ -58,6 +58,40 @@ interface RobotDrive {
     public void arcadeDrive(double moveValue, double rotateValue);
 
     /**
+     * Sets the forwards/backwards speed. The turn value should stay the same as
+     * set previously.
+     *
+     * @param moveValue the value to use for forwards/backwards
+     */
+    public void setForwardValue(double moveValue);
+
+    /**
+     * Sets the forwards/backwards speed. The turn value should stay the same as
+     * set previously.
+     *
+     * @param moveValue the value to use for forwards/backwards
+     * @param squaredInputs if set, decreases the sensitivity at low speeds
+     */
+    public void setForwardValue(double moveValue, boolean squaredInput);
+
+    /**
+     * Sets the forwards/backwards speed. The forward value should stay the same as
+     * set previously.
+     *
+     * @param rotateValue the value to use for the rotate right/left
+     */
+    public void setRotateValue(double rotateValue);
+
+    /**
+     * Sets the forwards/backwards speed. The forward value should stay the same as
+     * set previously.
+     *
+     * @param rotateValue the value to use for the rotate right/left
+     * @param squaredInputs if set, decreases the sensitivity at low speeds
+     */
+    public void setRotateValue(double rotateValue, boolean squaredInput);
+
+    /**
      * A method for driving with Mecanum wheeled robots.
      *
      * @param x the speed that the robot should drive in the X direction.
