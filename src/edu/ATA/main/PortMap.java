@@ -29,4 +29,7 @@ public interface PortMap {
     int GEAR_2 = 2;
     int LOADER_PORT = 3;
     int RELOADER_PORT = 4;
+    
+    // Relays
+    int COMPRESSOR = 1;
 }
