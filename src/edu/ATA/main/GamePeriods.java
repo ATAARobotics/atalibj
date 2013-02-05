@@ -35,7 +35,7 @@
 /*----------------------------------------------------------------------------*/
 package edu.ATA.main;
 
-import edu.ATA.test.RobotSelector;
+import edu.ATA.twolf.TheWolf;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -58,7 +58,7 @@ public final class GamePeriods extends IterativeRobot {
 
     {
         try {
-            robot = new RobotSelector();
+            robot = TheWolf.fetchTheHound();
         } catch (Throwable t) {
             t.printStackTrace();
         }

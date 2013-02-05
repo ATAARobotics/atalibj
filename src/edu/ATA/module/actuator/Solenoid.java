@@ -1,4 +1,4 @@
-package edu.ATA.module.sensor;
+package edu.ATA.module.actuator;
 
 /**
  * Interface representing solenoids. Is capable of setting the solenoid on or

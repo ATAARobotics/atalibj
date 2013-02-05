@@ -1,4 +1,4 @@
-package edu.ATA.module.sensor;
+package edu.ATA.module.actuator;
 
 import edu.ATA.module.Module;
 

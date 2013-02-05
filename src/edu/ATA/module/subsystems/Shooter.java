@@ -1,65 +1,64 @@
 package edu.ATA.module.subsystems;
 
 import edu.ATA.bindings.CommandBind;
-import edu.ATA.commands.SpeedControllerCommand;
-import edu.ATA.commands.StopCommand;
-import edu.ATA.main.Logger;
+import edu.ATA.command.Commands;
 import edu.ATA.module.Module;
-import edu.ATA.module.joystick.XboxController;
-import edu.ATA.module.sensor.SolenoidModule;
+import edu.ATA.module.sensor.PotentiometerModule;
+import edu.ATA.module.actuator.SolenoidModule;
 import edu.ATA.module.speedcontroller.SpeedControllerModule;
-import edu.ATA.module.speedcontroller.SpikeRelay;
-import edu.ATA.module.speedcontroller.SpikeRelayModule;
 import edu.ATA.module.subsystem.Subsystem;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Shooter extends Subsystem {
 
-    private final XboxController controller;
-    private final SpikeRelayModule compressor;
-    private final SpeedControllerModule shooter;
     private final SolenoidModule loader;
     private final SolenoidModule reloader;
+    private final PotentiometerModule pot;
+    private final SpeedControllerModule alignment;
 
-    public Shooter(XboxController controller,
-            SpikeRelayModule compressor, SpeedControllerModule shooter,
-            SolenoidModule loader, SolenoidModule reloader) {
-        super(new Module[]{controller, compressor, shooter, loader, reloader});
-        this.controller = controller;
-        this.compressor = compressor;
-        this.shooter = shooter;
+    public Shooter(SolenoidModule loader, SolenoidModule reloader,
+            PotentiometerModule pot, SpeedControllerModule alignment) {
+        super(new Module[]{loader, reloader, pot, alignment});
         this.loader = loader;
         this.reloader = reloader;
+        this.pot = pot;
+        this.alignment = alignment;
     }
 
-    public boolean enable() {
-        init();
-        return super.enable();
+    public void shoot() {
+        Commands.runInNewThread(new ShootCommand());
     }
 
-    private void init() {
-        controller.removeAllBinds();
-        controller.bindWhenPressed(XboxController.RIGHT_BUMPER, new CommandBind() {
-            public void run() {
-                Logger.log(Logger.Urgency.STATUSREPORT, "Shooter fired.");
-                loader.set(true);
-                reloader.set(false);
-                Timer.delay(0.8);
-                loader.set(false);
-                reloader.set(true);
+    public void alignTo(double setpoint) {
+        Commands.runInNewThread(new AlignCommand(setpoint));
+    }
+
+    private class ShootCommand implements CommandBind {
+
+        public void run() {
+            loader.set(true);
+            reloader.set(false);
+            Timer.delay(0.75);
+            loader.set(false);
+            reloader.set(true);
+        }
+    }
+
+    private class AlignCommand implements CommandBind {
+
+        private final double setpoint;
+
+        public AlignCommand(double setpoint) {
+            this.setpoint = setpoint;
+        }
+
+        public void run() {
+            while (pot.getPosition() > setpoint) {
+                alignment.set(-1);
             }
-        });
-        controller.bindWhilePressed(XboxController.RIGHT_STICK, new SpeedControllerCommand(shooter, 1));
-        controller.bindWhilePressed(XboxController.A, new SpeedControllerCommand(shooter, 0.9));
-        controller.bindWhilePressed(XboxController.B, new SpeedControllerCommand(shooter, 0.8));
-        controller.bindWhilePressed(XboxController.Y, new SpeedControllerCommand(shooter, 0.7));
-        controller.bindWhilePressed(XboxController.X, new SpeedControllerCommand(shooter, 0.6));
-        controller.bindWhilePressed(XboxController.LEFT_BUMPER, new SpeedControllerCommand(shooter, 0.5));
-        controller.bindWhenPressed(XboxController.LEFT_STICK, new StopCommand(shooter));
-    }
-
-    public void teleop() {
-        compressor.set(SpikeRelay.FORWARD);
-        controller.doBinds();
+            while (pot.getPosition() < setpoint) {
+                alignment.set(1);
+            }
+        }
     }
 }

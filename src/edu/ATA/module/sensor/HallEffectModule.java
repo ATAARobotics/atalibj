@@ -1,5 +1,6 @@
 package edu.ATA.module.sensor;
 
+import edu.ATA.module.Module;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -11,7 +12,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  *
  * @author Team 4334
  */
-public final class HallEffectModule extends ForwardingHallEffectModule {
+public final class HallEffectModule extends ForwardingHallEffectModule implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -182,7 +183,7 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * @return current counter rate
      */
     public double getRate() {
-        return counter.getPeriod() / 60;
+        return 60 / counter.getPeriod();
     }
 
     /**

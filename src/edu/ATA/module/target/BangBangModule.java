@@ -1,6 +1,5 @@
 package edu.ATA.module.target;
 
-import edu.ATA.main.DriverstationInfo;
 import edu.ATA.module.Module;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -26,12 +25,10 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
     private TimerTask task = new TimerTask() {
         public void run() {
             if (enabled) {
-                if (!DriverstationInfo.getGamePeriod().equals(DriverstationInfo.DISABLED)) {
-                    if (source.pidGet() >= setpoint) {
-                        output.pidWrite(defaultSpeed);
-                    } else {
-                        output.pidWrite(maxSpeed);
-                    }
+                if (source.pidGet() >= setpoint) {
+                    output.pidWrite(defaultSpeed);
+                } else {
+                    output.pidWrite(maxSpeed);
                 }
             }
         }
@@ -63,10 +60,8 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
         this.source = source;
         this.output = output;
         this.defaultSpeed = defaultSpeed;
-        timer.scheduleAtFixedRate(task, 0L, 10L);
+        timer.scheduleAtFixedRate(task, 0L, 20L);
     }
-    
-    
 
     /**
      * Stops the controller from changing output on the output object.
@@ -74,7 +69,14 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
      * @return if module is disabled successfully
      */
     public synchronized boolean disable() {
-        return !(enabled = false);
+        boolean d = true;
+        if (source instanceof Module) {
+            d = d && ((Module) source).enable();
+        }
+        if (output instanceof Module) {
+            d = d && ((Module) output).enable();
+        }
+        return !(enabled = false) && d;
     }
 
     /**
@@ -84,7 +86,14 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
      * @return if module is enabled successfully
      */
     public synchronized boolean enable() {
-        return (enabled = true);
+        boolean e = true;
+        if (source instanceof Module) {
+            e = e && ((Module) source).enable();
+        }
+        if (output instanceof Module) {
+            e = e && ((Module) output).enable();
+        }
+        return (enabled = true) && e;
     }
 
     /**

@@ -8,13 +8,25 @@ package edu.ATA.main;
  */
 public interface PortMap {
 
-    int JOYSTICK = 1;
+    // Joysticks
+    int JOYSTICK_1 = 1;
+    int JOYSTICK_2 = 2;
+    
+    // Digital sidecar output
     int DRIVE[] = {5, 4, 2, 3};
-    int RELAY = 1;
-    int SOLENOID[] = {5, 6, 7, 8};
+    int SHOOTER_PORT = 1;
+    int SHOOTER_ALIGNMENT_PORT = 6;
+    
+    // Digital sidecar input
+    int HALLEFFECT_PORT = 1;
     int ENCODER[] = {2, 3};
-    int SHOOTER = 1;
-    int LOADER = 1;
-    int RELOADER = 2;
-    int HALLEFFECT = 1;
+    
+    // Analog sidecar
+    int SHOOTER_POSITION = 1;
+    
+    // Pneumatics sidecar
+    int GEAR_1 = 1;
+    int GEAR_2 = 2;
+    int LOADER_PORT = 3;
+    int RELOADER_PORT = 4;
 }
