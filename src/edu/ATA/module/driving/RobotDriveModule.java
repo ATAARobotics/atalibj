@@ -36,6 +36,7 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
      */
     public final boolean enable() {
         setMaxOutput(maxSpeed);
+        setSafetyEnabled(true);
         return (enabled = true);
     }
 
@@ -57,6 +58,7 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
     public final boolean disable() {
         super.setMaxOutput(0);
         stopMotors();
+        setSafetyEnabled(false);
         return !(enabled = false);
     }
 

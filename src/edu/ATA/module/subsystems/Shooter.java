@@ -59,6 +59,7 @@ public class Shooter extends Subsystem {
             while (pot.getPosition() < setpoint) {
                 alignment.set(1);
             }
+            alignment.set(0);
         }
     }
 }

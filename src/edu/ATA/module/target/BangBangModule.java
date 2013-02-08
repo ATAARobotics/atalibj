@@ -117,6 +117,16 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
     }
 
     /**
+     * Returns whether the input is <b>currently</b> above the setpoint. Does
+     * not mean bang bang is off. (gets the most recent input)
+     *
+     * @return if input is higher than setpoint
+     */
+    public synchronized boolean pastSetpoint() {
+        return source.pidGet() > setpoint;
+    }
+
+    /**
      * Sets the maximum speed to set the output. If this value is negative, the
      * absolute value is used. To reverse the output direction, use
      * {@code reverse()}.

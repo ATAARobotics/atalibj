@@ -2,6 +2,10 @@ package edu.ATA.autonomous;
 
 import ATA.gordian.Script;
 import edu.ATA.main.Logger;
+import edu.ATA.module.subsystems.AlignmentSystem;
+import edu.ATA.module.subsystems.ShiftingDrivetrain;
+import edu.ATA.module.subsystems.Shooter;
+import edu.ATA.module.target.BangBangModule;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -34,28 +38,28 @@ public final class Gordian {
      * methods, variables, etc. You can generally accept that everything is
      * ready to be run after running this method.
      */
-    public static void ensureInit() {
+    public static void ensureInit(ShiftingDrivetrain drivetrain, Shooter shooter, 
+            BangBangModule bangBangModule, AlignmentSystem alignmentSystem) {
         if (!init) {
-            init();
+            init(drivetrain, shooter, bangBangModule, alignmentSystem);
             init = true;
         }
     }
 
     /**
-     * Makes sure Gordian is ready to run ({@link Gordian#ensureInit()}) and
-     * then runs the script given. Accesses the file at
-     * {@code "file:///"+fileName}, and uses the text found there as the script.
+     * Accesses the file at {@code "file:///"+fileName}, and uses the text found
+     * there as the script.
      *
      * @param fileName name of the file to retrieve text from
      * @throws IOException thrown when accessing file fails
      */
     public static void run(String fileName) throws IOException {
-        ensureInit();
         String script = Logger.getTextFromFile(Connector.openDataInputStream("file:///" + fileName));
         Script.run(script);
     }
 
-    private static void init() {
+    private static void init(ShiftingDrivetrain drivetrain, Shooter shooter, 
+            BangBangModule bangBangModule, AlignmentSystem alignmentSystem) {
         // Insert all methods, variables, returning methods and initialization code here.
     }
 }

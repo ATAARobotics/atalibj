@@ -29,6 +29,9 @@ public interface PortMap {
     int GEAR_2 = 2;
     int LOADER_PORT = 3;
     int RELOADER_PORT = 4;
+    int SHORT_ALIGN_PORT = 5;
+    int LONG_ALIGN_PORT = 6;
+    int STATIC_ALIGN_PORT = 7;
     
     // Relays
     int COMPRESSOR = 1;
