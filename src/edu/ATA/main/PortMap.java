@@ -19,16 +19,16 @@ public interface PortMap {
     
     // Digital sidecar input
     int HALLEFFECT_PORT = 1;
-    int ENCODER[] = {2, 3};
+    int ENCODER[] = {2, 3, 4, 5};
     
     // Analog sidecar
     int SHOOTER_POSITION = 1;
     
     // Pneumatics sidecar
-    int GEAR_1 = 1;
-    int GEAR_2 = 2;
-    int LOADER_PORT = 3;
-    int RELOADER_PORT = 4;
+    int GEAR_1 = 3;
+    int GEAR_2 = 4;
+    int LOADER_PORT = 1;
+    int RELOADER_PORT = 2;
     int SHORT_ALIGN_PORT = 5;
     int LONG_ALIGN_PORT = 6;
     int STATIC_ALIGN_PORT = 7;

@@ -18,7 +18,7 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
     private boolean enabled;
     private double setpoint = 0;
     private double maxSpeed = 1;
-    private final double defaultSpeed;
+    private double defaultSpeed;
     private final PIDSource source;
     private final PIDOutput output;
     private Timer timer = new Timer();
@@ -26,7 +26,11 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
         public void run() {
             if (enabled) {
                 if (source.pidGet() >= setpoint) {
-                    output.pidWrite(defaultSpeed);
+                    if (setpoint == 0) {
+                        output.pidWrite(0);
+                    } else {
+                        output.pidWrite(defaultSpeed);
+                    }
                 } else {
                     output.pidWrite(maxSpeed);
                 }
@@ -123,7 +127,8 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
      * @return if input is higher than setpoint
      */
     public synchronized boolean pastSetpoint() {
-        return source.pidGet() > setpoint;
+        // Remember to remove the -50 after 2013
+        return source.pidGet() > setpoint - 50;
     }
 
     /**
@@ -139,6 +144,10 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
         } else {
             this.maxSpeed = Math.abs(maxSpeed);
         }
+    }
+
+    public synchronized void setDefaultSpeed(double defaultSpeed) {
+        this.defaultSpeed = defaultSpeed;
     }
 
     /**

@@ -1,6 +1,12 @@
 package edu.ATA.autonomous;
 
+import ATA.gordian.Data;
 import ATA.gordian.Script;
+import ATA.gordian.data.BooleanData;
+import ATA.gordian.data.NumberData;
+import ATA.gordian.data.ReturningMethod;
+import ATA.gordian.instructions.MethodBody;
+import ATA.gordian.storage.Methods;
 import edu.ATA.main.Logger;
 import edu.ATA.module.subsystems.AlignmentSystem;
 import edu.ATA.module.subsystems.ShiftingDrivetrain;
@@ -38,7 +44,7 @@ public final class Gordian {
      * methods, variables, etc. You can generally accept that everything is
      * ready to be run after running this method.
      */
-    public static void ensureInit(ShiftingDrivetrain drivetrain, Shooter shooter, 
+    public static void ensureInit(ShiftingDrivetrain drivetrain, Shooter shooter,
             BangBangModule bangBangModule, AlignmentSystem alignmentSystem) {
         if (!init) {
             init(drivetrain, shooter, bangBangModule, alignmentSystem);
@@ -58,8 +64,73 @@ public final class Gordian {
         Script.run(script);
     }
 
-    private static void init(ShiftingDrivetrain drivetrain, Shooter shooter, 
-            BangBangModule bangBangModule, AlignmentSystem alignmentSystem) {
+    private static void init(final ShiftingDrivetrain drivetrain, final Shooter shooter,
+            final BangBangModule bangBangModule, final AlignmentSystem alignmentSystem) {
         // Insert all methods, variables, returning methods and initialization code here.
+        Methods.METHODS_STORAGE.addMethod("arcade", new MethodBody() {
+            public void run(Data[] args) {
+                drivetrain.arcadeDrive(((NumberData) args[0]).doubleValue(), ((NumberData) args[1]).doubleValue());
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("tank", new MethodBody() {
+            public void run(Data[] args) {
+                drivetrain.tankDrive(((NumberData) args[0]).doubleValue(), ((NumberData) args[1]).doubleValue());
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("stop", new MethodBody() {
+            public void run(Data[] args) {
+                drivetrain.stop();
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("shiftGear", new MethodBody() {
+            public void run(Data[] args) {
+                drivetrain.shiftGears();
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("driveToSetpoint", new MethodBody() {
+            public void run(Data[] args) {
+                drivetrain.driveTo(((NumberData)args[0]).doubleValue(), 2);
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("shoot", new MethodBody() {
+            public void run(Data[] args) {
+                shooter.shoot();
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("alignShooter", new MethodBody() {
+            public void run(Data[] args) {
+                shooter.alignTo(((NumberData) args[0]).doubleValue());
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("setShooterSpeed", new MethodBody() {
+            public void run(Data[] args) {
+                bangBangModule.setSetpoint(((NumberData) args[0]).doubleValue());
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("stopShooter", new MethodBody() {
+            public void run(Data[] args) {
+                bangBangModule.setSetpoint(0);
+            }
+        });
+        Data.RETURNING_METHODS.addMethod("isPastSetpoint", new ReturningMethod() {
+            public Data getValue(Data[] args) {
+                return new BooleanData(String.valueOf(bangBangModule.pastSetpoint()));
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("collapseAlignment", new MethodBody() {
+            public void run(Data[] args) {
+                alignmentSystem.collapse();
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("setLongAlignment", new MethodBody() {
+            public void run(Data[] args) {
+                alignmentSystem.setLong();
+            }
+        });
+        Methods.METHODS_STORAGE.addMethod("setShortAlignment", new MethodBody() {
+            public void run(Data[] args) {
+                alignmentSystem.setShort();
+            }
+        });
     }
 }

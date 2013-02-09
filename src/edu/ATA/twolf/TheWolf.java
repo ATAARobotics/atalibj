@@ -1,5 +1,6 @@
 package edu.ATA.twolf;
 
+import com.sun.squawk.microedition.io.FileConnection;
 import edu.ATA.autonomous.Gordian;
 import edu.ATA.bindings.CommandBind;
 import edu.ATA.commands.AlignCommand;
@@ -11,9 +12,10 @@ import edu.ATA.main.PortMap;
 import edu.ATA.main.Robot;
 import edu.ATA.module.actuator.SolenoidModule;
 import edu.ATA.module.driving.ArcadeBinding;
-import edu.ATA.module.driving.GearShift;
+import edu.ATA.commands.GearShift;
 import edu.ATA.module.driving.RobotDriveModule;
 import edu.ATA.module.joystick.XboxController;
+import edu.ATA.module.sensor.EncoderModule;
 import edu.ATA.module.sensor.HallEffectModule;
 import edu.ATA.module.sensor.PotentiometerModule;
 import edu.ATA.module.speedcontroller.SpeedControllerModule;
@@ -25,7 +27,9 @@ import edu.ATA.module.subsystems.Shooter;
 import edu.ATA.module.target.BangBangModule;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -33,7 +37,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import javax.microedition.io.Connector;
 
 /**
  *
@@ -43,6 +49,7 @@ public class TheWolf extends Robot implements PortMap {
 
     // Setpoint for shooter!
     private static double SETPOINT = 4500;
+    private static double DEFAULTSPEED = 0.5;
     private static double HIGH = 4.5;
     private static double MED_HIGH = 4;
     private static double MEDIUM = 3.5;
@@ -54,6 +61,7 @@ public class TheWolf extends Robot implements PortMap {
 
     private static void updateValues() {
         SETPOINT = Preferences.getInstance().getDouble("ShooterSetpoint", SETPOINT);
+        DEFAULTSPEED = Preferences.getInstance().getDouble("DefaultSpeed", DEFAULTSPEED);
         HIGH = Preferences.getInstance().getDouble("HighPosition", HIGH);
         MED_HIGH = Preferences.getInstance().getDouble("MedHighPosition", MED_HIGH);
         MEDIUM = Preferences.getInstance().getDouble("MediumPosition", MEDIUM);
@@ -77,14 +85,21 @@ public class TheWolf extends Robot implements PortMap {
     private final SpeedControllerModule shooter = new SpeedControllerModule(new Talon(SHOOTER_PORT));
     private final HallEffectModule hallEffect = new HallEffectModule(new DigitalInput(HALLEFFECT_PORT));
     private final RobotDriveModule drive = new RobotDriveModule(new RobotDrive(leftFront, leftBack, rightFront, rightBack));
+    private final EncoderModule leftEncoder = new EncoderModule(new Encoder(ENCODER[0], ENCODER[1]), EncoderModule.DISTANCE);
+    private final EncoderModule rightEncoder = new EncoderModule(new Encoder(ENCODER[2], ENCODER[3]), EncoderModule.DISTANCE);
+    private final PIDSource distance = new PIDSource() {
+        public double pidGet() {
+            return leftEncoder.pidGet() + rightEncoder.pidGet();
+        }
+    };
     private final XboxController WOLF_CONTROL = new XboxController(new Joystick(JOYSTICK_1));
     private final XboxController WOLF_SHOT_CONTROL = new XboxController(new Joystick(JOYSTICK_2));
     /*
      * Subsystems 
      */
-    private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, firstGear, secondGear);
+    private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, firstGear, secondGear, distance, 0, 0, 0);
     private final Shooter WOLF_SHOOT = new Shooter(loader, reloader, shooterAngle, shooterAligner);
-    private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter);
+    private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter, 0.5);
     private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlign, longAlign, staticAlign);
 
     public static Robot fetchTheHound() {
@@ -101,6 +116,7 @@ public class TheWolf extends Robot implements PortMap {
         compressor.set(SpikeRelay.FORWARD);
         // Refilling capacity using spike relay always on
         Preferences.getInstance().putDouble("ShooterSetpoint", SETPOINT);
+        Preferences.getInstance().putDouble("DefaultSpeed", DEFAULTSPEED);
         Preferences.getInstance().putDouble("HighPosition", HIGH);
         Preferences.getInstance().putDouble("MedHighPosition", MED_HIGH);
         Preferences.getInstance().putDouble("MediumPosition", MEDIUM);
@@ -161,6 +177,7 @@ public class TheWolf extends Robot implements PortMap {
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new ShootCommand(WOLF_SHOOT));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.START, new BangBangCommand(WOLF_SHOOTER, SETPOINT));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.BACK, new BangBangCommand(WOLF_SHOOTER, 0));
+        WOLF_SHOOTER.setDefaultSpeed(DEFAULTSPEED);
         WOLF_SHOOTER.setSetpoint(SETPOINT);
         // Shooter position //
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y, new ShooterAlignCommand(WOLF_SHOOT, HIGH));
@@ -173,20 +190,32 @@ public class TheWolf extends Robot implements PortMap {
                 shooterAligner.set(WOLF_SHOT_CONTROL.getTriggers());
             }
         });
+
+        buf = 0;
+        avg = 0;
     }
+    
+    double buf;
+    double avg;
 
     public void teleopPeriodic() {
         WOLF_CONTROL.doBinds();
+        WOLF_SHOT_CONTROL.doBinds();
         SmartDashboard.putBoolean("PastSetpoint", WOLF_SHOOTER.pastSetpoint());
         SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
+
+        final double rate = hallEffect.getRate();
+        buf = SETPOINT - rate;
+        avg = (buf * 0.00321 + avg * 0.99679);
+        SmartDashboard.putNumber("Average Offset", avg);
     }
 
     public void testInit() {
         updateValues();
         hallEffect.enable();
+        WOLF_SHOOTER.enable();
     }
 
     public void testPeriodic() {
-        SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
     }
 }

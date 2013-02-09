@@ -1,4 +1,4 @@
-package edu.ATA.module.driving;
+package edu.ATA.commands;
 
 import edu.ATA.bindings.CommandBind;
 import edu.ATA.module.actuator.SolenoidModule;
