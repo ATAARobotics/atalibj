@@ -171,7 +171,7 @@ public class TheWolf extends Robot implements PortMap {
         WOLF_SHOT_CONTROL.removeAllBinds();
         // Driving //
         WOLF_CONTROL.bindAxis(XboxController.RIGHT_X, new ArcadeBinding(drive, ArcadeBinding.ROTATE));
-        WOLF_CONTROL.bindAxis(XboxController.LEFT_Y, new ArcadeBinding(drive, ArcadeBinding.FORWARD));
+        WOLF_CONTROL.bindAxis(XboxController.LEFT_FROM_MIDDLE, new ArcadeBinding(drive, ArcadeBinding.FORWARD));
         WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(secondGear, firstGear));
         // Alignment //
         WOLF_CONTROL.bindWhenPressed(XboxController.Y, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE));
