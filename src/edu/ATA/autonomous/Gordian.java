@@ -43,6 +43,11 @@ public final class Gordian {
      * Makes sure that everything is ready to be run in Gordian. This includes
      * methods, variables, etc. You can generally accept that everything is
      * ready to be run after running this method.
+     *
+     * @param drivetrain the drivetrain you are using
+     * @param shooter the shooter you are using
+     * @param bangBangModule the bang-bang module that you are using
+     * @param alignmentSystem that alignment system that your are using
      */
     public static void ensureInit(ShiftingDrivetrain drivetrain, Shooter shooter,
             BangBangModule bangBangModule, AlignmentSystem alignmentSystem) {
@@ -89,7 +94,7 @@ public final class Gordian {
         });
         Methods.METHODS_STORAGE.addMethod("driveToSetpoint", new MethodBody() {
             public void run(Data[] args) {
-                drivetrain.driveTo(((NumberData)args[0]).doubleValue(), 2);
+                drivetrain.driveTo(((NumberData) args[0]).doubleValue(), 2);
             }
         });
         Methods.METHODS_STORAGE.addMethod("shoot", new MethodBody() {

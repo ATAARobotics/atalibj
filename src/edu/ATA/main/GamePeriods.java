@@ -52,6 +52,11 @@ public final class GamePeriods extends IterativeRobot {
 
     private static Robot robot;
 
+    /**
+     * Sets the robot to a robot
+     * 
+     * @param robot the robot object used
+     */
     public static void setRobot(Robot robot) {
         GamePeriods.robot = robot;
     }

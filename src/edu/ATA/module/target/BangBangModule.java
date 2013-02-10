@@ -146,6 +146,10 @@ public class BangBangModule implements Module.DisableableModule, BangBangControl
         }
     }
 
+    /**
+     *
+     * @param defaultSpeed
+     */
     public synchronized void setDefaultSpeed(double defaultSpeed) {
         this.defaultSpeed = defaultSpeed;
     }

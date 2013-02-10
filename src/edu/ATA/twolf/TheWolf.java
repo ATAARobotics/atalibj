@@ -102,6 +102,10 @@ public class TheWolf extends Robot implements PortMap {
     private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter, 0.5);
     private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlign, longAlign, staticAlign);
 
+    /**
+     *
+     * @return
+     */
     public static Robot fetchTheHound() {
         return (theWolf == null) ? (theWolf = new TheWolf()) : (theWolf);
     }

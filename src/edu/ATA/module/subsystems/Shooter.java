@@ -9,6 +9,10 @@ import edu.ATA.module.speedcontroller.SpeedControllerModule;
 import edu.ATA.module.subsystem.Subsystem;
 import edu.wpi.first.wpilibj.Timer;
 
+/**
+ *
+ * @author Team 4334
+ */
 public class Shooter extends Subsystem {
 
     private final SolenoidModule loader;
@@ -16,6 +20,13 @@ public class Shooter extends Subsystem {
     private final PotentiometerModule pot;
     private final SpeedControllerModule alignment;
 
+    /**
+     *
+     * @param loader
+     * @param reloader
+     * @param pot
+     * @param alignment
+     */
     public Shooter(SolenoidModule loader, SolenoidModule reloader,
             PotentiometerModule pot, SpeedControllerModule alignment) {
         super(new Module[]{loader, reloader, pot, alignment});
@@ -25,10 +36,17 @@ public class Shooter extends Subsystem {
         this.alignment = alignment;
     }
 
+    /**
+     *
+     */
     public void shoot() {
         Commands.runInNewThread(new ShootCommand());
     }
 
+    /**
+     *
+     * @param setpoint
+     */
     public void alignTo(double setpoint) {
         Commands.runInNewThread(new AlignCommand(setpoint));
     }

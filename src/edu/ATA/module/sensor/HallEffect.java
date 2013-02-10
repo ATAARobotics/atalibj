@@ -1,5 +1,10 @@
 package edu.ATA.module.sensor;
 
+/**
+ * The class for interacting with hall effect.
+ * 
+ * @author Team 4334
+ */
 public interface HallEffect {
 
     /**

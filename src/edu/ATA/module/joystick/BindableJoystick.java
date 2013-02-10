@@ -12,6 +12,9 @@ import edu.ATA.module.Module;
  */
 public class BindableJoystick extends Bindable implements Joystick, Module.DisableableModule {
 
+    /**
+     *The composition object used to get input.
+     */
     protected final JoystickModule joystick;
 
     /**
@@ -56,7 +59,7 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
      * {@link edu.wpi.first.wpilibj.Joystick#getRawAxis(int)}. If it is not,
      * returns 0.
      *
-     * @param axis axis number defined in windows
+     * @param port the port of the axis
      * @return value of where the joystick is (usually -1 to +1)
      */
     public double getAxis(int port) {
@@ -78,7 +81,6 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
     /**
      * Returns {@link BindableJoystick#getButton(int)}.
      *
-     * @param button button number defined in windows
      * @return whether the button is pressed
      */
     public final boolean getPressed(final int port) {
@@ -88,7 +90,6 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
     /**
      * Returns {@link BindableJoystick#getAxis(int)}.
      *
-     * @param axis axis number defined in windows
      * @return value of where the joystick is (usually -1 to +1)
      */
     public final double getAxisValue(final int port) {
