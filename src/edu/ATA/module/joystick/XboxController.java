@@ -1,5 +1,6 @@
 package edu.ATA.module.joystick;
 
+import edu.first.module.joystick.BindableJoystick;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -51,9 +52,12 @@ public final class XboxController extends BindableJoystick {
      * The absolute smallest value for the all axises to return. If it is
      * smaller than this value, it will revert to 0.
      */
-    public static final double DEADZONE = 0.19;
-    public static final int A = 1, B = 2, X = 3, Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
-            BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10;
+    public static final double DEADZONE = 0.2;
+    public static final int SHIFT = 17;
+    public static final int A = 1, B = 2, X = 3,
+            Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
+            BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10,
+            BIND_A = 11, BIND_B = 12, BIND_X = 13, BIND_Y = 14;
     public static final int LEFT_X = 1, LEFT_Y = 2, TRIGGERS = 3, RIGHT_X = 4,
             RIGHT_Y = 5, DIRECTIONAL_PAD = 6, RIGHT_FROM_MIDDLE = 7, LEFT_FROM_MIDDLE = 8;
 
@@ -76,9 +80,20 @@ public final class XboxController extends BindableJoystick {
      * @param axis axis number defined in windows
      * @return value of where the joystick is (usually -1 to +1)
      */
-    public double getAxis(final int axis) {
+    public double getAxis(int axis) {
         if (!isEnabled()) {
             return 0;
+        }
+        if (axis > SHIFT) {
+            if (getLeftBumper()) {
+                axis -= SHIFT;
+            } else {
+                return 0;
+            }
+        } else {
+            if(getLeftBumper()) {
+                return 0;
+            }
         }
         double a;
         switch (axis) {
@@ -89,9 +104,20 @@ public final class XboxController extends BindableJoystick {
                 a = getLeftDistanceFromMiddle();
                 break;
             default:
-                a = joystick.getAxis(axis);
+                a = super.getAxis(axis);
         }
-        return (Math.abs(a) < DEADZONE) ? 0 : a;
+        return Math.abs(a) < DEADZONE ? 0 : a;
+    }
+
+    public boolean getButton(int button) {
+        if (button == LEFT_BUMPER) {
+            return super.getButton(LEFT_BUMPER);
+        }
+        if (button > SHIFT) {
+            return getLeftBumper() && super.getButton(button - SHIFT);
+        } else {
+            return !getLeftBumper() && super.getButton(button);
+        }
     }
 
     /**
@@ -101,7 +127,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether A button is pressed
      */
     public boolean getAButton() {
-        return getButton(A);
+        return super.getButton(A);
     }
 
     /**
@@ -111,7 +137,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether B button is pressed
      */
     public boolean getBButton() {
-        return getButton(B);
+        return super.getButton(B);
     }
 
     /**
@@ -121,7 +147,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether X button is pressed
      */
     public boolean getXButton() {
-        return getButton(X);
+        return super.getButton(X);
     }
 
     /**
@@ -131,7 +157,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether Y button is pressed
      */
     public boolean getYButton() {
-        return getButton(Y);
+        return super.getButton(Y);
     }
 
     /**
@@ -141,7 +167,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether left bumper button is pressed
      */
     public boolean getLeftBumper() {
-        return getButton(LEFT_BUMPER);
+        return super.getButton(LEFT_BUMPER);
     }
 
     /**
@@ -151,7 +177,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether right bumper button is pressed
      */
     public boolean getRightBumper() {
-        return getButton(RIGHT_BUMPER);
+        return super.getButton(RIGHT_BUMPER);
     }
 
     /**
@@ -161,7 +187,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether back button is pressed
      */
     public boolean getBackButton() {
-        return getButton(BACK);
+        return super.getButton(BACK);
     }
 
     /**
@@ -171,7 +197,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether start button is pressed
      */
     public boolean getStartButton() {
-        return getButton(START);
+        return super.getButton(START);
     }
 
     /**
@@ -181,7 +207,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether left analog stick is pressed
      */
     public boolean getLeftJoystickButton() {
-        return getButton(LEFT_STICK);
+        return super.getButton(LEFT_STICK);
     }
 
     /**
@@ -191,7 +217,7 @@ public final class XboxController extends BindableJoystick {
      * @return whether right analog stick is pressed
      */
     public boolean getRightJoystickButton() {
-        return getButton(RIGHT_STICK);
+        return super.getButton(RIGHT_STICK);
     }
 
     /**
@@ -202,7 +228,7 @@ public final class XboxController extends BindableJoystick {
      * @return left joystick x axis
      */
     public double getLeftX() {
-        return getAxis(LEFT_X);
+        return super.getAxis(LEFT_X);
     }
 
     /**
@@ -213,7 +239,7 @@ public final class XboxController extends BindableJoystick {
      * @return left joystick y axis
      */
     public double getLeftY() {
-        return -getAxis(LEFT_Y);
+        return -super.getAxis(LEFT_Y);
     }
 
     /**
@@ -224,7 +250,7 @@ public final class XboxController extends BindableJoystick {
      * @return right joystick x axis
      */
     public double getRightX() {
-        return getAxis(RIGHT_X);
+        return super.getAxis(RIGHT_X);
     }
 
     /**
@@ -235,7 +261,7 @@ public final class XboxController extends BindableJoystick {
      * @return right joystick y axis
      */
     public double getRightY() {
-        return -getAxis(RIGHT_Y);
+        return -super.getAxis(RIGHT_Y);
     }
 
     /**
@@ -247,7 +273,7 @@ public final class XboxController extends BindableJoystick {
      * @return sum of both triggers values
      */
     public double getTriggers() {
-        return -getAxis(TRIGGERS);
+        return -super.getAxis(TRIGGERS);
     }
 
     /**
@@ -258,7 +284,7 @@ public final class XboxController extends BindableJoystick {
      * @return directional pad's axis
      */
     public double getDirectionalPad() {
-        return getAxis(DIRECTIONAL_PAD);
+        return super.getAxis(DIRECTIONAL_PAD);
     }
 
     /**
