@@ -26,7 +26,11 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public final class GamePeriods extends IterativeRobot {
 
-    private static Robot robot = TheWolf.fetchTheHound();
+    private static Robot robot;
+    
+    {
+        robot = TheWolf.fetchTheHound();
+    }
 
     /**
      * Sets the robot to run by all instances of {@link GamePeriods}. All of the

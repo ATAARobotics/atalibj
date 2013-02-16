@@ -401,10 +401,12 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
     public void pidWrite(double d) {
         arcadeDrive(d, 0);
     }
-    
+
     private double transform(double original) {
-        for(int x = 0; x < speedFunctions.size(); x++) {
-            original = ((Function)speedFunctions.get(x)).F(original);
+        if (original != 0) {
+            for (int x = 0; x < speedFunctions.size(); x++) {
+                original = ((Function) speedFunctions.get(x)).F(original);
+            }
         }
         return original;
     }

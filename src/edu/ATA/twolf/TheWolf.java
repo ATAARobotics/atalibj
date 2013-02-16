@@ -61,10 +61,6 @@ public class TheWolf extends RobotAdapter implements PortMap {
     private static double LOW = 3;
     private static boolean FOUR_WHEEL_DRIVE = true;
 
-    static {
-        updateValues();
-    }
-
     private static void updateValues() {
         Logger.log(Logger.Urgency.STATUSREPORT, "Updating preferences...");
         SETPOINT = Preferences.getInstance().getDouble("ShooterSetpoint", SETPOINT);
@@ -131,6 +127,16 @@ public class TheWolf extends RobotAdapter implements PortMap {
     }
 
     private TheWolf() {
+    }
+
+    public void robotInit() {
+        // Refilling capacity using spike relay always on
+        SpikeRelayModule compressor = new SpikeRelayModule(new Relay(COMPRESSOR));
+        compressor.enable();
+        Logger.log(Logger.Urgency.STATUSREPORT, "Starting compressor...");
+        compressor.set(SpikeRelay.FORWARD);
+        // Refilling capacity using spike relay always on
+        updateValues();
         Preferences.getInstance().putDouble("ShooterSetpoint", SETPOINT);
         Preferences.getInstance().putDouble("DefaultSpeed", DEFAULTSPEED);
         Preferences.getInstance().putDouble("HighPosition", HIGH);
@@ -145,15 +151,6 @@ public class TheWolf extends RobotAdapter implements PortMap {
                 return (input * input * input) + 0.25;
             }
         });
-    }
-
-    public void robotInit() {
-        // Refilling capacity using spike relay always on
-        SpikeRelayModule compressor = new SpikeRelayModule(new Relay(COMPRESSOR));
-        compressor.enable();
-        Logger.log(Logger.Urgency.STATUSREPORT, "Starting compressor...");
-        compressor.set(SpikeRelay.FORWARD);
-        // Refilling capacity using spike relay always on
     }
 
     public void disabledInit() {

@@ -9,9 +9,9 @@ public interface PortMap {
     int SHOOTER_ALIGNMENT_PORT = 2;
     int[] DRIVE = {5, 6, 3, 4};
     // Digital sidecar input
-    int SHOOTER_LIMIT_SWITCH = 1;
-    int HALLEFFECT_PORT = 2;
-    int[] ENCODER = {3, 4};
+    int SHOOTER_LIMIT_SWITCH = 4;
+    int HALLEFFECT_PORT = 1;
+    int[] ENCODER = {2, 3};
     int PSI_SWITCH = 5;
     // Analog sidecar
     int SHOOTER_POSITION = 1;
