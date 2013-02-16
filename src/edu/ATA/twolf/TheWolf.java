@@ -14,6 +14,7 @@ import edu.ATA.twolf.subsystems.Shooter;
 import edu.first.bindings.AxisBind;
 import edu.first.command.Command;
 import edu.first.module.actuator.SolenoidModule;
+import edu.first.module.driving.Function;
 import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.driving.SideBinding;
 import edu.first.module.sensor.DigitalLimitSwitchModule;
@@ -40,7 +41,6 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,6 +59,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
     private static double MED_HIGH = 4;
     private static double MEDIUM = 3.5;
     private static double LOW = 3;
+    private static boolean FOUR_WHEEL_DRIVE = true;
 
     static {
         updateValues();
@@ -72,43 +73,54 @@ public class TheWolf extends RobotAdapter implements PortMap {
         MED_HIGH = Preferences.getInstance().getDouble("MedHighPosition", MED_HIGH);
         MEDIUM = Preferences.getInstance().getDouble("MediumPosition", MEDIUM);
         LOW = Preferences.getInstance().getDouble("LowPosition", LOW);
+        FOUR_WHEEL_DRIVE = Preferences.getInstance().getBoolean("4WD", FOUR_WHEEL_DRIVE);
         Logger.log(Logger.Urgency.STATUSREPORT, "Preferences updated");
     }
-    // Setpoint for shooter!
     private static TheWolf theWolf;
-    private final SpeedController leftBack = new Victor(DRIVE[0]),
-            leftFront = new Victor(DRIVE[1]),
-            rightBack = new Victor(DRIVE[2]),
-            rightFront = new Victor(DRIVE[3]);
-    private final DigitalInput psiSwitch = new DigitalInput(PSI_SWITCH);
+    private final DigitalLimitSwitchModule psiSwitch = new DigitalLimitSwitchModule(new DigitalInput(PSI_SWITCH));
     private final TransferRateCalculator transferRate = new TransferRateCalculator();
+    /*
+     * Shooter
+     */
+    private final SpeedControllerModule shooter = new SpeedControllerModule(new Talon(SHOOTER_PORT));
+    private final SpeedControllerModule shooterAligner = new SpeedControllerModule(new Victor(SHOOTER_ALIGNMENT_PORT));
+    private final PotentiometerModule shooterAngle = new PotentiometerModule(new AnalogChannel(SHOOTER_POSITION));
+    private final DigitalLimitSwitchModule shooterSwitch = new DigitalLimitSwitchModule(new DigitalInput(SHOOTER_LIMIT_SWITCH));
+    private final HallEffectModule hallEffect = new HallEffectModule(new DigitalInput(HALLEFFECT_PORT));
+    private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter, 0.5);
+    private final SpikeRelayModule loader = new SpikeRelayModule(new Relay(LOADER_PORT));
+    private final Shooter WOLF_SHOOT = new Shooter(loader, psiSwitch, shooterAngle, shooterSwitch, shooterAligner, WOLF_SHOOTER);
+    /*
+     * Driving
+     */
+    private final SpeedControllerModule leftBack = new SpeedControllerModule(new Victor(DRIVE[0])),
+            leftFront = new SpeedControllerModule(new Victor(DRIVE[1])),
+            rightBack = new SpeedControllerModule(new Victor(DRIVE[2])),
+            rightFront = new SpeedControllerModule(new Victor(DRIVE[3]));
+    private final RobotDriveModule drive = new RobotDriveModule(new RobotDrive(leftFront, leftBack, rightFront, rightBack), false, true);
+    private final EncoderModule leftEncoder = new EncoderModule(new Encoder(ENCODER[0], ENCODER[1]), EncoderModule.DISTANCE);
+    private final GyroModule gyro = new GyroModule(new Gyro(GYRO));
     private final SolenoidModule gearUp = new SolenoidModule(new Solenoid(GEAR_UP)),
             gearDown = new SolenoidModule(new Solenoid(GEAR_DOWN));
-    private final SpikeRelayModule loader = new SpikeRelayModule(new Relay(LOADER_PORT));
+    private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, gearDown, gearUp);
+    private final PIDModule DRIVETRAIN_PID = new PIDModule(new PIDController(1, 0, 0, leftEncoder, drive));
+    /*
+     * Alignment
+     */
     private final SolenoidModule shortAlignOut = new SolenoidModule(new Solenoid(SHORT_ALIGN_OUT_PORT)),
             shortAlignIn = new SolenoidModule(new Solenoid(SHORT_ALIGN_IN_PORT)),
             longAlignOut = new SolenoidModule(new Solenoid(LONG_ALIGN_OUT_PORT)),
             longAlignIn = new SolenoidModule(new Solenoid(LONG_ALIGN_IN_PORT)),
             staticAlignIn = new SolenoidModule(new Solenoid(STATIC_ALIGN_IN_PORT)),
             staticAlignOut = new SolenoidModule(new Solenoid(STATIC_ALIGN_OUT_PORT));
-    private final SpeedControllerModule shooterAligner = new SpeedControllerModule(new Victor(SHOOTER_ALIGNMENT_PORT));
-    private final PotentiometerModule shooterAngle = new PotentiometerModule(new AnalogChannel(SHOOTER_POSITION));
-    private final DigitalLimitSwitchModule shooterSwitch = new DigitalLimitSwitchModule(new DigitalInput(SHOOTER_LIMIT_SWITCH));
-    private final SpeedControllerModule shooter = new SpeedControllerModule(new Talon(SHOOTER_PORT));
-    private final HallEffectModule hallEffect = new HallEffectModule(new DigitalInput(HALLEFFECT_PORT));
-    private final RobotDriveModule drive = new RobotDriveModule(new RobotDrive(leftFront, leftBack, rightFront, rightBack), false, true);
-    private final EncoderModule leftEncoder = new EncoderModule(new Encoder(ENCODER[0], ENCODER[1]), EncoderModule.DISTANCE);
-    private final GyroModule gyro = new GyroModule(new Gyro(GYRO));
+    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlignOut, shortAlignIn, longAlignOut,
+            longAlignIn, staticAlignOut, staticAlignIn);
+
+    /*
+     * Joysticks
+     */
     private final XboxController WOLF_CONTROL = new XboxController(new Joystick(JOYSTICK_1));
     private final XboxController WOLF_SHOT_CONTROL = new XboxController(new Joystick(JOYSTICK_2));
-    /*
-     * Subsystems
-     */
-    private final PIDModule DRIVETRAIN_PID = new PIDModule(new PIDController(1, 0, 0, leftEncoder, drive));
-    private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, gearDown, gearUp);
-    private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter, 0.5);
-    private final Shooter WOLF_SHOOT = new Shooter(loader, psiSwitch, shooterAngle, shooterSwitch, shooterAligner, WOLF_SHOOTER);
-    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlignOut, shortAlignIn, longAlignOut, longAlignIn, staticAlignOut, staticAlignIn);
 
     /**
      *
@@ -119,6 +131,20 @@ public class TheWolf extends RobotAdapter implements PortMap {
     }
 
     private TheWolf() {
+        Preferences.getInstance().putDouble("ShooterSetpoint", SETPOINT);
+        Preferences.getInstance().putDouble("DefaultSpeed", DEFAULTSPEED);
+        Preferences.getInstance().putDouble("HighPosition", HIGH);
+        Preferences.getInstance().putDouble("MedHighPosition", MED_HIGH);
+        Preferences.getInstance().putDouble("MediumPosition", MEDIUM);
+        Preferences.getInstance().putDouble("LowPosition", LOW);
+        Preferences.getInstance().putBoolean("4WD", FOUR_WHEEL_DRIVE);
+        WOLF_SHOOTER.reverse();
+        WOLF_SHOOTER.setPastSetpoint(40);
+        drive.addFunction(new Function() {
+            public double F(double input) {
+                return (input * input * input) + 0.25;
+            }
+        });
     }
 
     public void robotInit() {
@@ -128,19 +154,14 @@ public class TheWolf extends RobotAdapter implements PortMap {
         Logger.log(Logger.Urgency.STATUSREPORT, "Starting compressor...");
         compressor.set(SpikeRelay.FORWARD);
         // Refilling capacity using spike relay always on
-        Preferences.getInstance().putDouble("ShooterSetpoint", SETPOINT);
-        Preferences.getInstance().putDouble("DefaultSpeed", DEFAULTSPEED);
-        Preferences.getInstance().putDouble("HighPosition", HIGH);
-        Preferences.getInstance().putDouble("MedHighPosition", MED_HIGH);
-        Preferences.getInstance().putDouble("MediumPosition", MEDIUM);
-        Preferences.getInstance().putDouble("LowPosition", LOW);
-
-        WOLF_SHOOTER.reverse();
-        WOLF_SHOOTER.setPastSetpoint(50);
     }
 
     public void disabledInit() {
         updateValues();
+        leftBack.disable();
+        leftFront.disable();
+        rightBack.disable();
+        rightFront.disable();
         WOLF_SHOOT.disable();
         WOLF_SHOOTER.disable();
         WOLF_ALIGN.disable();
@@ -160,6 +181,10 @@ public class TheWolf extends RobotAdapter implements PortMap {
 
     public void autonomousInit() {
         updateValues();
+        leftBack.enable();
+        leftFront.enable();
+        rightBack.enable();
+        rightFront.enable();
         WOLF_DRIVE.enable();
         drive.setSafetyEnabled(false);
         WOLF_SHOOT.enable();
@@ -185,6 +210,12 @@ public class TheWolf extends RobotAdapter implements PortMap {
 
     public void teleopInit() {
         updateValues();
+        leftBack.enable();
+        rightBack.enable();
+        if (FOUR_WHEEL_DRIVE) {
+            leftFront.enable();
+            rightFront.enable();
+        }
         WOLF_SHOOT.enable();
         WOLF_SHOOTER.enable();
         WOLF_ALIGN.enable();
@@ -221,6 +252,10 @@ public class TheWolf extends RobotAdapter implements PortMap {
                 }
             }
         });
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y, new ShooterAlignCommand(WOLF_SHOOT, HIGH, true));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.X, new ShooterAlignCommand(WOLF_SHOOT, MED_HIGH, true));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.B, new ShooterAlignCommand(WOLF_SHOOT, MEDIUM, true));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.A, new ShooterAlignCommand(WOLF_SHOOT, LOW, true));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y + XboxController.SHIFT, new Command() {
             public void run() {
                 HIGH = shooterAngle.getPosition();
@@ -230,7 +265,6 @@ public class TheWolf extends RobotAdapter implements PortMap {
                 Logger.log(Logger.Urgency.USERMESSAGE, "High set to " + HIGH);
             }
         });
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y, new ShooterAlignCommand(WOLF_SHOOT, HIGH, true));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.X + XboxController.SHIFT, new Command() {
             public void run() {
                 MED_HIGH = shooterAngle.getPosition();
@@ -240,7 +274,6 @@ public class TheWolf extends RobotAdapter implements PortMap {
                 Logger.log(Logger.Urgency.USERMESSAGE, "MedHigh set to " + MED_HIGH);
             }
         });
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.X, new ShooterAlignCommand(WOLF_SHOOT, MED_HIGH, true));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.B + XboxController.SHIFT, new Command() {
             public void run() {
                 MEDIUM = shooterAngle.getPosition();
@@ -250,7 +283,6 @@ public class TheWolf extends RobotAdapter implements PortMap {
                 Logger.log(Logger.Urgency.USERMESSAGE, "Medium set to " + MEDIUM);
             }
         });
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.B, new ShooterAlignCommand(WOLF_SHOOT, MEDIUM, true));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.A + XboxController.SHIFT, new Command() {
             public void run() {
                 LOW = shooterAngle.getPosition();
@@ -260,7 +292,6 @@ public class TheWolf extends RobotAdapter implements PortMap {
                 Logger.log(Logger.Urgency.USERMESSAGE, "Low set to " + LOW);
             }
         });
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.A, new ShooterAlignCommand(WOLF_SHOOT, LOW, true));
         Logger.log(Logger.Urgency.USERMESSAGE, "Teleop ready");
 
         buf = 0;
@@ -278,7 +309,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
         SmartDashboard.putNumber("ShooterRPM", rate);
         SmartDashboard.putNumber("ShooterPosition", shooterAngle.getPosition());
         SmartDashboard.putNumber("NetworkLag", transferRate.packetsPerMillisecond());
-        SmartDashboard.putBoolean("60 PSI", psiSwitch.get());
+        SmartDashboard.putBoolean("60 PSI", psiSwitch.isPushed());
 
         buf = Math.abs(SETPOINT - rate);
         avg = (buf * 0.00321 + avg * 0.99679);
@@ -288,7 +319,6 @@ public class TheWolf extends RobotAdapter implements PortMap {
     public void testInit() {
         updateValues();
         hallEffect.enable();
-        WOLF_SHOOTER.enable();
     }
 
     public void testPeriodic() {

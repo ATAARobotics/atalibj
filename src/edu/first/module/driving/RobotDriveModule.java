@@ -3,7 +3,7 @@ package edu.first.module.driving;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
-
+import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
  * Module designed to drive robots. Has all of the benefits of
@@ -74,6 +74,7 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
         super.setMaxOutput(maxSpeed = maxOutput);
     }
 }
+
 /**
  * Forwarding class, as described in Effective Java: Second Edition, Item 16.
  * Forwards {@link edu.wpi.first.wpilibj.RobotDrive}.
@@ -83,6 +84,7 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
 class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOutput {
 
     private final edu.wpi.first.wpilibj.RobotDrive drive;
+    private final List speedFunctions = new List();
     private final boolean reverseSpeed, reverseTurn;
     private double lastLeft, lastRight, lastForward, lastTurn;
 
@@ -125,13 +127,13 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
      * @param curve the rate of turn, constant for different forward speeds.
      */
     public void drive(double outputMagnitude, double curve) {
-        if(reverseSpeed) {
+        if (reverseSpeed) {
             outputMagnitude = -outputMagnitude;
         }
-        if(reverseTurn) {
+        if (reverseTurn) {
             curve = -curve;
         }
-        drive.drive(outputMagnitude, curve);
+        drive.drive(transform(outputMagnitude), curve);
     }
 
     /**
@@ -144,11 +146,11 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
      * sensitivity at lower speeds
      */
     public void tankDrive(double leftValue, double rightValue, boolean squaredInputs) {
-        if(reverseSpeed) {
+        if (reverseSpeed) {
             leftValue = -leftValue;
             rightValue = -rightValue;
         }
-        drive.tankDrive(leftValue, rightValue, squaredInputs);
+        drive.tankDrive(transform(leftValue), transform(rightValue), squaredInputs);
     }
 
     /**
@@ -171,14 +173,14 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
      * @param squaredInputs if set, decreases the sensitivity at low speeds
      */
     public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
-        if(reverseSpeed) {
+        if (reverseSpeed) {
             moveValue = -moveValue;
         }
-        if(reverseTurn) {
+        if (reverseTurn) {
             rotateValue = -rotateValue;
         }
-        lastForward = moveValue;
-        lastTurn = rotateValue;
+        lastForward = transform(moveValue);
+        lastTurn = transform(rotateValue);
         drive.arcadeDrive(moveValue, rotateValue, squaredInputs);
     }
 
@@ -266,7 +268,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
      * implement field-oriented controls.
      */
     public void mecanumDrive_Cartesian(double x, double y, double rotation, double gyroAngle) {
-        drive.mecanumDrive_Cartesian(x, y, rotation, gyroAngle);
+        drive.mecanumDrive_Cartesian(x, transform(y), rotation, gyroAngle);
     }
 
     /**
@@ -283,7 +285,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
      * independent of the magnitude or direction. [-1.0..1.0]
      */
     public void mecanumDrive_Polar(double magnitude, double direction, double rotation) {
-        drive.mecanumDrive_Polar(magnitude, direction, rotation);
+        drive.mecanumDrive_Polar(transform(magnitude), direction, rotation);
     }
 
     /**
@@ -293,12 +295,12 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
      * @param rightOutput the speed to send to the right side of the robot.
      */
     public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
-        if(reverseSpeed) {
+        if (reverseSpeed) {
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
         }
-        lastLeft = leftOutput;
-        lastRight = rightOutput;
+        lastLeft = transform(leftOutput);
+        lastRight = transform(rightOutput);
         drive.setLeftRightMotorOutputs(leftOutput, rightOutput);
     }
 
@@ -326,6 +328,15 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
      */
     public void setRightMotorOutput(double rightOutput) {
         setLeftRightMotorOutputs(lastLeft, rightOutput);
+    }
+
+    /**
+     * Adds a function to be applied to speed in all situations.
+     *
+     * @param function function to apply
+     */
+    public void addFunction(Function function) {
+        speedFunctions.add(function);
     }
 
     /**
@@ -389,5 +400,12 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
      */
     public void pidWrite(double d) {
         arcadeDrive(d, 0);
+    }
+    
+    private double transform(double original) {
+        for(int x = 0; x < speedFunctions.size(); x++) {
+            original = ((Function)speedFunctions.get(x)).F(original);
+        }
+        return original;
     }
 }

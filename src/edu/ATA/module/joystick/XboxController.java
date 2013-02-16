@@ -52,7 +52,7 @@ public final class XboxController extends BindableJoystick {
      * The absolute smallest value for the all axises to return. If it is
      * smaller than this value, it will revert to 0.
      */
-    public static final double DEADZONE = 0.19;
+    public static final double DEADZONE = 0.2;
     public static final int SHIFT = 17;
     public static final int A = 1, B = 2, X = 3,
             Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,

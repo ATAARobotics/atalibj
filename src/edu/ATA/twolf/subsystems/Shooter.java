@@ -10,7 +10,6 @@ import edu.first.module.subsystem.Subsystem;
 import edu.first.module.target.BangBangModule;
 import edu.first.utils.DriverstationInfo;
 import edu.first.utils.Logger;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -20,7 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Shooter extends Subsystem {
 
     private final SpikeRelayModule loader;
-    private final DigitalInput psiSwitch;
+    private final DigitalLimitSwitchModule psiSwitch;
     private final PotentiometerModule pot;
     private final DigitalLimitSwitchModule limitSwitch;
     private final SpeedControllerModule alignment;
@@ -35,10 +34,10 @@ public class Shooter extends Subsystem {
      * @param pot
      * @param alignment
      */
-    public Shooter(SpikeRelayModule loader, DigitalInput psiSwitch, PotentiometerModule pot, 
+    public Shooter(SpikeRelayModule loader, DigitalLimitSwitchModule psiSwitch, PotentiometerModule pot, 
             DigitalLimitSwitchModule limitSwitch,
             SpeedControllerModule alignment, BangBangModule bangBang) {
-        super(new Module[]{loader, pot, limitSwitch, alignment});
+        super(new Module[]{loader, psiSwitch, pot, limitSwitch, alignment});
         this.loader = loader;
         this.psiSwitch = psiSwitch;
         this.pot = pot;
@@ -52,7 +51,7 @@ public class Shooter extends Subsystem {
      */
     public void shoot() {
         // Only shoots once at a time
-        if (!shooterLock && !psiSwitch.get()) {
+        if (!shooterLock && !psiSwitch.isPushed()) {
             Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
             shooterLock = true;
             Timer.delay(0.2);
@@ -62,7 +61,7 @@ public class Shooter extends Subsystem {
             loader.set(false);
             bangBang.setCoast(false);
             shooterLock = false;
-        } else if(psiSwitch.get()) {
+        } else if(psiSwitch.isPushed()) {
             Logger.log(Logger.Urgency.URGENT, "PSI not high enough");
         }
     }
