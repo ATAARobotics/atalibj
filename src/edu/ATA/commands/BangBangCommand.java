@@ -1,8 +1,7 @@
 package edu.ATA.commands;
 
-import edu.ATA.bindings.CommandBind;
-import edu.ATA.command.Command;
-import edu.ATA.module.target.BangBangModule;
+import edu.first.command.Command;
+import edu.first.module.target.BangBangModule;
 
 /**
  * This is the command class for the {@link BangBangModule} to set the setpoint
@@ -10,7 +9,7 @@ import edu.ATA.module.target.BangBangModule;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class BangBangCommand implements Command, CommandBind {
+public class BangBangCommand implements Command {
 
     private final BangBangModule bangBangModule;
     private final double setpoint;

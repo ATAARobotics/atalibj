@@ -1,14 +1,14 @@
 package edu.ATA.commands;
 
-import edu.ATA.bindings.CommandBind;
 import edu.ATA.module.subsystems.AlignmentSystem;
+import edu.first.command.Command;
 
 /**
  * This is the command class for the alignment pistons
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class AlignCommand implements CommandBind {
+public class AlignCommand implements Command {
 
     /**
      * The type for all three alignment pistons being collapsed.

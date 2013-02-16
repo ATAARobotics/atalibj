@@ -1,7 +1,8 @@
 package edu.ATA.commands;
 
-import edu.ATA.module.driving.RobotDriveModule;
-import edu.ATA.module.speedcontroller.SpeedControllerModule;
+import edu.first.commands.SpeedControllerCommand;
+import edu.first.module.driving.RobotDriveModule;
+import edu.first.module.speedcontroller.SpeedControllerModule;
 
 /**
  * Command meant to stop a speed controller. Is virtually the same as {@link SpeedControllerCommand#SpeedControllerCommand(edu.ATA.module.speedcontroller.SpeedControllerModule, double)
@@ -9,9 +10,10 @@ import edu.ATA.module.speedcontroller.SpeedControllerModule;
  *
  * @author joel
  */
-public final class StopCommand extends SpeedControllerCommand {
+public final class StopCommand {
 
-    private RobotDriveModule drive;
+    private final RobotDriveModule drive;
+    private final SpeedControllerModule speedController;
 
     /**
      * Constructs the command with the speed controller to stop.
@@ -19,7 +21,8 @@ public final class StopCommand extends SpeedControllerCommand {
      * @param speedControllerModule speed controller to stop
      */
     public StopCommand(SpeedControllerModule speedControllerModule) {
-        super(speedControllerModule, 0);
+        this.speedController = speedControllerModule;
+        this.drive = null;
     }
 
     /**
@@ -28,14 +31,15 @@ public final class StopCommand extends SpeedControllerCommand {
      * @param drive driving object to stop
      */
     public StopCommand(RobotDriveModule drive) {
-        super(null, 0);
+        this.speedController = null;
         this.drive = drive;
     }
 
     public void run() {
-        if (drive == null) {
-            super.run();
-        } else {
+        if(speedController != null) {
+            speedController.set(0);
+        }
+        if(drive != null) {
             drive.stopMotors();
         }
     }

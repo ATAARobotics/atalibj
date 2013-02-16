@@ -7,11 +7,13 @@ import ATA.gordian.data.NumberData;
 import ATA.gordian.data.ReturningMethod;
 import ATA.gordian.instructions.MethodBody;
 import ATA.gordian.storage.Methods;
-import edu.ATA.main.Logger;
+import edu.ATA.commands.MoveToSetpoint;
 import edu.ATA.module.subsystems.AlignmentSystem;
 import edu.ATA.module.subsystems.ShiftingDrivetrain;
 import edu.ATA.module.subsystems.Shooter;
-import edu.ATA.module.target.BangBangModule;
+import edu.first.module.target.BangBangModule;
+import edu.first.module.target.PIDModule;
+import edu.first.utils.Logger;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -50,9 +52,9 @@ public final class Gordian {
      * @param alignmentSystem that alignment system that your are using
      */
     public static void ensureInit(ShiftingDrivetrain drivetrain, Shooter shooter,
-            BangBangModule bangBangModule, AlignmentSystem alignmentSystem) {
+            BangBangModule bangBangModule, AlignmentSystem alignmentSystem, PIDModule drivetrainPID) {
         if (!init) {
-            init(drivetrain, shooter, bangBangModule, alignmentSystem);
+            init(drivetrain, shooter, bangBangModule, alignmentSystem, drivetrainPID);
             init = true;
         }
     }
@@ -70,8 +72,14 @@ public final class Gordian {
     }
 
     private static void init(final ShiftingDrivetrain drivetrain, final Shooter shooter,
-            final BangBangModule bangBangModule, final AlignmentSystem alignmentSystem) {
+            final BangBangModule bangBangModule, final AlignmentSystem alignmentSystem,
+            final PIDModule drivetrainPID) {
         // Insert all methods, variables, returning methods and initialization code here.
+        Methods.METHODS_STORAGE.addMethod("log", new MethodBody() {
+            public void run(Data[] args) {
+                Logger.log(Logger.Urgency.USERMESSAGE, args[0].getValue().toString());
+            }
+        });
         Methods.METHODS_STORAGE.addMethod("arcade", new MethodBody() {
             public void run(Data[] args) {
                 drivetrain.arcadeDrive(((NumberData) args[0]).doubleValue(), ((NumberData) args[1]).doubleValue());
@@ -94,7 +102,7 @@ public final class Gordian {
         });
         Methods.METHODS_STORAGE.addMethod("driveToSetpoint", new MethodBody() {
             public void run(Data[] args) {
-                drivetrain.driveTo(((NumberData) args[0]).doubleValue(), 2);
+                new MoveToSetpoint(drivetrainPID, ((NumberData) args[0]).doubleValue(), 5).run();
             }
         });
         Methods.METHODS_STORAGE.addMethod("shoot", new MethodBody() {

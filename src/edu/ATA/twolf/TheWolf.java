@@ -1,51 +1,57 @@
 package edu.ATA.twolf;
 
-import com.sun.squawk.microedition.io.FileConnection;
 import edu.ATA.autonomous.Gordian;
-import edu.ATA.bindings.CommandBind;
 import edu.ATA.commands.AlignCommand;
+import edu.ATA.commands.AutoShoot;
 import edu.ATA.commands.BangBangCommand;
 import edu.ATA.commands.ShootCommand;
 import edu.ATA.commands.ShooterAlignCommand;
-import edu.ATA.main.Logger;
-import edu.ATA.main.PortMap;
-import edu.ATA.main.Robot;
-import edu.ATA.module.actuator.SolenoidModule;
-import edu.ATA.module.driving.ArcadeBinding;
 import edu.ATA.commands.GearShift;
-import edu.ATA.module.driving.RobotDriveModule;
 import edu.ATA.module.joystick.XboxController;
-import edu.ATA.module.sensor.EncoderModule;
-import edu.ATA.module.sensor.HallEffectModule;
-import edu.ATA.module.sensor.PotentiometerModule;
-import edu.ATA.module.speedcontroller.SpeedControllerModule;
-import edu.ATA.module.speedcontroller.SpikeRelay;
-import edu.ATA.module.speedcontroller.SpikeRelayModule;
 import edu.ATA.module.subsystems.AlignmentSystem;
 import edu.ATA.module.subsystems.ShiftingDrivetrain;
 import edu.ATA.module.subsystems.Shooter;
-import edu.ATA.module.target.BangBangModule;
+import edu.first.bindings.AxisBind;
+import edu.first.command.Command;
+import edu.first.module.actuator.SolenoidModule;
+import edu.first.module.driving.RobotDriveModule;
+import edu.first.module.driving.SideBinding;
+import edu.first.module.sensor.DigitalLimitSwitchModule;
+import edu.first.module.sensor.EncoderModule;
+import edu.first.module.sensor.GyroModule;
+import edu.first.module.sensor.HallEffectModule;
+import edu.first.module.sensor.PotentiometerModule;
+import edu.first.module.speedcontroller.SpeedControllerModule;
+import edu.first.module.speedcontroller.SpikeRelay;
+import edu.first.module.speedcontroller.SpikeRelayModule;
+import edu.first.module.target.BangBangModule;
+import edu.first.module.target.PIDModule;
+import edu.first.robot.PortMap;
+import edu.first.robot.Robot;
+import edu.first.robot.RobotAdapter;
+import edu.first.utils.Logger;
+import edu.first.utils.TransferRateCalculator;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import javax.microedition.io.Connector;
 
 /**
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class TheWolf extends Robot implements PortMap {
+public class TheWolf extends RobotAdapter implements PortMap {
 
     // Setpoint for shooter!
     private static double SETPOINT = 4500;
@@ -60,47 +66,50 @@ public class TheWolf extends Robot implements PortMap {
     }
 
     private static void updateValues() {
+        Logger.log(Logger.Urgency.STATUSREPORT, "Updating preferences...");
         SETPOINT = Preferences.getInstance().getDouble("ShooterSetpoint", SETPOINT);
         DEFAULTSPEED = Preferences.getInstance().getDouble("DefaultSpeed", DEFAULTSPEED);
         HIGH = Preferences.getInstance().getDouble("HighPosition", HIGH);
         MED_HIGH = Preferences.getInstance().getDouble("MedHighPosition", MED_HIGH);
         MEDIUM = Preferences.getInstance().getDouble("MediumPosition", MEDIUM);
         LOW = Preferences.getInstance().getDouble("LowPosition", LOW);
+        Logger.log(Logger.Urgency.STATUSREPORT, "Preferences updated");
     }
     // Setpoint for shooter!
     private static TheWolf theWolf;
-    private final SpeedControllerModule leftBack = new SpeedControllerModule(new Victor(DRIVE[0])),
-            leftFront = new SpeedControllerModule(new Victor(DRIVE[1])),
-            rightBack = new SpeedControllerModule(new Victor(DRIVE[2])),
-            rightFront = new SpeedControllerModule(new Victor(DRIVE[3]));
-    private final SolenoidModule firstGear = new SolenoidModule(new Solenoid(GEAR_1)),
-            secondGear = new SolenoidModule(new Solenoid(GEAR_2));
-    private final SolenoidModule loader = new SolenoidModule(new Solenoid(LOADER_PORT)),
-            reloader = new SolenoidModule(new Solenoid(RELOADER_PORT));
-    private final SolenoidModule shortAlign = new SolenoidModule(new Solenoid(SHORT_ALIGN_PORT)),
-            longAlign = new SolenoidModule(new Solenoid(LONG_ALIGN_PORT)),
-            staticAlign = new SolenoidModule(new Solenoid(STATIC_ALIGN_PORT));
+    private final SpeedController leftBack = new Victor(DRIVE[0]),
+            leftFront = new Victor(DRIVE[1]),
+            rightBack = new Victor(DRIVE[2]),
+            rightFront = new Victor(DRIVE[3]);
+    private final DigitalInput psiSwitch = new DigitalInput(PSI_SWITCH);
+    private final TransferRateCalculator transferRate = new TransferRateCalculator();
+    private final SolenoidModule gearUp = new SolenoidModule(new Solenoid(GEAR_UP)),
+            gearDown = new SolenoidModule(new Solenoid(GEAR_DOWN));
+    private final SpikeRelayModule loader = new SpikeRelayModule(new Relay(LOADER_PORT));
+    private final SolenoidModule shortAlignOut = new SolenoidModule(new Solenoid(SHORT_ALIGN_OUT_PORT)),
+            shortAlignIn = new SolenoidModule(new Solenoid(SHORT_ALIGN_IN_PORT)),
+            longAlignOut = new SolenoidModule(new Solenoid(LONG_ALIGN_OUT_PORT)),
+            longAlignIn = new SolenoidModule(new Solenoid(LONG_ALIGN_IN_PORT)),
+            staticAlignIn = new SolenoidModule(new Solenoid(STATIC_ALIGN_IN_PORT)),
+            staticAlignOut = new SolenoidModule(new Solenoid(STATIC_ALIGN_OUT_PORT));
     private final SpeedControllerModule shooterAligner = new SpeedControllerModule(new Victor(SHOOTER_ALIGNMENT_PORT));
     private final PotentiometerModule shooterAngle = new PotentiometerModule(new AnalogChannel(SHOOTER_POSITION));
+    private final DigitalLimitSwitchModule shooterSwitch = new DigitalLimitSwitchModule(new DigitalInput(SHOOTER_LIMIT_SWITCH));
     private final SpeedControllerModule shooter = new SpeedControllerModule(new Talon(SHOOTER_PORT));
     private final HallEffectModule hallEffect = new HallEffectModule(new DigitalInput(HALLEFFECT_PORT));
-    private final RobotDriveModule drive = new RobotDriveModule(new RobotDrive(leftFront, leftBack, rightFront, rightBack));
+    private final RobotDriveModule drive = new RobotDriveModule(new RobotDrive(leftFront, leftBack, rightFront, rightBack), false, true);
     private final EncoderModule leftEncoder = new EncoderModule(new Encoder(ENCODER[0], ENCODER[1]), EncoderModule.DISTANCE);
-    private final EncoderModule rightEncoder = new EncoderModule(new Encoder(ENCODER[2], ENCODER[3]), EncoderModule.DISTANCE);
-    private final PIDSource distance = new PIDSource() {
-        public double pidGet() {
-            return leftEncoder.pidGet() + rightEncoder.pidGet();
-        }
-    };
+    private final GyroModule gyro = new GyroModule(new Gyro(GYRO));
     private final XboxController WOLF_CONTROL = new XboxController(new Joystick(JOYSTICK_1));
     private final XboxController WOLF_SHOT_CONTROL = new XboxController(new Joystick(JOYSTICK_2));
     /*
-     * Subsystems 
+     * Subsystems
      */
-    private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, firstGear, secondGear, distance, 0, 0, 0);
-    private final Shooter WOLF_SHOOT = new Shooter(loader, reloader, shooterAngle, shooterAligner);
+    private final PIDModule DRIVETRAIN_PID = new PIDModule(new PIDController(1, 0, 0, leftEncoder, drive));
+    private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, gearDown, gearUp);
     private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter, 0.5);
-    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlign, longAlign, staticAlign);
+    private final Shooter WOLF_SHOOT = new Shooter(loader, psiSwitch, shooterAngle, shooterSwitch, shooterAligner, WOLF_SHOOTER);
+    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlignOut, shortAlignIn, longAlignOut, longAlignIn, staticAlignOut, staticAlignIn);
 
     /**
      *
@@ -117,6 +126,7 @@ public class TheWolf extends Robot implements PortMap {
         // Refilling capacity using spike relay always on
         SpikeRelayModule compressor = new SpikeRelayModule(new Relay(COMPRESSOR));
         compressor.enable();
+        Logger.log(Logger.Urgency.STATUSREPORT, "Starting compressor...");
         compressor.set(SpikeRelay.FORWARD);
         // Refilling capacity using spike relay always on
         Preferences.getInstance().putDouble("ShooterSetpoint", SETPOINT);
@@ -125,6 +135,9 @@ public class TheWolf extends Robot implements PortMap {
         Preferences.getInstance().putDouble("MedHighPosition", MED_HIGH);
         Preferences.getInstance().putDouble("MediumPosition", MEDIUM);
         Preferences.getInstance().putDouble("LowPosition", LOW);
+
+        WOLF_SHOOTER.reverse();
+        WOLF_SHOOTER.setPastSetpoint(50);
     }
 
     public void disabledInit() {
@@ -133,7 +146,14 @@ public class TheWolf extends Robot implements PortMap {
         WOLF_SHOOTER.disable();
         WOLF_ALIGN.disable();
         WOLF_CONTROL.disable();
+        WOLF_SHOT_CONTROL.disable();
         WOLF_DRIVE.disable();
+        DRIVETRAIN_PID.disable();
+        hallEffect.disable();
+        gyro.disable();
+        SmartDashboard.putBoolean("PastSetpoint", false);
+        SmartDashboard.putBoolean("Enabled", false);
+        Logger.log(Logger.Urgency.STATUSREPORT, "Robot fully disabled");
     }
 
     public void disabledPeriodic() {
@@ -146,9 +166,15 @@ public class TheWolf extends Robot implements PortMap {
         WOLF_SHOOT.enable();
         WOLF_SHOOTER.enable();
         WOLF_ALIGN.enable();
-        Gordian.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN);
+        DRIVETRAIN_PID.enable();
+        gyro.enable();
+        SmartDashboard.putBoolean("Enabled", true);
+        Logger.log(Logger.Urgency.STATUSREPORT, "Gordian init...");
+        Gordian.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID);
         try {
-            Gordian.run("auto/" + Preferences.getInstance().getString("AutonomousMode", "auto") + ".txt");
+            String current = Preferences.getInstance().getString("AutonomousMode", "auto");
+            Logger.log(Logger.Urgency.USERMESSAGE, "Running " + current + " autonomous mode.");
+            Gordian.run("auto/" + current + ".txt");
         } catch (IOException ex) {
             ex.printStackTrace();
             Logger.log(Logger.Urgency.URGENT, "AUTO DID NOT RUN");
@@ -167,49 +193,95 @@ public class TheWolf extends Robot implements PortMap {
         WOLF_SHOT_CONTROL.enable();
         WOLF_DRIVE.enable();
 
+        SmartDashboard.putBoolean("Enabled", true);
+        Logger.log(Logger.Urgency.USERMESSAGE, "Doing binds");
         WOLF_CONTROL.removeAllBinds();
         WOLF_SHOT_CONTROL.removeAllBinds();
         // Driving //
-        WOLF_CONTROL.bindAxis(XboxController.RIGHT_X, new ArcadeBinding(drive, ArcadeBinding.ROTATE));
-        WOLF_CONTROL.bindAxis(XboxController.LEFT_FROM_MIDDLE, new ArcadeBinding(drive, ArcadeBinding.FORWARD));
-        WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(secondGear, firstGear));
+        WOLF_CONTROL.bindAxis(XboxController.RIGHT_FROM_MIDDLE, new SideBinding(drive, SideBinding.RIGHT));
+        WOLF_CONTROL.bindAxis(XboxController.LEFT_FROM_MIDDLE, new SideBinding(drive, SideBinding.LEFT));
+        WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(gearUp, gearDown));
         // Alignment //
         WOLF_CONTROL.bindWhenPressed(XboxController.Y, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE));
         WOLF_CONTROL.bindWhenPressed(XboxController.B, new AlignCommand(WOLF_ALIGN, AlignCommand.LONG));
         WOLF_CONTROL.bindWhenPressed(XboxController.A, new AlignCommand(WOLF_ALIGN, AlignCommand.SHORT));
         // Shooting //
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new ShootCommand(WOLF_SHOOT));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new ShootCommand(WOLF_SHOOT, true));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.START, new BangBangCommand(WOLF_SHOOTER, SETPOINT));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.BACK, new BangBangCommand(WOLF_SHOOTER, 0));
+        WOLF_SHOT_CONTROL.bindWhilePressed(XboxController.RIGHT_STICK, new AutoShoot(WOLF_SHOOT, WOLF_SHOOTER, true));
         WOLF_SHOOTER.setDefaultSpeed(DEFAULTSPEED);
-        WOLF_SHOOTER.setSetpoint(SETPOINT);
+        WOLF_SHOOTER.setSetpoint(0);
         // Shooter position //
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y, new ShooterAlignCommand(WOLF_SHOOT, HIGH));
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.X, new ShooterAlignCommand(WOLF_SHOOT, MED_HIGH));
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.B, new ShooterAlignCommand(WOLF_SHOOT, MEDIUM));
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.A, new ShooterAlignCommand(WOLF_SHOOT, LOW));
-        WOLF_SHOT_CONTROL.bindWhilePressed(XboxController.LEFT_BUMPER, new CommandBind() {
-            public void run() {
-                // Manual adjustment when left bumper is pressed
-                shooterAligner.set(WOLF_SHOT_CONTROL.getTriggers());
+        WOLF_SHOT_CONTROL.bindAxis(XboxController.TRIGGERS + XboxController.SHIFT, new AxisBind() {
+            public void set(double axisValue) {
+                if (!(axisValue < 0 && shooterSwitch.isPushed())) {
+                    shooterAligner.set(axisValue);
+                } else {
+                    shooterAligner.set(0);
+                }
             }
         });
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y + XboxController.SHIFT, new Command() {
+            public void run() {
+                HIGH = shooterAngle.getPosition();
+                Preferences.getInstance().putDouble("HighPosition", HIGH);
+                WOLF_SHOT_CONTROL.removeButtonBinds(XboxController.Y);
+                WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y, new ShooterAlignCommand(WOLF_SHOOT, HIGH, true));
+                Logger.log(Logger.Urgency.USERMESSAGE, "High set to " + HIGH);
+            }
+        });
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y, new ShooterAlignCommand(WOLF_SHOOT, HIGH, true));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.X + XboxController.SHIFT, new Command() {
+            public void run() {
+                MED_HIGH = shooterAngle.getPosition();
+                Preferences.getInstance().putDouble("MedHighPosition", MED_HIGH);
+                WOLF_SHOT_CONTROL.removeButtonBinds(XboxController.X);
+                WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.X, new ShooterAlignCommand(WOLF_SHOOT, MED_HIGH, true));
+                Logger.log(Logger.Urgency.USERMESSAGE, "MedHigh set to " + MED_HIGH);
+            }
+        });
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.X, new ShooterAlignCommand(WOLF_SHOOT, MED_HIGH, true));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.B + XboxController.SHIFT, new Command() {
+            public void run() {
+                MEDIUM = shooterAngle.getPosition();
+                Preferences.getInstance().putDouble("MediumPosition", MEDIUM);
+                WOLF_SHOT_CONTROL.removeButtonBinds(XboxController.B);
+                WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.B, new ShooterAlignCommand(WOLF_SHOOT, MEDIUM, true));
+                Logger.log(Logger.Urgency.USERMESSAGE, "Medium set to " + MEDIUM);
+            }
+        });
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.B, new ShooterAlignCommand(WOLF_SHOOT, MEDIUM, true));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.A + XboxController.SHIFT, new Command() {
+            public void run() {
+                LOW = shooterAngle.getPosition();
+                Preferences.getInstance().putDouble("LowPosition", LOW);
+                WOLF_SHOT_CONTROL.removeButtonBinds(XboxController.A);
+                WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.A, new ShooterAlignCommand(WOLF_SHOOT, LOW, true));
+                Logger.log(Logger.Urgency.USERMESSAGE, "Low set to " + LOW);
+            }
+        });
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.A, new ShooterAlignCommand(WOLF_SHOOT, LOW, true));
+        Logger.log(Logger.Urgency.USERMESSAGE, "Teleop ready");
 
         buf = 0;
         avg = 0;
     }
-    
     double buf;
     double avg;
 
     public void teleopPeriodic() {
         WOLF_CONTROL.doBinds();
         WOLF_SHOT_CONTROL.doBinds();
-        SmartDashboard.putBoolean("PastSetpoint", WOLF_SHOOTER.pastSetpoint());
-        SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
-
         final double rate = hallEffect.getRate();
-        buf = SETPOINT - rate;
+        SmartDashboard.putBoolean("PastSetpoint", WOLF_SHOOTER.pastSetpoint());
+        SmartDashboard.putNumber("HallEffectRate", rate);
+        SmartDashboard.putNumber("ShooterRPM", rate);
+        SmartDashboard.putNumber("ShooterPosition", shooterAngle.getPosition());
+        SmartDashboard.putNumber("NetworkLag", transferRate.packetsPerMillisecond());
+        SmartDashboard.putBoolean("60 PSI", psiSwitch.get());
+
+        buf = Math.abs(SETPOINT - rate);
         avg = (buf * 0.00321 + avg * 0.99679);
         SmartDashboard.putNumber("Average Offset", avg);
     }

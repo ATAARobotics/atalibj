@@ -66,4 +66,8 @@ public class StringData extends Data {
     public Object getValue() {
         return interpretedString;
     }
+
+    public String toString() {
+        return getValue().toString();
+    }
 }

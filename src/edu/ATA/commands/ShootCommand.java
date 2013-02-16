@@ -1,28 +1,33 @@
 package edu.ATA.commands;
 
-import edu.ATA.bindings.CommandBind;
-import edu.ATA.command.Command;
 import edu.ATA.module.subsystems.Shooter;
+import edu.first.command.Command;
 
 /**
  * The command class for the shooter shooting.
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class ShootCommand implements Command, CommandBind {
+public class ShootCommand implements Command {
 
     private final Shooter shooter;
+    private final boolean newThread;
+    private final Runnable run = new Runnable() {
+        public void run() {
+            shooter.shoot();
+        }
+    };
 
-    /**
-     * Shoots the shooter.
-     *
-     * @param shooter the shooter object used
-     */
-    public ShootCommand(Shooter shooter) {
+    public ShootCommand(Shooter shooter, boolean newThread) {
         this.shooter = shooter;
+        this.newThread = newThread;
     }
 
     public void run() {
-        shooter.shoot();
+        if (newThread) {
+            new Thread(run).start();
+        } else {
+            run.run();
+        }
     }
 }
