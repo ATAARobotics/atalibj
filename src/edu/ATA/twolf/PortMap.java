@@ -1,13 +1,6 @@
-package edu.first.robot;
+package edu.ATA.twolf;
 
-/**
- * Interface that carries all of the port numbers of the various components on
- * the robot. Implement this class to have access to the ports.
- *
- * @author Joel Gallant
- */
 public interface PortMap {
-    // Joysticks
 
     int JOYSTICK_1 = 1;
     int JOYSTICK_2 = 2;

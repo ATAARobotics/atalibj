@@ -1,6 +1,6 @@
 package edu.ATA.commands;
 
-import edu.ATA.module.subsystems.Shooter;
+import edu.ATA.twolf.subsystems.Shooter;
 import edu.first.command.Command;
 
 /**
