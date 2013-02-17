@@ -7,8 +7,10 @@ import edu.ATA.commands.BangBangCommand;
 import edu.ATA.commands.ShootCommand;
 import edu.ATA.commands.ShooterAlignCommand;
 import edu.ATA.commands.GearShift;
+import edu.ATA.commands.SwitchBitchBar;
 import edu.ATA.module.joystick.XboxController;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
+import edu.ATA.twolf.subsystems.BitchBar;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.ATA.twolf.subsystems.Shooter;
 import edu.first.bindings.AxisBind;
@@ -103,14 +105,14 @@ public class TheWolf extends RobotAdapter implements PortMap {
     /*
      * Alignment
      */
+    private final BitchBar BITCH_BAR = new BitchBar(new SolenoidModule(new Solenoid(BITCH_BAR_IN_PORT)), 
+            new SolenoidModule(new Solenoid(BITCH_BAR_OUT_PORT)));
     private final SolenoidModule shortAlignOut = new SolenoidModule(new Solenoid(SHORT_ALIGN_OUT_PORT)),
             shortAlignIn = new SolenoidModule(new Solenoid(SHORT_ALIGN_IN_PORT)),
             longAlignOut = new SolenoidModule(new Solenoid(LONG_ALIGN_OUT_PORT)),
-            longAlignIn = new SolenoidModule(new Solenoid(LONG_ALIGN_IN_PORT)),
-            staticAlignIn = new SolenoidModule(new Solenoid(STATIC_ALIGN_IN_PORT)),
-            staticAlignOut = new SolenoidModule(new Solenoid(STATIC_ALIGN_OUT_PORT));
-    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlignOut, shortAlignIn, longAlignOut,
-            longAlignIn, staticAlignOut, staticAlignIn);
+            longAlignIn = new SolenoidModule(new Solenoid(LONG_ALIGN_IN_PORT));
+    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlignOut, shortAlignIn,
+            longAlignOut, longAlignIn);
 
     /*
      * Joysticks
@@ -148,7 +150,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
         WOLF_SHOOTER.setPastSetpoint(40);
         drive.addFunction(new Function() {
             public double F(double input) {
-                return (input * input * input) + 0.25;
+                return (input * input * input) + 0.12;
             }
         });
     }
@@ -213,6 +215,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
             leftFront.enable();
             rightFront.enable();
         }
+        BITCH_BAR.enable();
         WOLF_SHOOT.enable();
         WOLF_SHOOTER.enable();
         WOLF_ALIGN.enable();
@@ -229,6 +232,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
         WOLF_CONTROL.bindAxis(XboxController.LEFT_FROM_MIDDLE, new SideBinding(drive, SideBinding.LEFT));
         WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(gearUp, gearDown));
         // Alignment //
+        WOLF_CONTROL.bindWhenPressed(XboxController.X, new SwitchBitchBar(BITCH_BAR));
         WOLF_CONTROL.bindWhenPressed(XboxController.Y, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE));
         WOLF_CONTROL.bindWhenPressed(XboxController.B, new AlignCommand(WOLF_ALIGN, AlignCommand.LONG));
         WOLF_CONTROL.bindWhenPressed(XboxController.A, new AlignCommand(WOLF_ALIGN, AlignCommand.SHORT));
@@ -306,7 +310,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
         SmartDashboard.putNumber("ShooterRPM", rate);
         SmartDashboard.putNumber("ShooterPosition", shooterAngle.getPosition());
         SmartDashboard.putNumber("NetworkLag", transferRate.packetsPerMillisecond());
-        SmartDashboard.putBoolean("60 PSI", psiSwitch.isPushed());
+        SmartDashboard.putBoolean("60 PSI", !psiSwitch.isPushed());
 
         buf = Math.abs(SETPOINT - rate);
         avg = (buf * 0.00321 + avg * 0.99679);

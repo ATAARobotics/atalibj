@@ -120,12 +120,9 @@ public final class Logger {
         } else if (urgency == Urgency.LOG) {
             usrMsg = "Log@" + DriverstationInfo.getMatchTime() + " - " + msg;
         }
-        if (urgency != Urgency.LOG) {
-            System.out.println(usrMsg);
-        }
         try {
             if (fileLoggingOn) {
-                logFile(msg.concat("\n"));
+                logFile(usrMsg.concat("\n"));
             }
         } catch (IOException ex) {
             System.err.println("!!!ERROR WHILE WRITING TO LOG FILE!!!\n" + ex.getMessage());
@@ -142,8 +139,11 @@ public final class Logger {
     public static void logFile(String msg) throws IOException {
         if (logFile == null) {
             logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+        }
+        if (outputStream == null) {
             outputStream = logFile.openDataOutputStream();
         }
+        System.out.println(msg);
         appendToFile(msg, outputStream);
     }
 
@@ -160,10 +160,9 @@ public final class Logger {
         if (msg == null || outputStream == null) {
             throw new NullPointerException();
         }
-        byte[] data = msg.getBytes();
         try {
             // Need to test to find out if offset should be saved to append
-            outputStream.write(data);
+            outputStream.write(msg.getBytes());
         } catch (IOException ex) {
         }
     }
@@ -179,6 +178,8 @@ public final class Logger {
     public static String getLog() throws IOException {
         if (logFile == null) {
             logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+        }
+        if (inputStream == null) {
             inputStream = logFile.openDataInputStream();
         }
         return getTextFromFile(inputStream);

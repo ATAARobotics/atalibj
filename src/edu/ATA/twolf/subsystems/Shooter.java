@@ -52,7 +52,7 @@ public class Shooter extends Subsystem {
     public void shoot() {
         // Only shoots once at a time
         if (!shooterLock && !psiSwitch.isPushed()) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
+            Logger.log(Logger.Urgency.STATUSREPORT, "Shooting");
             shooterLock = true;
             Timer.delay(0.2);
             bangBang.setCoast(true);
@@ -89,7 +89,7 @@ public class Shooter extends Subsystem {
                     }
                 }
             }
-            if (Math.abs(pot.getPosition() - setpoint) > 0.3) {
+            if (Math.abs(pot.getPosition() - setpoint) > 0.1) {
                 // Retry for overshoot
                 alignTo(setpoint);
             }

@@ -17,14 +17,14 @@ public interface PortMap {
     int SHOOTER_POSITION = 1;
     int GYRO = 2;
     // Pneumatics sidecar
-    int GEAR_UP = 1;
-    int GEAR_DOWN = 2;
-    int SHORT_ALIGN_OUT_PORT = 3;
-    int SHORT_ALIGN_IN_PORT = 4;
-    int LONG_ALIGN_OUT_PORT = 5;
-    int LONG_ALIGN_IN_PORT = 6;
-    int STATIC_ALIGN_IN_PORT = 7;
-    int STATIC_ALIGN_OUT_PORT = 8;
+    int GEAR_UP = 5;
+    int GEAR_DOWN = 6;
+    int SHORT_ALIGN_OUT_PORT = 1;
+    int SHORT_ALIGN_IN_PORT = 2;
+    int LONG_ALIGN_OUT_PORT = 7;
+    int LONG_ALIGN_IN_PORT = 8;
+    int BITCH_BAR_IN_PORT = 3;
+    int BITCH_BAR_OUT_PORT = 4;
     // Relays
     int LOADER_PORT = 1;
     int COMPRESSOR = 2;
