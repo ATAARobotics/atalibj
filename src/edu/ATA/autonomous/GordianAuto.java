@@ -1,13 +1,16 @@
 package edu.ATA.autonomous;
 
+import edu.ATA.commands.AlignCommand;
 import edu.ATA.commands.AlignShooter;
 import edu.ATA.commands.ArcadeDriveCommand;
 import edu.ATA.commands.BangBangCommand;
+import edu.ATA.commands.DriveDistance;
 import edu.ATA.commands.GearShift;
-import edu.ATA.commands.MoveToSetpoint;
+import edu.ATA.commands.ResetAngleCommand;
+import edu.ATA.commands.ResetEncoderCommand;
 import edu.ATA.commands.ShootCommand;
 import edu.ATA.commands.TankDriveCommand;
-import edu.ATA.commands.TurnToAngle;
+import edu.ATA.commands.Turn;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.ATA.twolf.subsystems.Shooter;
@@ -25,7 +28,6 @@ import edu.gordian.method.BooleanReturningMethod;
 import edu.gordian.method.NumberReturningMethod;
 import edu.gordian.method.RunningMethod;
 import edu.gordian.variable.NumberInterface;
-import edu.wpi.first.wpilibj.Timer;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -102,6 +104,26 @@ public final class GordianAuto {
 
     private static void init() {
         // Insert all methods, variables, returning methods and initialization code here.
+        gordian.addMethod(new NumberReturningMethod("encoderDistance") {
+            public double getDouble() {
+                return encoder.getDistance();
+            }
+        });
+        gordian.addMethod(new BooleanReturningMethod("isPastSetpoint") {
+            public boolean getBoolean() {
+                return bangBangModule.pastSetpoint();
+            }
+        });
+        gordian.addMethod(new NumberReturningMethod("gyro") {
+            public double getDouble() {
+                return gyro.getAngle();
+            }
+        });
+        gordian.addMethod(new BooleanReturningMethod("isEnabled") {
+            public boolean getBoolean() {
+                return DriverstationInfo.isEnabled();
+            }
+        });
         gordian.addMethod(new RunningMethod("print") {
             public void run(Variable[] args) {
                 System.out.println(args[0].getValue());
@@ -115,11 +137,6 @@ public final class GordianAuto {
         gordian.addMethod(new RunningMethod("log") {
             public void run(Variable[] args) {
                 new LogCommand(args[0].getValue().toString()).run();
-            }
-        });
-        gordian.addMethod(new BooleanReturningMethod("isEnabled") {
-            public boolean getBoolean() {
-                return DriverstationInfo.isEnabled();
             }
         });
         gordian.addMethod(new RunningMethod("arcade") {
@@ -146,10 +163,9 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("driveToSetpoint") {
             public void run(Variable[] args) {
-                encoder.reset();
                 double setpoint = ((NumberInterface) args[0]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Driving to " + setpoint);
-                new MoveToSetpoint(drivetrainPID, setpoint, false).run();
+                new DriveDistance(encoder, drivetrainPID, setpoint).run();
             }
         });
         gordian.addMethod(new RunningMethod("gyroTurn") {
@@ -158,7 +174,7 @@ public final class GordianAuto {
                 double lspeed = ((NumberInterface) args[1]).doubleValue();
                 double rspeed = ((NumberInterface) args[2]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Turning to " + setpoint);
-                new TurnToAngle(lspeed, rspeed, setpoint, gyro, drivetrain, false).run();
+                new Turn(gyro, drivetrain, lspeed, rspeed, setpoint).run();
             }
         });
         gordian.addMethod(new RunningMethod("shoot") {
@@ -183,44 +199,29 @@ public final class GordianAuto {
                 new BangBangCommand(bangBangModule, 0, false).run();
             }
         });
-        gordian.addMethod(new BooleanReturningMethod("isPastSetpoint") {
-            public boolean getBoolean() {
-                return bangBangModule.pastSetpoint();
-            }
-        });
-        gordian.addMethod(new NumberReturningMethod("gyro") {
-            public double getDouble() {
-                return gyro.getAngle();
-            }
-        });
         gordian.addMethod(new RunningMethod("resetAngle") {
             public void run(Variable[] args) {
-                gyro.reset();
-            }
-        });
-        gordian.addMethod(new NumberReturningMethod("encoderDistance") {
-            public double getDouble() {
-                return encoder.getDistance();
+                new ResetAngleCommand(gyro, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("resetDistance") {
             public void run(Variable[] args) {
-                encoder.reset();
+                new ResetEncoderCommand(encoder, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("collapseAlignment") {
             public void run(Variable[] args) {
-                alignmentSystem.collapse();
+                new AlignCommand(alignmentSystem, AlignCommand.COLLAPSE, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("setLongAlignment") {
             public void run(Variable[] args) {
-                alignmentSystem.setLong();
+                new AlignCommand(alignmentSystem, AlignCommand.LONG, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("setShortAlignment") {
             public void run(Variable[] args) {
-                alignmentSystem.setShort();
+                new AlignCommand(alignmentSystem, AlignCommand.SHORT, false).run();
             }
         });
     }
