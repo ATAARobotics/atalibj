@@ -1,9 +1,12 @@
 package edu.ATA.autonomous;
 
+import edu.ATA.commands.ArcadeDriveCommand;
 import edu.ATA.commands.MoveToSetpoint;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.ATA.twolf.subsystems.Shooter;
+import edu.first.commands.PauseCommand;
+import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
 import edu.first.module.target.BangBangModule;
@@ -100,7 +103,7 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("wait") {
             public void run(Variable[] args) {
-                Timer.delay(((NumberInterface)args[0]).doubleValue());
+              new PauseCommand(((NumberInterface)args[0]).doubleValue()).run();
             }
         });
         gordian.addMethod(new RunningMethod("log") {
@@ -115,7 +118,7 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("arcade") {
             public void run(Variable[] args) {
-                drivetrain.arcadeDrive(((NumberInterface) args[0]).doubleValue(), ((NumberInterface) args[1]).doubleValue());
+                new ArcadeDriveCommand(null, forward, turn), ((NumberInterface) args[0]).doubleValue(), ((NumberInterface) args[1]).doubleValue()).run;
             }
         });
         gordian.addMethod(new RunningMethod("tank") {
