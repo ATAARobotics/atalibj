@@ -1,9 +1,13 @@
 package edu.ATA.autonomous;
 
+import edu.ATA.commands.AlignShooter;
 import edu.ATA.commands.ArcadeDriveCommand;
+import edu.ATA.commands.BangBangCommand;
 import edu.ATA.commands.GearShift;
 import edu.ATA.commands.MoveToSetpoint;
+import edu.ATA.commands.ShootCommand;
 import edu.ATA.commands.TankDriveCommand;
+import edu.ATA.commands.TurnToAngle;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.ATA.twolf.subsystems.Shooter;
@@ -126,7 +130,7 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("tank") {
             public void run(Variable[] args) {
-                new TankDriveCommand(drivetrain, ((NumberInterface) args[0]).doubleValue(), 
+                new TankDriveCommand(drivetrain, ((NumberInterface) args[0]).doubleValue(),
                         ((NumberInterface) args[1]).doubleValue(), false).run();
             }
         });
@@ -150,39 +154,33 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("gyroTurn") {
             public void run(Variable[] args) {
-                gyro.reset();
                 double setpoint = ((NumberInterface) args[0]).doubleValue();
                 double lspeed = ((NumberInterface) args[1]).doubleValue();
                 double rspeed = ((NumberInterface) args[2]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Turning to " + setpoint);
-                String mode = DriverstationInfo.getGamePeriod();
-                while (Math.abs(gyro.getAngle()) < Math.abs(setpoint) && mode.equals(DriverstationInfo.getGamePeriod())) {
-                    drivetrain.tankDrive(lspeed, rspeed);
-                    Timer.delay(0.02);
-                }
-                drivetrain.stop();
+                new TurnToAngle(lspeed, rspeed, setpoint, gyro, drivetrain, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("shoot") {
             public void run(Variable[] args) {
-                shooter.shoot();
+                new ShootCommand(shooter, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("alignShooter") {
             public void run(Variable[] args) {
-                shooter.alignTo(((NumberInterface) args[0]).doubleValue());
+                new AlignShooter(shooter, ((NumberInterface) args[0]).doubleValue(), false).run();
             }
         });
         gordian.addMethod(new RunningMethod("setShooterSpeed") {
             public void run(Variable[] args) {
                 double speed = ((NumberInterface) args[0]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Setting shooter to " + speed);
-                bangBangModule.setSetpoint(speed);
+                new BangBangCommand(bangBangModule, speed, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("stopShooter") {
             public void run(Variable[] args) {
-                bangBangModule.setSetpoint(0);
+                new BangBangCommand(bangBangModule, 0, false).run();
             }
         });
         gordian.addMethod(new BooleanReturningMethod("isPastSetpoint") {

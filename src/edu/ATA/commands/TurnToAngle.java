@@ -1,9 +1,41 @@
 package edu.ATA.commands;
 
+import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
+import edu.first.module.sensor.GyroModule;
+import edu.first.utils.DriverstationInfo;
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class TurnToAngle {
+public final class TurnToAngle extends ThreadableCommand {
 
+    private final double left, right;
+    private final double setpoint;
+    private final GyroModule gyro;
+    private final ShiftingDrivetrain drivetrain;
+
+    public TurnToAngle(double left, double right, double setpoint, GyroModule gyro, ShiftingDrivetrain drivetrain, boolean newThread) {
+        super(newThread);
+        this.left = left;
+        this.right = right;
+        this.setpoint = setpoint;
+        this.gyro = gyro;
+        this.drivetrain = drivetrain;
+    }
+
+    public Runnable getRunnable() {
+        return new Runnable() {
+            public void run() {
+                gyro.reset();
+                String mode = DriverstationInfo.getGamePeriod();
+                while (Math.abs(gyro.getAngle()) < Math.abs(setpoint) && mode.equals(DriverstationInfo.getGamePeriod())) {
+                    drivetrain.tankDrive(left, right);
+                    Timer.delay(0.02);
+                }
+                drivetrain.stop();
+            }
+        };
+    }
 }
