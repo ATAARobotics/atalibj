@@ -10,6 +10,7 @@ import edu.gordian.variable.BooleanInterface;
 import edu.gordian.variable.BooleanVariable;
 import edu.gordian.variable.NumberInterface;
 import edu.gordian.variable.NumberVariable;
+import edu.gordian.variable.StringInterface;
 import edu.gordian.variable.StringVariable;
 import edu.gordian.variable.field.BooleanField;
 import edu.gordian.variable.field.NumberField;
@@ -19,15 +20,18 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
 public class Gordian {
 
     private final String script;
-    private final List methods = new List();
-    private final List fields = new List();
+    private final List methods;
+    private final List fields;
     private final List blockStack = new List();
+    private int count = 0;
     private If prevIf;
 
     public Gordian(String script, Method[] methods) {
         if (script == null) {
             throw new NullPointerException("Null script");
         }
+        this.methods = new List();
+        this.fields = new List();
         if (methods != null) {
             for (int x = 0; x < methods.length; x++) {
                 this.methods.add(methods[x]);
@@ -38,6 +42,15 @@ public class Gordian {
 
     public Gordian(String script) {
         this(script, null);
+    }
+
+    public Gordian(Gordian gordian, String script) {
+        if (script == null) {
+            throw new NullPointerException("Null script");
+        }
+        this.methods = gordian.methods;
+        this.fields = gordian.fields;
+        this.script = StringUtils.replace(StringUtils.replace(script, '\n', ";"), ']', "];");
     }
 
     public void addMethod(Method method) {
@@ -55,6 +68,15 @@ public class Gordian {
     }
 
     private void doLine(String line) {
+        if (StringUtils.contains(line, "[")) {
+            count++;
+        } else if (StringUtils.contains(line, "]")) {
+            count--;
+        }
+        if (blockStack.size() > 0 && !(StringUtils.contains(line, "]") && count == 0)) {
+            ((Special) blockStack.get(blockStack.size() - 1)).add(line);
+            return;
+        }
         if (StringUtils.contains(line, "[")) {
             String start = line.substring(0, line.indexOf("["));
             String arg = null;
@@ -88,20 +110,13 @@ public class Gordian {
             currentBlock.run();
         }
         if (!StringUtils.contains(line, "[") && !StringUtils.contains(line, "]")) {
-            if (blockStack.size() > 0) {
-                ((Special) blockStack.get(blockStack.size() - 1)).add(line);
-            } else {
-                convertInstruction(line).run();
-            }
+            convertInstruction(line).run();
         }
     }
 
     public Instruction convertInstruction(String original) {
         if (original.length() == 0 || original.startsWith("#")) {
-            return new Instruction() {
-                public void run() {
-                }
-            };
+            return new BlankInstruction();
         }
         if (StringUtils.contains(original, "=") && (original.indexOf("=") != original.indexOf("=="))
                 && (original.indexOf("=") - 1 != original.indexOf("!="))
@@ -213,6 +228,8 @@ public class Gordian {
         }
         // String
         return new StringVariable(original);
+
+
     }
 
     private final class Declaration implements Instruction {
@@ -256,15 +273,21 @@ public class Gordian {
         }
 
         private Field convert(String name, Variable value) {
-            if (value instanceof BooleanVariable) {
-                return new BooleanField(name, (BooleanVariable) value);
-            } else if (value instanceof NumberVariable) {
-                return new NumberField(name, (NumberVariable) value);
-            } else if (value instanceof StringVariable) {
-                return new StringField(name, (StringVariable) value);
+            if (value instanceof BooleanInterface) {
+                return new BooleanField(name, (BooleanInterface) value);
+            } else if (value instanceof NumberInterface) {
+                return new NumberField(name, (NumberInterface) value);
+            } else if (value instanceof StringInterface) {
+                return new StringField(name, (StringInterface) value);
             } else {
                 return new StringField(name, value.getValue().toString());
             }
+        }
+    }
+
+    private static class BlankInstruction implements Instruction {
+
+        public void run() {
         }
     }
 }

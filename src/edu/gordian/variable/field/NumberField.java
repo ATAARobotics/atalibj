@@ -1,6 +1,7 @@
 package edu.gordian.variable.field;
 
 import edu.gordian.Field;
+import edu.gordian.variable.NumberInterface;
 import edu.gordian.variable.NumberVariable;
 
 public final class NumberField extends NumberVariable implements Field {
@@ -12,7 +13,7 @@ public final class NumberField extends NumberVariable implements Field {
         this.name = name;
     }
 
-    public NumberField(String name, NumberVariable value) {
+    public NumberField(String name, NumberInterface value) {
         super(value.doubleValue());
         this.name = name;
     }

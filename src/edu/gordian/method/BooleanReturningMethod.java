@@ -1,6 +1,5 @@
 package edu.gordian.method;
 
-import edu.gordian.method.Method;
 import edu.gordian.variable.BooleanInterface;
 
 public abstract class BooleanReturningMethod extends Method implements BooleanInterface {

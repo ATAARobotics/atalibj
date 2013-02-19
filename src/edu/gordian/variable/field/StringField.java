@@ -1,6 +1,7 @@
 package edu.gordian.variable.field;
 
 import edu.gordian.Field;
+import edu.gordian.variable.StringInterface;
 import edu.gordian.variable.StringVariable;
 
 public final class StringField extends StringVariable implements Field {
@@ -12,7 +13,7 @@ public final class StringField extends StringVariable implements Field {
         this.name = name;
     }
 
-    public StringField(String name, StringVariable value) {
+    public StringField(String name, StringInterface value) {
         super(value.stringValue());
         this.name = name;
     }

@@ -93,6 +93,16 @@ public final class GordianAuto {
 
     private static void init() {
         // Insert all methods, variables, returning methods and initialization code here.
+        gordian.addMethod(new RunningMethod("print") {
+            public void run(Variable[] args) {
+                System.out.println(args[0].getValue());
+            }
+        });
+        gordian.addMethod(new RunningMethod("wait") {
+            public void run(Variable[] args) {
+                Timer.delay(((NumberInterface)args[0]).doubleValue());
+            }
+        });
         gordian.addMethod(new RunningMethod("log") {
             public void run(Variable[] args) {
                 Logger.log(Logger.Urgency.USERMESSAGE, args[0].getValue().toString());

@@ -1,13 +1,12 @@
 package edu.gordian.special;
 
 import edu.gordian.Gordian;
-import edu.wpi.first.wpilibj.networktables2.util.List;
 
 public final class If implements Special {
 
     private final Gordian gordian;
     private final String literal;
-    private final List list = new List();
+    private String script = "";
     private boolean ran = false;
 
     public If(Gordian gordian, String literal) {
@@ -16,7 +15,7 @@ public final class If implements Special {
     }
 
     public void add(String instruction) {
-        list.add(instruction);
+        script += instruction + ";";
     }
 
     public boolean ran() {
@@ -26,9 +25,7 @@ public final class If implements Special {
     public void run() {
         if (gordian.convertVariable(literal).getValue().equals(Boolean.TRUE)) {
             ran = true;
-            for (int x = 0; x < list.size(); x++) {
-                gordian.convertInstruction((String) list.get(x)).run();
-            }
+            new Gordian(gordian, script).run();
         } else {
             ran = false;
         }

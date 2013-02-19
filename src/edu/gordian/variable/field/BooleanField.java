@@ -1,6 +1,7 @@
 package edu.gordian.variable.field;
 
 import edu.gordian.Field;
+import edu.gordian.variable.BooleanInterface;
 import edu.gordian.variable.BooleanVariable;
 
 public final class BooleanField extends BooleanVariable implements Field {
@@ -12,7 +13,7 @@ public final class BooleanField extends BooleanVariable implements Field {
         this.name = name;
     }
 
-    public BooleanField(String name, BooleanVariable value) {
+    public BooleanField(String name, BooleanInterface value) {
         super(value.booleanValue());
         this.name = name;
     }
