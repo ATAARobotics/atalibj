@@ -1,6 +1,6 @@
 package edu.ATA.commands;
 
-import edu.first.module.actuator.SolenoidModule;
+import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 
 /**
  * This is the command class for gear shifter. Used for setting gear shifter
@@ -10,21 +10,17 @@ import edu.first.module.actuator.SolenoidModule;
  */
 public final class GearShift extends ThreadableCommand {
 
-    private final SolenoidModule gearUp, gearDown;
-    private boolean track = false;
+    private final ShiftingDrivetrain drivetrain;
 
-    public GearShift(SolenoidModule gearUp, SolenoidModule gearDown, boolean newThread) {
+    public GearShift(ShiftingDrivetrain drivetrain, boolean newThread) {
         super(newThread);
-        this.gearUp = gearUp;
-        this.gearDown = gearDown;
+        this.drivetrain = drivetrain;
     }
 
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                track = !track;
-                gearUp.set(track);
-                gearDown.set(!track);
+                drivetrain.shiftGears();
             }
         };
     }

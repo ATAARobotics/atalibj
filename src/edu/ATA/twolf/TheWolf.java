@@ -29,7 +29,6 @@ import edu.first.module.speedcontroller.SpikeRelay;
 import edu.first.module.speedcontroller.SpikeRelayModule;
 import edu.first.module.target.BangBangModule;
 import edu.first.module.target.PIDModule;
-import edu.first.robot.Robot;
 import edu.first.robot.RobotAdapter;
 import edu.first.utils.Logger;
 import edu.first.utils.TransferRateCalculator;
@@ -243,16 +242,16 @@ public class TheWolf extends RobotAdapter implements PortMap {
         // Driving //
         WOLF_CONTROL.bindAxis(XboxController.RIGHT_FROM_MIDDLE, new SideBinding(drive, SideBinding.RIGHT));
         WOLF_CONTROL.bindAxis(XboxController.LEFT_FROM_MIDDLE, new SideBinding(drive, SideBinding.LEFT));
-        WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(gearUp, gearDown));
+        WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(WOLF_DRIVE, true));
         // Alignment //
-        WOLF_CONTROL.bindWhenPressed(XboxController.X, new SwitchBitchBar(BITCH_BAR));
+        WOLF_CONTROL.bindWhenPressed(XboxController.X, new SwitchBitchBar(BITCH_BAR, true));
         WOLF_CONTROL.bindWhenPressed(XboxController.Y, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE, true));
         WOLF_CONTROL.bindWhenPressed(XboxController.B, new AlignCommand(WOLF_ALIGN, AlignCommand.LONG, true));
         WOLF_CONTROL.bindWhenPressed(XboxController.A, new AlignCommand(WOLF_ALIGN, AlignCommand.SHORT, true));
         // Shooting //
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new ShootCommand(WOLF_SHOOT, true));
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.START, new BangBangCommand(WOLF_SHOOTER, SETPOINT));
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.BACK, new BangBangCommand(WOLF_SHOOTER, 0));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.START, new BangBangCommand(WOLF_SHOOTER, SETPOINT, false));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.BACK, new BangBangCommand(WOLF_SHOOTER, 0, false));
         WOLF_SHOT_CONTROL.bindWhilePressed(XboxController.RIGHT_STICK, new AutoShoot(WOLF_SHOOT, WOLF_SHOOTER, true));
         WOLF_SHOOTER.setDefaultSpeed(DEFAULTSPEED);
         WOLF_SHOOTER.setSetpoint(0);
