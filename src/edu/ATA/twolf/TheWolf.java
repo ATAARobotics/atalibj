@@ -101,11 +101,12 @@ public class TheWolf extends RobotAdapter implements PortMap {
     private final SolenoidModule gearUp = new SolenoidModule(new Solenoid(GEAR_UP)),
             gearDown = new SolenoidModule(new Solenoid(GEAR_DOWN));
     private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, gearDown, gearUp);
-    private final PIDModule DRIVETRAIN_PID = new PIDModule(new PIDController(1, 0, 0, leftEncoder, drive));
+    private final PIDController drivetrainPID = new PIDController(0.001, 0, 0.001, leftEncoder, drive);
+    private final PIDModule DRIVETRAIN_PID = new PIDModule(drivetrainPID);
     /*
      * Alignment
      */
-    private final BitchBar BITCH_BAR = new BitchBar(new SolenoidModule(new Solenoid(BITCH_BAR_IN_PORT)), 
+    private final BitchBar BITCH_BAR = new BitchBar(new SolenoidModule(new Solenoid(BITCH_BAR_IN_PORT)),
             new SolenoidModule(new Solenoid(BITCH_BAR_OUT_PORT)));
     private final SolenoidModule shortAlignOut = new SolenoidModule(new Solenoid(SHORT_ALIGN_OUT_PORT)),
             shortAlignIn = new SolenoidModule(new Solenoid(SHORT_ALIGN_IN_PORT)),
@@ -124,7 +125,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
      *
      * @return
      */
-    public static Robot fetchTheHound() {
+    public static TheWolf fetchTheHound() {
         return (theWolf == null) ? (theWolf = new TheWolf()) : (theWolf);
     }
 
@@ -146,6 +147,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
         Preferences.getInstance().putDouble("MediumPosition", MEDIUM);
         Preferences.getInstance().putDouble("LowPosition", LOW);
         Preferences.getInstance().putBoolean("4WD", FOUR_WHEEL_DRIVE);
+        SmartDashboard.putData("PID", drivetrainPID);
         WOLF_SHOOTER.reverse();
         WOLF_SHOOTER.setPastSetpoint(40);
         drive.addFunction(new Function() {
@@ -153,6 +155,8 @@ public class TheWolf extends RobotAdapter implements PortMap {
                 return (input * input * input) + 0.12;
             }
         });
+        leftEncoder.setReverseDirection(true);
+        DRIVETRAIN_PID.setTolerance(100);
     }
 
     public void disabledInit() {
@@ -181,23 +185,30 @@ public class TheWolf extends RobotAdapter implements PortMap {
     public void autonomousInit() {
         updateValues();
         leftBack.enable();
-        leftFront.enable();
         rightBack.enable();
-        rightFront.enable();
+        if (FOUR_WHEEL_DRIVE) {
+            leftFront.enable();
+            rightFront.enable();
+        }
         WOLF_DRIVE.enable();
+        drive.enable();
         drive.setSafetyEnabled(false);
         WOLF_SHOOT.enable();
         WOLF_SHOOTER.enable();
         WOLF_ALIGN.enable();
-        DRIVETRAIN_PID.enable();
+        DRIVETRAIN_PID.setOutputRange(-0.3, 0.3);
+        leftEncoder.enable();
+        leftEncoder.reset();
         gyro.enable();
+        gyro.reset();
         SmartDashboard.putBoolean("Enabled", true);
         Logger.log(Logger.Urgency.STATUSREPORT, "Gordian init...");
-        Gordian.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID);
+        Gordian.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID, leftEncoder, gyro);
         try {
             String current = Preferences.getInstance().getString("AutonomousMode", "auto");
-            Logger.log(Logger.Urgency.USERMESSAGE, "Running " + current + " autonomous mode.");
+            Logger.log(Logger.Urgency.USERMESSAGE, "Running " + current + ".txt");
             Gordian.run("auto/" + current + ".txt");
+            Logger.log(Logger.Urgency.USERMESSAGE, "Autonomous Done");
         } catch (IOException ex) {
             ex.printStackTrace();
             Logger.log(Logger.Urgency.URGENT, "AUTO DID NOT RUN");
@@ -222,6 +233,8 @@ public class TheWolf extends RobotAdapter implements PortMap {
         WOLF_CONTROL.enable();
         WOLF_SHOT_CONTROL.enable();
         WOLF_DRIVE.enable();
+        drive.setSafetyEnabled(true);
+        drive.setMaxOutput(1);
 
         SmartDashboard.putBoolean("Enabled", true);
         Logger.log(Logger.Urgency.USERMESSAGE, "Doing binds");

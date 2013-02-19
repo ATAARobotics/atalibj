@@ -91,12 +91,4 @@ interface PIDController {
      * @return true if the error is less than the tolerance
      */
     public boolean onTarget();
-
-    /**
-     * Set the percentage error which is considered tolerable for use with
-     * OnTarget. (Input of 15.0 = 15 percent)
-     *
-     * @param percent error which is tolerable
-     */
-    public void setPercentTolerance(double percentage);
 }
