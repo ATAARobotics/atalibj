@@ -132,7 +132,7 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("stop") {
             public void run(Variable[] args) {
-                drivetrain.stop();
+                new TankDriveCommand(drivetrain, 0, 0, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("shiftGear") {
