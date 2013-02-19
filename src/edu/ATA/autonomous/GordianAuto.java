@@ -5,8 +5,8 @@ import edu.ATA.commands.MoveToSetpoint;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.ATA.twolf.subsystems.Shooter;
+import edu.first.commands.LogCommand;
 import edu.first.commands.PauseCommand;
-import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
 import edu.first.module.target.BangBangModule;
@@ -103,12 +103,12 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("wait") {
             public void run(Variable[] args) {
-              new PauseCommand(((NumberInterface)args[0]).doubleValue()).run();
+                new PauseCommand(((NumberInterface) args[0]).doubleValue()).run();
             }
         });
         gordian.addMethod(new RunningMethod("log") {
             public void run(Variable[] args) {
-                Logger.log(Logger.Urgency.USERMESSAGE, args[0].getValue().toString());
+                new LogCommand(args[0].getValue().toString()).run();
             }
         });
         gordian.addMethod(new BooleanReturningMethod("isEnabled") {
@@ -118,7 +118,8 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("arcade") {
             public void run(Variable[] args) {
-                new ArcadeDriveCommand(null, forward, turn), ((NumberInterface) args[0]).doubleValue(), ((NumberInterface) args[1]).doubleValue()).run;
+                new ArcadeDriveCommand(drivetrain, ((NumberInterface) args[0]).doubleValue(),
+                        ((NumberInterface) args[1]).doubleValue()).run();
             }
         });
         gordian.addMethod(new RunningMethod("tank") {
@@ -141,7 +142,7 @@ public final class GordianAuto {
                 encoder.reset();
                 double setpoint = ((NumberInterface) args[0]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Driving to " + setpoint);
-                new MoveToSetpoint(drivetrainPID, setpoint).run();
+                new MoveToSetpoint(drivetrainPID, setpoint, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("gyroTurn") {
