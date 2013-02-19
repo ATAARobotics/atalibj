@@ -1,6 +1,5 @@
 package edu.ATA.commands;
 
-import edu.first.command.Command;
 import edu.first.module.actuator.SolenoidModule;
 
 /**
@@ -9,19 +8,24 @@ import edu.first.module.actuator.SolenoidModule;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class GearShift implements Command {
+public final class GearShift extends ThreadableCommand {
 
     private final SolenoidModule gearUp, gearDown;
     private boolean track = false;
 
-    public GearShift(SolenoidModule gearUp, SolenoidModule gearDown) {
+    public GearShift(SolenoidModule gearUp, SolenoidModule gearDown, boolean newThread) {
+        super(newThread);
         this.gearUp = gearUp;
         this.gearDown = gearDown;
     }
 
-    public void run() {
-        track = !track;
-        gearUp.set(track);
-        gearDown.set(!track);
+    public Runnable getRunnable() {
+        return new Runnable() {
+            public void run() {
+                track = !track;
+                gearUp.set(track);
+                gearDown.set(!track);
+            }
+        };
     }
 }
