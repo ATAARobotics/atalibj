@@ -1,6 +1,6 @@
 package edu.ATA.twolf;
 
-import edu.ATA.autonomous.Gordian;
+import edu.ATA.autonomous.GordianAuto;
 import edu.ATA.commands.AlignCommand;
 import edu.ATA.commands.AutoShoot;
 import edu.ATA.commands.BangBangCommand;
@@ -203,11 +203,11 @@ public class TheWolf extends RobotAdapter implements PortMap {
         gyro.reset();
         SmartDashboard.putBoolean("Enabled", true);
         Logger.log(Logger.Urgency.STATUSREPORT, "Gordian init...");
-        Gordian.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID, leftEncoder, gyro);
+        GordianAuto.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID, leftEncoder, gyro);
         try {
             String current = Preferences.getInstance().getString("AutonomousMode", "auto");
             Logger.log(Logger.Urgency.USERMESSAGE, "Running " + current + ".txt");
-            Gordian.run("auto/" + current + ".txt");
+            GordianAuto.run("auto/" + current + ".txt");
             Logger.log(Logger.Urgency.USERMESSAGE, "Autonomous Done");
         } catch (IOException ex) {
             ex.printStackTrace();
