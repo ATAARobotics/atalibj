@@ -2,6 +2,7 @@ package edu.ATA.autonomous;
 
 import edu.ATA.commands.ArcadeDriveCommand;
 import edu.ATA.commands.MoveToSetpoint;
+import edu.ATA.commands.TankDriveCommand;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.ATA.twolf.subsystems.Shooter;
@@ -119,12 +120,13 @@ public final class GordianAuto {
         gordian.addMethod(new RunningMethod("arcade") {
             public void run(Variable[] args) {
                 new ArcadeDriveCommand(drivetrain, ((NumberInterface) args[0]).doubleValue(),
-                        ((NumberInterface) args[1]).doubleValue()).run();
+                        ((NumberInterface) args[1]).doubleValue(), false).run();
             }
         });
         gordian.addMethod(new RunningMethod("tank") {
             public void run(Variable[] args) {
-                drivetrain.tankDrive(((NumberInterface) args[0]).doubleValue(), ((NumberInterface) args[1]).doubleValue());
+                new TankDriveCommand(drivetrain, ((NumberInterface) args[0]).doubleValue(), 
+                        ((NumberInterface) args[1]).doubleValue(), false).run();
             }
         });
         gordian.addMethod(new RunningMethod("stop") {
