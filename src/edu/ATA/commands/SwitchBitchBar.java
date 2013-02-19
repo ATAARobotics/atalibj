@@ -1,21 +1,25 @@
 package edu.ATA.commands;
 
 import edu.ATA.twolf.subsystems.BitchBar;
-import edu.first.command.Command;
 
 /**
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class SwitchBitchBar implements Command {
+public final class SwitchBitchBar extends ThreadableCommand {
 
     private final BitchBar bitchBar;
 
-    public SwitchBitchBar(BitchBar bitchBar) {
+    public SwitchBitchBar(BitchBar bitchBar, boolean newThread) {
+        super(newThread);
         this.bitchBar = bitchBar;
     }
 
-    public void run() {
-        bitchBar.switchPosition();
+    public Runnable getRunnable() {
+        return new Runnable() {
+            public void run() {
+                bitchBar.switchPosition();
+            }
+        };
     }
 }

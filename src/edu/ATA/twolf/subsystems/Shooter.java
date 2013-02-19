@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Timer;
  *
  * @author Team 4334
  */
-public class Shooter extends Subsystem {
+public final class Shooter extends Subsystem {
 
     private final SpikeRelayModule loader;
     private final DigitalLimitSwitchModule psiSwitch;
@@ -24,8 +24,6 @@ public class Shooter extends Subsystem {
     private final DigitalLimitSwitchModule limitSwitch;
     private final SpeedControllerModule alignment;
     private final BangBangModule bangBang;
-    private boolean shooterLock;
-    private boolean alignmentLock;
 
     /**
      *
@@ -34,7 +32,7 @@ public class Shooter extends Subsystem {
      * @param pot
      * @param alignment
      */
-    public Shooter(SpikeRelayModule loader, DigitalLimitSwitchModule psiSwitch, PotentiometerModule pot, 
+    public Shooter(SpikeRelayModule loader, DigitalLimitSwitchModule psiSwitch, PotentiometerModule pot,
             DigitalLimitSwitchModule limitSwitch,
             SpeedControllerModule alignment, BangBangModule bangBang) {
         super(new Module[]{loader, psiSwitch, pot, limitSwitch, alignment});
@@ -50,18 +48,15 @@ public class Shooter extends Subsystem {
      *
      */
     public void shoot() {
-        // Only shoots once at a time
-        if (!shooterLock && !psiSwitch.isPushed()) {
+        if (!psiSwitch.isPushed()) {
             Logger.log(Logger.Urgency.STATUSREPORT, "Shooting");
-            shooterLock = true;
             Timer.delay(0.2);
             bangBang.setCoast(true);
             loader.set(SpikeRelay.BACKWARD);
             Timer.delay(0.5);
             loader.set(false);
             bangBang.setCoast(false);
-            shooterLock = false;
-        } else if(psiSwitch.isPushed()) {
+        } else if (psiSwitch.isPushed()) {
             Logger.log(Logger.Urgency.URGENT, "PSI not high enough");
         }
     }
@@ -71,32 +66,28 @@ public class Shooter extends Subsystem {
      * @param setpoint
      */
     public void alignTo(final double setpoint) {
-        // Only aligns once at a time
-        if (!alignmentLock) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "Aligning to position");
-            alignmentLock = true;
-            final String mode = DriverstationInfo.getGamePeriod();
-            if (pot.getPosition() > setpoint) {
-                while (pot.getPosition() > setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    if (!set(+1)) {
-                        break;
-                    }
-                }
-            } else if (pot.getPosition() < setpoint) {
-                while (pot.getPosition() < setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    if (!set(-1)) {
-                        break;
-                    }
+        Logger.log(Logger.Urgency.USERMESSAGE, "Aligning to position");
+        final String mode = DriverstationInfo.getGamePeriod();
+        if (pot.getPosition() > setpoint) {
+            while (pot.getPosition() > setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
+                if (!set(+1)) {
+                    break;
                 }
             }
-            if (Math.abs(pot.getPosition() - setpoint) > 0.1) {
-                // Retry for overshoot
-                alignTo(setpoint);
+        } else if (pot.getPosition() < setpoint) {
+            while (pot.getPosition() < setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
+                if (!set(-1)) {
+                    break;
+                }
             }
-            set(0);
-            alignmentLock = false;
-            Logger.log(Logger.Urgency.USERMESSAGE, "Aligned to " + setpoint);
         }
+        if (Math.abs(pot.getPosition() - setpoint) > 0.1) {
+            // Retry for overshoot
+            alignTo(setpoint);
+        }
+        set(0);
+        Logger.log(Logger.Urgency.USERMESSAGE, "Aligned to " + setpoint);
+
     }
 
     private boolean set(double speed) {

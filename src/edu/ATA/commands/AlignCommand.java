@@ -7,7 +7,7 @@ import edu.ATA.twolf.subsystems.AlignmentSystem;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class AlignCommand extends ThreadableCommand {
+public final class AlignCommand extends ThreadableCommand {
 
     /**
      * The type for all three alignment pistons being collapsed.
