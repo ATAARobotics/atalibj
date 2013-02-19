@@ -1,6 +1,7 @@
 package edu.ATA.autonomous;
 
 import edu.ATA.commands.ArcadeDriveCommand;
+import edu.ATA.commands.GearShift;
 import edu.ATA.commands.MoveToSetpoint;
 import edu.ATA.commands.TankDriveCommand;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
@@ -136,7 +137,7 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("shiftGear") {
             public void run(Variable[] args) {
-                drivetrain.shiftGears();
+                new GearShift(drivetrain, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("driveToSetpoint") {
