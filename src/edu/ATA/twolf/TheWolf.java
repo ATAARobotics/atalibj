@@ -82,11 +82,11 @@ public class TheWolf extends RobotAdapter implements PortMap {
     private final SpeedControllerModule shooter = new SpeedControllerModule(new Talon(SHOOTER_PORT));
     private final SpeedControllerModule shooterAligner = new SpeedControllerModule(new Victor(SHOOTER_ALIGNMENT_PORT));
     private final PotentiometerModule shooterAngle = new PotentiometerModule(new AnalogChannel(SHOOTER_POSITION));
-    private final DigitalLimitSwitchModule shooterSwitch = new DigitalLimitSwitchModule(new DigitalInput(SHOOTER_LIMIT_SWITCH));
     private final HallEffectModule hallEffect = new HallEffectModule(new DigitalInput(HALLEFFECT_PORT));
     private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter, 0.5);
-    private final SpikeRelayModule loader = new SpikeRelayModule(new Relay(LOADER_PORT));
-    private final Shooter WOLF_SHOOT = new Shooter(loader, psiSwitch, shooterAngle, shooterSwitch, shooterAligner, WOLF_SHOOTER);
+    private final SolenoidModule loadIn = new SolenoidModule(new Solenoid(LOAD_IN)),
+            loadOut = new SolenoidModule(new Solenoid(LOAD_OUT));
+    private final Shooter WOLF_SHOOT = new Shooter(loadIn, loadOut, psiSwitch, shooterAngle, shooterAligner, WOLF_SHOOTER);
     /*
      * Driving
      */
@@ -107,12 +107,9 @@ public class TheWolf extends RobotAdapter implements PortMap {
      */
     private final BitchBar BITCH_BAR = new BitchBar(new SolenoidModule(new Solenoid(BITCH_BAR_IN_PORT)),
             new SolenoidModule(new Solenoid(BITCH_BAR_OUT_PORT)));
-    private final SolenoidModule shortAlignOut = new SolenoidModule(new Solenoid(SHORT_ALIGN_OUT_PORT)),
-            shortAlignIn = new SolenoidModule(new Solenoid(SHORT_ALIGN_IN_PORT)),
-            longAlignOut = new SolenoidModule(new Solenoid(LONG_ALIGN_OUT_PORT)),
-            longAlignIn = new SolenoidModule(new Solenoid(LONG_ALIGN_IN_PORT));
-    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlignOut, shortAlignIn,
-            longAlignOut, longAlignIn);
+    private final SolenoidModule alignIn = new SolenoidModule(new Solenoid(BACK_IN)),
+            alignOut = new SolenoidModule(new Solenoid(BACK_OUT));
+    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(alignIn, alignOut);
 
     /*
      * Joysticks
@@ -154,8 +151,9 @@ public class TheWolf extends RobotAdapter implements PortMap {
                 return (input * input * input) + 0.12;
             }
         });
+        drive.setCompensation(0);
         leftEncoder.setReverseDirection(true);
-        DRIVETRAIN_PID.setTolerance(100);
+        DRIVETRAIN_PID.setTolerance(40);
     }
 
     public void disabledInit() {
@@ -194,6 +192,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
         drive.setSafetyEnabled(false);
         WOLF_SHOOT.enable();
         WOLF_SHOOTER.enable();
+        WOLF_SHOOTER.setDefaultSpeed(0);
         WOLF_ALIGN.enable();
         DRIVETRAIN_PID.setOutputRange(-0.3, 0.3);
         leftEncoder.enable();
@@ -245,9 +244,8 @@ public class TheWolf extends RobotAdapter implements PortMap {
         WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(WOLF_DRIVE, true));
         // Alignment //
         WOLF_CONTROL.bindWhenPressed(XboxController.X, new SwitchBitchBar(BITCH_BAR, true));
-        WOLF_CONTROL.bindWhenPressed(XboxController.Y, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE, true));
-        WOLF_CONTROL.bindWhenPressed(XboxController.B, new AlignCommand(WOLF_ALIGN, AlignCommand.LONG, true));
-        WOLF_CONTROL.bindWhenPressed(XboxController.A, new AlignCommand(WOLF_ALIGN, AlignCommand.SHORT, true));
+        WOLF_CONTROL.bindWhenPressed(XboxController.B, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE, true));
+        WOLF_CONTROL.bindWhenPressed(XboxController.A, new AlignCommand(WOLF_ALIGN, AlignCommand.EXTEND, true));
         // Shooting //
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new ShootCommand(WOLF_SHOOT, true));
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.START, new BangBangCommand(WOLF_SHOOTER, SETPOINT, false));
@@ -258,11 +256,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
         // Shooter position //
         WOLF_SHOT_CONTROL.bindAxis(XboxController.TRIGGERS + XboxController.SHIFT, new AxisBind() {
             public void set(double axisValue) {
-                if (!(axisValue < 0 && shooterSwitch.isPushed())) {
-                    shooterAligner.set(axisValue);
-                } else {
-                    shooterAligner.set(0);
-                }
+                shooterAligner.set(axisValue);
             }
         });
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y, new ShooterAlignCommand(WOLF_SHOOT, HIGH, true));

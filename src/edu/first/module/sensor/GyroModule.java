@@ -98,7 +98,7 @@ class ForwardingGyro implements edu.first.module.sensor.Gyro {
      * @param gyro actual underlying object used
      */
     ForwardingGyro(edu.wpi.first.wpilibj.Gyro gyro) {
-        if(gyro == null) {
+        if (gyro == null) {
             throw new NullPointerException();
         }
         this.gyro = gyro;

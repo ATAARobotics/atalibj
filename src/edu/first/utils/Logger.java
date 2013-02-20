@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import javax.microedition.io.Connector;
 
 /**
@@ -122,7 +123,7 @@ public final class Logger {
         }
         try {
             if (fileLoggingOn) {
-                logFile(usrMsg.concat("\n"));
+                logFile(new Date().toString() + usrMsg.concat("\n"));
             }
         } catch (IOException ex) {
             System.err.println("!!!ERROR WHILE WRITING TO LOG FILE!!!\n" + ex.getMessage());

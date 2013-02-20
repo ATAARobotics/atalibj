@@ -87,6 +87,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
     private final List speedFunctions = new List();
     private final boolean reverseSpeed, reverseTurn;
     private double lastLeft, lastRight, lastForward, lastTurn;
+    private double compensation = 0;
 
     /**
      * Constructs the object by using composition, using the given robot drive
@@ -395,11 +396,15 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
         drive.stopMotor();
     }
 
+    public void setCompensation(double compensation) {
+        this.compensation = compensation;
+    }
+
     /**
      * {@inheritDoc}
      */
     public void pidWrite(double d) {
-        arcadeDrive(d, 0);
+        drive.drive(d, d != 0 ? compensation : 0);
     }
 
     private double transform(double original) {

@@ -145,91 +145,95 @@ public class Gordian {
     }
 
     public Variable convertVariable(String original) {
-        if (original == null) {
-            throw new NullPointerException("Null variable");
-        }
-        original = original.trim();
-        if (original.indexOf("\"") != original.lastIndexOf('\"')) {
-            return new StringVariable(original.substring(original.indexOf("\"") + 1, original.lastIndexOf('\"')));
-        }
-        // Boolean
-        if (StringUtils.contains(original, "&&")) {
-            return new BooleanVariable(((BooleanInterface) convertVariable(original.substring(0, original.indexOf("&&")))).booleanValue()
-                    && ((BooleanVariable) convertVariable(original.substring(original.indexOf("&&") + 2))).booleanValue());
-        }
-        if (StringUtils.contains(original, "||")) {
-            return new BooleanVariable(((BooleanInterface) convertVariable(original.substring(0, original.indexOf("||")))).booleanValue()
-                    || ((BooleanVariable) convertVariable(original.substring(original.indexOf("||") + 2))).booleanValue());
-        }
-        if (original.startsWith("!")) {
-            return new BooleanVariable(!((BooleanInterface) convertVariable(original.substring(original.indexOf("!") + 1))).booleanValue());
-        }
-        if (original.equalsIgnoreCase("true")) {
-            return new BooleanVariable(true);
-        } else if (original.equalsIgnoreCase("false")) {
-            return new BooleanVariable(false);
-        } else if (StringUtils.contains(original, "==")) {
-            Variable v1 = convertVariable(original.substring(0, original.indexOf("==")));
-            Variable v2 = convertVariable(original.substring(original.indexOf("==") + 2));
-            return new BooleanVariable(v1.getValue().equals(v2.getValue()));
-        } else if (StringUtils.contains(original, "!=")) {
-            Variable v1 = convertVariable(original.substring(0, original.indexOf("!=")));
-            Variable v2 = convertVariable(original.substring(original.indexOf("!=") + 2));
-            return new BooleanVariable(!v1.getValue().equals(v2.getValue()));
-        } else if (StringUtils.contains(original, ">=")) {
-            NumberInterface v1 = (NumberInterface) convertVariable(original.substring(0, original.indexOf(">=")));
-            NumberInterface v2 = (NumberInterface) convertVariable(original.substring(original.indexOf(">=") + 2));
-            return new BooleanVariable(v1.doubleValue() >= v2.doubleValue());
-        } else if (StringUtils.contains(original, "<=")) {
-            NumberInterface v1 = (NumberInterface) convertVariable(original.substring(0, original.indexOf("<=")));
-            NumberInterface v2 = (NumberInterface) convertVariable(original.substring(original.indexOf("<=") + 2));
-            return new BooleanVariable(v1.doubleValue() <= v2.doubleValue());
-        } else if (StringUtils.contains(original, ">")) {
-            NumberInterface v1 = (NumberInterface) convertVariable(original.substring(0, original.indexOf(">")));
-            NumberInterface v2 = (NumberInterface) convertVariable(original.substring(original.indexOf(">") + 1));
-            return new BooleanVariable(v1.doubleValue() > v2.doubleValue());
-        } else if (StringUtils.contains(original, "<")) {
-            NumberInterface v1 = (NumberInterface) convertVariable(original.substring(0, original.indexOf("<")));
-            NumberInterface v2 = (NumberInterface) convertVariable(original.substring(original.indexOf("<") + 1));
-            return new BooleanVariable(v1.doubleValue() < v2.doubleValue());
-        }
-        // Number
         try {
-            return new NumberVariable(Double.parseDouble(original));
-        } catch (NumberFormatException ex) {
-            if (StringUtils.contains(original, "+")) {
-                return new NumberVariable(((NumberInterface) convertVariable(original.substring(0, original.indexOf("+")))).doubleValue()
-                        + ((NumberInterface) convertVariable(original.substring(original.indexOf("+") + 1))).doubleValue());
-            } else if (StringUtils.contains(original, "-")) {
-                return new NumberVariable(((NumberInterface) convertVariable(original.substring(0, original.indexOf("-")))).doubleValue()
-                        - ((NumberInterface) convertVariable(original.substring(original.indexOf("-") + 1))).doubleValue());
-            } else if (StringUtils.contains(original, "*")) {
-                return new NumberVariable(((NumberInterface) convertVariable(original.substring(0, original.indexOf("*")))).doubleValue()
-                        * ((NumberInterface) convertVariable(original.substring(original.indexOf("*") + 1))).doubleValue());
-            } else if (StringUtils.contains(original, "/")) {
-                return new NumberVariable(((NumberInterface) convertVariable(original.substring(0, original.indexOf("/")))).doubleValue()
-                        / ((NumberInterface) convertVariable(original.substring(original.indexOf("/") + 1))).doubleValue());
+            if (original == null) {
+                throw new NullPointerException("Null variable");
             }
-        }
-        for (int x = 0; x < fields.size(); x++) {
-            if (original.equals(((Field) fields.get(x)).fieldName())) {
-                return (Field) fields.get(x);
+            original = original.trim();
+            if (original.indexOf("\"") != original.lastIndexOf('\"')) {
+                return new StringVariable(original.substring(original.indexOf("\"") + 1, original.lastIndexOf('\"')));
             }
-        }
-        for (int x = 0; x < methods.size(); x++) {
-            if (original.startsWith(((Method) methods.get(x)).getMethodName())) {
-                String[] args = StringUtils.split(original.substring(original.indexOf("(") + 1, original.lastIndexOf(')')), ',');
-                final Variable[] arguments = new Variable[args.length];
-                for (int i = 0; i < arguments.length; i++) {
-                    arguments[i] = convertVariable(args[i]);
+            // Boolean
+            if (StringUtils.contains(original, "&&")) {
+                return new BooleanVariable(((BooleanInterface) convertVariable(original.substring(0, original.indexOf("&&")))).booleanValue()
+                        && ((BooleanInterface) convertVariable(original.substring(original.indexOf("&&") + 2))).booleanValue());
+            }
+            if (StringUtils.contains(original, "||")) {
+                return new BooleanVariable(((BooleanInterface) convertVariable(original.substring(0, original.indexOf("||")))).booleanValue()
+                        || ((BooleanInterface) convertVariable(original.substring(original.indexOf("||") + 2))).booleanValue());
+            }
+            if (original.startsWith("!")) {
+                return new BooleanVariable(!((BooleanInterface) convertVariable(original.substring(original.indexOf("!") + 1))).booleanValue());
+            }
+            if (original.equalsIgnoreCase("true")) {
+                return new BooleanVariable(true);
+            } else if (original.equalsIgnoreCase("false")) {
+                return new BooleanVariable(false);
+            } else if (StringUtils.contains(original, "==")) {
+                Variable v1 = convertVariable(original.substring(0, original.indexOf("==")));
+                Variable v2 = convertVariable(original.substring(original.indexOf("==") + 2));
+                return new BooleanVariable(v1.getValue().equals(v2.getValue()));
+            } else if (StringUtils.contains(original, "!=")) {
+                Variable v1 = convertVariable(original.substring(0, original.indexOf("!=")));
+                Variable v2 = convertVariable(original.substring(original.indexOf("!=") + 2));
+                return new BooleanVariable(!v1.getValue().equals(v2.getValue()));
+            } else if (StringUtils.contains(original, ">=")) {
+                NumberInterface v1 = (NumberInterface) convertVariable(original.substring(0, original.indexOf(">=")));
+                NumberInterface v2 = (NumberInterface) convertVariable(original.substring(original.indexOf(">=") + 2));
+                return new BooleanVariable(v1.doubleValue() >= v2.doubleValue());
+            } else if (StringUtils.contains(original, "<=")) {
+                NumberInterface v1 = (NumberInterface) convertVariable(original.substring(0, original.indexOf("<=")));
+                NumberInterface v2 = (NumberInterface) convertVariable(original.substring(original.indexOf("<=") + 2));
+                return new BooleanVariable(v1.doubleValue() <= v2.doubleValue());
+            } else if (StringUtils.contains(original, ">")) {
+                NumberInterface v1 = (NumberInterface) convertVariable(original.substring(0, original.indexOf(">")));
+                NumberInterface v2 = (NumberInterface) convertVariable(original.substring(original.indexOf(">") + 1));
+                return new BooleanVariable(v1.doubleValue() > v2.doubleValue());
+            } else if (StringUtils.contains(original, "<")) {
+                NumberInterface v1 = (NumberInterface) convertVariable(original.substring(0, original.indexOf("<")));
+                NumberInterface v2 = (NumberInterface) convertVariable(original.substring(original.indexOf("<") + 1));
+                return new BooleanVariable(v1.doubleValue() < v2.doubleValue());
+            }
+            // Number
+            try {
+                return new NumberVariable(Double.parseDouble(original));
+            } catch (NumberFormatException ex) {
+                if (StringUtils.contains(original, "+")) {
+                    return new NumberVariable(((NumberInterface) convertVariable(original.substring(0, original.indexOf("+")))).doubleValue()
+                            + ((NumberInterface) convertVariable(original.substring(original.indexOf("+") + 1))).doubleValue());
+                } else if (StringUtils.contains(original, "-")) {
+                    return new NumberVariable(((NumberInterface) convertVariable(original.substring(0, original.indexOf("-")))).doubleValue()
+                            - ((NumberInterface) convertVariable(original.substring(original.indexOf("-") + 1))).doubleValue());
+                } else if (StringUtils.contains(original, "*")) {
+                    return new NumberVariable(((NumberInterface) convertVariable(original.substring(0, original.indexOf("*")))).doubleValue()
+                            * ((NumberInterface) convertVariable(original.substring(original.indexOf("*") + 1))).doubleValue());
+                } else if (StringUtils.contains(original, "/")) {
+                    return new NumberVariable(((NumberInterface) convertVariable(original.substring(0, original.indexOf("/")))).doubleValue()
+                            / ((NumberInterface) convertVariable(original.substring(original.indexOf("/") + 1))).doubleValue());
                 }
-                return ((Variable) methods.get(x));
             }
+            for (int x = 0; x < fields.size(); x++) {
+                if (original.equals(((Field) fields.get(x)).fieldName())) {
+                    return (Field) fields.get(x);
+                }
+            }
+            for (int x = 0; x < methods.size(); x++) {
+                if (original.startsWith(((Method) methods.get(x)).getMethodName())) {
+                    String[] args = StringUtils.split(original.substring(original.indexOf("(") + 1, original.lastIndexOf(')')), ',');
+                    final Variable[] arguments = new Variable[args.length];
+                    for (int i = 0; i < arguments.length; i++) {
+                        arguments[i] = convertVariable(args[i]);
+                    }
+                    return ((Variable) methods.get(x));
+                }
+            }
+            // String
+            return new StringVariable(original);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new NullPointerException("Problem converting " + original);
         }
-        // String
-        return new StringVariable(original);
-
-
     }
 
     private final class Declaration implements Instruction {

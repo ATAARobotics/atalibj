@@ -13,14 +13,7 @@ public final class AlignCommand extends ThreadableCommand {
      * The type for all three alignment pistons being collapsed.
      */
     public static final AlignType COLLAPSE = new AlignType(AlignType.COLLAPSE);
-    /**
-     * The type to turn the short piston on and the longs piston off.
-     */
-    public static final AlignType SHORT = new AlignType(AlignType.SHORT);
-    /**
-     * The type to turn the short piston off and to turn the long piston off.
-     */
-    public static final AlignType LONG = new AlignType(AlignType.LONG);
+    public static final AlignType EXTEND = new AlignType(AlignType.EXTEND);
     private final AlignmentSystem alignmentSystem;
     private final AlignType type;
 
@@ -35,11 +28,9 @@ public final class AlignCommand extends ThreadableCommand {
             public void run() {
                 if (type.type == COLLAPSE.type) {
                     alignmentSystem.collapse();
-                } else if (type.type == SHORT.type) {
-                    alignmentSystem.setShort();
-                } else if (type.type == LONG.type) {
-                    alignmentSystem.setLong();
-                }
+                } else if (type.type == EXTEND.type) {
+                    alignmentSystem.extend();
+                } 
             }
         };
     }
@@ -50,7 +41,7 @@ public final class AlignCommand extends ThreadableCommand {
      */
     public static final class AlignType {
 
-        private static final int COLLAPSE = 1, SHORT = 2, LONG = 3;
+        private static final int COLLAPSE = 1, EXTEND = 2;
         private final int type;
 
         private AlignType(int type) {

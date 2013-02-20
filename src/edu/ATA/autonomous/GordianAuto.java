@@ -3,6 +3,7 @@ package edu.ATA.autonomous;
 import edu.ATA.commands.AlignCommand;
 import edu.ATA.commands.AlignShooter;
 import edu.ATA.commands.ArcadeDriveCommand;
+import edu.ATA.commands.AutoShoot;
 import edu.ATA.commands.BangBangCommand;
 import edu.ATA.commands.DriveDistance;
 import edu.ATA.commands.GearShift;
@@ -10,7 +11,7 @@ import edu.ATA.commands.ResetAngleCommand;
 import edu.ATA.commands.ResetEncoderCommand;
 import edu.ATA.commands.ShootCommand;
 import edu.ATA.commands.TankDriveCommand;
-import edu.ATA.commands.Turn;
+import edu.ATA.commands.TurnToAngle;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.ATA.twolf.subsystems.Shooter;
@@ -174,7 +175,12 @@ public final class GordianAuto {
                 double lspeed = ((NumberInterface) args[1]).doubleValue();
                 double rspeed = ((NumberInterface) args[2]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Turning to " + setpoint);
-                new Turn(gyro, drivetrain, lspeed, rspeed, setpoint).run();
+                new TurnToAngle(lspeed, rspeed, setpoint, gyro, drivetrain, false).run();
+            }
+        });
+        gordian.addMethod(new RunningMethod("autoShoot") {
+            public void run(Variable[] args) {
+                new AutoShoot(shooter, bangBangModule, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("shoot") {
@@ -214,14 +220,9 @@ public final class GordianAuto {
                 new AlignCommand(alignmentSystem, AlignCommand.COLLAPSE, false).run();
             }
         });
-        gordian.addMethod(new RunningMethod("setLongAlignment") {
+        gordian.addMethod(new RunningMethod("extendAlignment") {
             public void run(Variable[] args) {
-                new AlignCommand(alignmentSystem, AlignCommand.LONG, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("setShortAlignment") {
-            public void run(Variable[] args) {
-                new AlignCommand(alignmentSystem, AlignCommand.SHORT, false).run();
+                new AlignCommand(alignmentSystem, AlignCommand.EXTEND, false).run();
             }
         });
     }

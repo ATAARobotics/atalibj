@@ -3,6 +3,7 @@ package edu.ATA.commands;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.first.module.sensor.GyroModule;
 import edu.first.utils.DriverstationInfo;
+import edu.first.utils.Logger;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -28,8 +29,13 @@ public final class TurnToAngle extends ThreadableCommand {
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                String mode = DriverstationInfo.getGamePeriod();
-                while (Math.abs(gyro.getAngle()) < Math.abs(setpoint) && mode.equals(DriverstationInfo.getGamePeriod())) {
+                gyro.reset();
+                while(gyro.getAngle() > 1) {
+                    Timer.delay(0.02);
+                }
+                final double prev = gyro.getAngle();
+                final String mode = DriverstationInfo.getGamePeriod();
+                while (Math.abs(gyro.getAngle() - prev) < Math.abs(setpoint) && mode.equals(DriverstationInfo.getGamePeriod())) {
                     drivetrain.tankDrive(left, right);
                     Timer.delay(0.02);
                 }
