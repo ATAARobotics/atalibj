@@ -148,7 +148,11 @@ public class TheWolf extends RobotAdapter implements PortMap {
         WOLF_SHOOTER.setPastSetpoint(40);
         drive.addFunction(new Function() {
             public double F(double input) {
-                return (input * input * input) + 0.12;
+                if (input != 0) {
+                    return (input * input * input) + 0.12;
+                } else {
+                    return 0;
+                }
             }
         });
         drive.setCompensation(0);
