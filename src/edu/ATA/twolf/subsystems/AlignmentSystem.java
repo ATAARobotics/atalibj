@@ -11,18 +11,12 @@ import edu.first.module.subsystem.Subsystem;
  */
 public final class AlignmentSystem extends Subsystem {
 
-    private final SolenoidModule shortAlignOut, shortAlignIn, longAlignOut, longAlignIn, staticAlignOut, staticAlignIn;
+    private final SolenoidModule in, out;
 
-    public AlignmentSystem(SolenoidModule shortAlignOut, SolenoidModule shortAlignIn,
-            SolenoidModule longAlignOut, SolenoidModule longAlignIn, SolenoidModule staticAlignOut, 
-            SolenoidModule staticAlignIn) {
-        super(new Module[]{shortAlignOut, shortAlignIn, longAlignOut, longAlignIn, staticAlignOut, staticAlignIn});
-        this.shortAlignOut = shortAlignOut;
-        this.shortAlignIn = shortAlignIn;
-        this.longAlignOut = longAlignOut;
-        this.longAlignIn = longAlignIn;
-        this.staticAlignOut = staticAlignOut;
-        this.staticAlignIn = staticAlignIn;
+    public AlignmentSystem(SolenoidModule in, SolenoidModule out) {
+        super(new Module[]{in, out});
+        this.in = in;
+        this.out = out;
         collapse();
     }
 
@@ -30,35 +24,12 @@ public final class AlignmentSystem extends Subsystem {
      * Collapses all pistons.
      */
     public void collapse() {
-        shortAlignIn.set(true);
-        shortAlignOut.set(false);
-        longAlignIn.set(true);
-        longAlignOut.set(false);
-        staticAlignIn.set(true);
-        staticAlignOut.set(false);
+        in.set(true);
+        out.set(false);
     }
-
-    /**
-     * Hides long piston and extends short and static piston.
-     */
-    public void setShort() {
-        shortAlignIn.set(false);
-        shortAlignOut.set(true);
-        longAlignIn.set(true);
-        longAlignOut.set(false);
-        staticAlignIn.set(false);
-        staticAlignOut.set(true);
-    }
-
-    /**
-     * Hides short piston and extends long and static piston.
-     */
-    public void setLong() {
-        shortAlignIn.set(true);
-        shortAlignOut.set(false);
-        longAlignIn.set(false);
-        longAlignOut.set(true);
-        staticAlignIn.set(false);
-        staticAlignOut.set(true);
+    
+    public void extend() {
+        in.set(false);
+        out.set(true);
     }
 }

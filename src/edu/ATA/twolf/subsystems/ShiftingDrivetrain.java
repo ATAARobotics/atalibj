@@ -1,6 +1,5 @@
 package edu.ATA.twolf.subsystems;
 
-import edu.ATA.commands.GearShift;
 import edu.first.module.Module;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.module.driving.RobotDriveModule;
@@ -10,10 +9,11 @@ import edu.first.module.subsystem.Subsystem;
  *
  * @author Team 4334
  */
-public class ShiftingDrivetrain extends Subsystem {
+public final class ShiftingDrivetrain extends Subsystem {
 
     private final RobotDriveModule driveModule;
     private final SolenoidModule firstGear, secondGear;
+    private boolean shifted;
 
     public ShiftingDrivetrain(RobotDriveModule driveModule, SolenoidModule firstGear, SolenoidModule secondGear) {
         super(new Module[]{driveModule, firstGear, secondGear});
@@ -51,6 +51,8 @@ public class ShiftingDrivetrain extends Subsystem {
      *
      */
     public void shiftGears() {
-        new GearShift(firstGear, secondGear).run();
+        shifted = !shifted;
+        firstGear.set(shifted);
+        secondGear.set(!shifted);
     }
 }

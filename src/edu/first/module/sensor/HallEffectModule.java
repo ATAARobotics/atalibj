@@ -108,8 +108,11 @@ public final class HallEffectModule extends ForwardingHallEffectModule implement
  */
 class ForwardingHallEffectModule implements HallEffect, PIDSource {
 
+    public static final double defaultMaxPossible = 50000;
     private final DigitalInput hallEffect;
     private final Counter counter;
+    private final double maxPossible;
+    private double prev;
 
     /**
      * Constructs the object by using composition, using the given digital input
@@ -118,7 +121,18 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * @param hallEffect underlying hallEffect object used
      */
     public ForwardingHallEffectModule(DigitalInput hallEffect) {
-        this(hallEffect, new Counter(hallEffect));
+        this(hallEffect, defaultMaxPossible);
+    }
+
+    /**
+     * Constructs the object by using composition, using the given digital input
+     * object to control methods in this class.
+     *
+     * @param hallEffect actual underlying object used
+     * @param maxPossible maximum acceptable value to allow getRate() to return
+     */
+    public ForwardingHallEffectModule(DigitalInput hallEffect, double maxPossible) {
+        this(hallEffect, new Counter(hallEffect), maxPossible);
     }
 
     /**
@@ -129,8 +143,21 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * @param counter the counter object it uses
      */
     public ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter) {
+        this(hallEffect, counter, defaultMaxPossible);
+    }
+
+    /**
+     * Constructs the object by using composition, using the given digital input
+     * object and a custom counter to control methods in this class.
+     *
+     * @param hallEffect actual underlying object used
+     * @param counter the counter object it uses
+     * @param maxPossible maximum acceptable value to allow getRate() to return
+     */
+    public ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter, double maxPossible) {
         this.hallEffect = hallEffect;
         this.counter = counter;
+        this.maxPossible = maxPossible;
     }
 
     /**
@@ -163,7 +190,8 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * @return current counter rate
      */
     public double getRate() {
-        return 60 / counter.getPeriod();
+        double rate = 60 / counter.getPeriod();
+        return (rate > maxPossible) ? prev : (prev = rate);
     }
 
     /**

@@ -3,23 +3,24 @@ package edu.ATA.commands;
 import edu.ATA.twolf.subsystems.Shooter;
 
 /**
- * The command class for the shooter shooting.
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public final class ShootCommand extends ThreadableCommand {
+public final class AlignShooter extends ThreadableCommand {
 
     private final Shooter shooter;
+    private final double setpoint;
 
-    public ShootCommand(Shooter shooter, boolean newThread) {
+    public AlignShooter(Shooter shooter, double setpoint, boolean newThread) {
         super(newThread);
         this.shooter = shooter;
+        this.setpoint = setpoint;
     }
 
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                shooter.shoot();
+                shooter.alignTo(setpoint);
             }
         };
     }

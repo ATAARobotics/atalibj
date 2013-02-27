@@ -65,6 +65,7 @@ public final class PIDModule extends ForwardingPIDController implements Module.D
 class ForwardingPIDController implements edu.first.module.target.PIDController {
 
     private final edu.wpi.first.wpilibj.PIDController controller;
+    private double tolerance = 0;
 
     /**
      * Constructs the object by using composition, using the given controller
@@ -192,16 +193,16 @@ class ForwardingPIDController implements edu.first.module.target.PIDController {
      * @return true if the error is less than the tolerance
      */
     public boolean onTarget() {
-        return controller.onTarget();
+        return Math.abs(controller.getError()) < tolerance;
     }
 
     /**
      * Set the percentage error which is considered tolerable for use with
-     * OnTarget. (Input of 15.0 = 15 percent)
+     * OnTarget.
      *
      * @param percent error which is tolerable
      */
-    public void setPercentTolerance(double percentage) {
-        controller.setPercentTolerance(percentage);
+    public void setTolerance(double tolerance) {
+        this.tolerance = tolerance;
     }
 }

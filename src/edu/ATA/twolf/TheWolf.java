@@ -1,14 +1,16 @@
 package edu.ATA.twolf;
 
-import edu.ATA.autonomous.Gordian;
+import edu.ATA.autonomous.GordianAuto;
 import edu.ATA.commands.AlignCommand;
 import edu.ATA.commands.AutoShoot;
 import edu.ATA.commands.BangBangCommand;
 import edu.ATA.commands.ShootCommand;
 import edu.ATA.commands.ShooterAlignCommand;
 import edu.ATA.commands.GearShift;
+import edu.ATA.commands.SwitchBitchBar;
 import edu.ATA.module.joystick.XboxController;
 import edu.ATA.twolf.subsystems.AlignmentSystem;
+import edu.ATA.twolf.subsystems.BitchBar;
 import edu.ATA.twolf.subsystems.ShiftingDrivetrain;
 import edu.ATA.twolf.subsystems.Shooter;
 import edu.first.bindings.AxisBind;
@@ -27,7 +29,6 @@ import edu.first.module.speedcontroller.SpikeRelay;
 import edu.first.module.speedcontroller.SpikeRelayModule;
 import edu.first.module.target.BangBangModule;
 import edu.first.module.target.PIDModule;
-import edu.first.robot.Robot;
 import edu.first.robot.RobotAdapter;
 import edu.first.utils.Logger;
 import edu.first.utils.TransferRateCalculator;
@@ -81,11 +82,11 @@ public class TheWolf extends RobotAdapter implements PortMap {
     private final SpeedControllerModule shooter = new SpeedControllerModule(new Talon(SHOOTER_PORT));
     private final SpeedControllerModule shooterAligner = new SpeedControllerModule(new Victor(SHOOTER_ALIGNMENT_PORT));
     private final PotentiometerModule shooterAngle = new PotentiometerModule(new AnalogChannel(SHOOTER_POSITION));
-    private final DigitalLimitSwitchModule shooterSwitch = new DigitalLimitSwitchModule(new DigitalInput(SHOOTER_LIMIT_SWITCH));
     private final HallEffectModule hallEffect = new HallEffectModule(new DigitalInput(HALLEFFECT_PORT));
     private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter, 0.5);
-    private final SpikeRelayModule loader = new SpikeRelayModule(new Relay(LOADER_PORT));
-    private final Shooter WOLF_SHOOT = new Shooter(loader, psiSwitch, shooterAngle, shooterSwitch, shooterAligner, WOLF_SHOOTER);
+    private final SolenoidModule loadIn = new SolenoidModule(new Solenoid(LOAD_IN)),
+            loadOut = new SolenoidModule(new Solenoid(LOAD_OUT));
+    private final Shooter WOLF_SHOOT = new Shooter(loadIn, loadOut, psiSwitch, shooterAngle, shooterAligner, WOLF_SHOOTER);
     /*
      * Driving
      */
@@ -99,18 +100,16 @@ public class TheWolf extends RobotAdapter implements PortMap {
     private final SolenoidModule gearUp = new SolenoidModule(new Solenoid(GEAR_UP)),
             gearDown = new SolenoidModule(new Solenoid(GEAR_DOWN));
     private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, gearDown, gearUp);
-    private final PIDModule DRIVETRAIN_PID = new PIDModule(new PIDController(1, 0, 0, leftEncoder, drive));
+    private final PIDController drivetrainPID = new PIDController(0.001, 0, 0.001, leftEncoder, drive);
+    private final PIDModule DRIVETRAIN_PID = new PIDModule(drivetrainPID);
     /*
      * Alignment
      */
-    private final SolenoidModule shortAlignOut = new SolenoidModule(new Solenoid(SHORT_ALIGN_OUT_PORT)),
-            shortAlignIn = new SolenoidModule(new Solenoid(SHORT_ALIGN_IN_PORT)),
-            longAlignOut = new SolenoidModule(new Solenoid(LONG_ALIGN_OUT_PORT)),
-            longAlignIn = new SolenoidModule(new Solenoid(LONG_ALIGN_IN_PORT)),
-            staticAlignIn = new SolenoidModule(new Solenoid(STATIC_ALIGN_IN_PORT)),
-            staticAlignOut = new SolenoidModule(new Solenoid(STATIC_ALIGN_OUT_PORT));
-    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(shortAlignOut, shortAlignIn, longAlignOut,
-            longAlignIn, staticAlignOut, staticAlignIn);
+    private final BitchBar BITCH_BAR = new BitchBar(new SolenoidModule(new Solenoid(BITCH_BAR_IN_PORT)),
+            new SolenoidModule(new Solenoid(BITCH_BAR_OUT_PORT)));
+    private final SolenoidModule alignIn = new SolenoidModule(new Solenoid(BACK_IN)),
+            alignOut = new SolenoidModule(new Solenoid(BACK_OUT));
+    private final AlignmentSystem WOLF_ALIGN = new AlignmentSystem(alignIn, alignOut);
 
     /*
      * Joysticks
@@ -122,7 +121,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
      *
      * @return
      */
-    public static Robot fetchTheHound() {
+    public static TheWolf fetchTheHound() {
         return (theWolf == null) ? (theWolf = new TheWolf()) : (theWolf);
     }
 
@@ -144,13 +143,21 @@ public class TheWolf extends RobotAdapter implements PortMap {
         Preferences.getInstance().putDouble("MediumPosition", MEDIUM);
         Preferences.getInstance().putDouble("LowPosition", LOW);
         Preferences.getInstance().putBoolean("4WD", FOUR_WHEEL_DRIVE);
+        SmartDashboard.putData("PID", drivetrainPID);
         WOLF_SHOOTER.reverse();
         WOLF_SHOOTER.setPastSetpoint(40);
         drive.addFunction(new Function() {
             public double F(double input) {
-                return (input * input * input) + 0.25;
+                if (input != 0) {
+                    return (input * input * input) + 0.12;
+                } else {
+                    return 0;
+                }
             }
         });
+        drive.setCompensation(0);
+        leftEncoder.setReverseDirection(true);
+        DRIVETRAIN_PID.setTolerance(40);
     }
 
     public void disabledInit() {
@@ -179,23 +186,31 @@ public class TheWolf extends RobotAdapter implements PortMap {
     public void autonomousInit() {
         updateValues();
         leftBack.enable();
-        leftFront.enable();
         rightBack.enable();
-        rightFront.enable();
+        if (FOUR_WHEEL_DRIVE) {
+            leftFront.enable();
+            rightFront.enable();
+        }
         WOLF_DRIVE.enable();
+        drive.enable();
         drive.setSafetyEnabled(false);
         WOLF_SHOOT.enable();
         WOLF_SHOOTER.enable();
+        WOLF_SHOOTER.setDefaultSpeed(0);
         WOLF_ALIGN.enable();
-        DRIVETRAIN_PID.enable();
+        DRIVETRAIN_PID.setOutputRange(-0.3, 0.3);
+        leftEncoder.enable();
+        leftEncoder.reset();
         gyro.enable();
+        gyro.reset();
         SmartDashboard.putBoolean("Enabled", true);
         Logger.log(Logger.Urgency.STATUSREPORT, "Gordian init...");
-        Gordian.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID);
+        GordianAuto.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID, leftEncoder, gyro);
         try {
             String current = Preferences.getInstance().getString("AutonomousMode", "auto");
-            Logger.log(Logger.Urgency.USERMESSAGE, "Running " + current + " autonomous mode.");
-            Gordian.run("auto/" + current + ".txt");
+            Logger.log(Logger.Urgency.USERMESSAGE, "Running " + current + ".txt");
+            GordianAuto.run("auto/" + current + ".txt");
+            Logger.log(Logger.Urgency.USERMESSAGE, "Autonomous Done");
         } catch (IOException ex) {
             ex.printStackTrace();
             Logger.log(Logger.Urgency.URGENT, "AUTO DID NOT RUN");
@@ -213,12 +228,15 @@ public class TheWolf extends RobotAdapter implements PortMap {
             leftFront.enable();
             rightFront.enable();
         }
+        BITCH_BAR.enable();
         WOLF_SHOOT.enable();
         WOLF_SHOOTER.enable();
         WOLF_ALIGN.enable();
         WOLF_CONTROL.enable();
         WOLF_SHOT_CONTROL.enable();
         WOLF_DRIVE.enable();
+        drive.setSafetyEnabled(true);
+        drive.setMaxOutput(1);
 
         SmartDashboard.putBoolean("Enabled", true);
         Logger.log(Logger.Urgency.USERMESSAGE, "Doing binds");
@@ -227,26 +245,22 @@ public class TheWolf extends RobotAdapter implements PortMap {
         // Driving //
         WOLF_CONTROL.bindAxis(XboxController.RIGHT_FROM_MIDDLE, new SideBinding(drive, SideBinding.RIGHT));
         WOLF_CONTROL.bindAxis(XboxController.LEFT_FROM_MIDDLE, new SideBinding(drive, SideBinding.LEFT));
-        WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(gearUp, gearDown));
+        WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(WOLF_DRIVE, true));
         // Alignment //
-        WOLF_CONTROL.bindWhenPressed(XboxController.Y, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE));
-        WOLF_CONTROL.bindWhenPressed(XboxController.B, new AlignCommand(WOLF_ALIGN, AlignCommand.LONG));
-        WOLF_CONTROL.bindWhenPressed(XboxController.A, new AlignCommand(WOLF_ALIGN, AlignCommand.SHORT));
+        WOLF_CONTROL.bindWhenPressed(XboxController.X, new SwitchBitchBar(BITCH_BAR, true));
+        WOLF_CONTROL.bindWhenPressed(XboxController.B, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE, true));
+        WOLF_CONTROL.bindWhenPressed(XboxController.A, new AlignCommand(WOLF_ALIGN, AlignCommand.EXTEND, true));
         // Shooting //
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new ShootCommand(WOLF_SHOOT, true));
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.START, new BangBangCommand(WOLF_SHOOTER, SETPOINT));
-        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.BACK, new BangBangCommand(WOLF_SHOOTER, 0));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.START, new BangBangCommand(WOLF_SHOOTER, SETPOINT, false));
+        WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.BACK, new BangBangCommand(WOLF_SHOOTER, 0, false));
         WOLF_SHOT_CONTROL.bindWhilePressed(XboxController.RIGHT_STICK, new AutoShoot(WOLF_SHOOT, WOLF_SHOOTER, true));
         WOLF_SHOOTER.setDefaultSpeed(DEFAULTSPEED);
         WOLF_SHOOTER.setSetpoint(0);
         // Shooter position //
         WOLF_SHOT_CONTROL.bindAxis(XboxController.TRIGGERS + XboxController.SHIFT, new AxisBind() {
             public void set(double axisValue) {
-                if (!(axisValue < 0 && shooterSwitch.isPushed())) {
-                    shooterAligner.set(axisValue);
-                } else {
-                    shooterAligner.set(0);
-                }
+                shooterAligner.set(axisValue);
             }
         });
         WOLF_SHOT_CONTROL.bindWhenPressed(XboxController.Y, new ShooterAlignCommand(WOLF_SHOOT, HIGH, true));
@@ -306,7 +320,7 @@ public class TheWolf extends RobotAdapter implements PortMap {
         SmartDashboard.putNumber("ShooterRPM", rate);
         SmartDashboard.putNumber("ShooterPosition", shooterAngle.getPosition());
         SmartDashboard.putNumber("NetworkLag", transferRate.packetsPerMillisecond());
-        SmartDashboard.putBoolean("60 PSI", psiSwitch.isPushed());
+        SmartDashboard.putBoolean("60 PSI", !psiSwitch.isPushed());
 
         buf = Math.abs(SETPOINT - rate);
         avg = (buf * 0.00321 + avg * 0.99679);
