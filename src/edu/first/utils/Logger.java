@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Date;
 import javax.microedition.io.Connector;
 
 /**
@@ -108,26 +107,43 @@ public final class Logger {
     public static void log(Urgency urgency, String msg) {
         String usrMsg = msg;
         if (urgency == Urgency.URGENT) {
-            displayLCDMessage(usrMsg);
-            usrMsg = "Urgent@" + DriverstationInfo.getMatchTime() + " - " + msg;
+            displayLCDMessage(usrMsg, true);
         } else if (urgency == Urgency.WARNING) {
-            displayLCDMessage(usrMsg);
-            usrMsg = "Warning@" + DriverstationInfo.getMatchTime() + " - " + msg;
+            displayLCDMessage(usrMsg, true);
         } else if (urgency == Urgency.USERMESSAGE) {
-            displayLCDMessage(usrMsg);
-            usrMsg = "User Message - " + msg;
-        } else if (urgency == Urgency.STATUSREPORT) {
-            usrMsg = "Status@" + DriverstationInfo.getMatchTime() + " - " + msg;
-        } else if (urgency == Urgency.LOG) {
-            usrMsg = "Log@" + DriverstationInfo.getMatchTime() + " - " + msg;
+            displayLCDMessage(usrMsg, true);
         }
         try {
             if (fileLoggingOn) {
-                logFile(new Date().toString() + usrMsg.concat("\n"));
+                logFile(DriverstationInfo.getGamePeriod() + " " + DriverstationInfo.getMatchTime() + " " + usrMsg.concat("\n"));
             }
         } catch (IOException ex) {
-            System.err.println("!!!ERROR WHILE WRITING TO LOG FILE!!!\n" + ex.getMessage());
+            System.err.println("!!!ERROR WHILE WRITING TO LOG FILE!!!\n\t" + ex.getMessage());
         }
+    }
+
+    private static DataOutputStream logFile() throws IOException {
+        if (logFile == null || !logFile.isOpen() || !logFile.exists()) {
+            if (logFile != null) {
+                logFile.close();
+            }
+            logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+            logFile.create();
+            outputStream = logFile.openDataOutputStream();
+        }
+        return outputStream;
+    }
+
+    private static DataInputStream logFileInput() throws IOException {
+        if (logFile == null || !logFile.isOpen() || !logFile.exists()) {
+            if (logFile != null) {
+                logFile.close();
+            }
+            logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+            logFile.create();
+            inputStream = logFile.openDataInputStream();
+        }
+        return inputStream;
     }
 
     /**
@@ -138,14 +154,8 @@ public final class Logger {
      * @throws IOException thrown when an error occurs while writing to the file
      */
     public static void logFile(String msg) throws IOException {
-        if (logFile == null) {
-            logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
-        }
-        if (outputStream == null) {
-            outputStream = logFile.openDataOutputStream();
-        }
         System.out.println(msg);
-        appendToFile(msg, outputStream);
+        appendToFile(msg, logFile());
     }
 
     /**
@@ -162,9 +172,9 @@ public final class Logger {
             throw new NullPointerException();
         }
         try {
-            // Need to test to find out if offset should be saved to append
             outputStream.write(msg.getBytes());
         } catch (IOException ex) {
+            System.err.println("Error while printing " + msg + "\n\t" + ex.getMessage());
         }
     }
 
@@ -177,13 +187,7 @@ public final class Logger {
      * @return text in the log file
      */
     public static String getLog() throws IOException {
-        if (logFile == null) {
-            logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
-        }
-        if (inputStream == null) {
-            inputStream = logFile.openDataInputStream();
-        }
-        return getTextFromFile(inputStream);
+        return getTextFromFile(logFileInput());
     }
 
     /**
@@ -217,43 +221,50 @@ public final class Logger {
      *
      * @param msg message to display on next line
      */
-    public static void displayLCDMessage(String msg) {
+    public static void displayLCDMessage(String msg, boolean blank) {
         if (msg == null) {
             throw new NullPointerException();
         }
+        if (msg.length() > DriverStationLCD.kLineLength) {
+            displayLCDMessage(msg.substring(0, DriverStationLCD.kLineLength), false);
+            displayLCDMessage(msg.substring(DriverStationLCD.kLineLength), true);
+            return;
+        }
         DriverStationLCD.Line line;
-        DriverStationLCD.Line blank;
+        DriverStationLCD.Line blankLine;
         switch (lineNum) {
             case (1):
                 line = DriverStationLCD.Line.kUser1;
-                blank = DriverStationLCD.Line.kUser2;
+                blankLine = DriverStationLCD.Line.kUser2;
                 break;
             case (2):
                 line = DriverStationLCD.Line.kUser2;
-                blank = DriverStationLCD.Line.kUser3;
+                blankLine = DriverStationLCD.Line.kUser3;
                 break;
             case (3):
                 line = DriverStationLCD.Line.kUser3;
-                blank = DriverStationLCD.Line.kUser4;
+                blankLine = DriverStationLCD.Line.kUser4;
                 break;
             case (4):
                 line = DriverStationLCD.Line.kUser4;
-                blank = DriverStationLCD.Line.kUser5;
+                blankLine = DriverStationLCD.Line.kUser5;
                 break;
             case (5):
                 line = DriverStationLCD.Line.kUser5;
-                blank = DriverStationLCD.Line.kUser6;
+                blankLine = DriverStationLCD.Line.kUser6;
                 break;
             case (6):
                 line = DriverStationLCD.Line.kUser6;
-                blank = DriverStationLCD.Line.kUser1;
+                blankLine = DriverStationLCD.Line.kUser1;
                 break;
             default:
                 line = DriverStationLCD.Line.kUser1;
-                blank = DriverStationLCD.Line.kUser2;
+                blankLine = DriverStationLCD.Line.kUser2;
         }
         DriverStationLCD.getInstance().println(line, 1, msg + "                      ");
-        DriverStationLCD.getInstance().println(blank, 1, "                      ");
+        if (blank) {
+            DriverStationLCD.getInstance().println(blankLine, 1, "                      ");
+        }
         DriverStationLCD.getInstance().updateLCD();
         if (++lineNum > 6) {
             lineNum = 1;
