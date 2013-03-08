@@ -4,11 +4,14 @@ import edu.ata.autonomous.GordianAuto;
 import edu.ata.commands.AlignCommand;
 import edu.ata.commands.AutoShoot;
 import edu.ata.commands.BangBangCommand;
+import edu.ata.commands.GearShiftCommand;
 import edu.ata.commands.ShootCommand;
 import edu.ata.commands.ShooterAlignCommand;
 import edu.ata.commands.SwitchBitchBar;
 import edu.ata.modules.XboxController;
 import edu.ata.subsystems.AlignmentSystem;
+import edu.ata.subsystems.GearShifters;
+import edu.ata.subsystems.ReversingSolenoids;
 import edu.ata.subsystems.Shooter;
 import edu.first.bindings.AxisBind;
 import edu.first.command.Command;
@@ -49,7 +52,7 @@ import java.io.IOException;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class Murdock extends RobotAdapter {
+public class Murdock extends RobotAdapter implements PortMap {
 
     private final static Murdock MURDOCK = new Murdock();
 
@@ -99,15 +102,15 @@ public class Murdock extends RobotAdapter {
     private final RobotDriveModule drive = new RobotDriveModule(new RobotDrive(leftFront, leftBack, rightFront, rightBack), false, true);
     private final EncoderModule leftEncoder = new EncoderModule(new Encoder(ENCODER[0], ENCODER[1]), EncoderModule.DISTANCE);
     private final GyroModule gyro = new GyroModule(new Gyro(GYRO));
-    private final SolenoidModule gearUp = new SolenoidModule(new Solenoid(GEAR_UP)),
-            gearDown = new SolenoidModule(new Solenoid(GEAR_DOWN));
-    private final ShiftingDrivetrain WOLF_DRIVE = new ShiftingDrivetrain(drive, gearDown, gearUp);
+    private final SolenoidModule gearTwo = new SolenoidModule(new Solenoid(GEAR_UP)),
+            gearOne = new SolenoidModule(new Solenoid(GEAR_DOWN));
+    private final GearShifters shifters = new GearShifters(gearOne, gearTwo);
     private final PIDController drivetrainPID = new PIDController(0.001, 0, 0.001, leftEncoder, drive);
     private final PIDModule DRIVETRAIN_PID = new PIDModule(drivetrainPID);
     /*
      * Alignment
      */
-    private final BitchBar BITCH_BAR = new BitchBar(new SolenoidModule(new Solenoid(BITCH_BAR_IN_PORT)),
+    private final ReversingSolenoids BITCH_BAR = new ReversingSolenoids(new SolenoidModule(new Solenoid(BITCH_BAR_IN_PORT)),
             new SolenoidModule(new Solenoid(BITCH_BAR_OUT_PORT)));
     private final SolenoidModule alignIn = new SolenoidModule(new Solenoid(BACK_IN)),
             alignOut = new SolenoidModule(new Solenoid(BACK_OUT));
@@ -164,7 +167,7 @@ public class Murdock extends RobotAdapter {
         WOLF_ALIGN.disable();
         WOLF_CONTROL.disable();
         WOLF_SHOT_CONTROL.disable();
-        WOLF_DRIVE.disable();
+        shifters.disable();
         DRIVETRAIN_PID.disable();
         hallEffect.disable();
         gyro.disable();
@@ -184,7 +187,7 @@ public class Murdock extends RobotAdapter {
             leftFront.enable();
             rightFront.enable();
         }
-        WOLF_DRIVE.enable();
+        shifters.enable();
         drive.enable();
         drive.setSafetyEnabled(false);
         WOLF_SHOOT.enable();
@@ -198,7 +201,7 @@ public class Murdock extends RobotAdapter {
         gyro.reset();
         SmartDashboard.putBoolean("Enabled", true);
         Logger.log(Logger.Urgency.STATUSREPORT, "Gordian init...");
-        GordianAuto.ensureInit(WOLF_DRIVE, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID, leftEncoder, gyro);
+        GordianAuto.ensureInit(shifters, drive, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID, leftEncoder, gyro);
         try {
             String current = Preferences.getInstance().getString("AutonomousMode", "auto");
             Logger.log(Logger.Urgency.USERMESSAGE, "Running " + current + ".txt");
@@ -231,7 +234,7 @@ public class Murdock extends RobotAdapter {
         WOLF_ALIGN.enable();
         WOLF_CONTROL.enable();
         WOLF_SHOT_CONTROL.enable();
-        WOLF_DRIVE.enable();
+        shifters.enable();
         drive.setSafetyEnabled(true);
         drive.setMaxOutput(1);
 
@@ -242,7 +245,7 @@ public class Murdock extends RobotAdapter {
         // Driving //
         WOLF_CONTROL.bindAxis(XboxController.LEFT_FROM_MIDDLE, new ArcadeBinding(drive, ArcadeBinding.FORWARD));
         WOLF_CONTROL.bindAxis(XboxController.RIGHT_X, new ArcadeBinding(drive, ArcadeBinding.ROTATE));
-        WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShift(WOLF_DRIVE, true));
+        WOLF_CONTROL.bindWhenPressed(XboxController.RIGHT_BUMPER, new GearShiftCommand(shifters, true));
         // Alignment //
         WOLF_CONTROL.bindWhenPressed(XboxController.X, new SwitchBitchBar(BITCH_BAR, true));
         WOLF_CONTROL.bindWhenPressed(XboxController.B, new AlignCommand(WOLF_ALIGN, AlignCommand.COLLAPSE, true));

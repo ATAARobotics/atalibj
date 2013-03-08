@@ -5,7 +5,7 @@
  */
 package edu.first.main;
 
-import edu.ATA.twolf.TheWolf;
+import edu.ata.murdock.Murdock;
 import edu.first.robot.Robot;
 import edu.first.utils.Logger;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -29,7 +29,7 @@ public final class GamePeriods extends IterativeRobot {
     private static Robot robot;
     
     {
-        robot = TheWolf.fetchTheHound();
+        robot = Murdock.getInstance();
     }
 
     /**
