@@ -39,10 +39,6 @@ public final class TurnToAngle extends ThreadableCommand {
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                gyro.reset();
-                while (gyro.getAngle() > 1) {
-                    Timer.delay(0.02);
-                }
                 final double prev = gyro.getAngle();
                 final String mode = DriverstationInfo.getGamePeriod();
                 while (Math.abs(gyro.getAngle() - prev) < Math.abs(setpoint) && mode.equals(DriverstationInfo.getGamePeriod())) {

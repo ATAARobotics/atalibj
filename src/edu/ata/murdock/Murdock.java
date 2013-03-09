@@ -130,7 +130,6 @@ public class Murdock extends RobotAdapter implements PortMap {
         leftEncoder.enable();
         leftEncoder.reset();
         gyro.enable();
-        gyro.reset();
         SmartDashboard.putBoolean("Enabled", true);
         Logger.log(Logger.Urgency.STATUSREPORT, "Gordian init...");
         GordianAuto.ensureInit(shifters, drive, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID, leftEncoder, gyro);
@@ -158,7 +157,6 @@ public class Murdock extends RobotAdapter implements PortMap {
         leftEncoder.enable();
         leftEncoder.reset();
         gyro.enable();
-        gyro.reset();
         BITCH_BAR.enable();
         WOLF_SHOOT.enable();
         WOLF_SHOOTER.enable();

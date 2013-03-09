@@ -8,7 +8,6 @@ import edu.ata.commands.BangBangCommand;
 import edu.ata.commands.DriveDistance;
 import edu.ata.commands.GearShiftCommand;
 import edu.ata.commands.MoveCommand;
-import edu.ata.commands.ResetAngleCommand;
 import edu.ata.commands.ResetEncoderCommand;
 import edu.ata.commands.ShootCommand;
 import edu.ata.commands.TankDriveCommand;
@@ -212,11 +211,6 @@ public final class GordianAuto {
         gordian.addMethod(new RunningMethod("stopShooter") {
             public void run(Variable[] args) {
                 new BangBangCommand(bangBangModule, 0, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("resetAngle") {
-            public void run(Variable[] args) {
-                new ResetAngleCommand(gyro, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("resetDistance") {
