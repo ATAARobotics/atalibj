@@ -31,6 +31,7 @@ import edu.gordian.method.BooleanReturningMethod;
 import edu.gordian.method.NumberReturningMethod;
 import edu.gordian.method.RunningMethod;
 import edu.gordian.variable.NumberInterface;
+import java.io.DataInputStream;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -93,7 +94,9 @@ public final class GordianAuto {
      * @throws IOException thrown when accessing file fails
      */
     public static void run(String fileName) throws IOException {
-        String script = Logger.getTextFromFile(Connector.openDataInputStream("file:///" + fileName));
+        DataInputStream stream = Connector.openDataInputStream("file:///" + fileName);
+        String script = Logger.getTextFromFile(stream);
+        stream.close();
         gordian = new Gordian(script);
         init();
         gordian.run();
