@@ -27,7 +27,8 @@ public final class TurnToAngle extends ThreadableCommand {
      * @param drivetrain drivetrain to turn with
      * @param newThread if command should run in a new thread
      */
-    public TurnToAngle(double left, double right, double setpoint, GyroModule gyro, RobotDriveModule drivetrain, boolean newThread) {
+    public TurnToAngle(double left, double right, double setpoint, GyroModule gyro, 
+            RobotDriveModule drivetrain, boolean newThread) {
         super(newThread);
         this.left = left;
         this.right = right;
@@ -41,7 +42,8 @@ public final class TurnToAngle extends ThreadableCommand {
             public void run() {
                 final double prev = gyro.getAngle();
                 final String mode = DriverstationInfo.getGamePeriod();
-                while (Math.abs(gyro.getAngle() - prev) < Math.abs(setpoint) && mode.equals(DriverstationInfo.getGamePeriod())) {
+                while (Math.abs(gyro.getAngle() - prev) < Math.abs(setpoint) 
+                        && mode.equals(DriverstationInfo.getGamePeriod())) {
                     drivetrain.tankDrive(left, right);
                     Timer.delay(0.02);
                 }
