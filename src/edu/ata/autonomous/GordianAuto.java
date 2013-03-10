@@ -183,7 +183,7 @@ public final class GordianAuto {
                 double turn = ((NumberInterface) args[2]).doubleValue();
                 double nonturn = ((NumberInterface) args[3]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Moving to " + x + ", " + y);
-                new MoveCommand(drivetrainPID, gyro, drivetrain, x, y, turn, nonturn).run();
+                new MoveCommand(encoder, drivetrainPID, gyro, drivetrain, x, y, turn, nonturn).run();
             }
         });
         gordian.addMethod(new RunningMethod("autoShoot") {
