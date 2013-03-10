@@ -25,8 +25,7 @@ public interface PortMap {
     int GEAR_DOWN = 4;
     int BACK_IN = 1;
     int BACK_OUT = 2;
-    int LOAD_IN = 7;
-    int LOAD_OUT = 8;
+    int LOAD_OUT = 7;
     int BITCH_BAR_IN_PORT = 5;
     int BITCH_BAR_OUT_PORT = 6;
     // Relays

@@ -49,21 +49,41 @@ public final class Shooter extends Subsystem {
     }
 
     /**
+     * Constructs the shooter using all of the components used.
+     *
+     * @param loadOut loader out solenoid
+     * @param psiSwitch 60 psi switch
+     * @param pot potentiometer measuring alignment
+     * @param alignment motor controlling winch
+     * @param bangBang bang-bang controlling shooter wheel
+     */
+    public Shooter(SolenoidModule loadOut, DigitalLimitSwitchModule psiSwitch, PotentiometerModule pot,
+            SpeedControllerModule alignment, BangBangModule bangBang) {
+        super(new Module[]{loadOut, psiSwitch, pot, alignment, bangBang});
+        this.loadIn = null;
+        this.loadOut = loadOut;
+        this.psiSwitch = psiSwitch;
+        this.pot = pot;
+        this.alignment = alignment;
+        this.bangBang = bangBang;
+    }
+
+    /**
      * Coasts the shooter and fires the disc for half a second.
      */
     public void shoot() {
-        if (!psiSwitch.isPushed()) {
-            Logger.log(Logger.Urgency.STATUSREPORT, "Shooting");
-            bangBang.setCoast(true);
+        Logger.log(Logger.Urgency.STATUSREPORT, "Shooting");
+        bangBang.setCoast(true);
+        if (loadIn != null) {
             loadIn.set(false);
-            loadOut.set(true);
-            Timer.delay(0.5);
-            loadIn.set(true);
-            loadOut.set(false);
-            bangBang.setCoast(false);
-        } else if (psiSwitch.isPushed()) {
-            Logger.log(Logger.Urgency.URGENT, "PSI not high enough");
         }
+        loadOut.set(true);
+        Timer.delay(0.5);
+        if (loadIn != null) {
+            loadIn.set(true);
+        }
+        loadOut.set(false);
+        bangBang.setCoast(false);
     }
 
     /**

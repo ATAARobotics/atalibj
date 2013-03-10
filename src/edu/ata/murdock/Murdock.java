@@ -287,9 +287,8 @@ public class Murdock extends RobotAdapter implements PortMap {
     private final PotentiometerModule shooterAngle = new PotentiometerModule(new AnalogChannel(SHOOTER_POSITION));
     private final HallEffectModule hallEffect = new HallEffectModule(new DigitalInput(HALLEFFECT_PORT));
     private final BangBangModule WOLF_SHOOTER = new BangBangModule(hallEffect, shooter, 0.5);
-    private final SolenoidModule loadIn = new SolenoidModule(new Solenoid(LOAD_IN)),
-            loadOut = new SolenoidModule(new Solenoid(LOAD_OUT));
-    private final Shooter WOLF_SHOOT = new Shooter(loadIn, loadOut, psiSwitch, shooterAngle, shooterAligner, WOLF_SHOOTER);
+    private final SolenoidModule loadOut = new SolenoidModule(new Solenoid(LOAD_OUT));
+    private final Shooter WOLF_SHOOT = new Shooter(loadOut, psiSwitch, shooterAngle, shooterAligner, WOLF_SHOOTER);
     /*
      * Driving
      */
