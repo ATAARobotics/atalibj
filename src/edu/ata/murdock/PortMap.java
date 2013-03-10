@@ -7,27 +7,28 @@ package edu.ata.murdock;
  */
 public interface PortMap {
 
-    int JOYSTICK_1 = 1;
-    int JOYSTICK_2 = 2;
+    int JOYSTICK_1 = PortMapFile.getPort("Joystick1", 1);
+    int JOYSTICK_2 = PortMapFile.getPort("Joystick2", 2);
     // Digital sidecar output
-    int SHOOTER_PORT = 1;
-    int SHOOTER_ALIGNMENT_PORT = 2;
-    int[] DRIVE = {5, 6, 3, 4};
+    int SHOOTER_PORT = PortMapFile.getPort("Shooter", 1);
+    int SHOOTER_ALIGNMENT_PORT = PortMapFile.getPort("ShooterAlignment", 2);
+    int[] DRIVE = {PortMapFile.getPort("LeftBack", 5), PortMapFile.getPort("LeftFront", 6),
+        PortMapFile.getPort("RightBack", 3), PortMapFile.getPort("JRightFront", 4)};
     // Digital sidecar input
-    int HALLEFFECT_PORT = 1;
-    int[] ENCODER = {2, 3};
-    int PSI_SWITCH = 5;
+    int HALLEFFECT_PORT = PortMapFile.getPort("HallEffect", 1);
+    int[] ENCODER = {PortMapFile.getPort("EncoderA", 2), PortMapFile.getPort("EncoderB", 3)};
+    int PSI_SWITCH = PortMapFile.getPort("PSISwitch", 5);
     // Analog sidecar
-    int SHOOTER_POSITION = 1;
-    int GYRO = 2;
+    int SHOOTER_POSITION = PortMapFile.getPort("Pot", 1);
+    int GYRO = PortMapFile.getPort("Gyro", 2);
     // Pneumatics sidecar
-    int GEAR_UP = 3;
-    int GEAR_DOWN = 4;
-    int BACK_IN = 1;
-    int BACK_OUT = 2;
-    int LOAD_OUT = 7;
-    int BITCH_BAR_IN_PORT = 5;
-    int BITCH_BAR_OUT_PORT = 6;
+    int GEAR_UP = PortMapFile.getPort("GearUp", 3);
+    int GEAR_DOWN = PortMapFile.getPort("GearDown", 4);
+    int BACK_IN = PortMapFile.getPort("BackIn", 1);
+    int BACK_OUT = PortMapFile.getPort("BackOut", 2);
+    int LOAD_OUT = PortMapFile.getPort("LoadOut", 7);
+    int BITCH_BAR_IN_PORT = PortMapFile.getPort("BitchBarIn", 5);
+    int BITCH_BAR_OUT_PORT = PortMapFile.getPort("BitchBarOut", 6);
     // Relays
-    int COMPRESSOR = 1;
+    int COMPRESSOR = PortMapFile.getPort("Compressor", 1);
 }

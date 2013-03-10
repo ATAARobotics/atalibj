@@ -229,14 +229,7 @@ public class Murdock extends RobotAdapter implements PortMap {
             }
         });
         Logger.log(Logger.Urgency.USERMESSAGE, "Teleop ready");
-
-        buf = 0;
-        avg = 0;
-        setpoint = SETPOINT.get();
     }
-    double buf;
-    double avg;
-    double setpoint;
 
     public void teleopPeriodic() {
         WOLF_CONTROL.doBinds();
@@ -250,10 +243,6 @@ public class Murdock extends RobotAdapter implements PortMap {
         SmartDashboard.putNumber("ShooterPosition", shooterAngle.getPosition());
         SmartDashboard.putNumber("NetworkLag", transferRate.packetsPerMillisecond());
         SmartDashboard.putBoolean("60 PSI", !psiSwitch.isPushed());
-
-        buf = Math.abs(setpoint - rate);
-        avg = (buf * 0.00321 + avg * 0.99679);
-        SmartDashboard.putNumber("Average Offset", avg);
     }
 
     public void testInit() {
