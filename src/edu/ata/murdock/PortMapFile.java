@@ -29,7 +29,7 @@ public final class PortMapFile {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-            Logger.log(Logger.Urgency.WARNING, "PortMap not found");
+            Logger.log(Logger.Urgency.USERMESSAGE, "PortMap not found");
         }
     }
 
@@ -62,6 +62,7 @@ public final class PortMapFile {
     public static int getPort(String name, int def) {
         for (int x = 0; x < ports.length; x++) {
             if (ports[x].name.equals(name)) {
+                Logger.log(Logger.Urgency.LOG, name + " is " + ports[x].port);
                 return ports[x].port;
             }
         }

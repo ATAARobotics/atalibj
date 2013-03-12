@@ -96,7 +96,7 @@ public final class DriverstationInfo {
      * is reset to +15.0 seconds. If the robot is disabled, this returns 0.0
      * seconds.
      *
-     * <p> <b> Warning: This is not an official time (so it cannot be used to
+     * <p> <b> USERMESSAGE: This is not an official time (so it cannot be used to
      * argue with referees) </b>
      *
      * @return match time in seconds since the beginning of autonomous

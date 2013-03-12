@@ -61,7 +61,7 @@ public class ConcurrentCommandGroup implements Command {
                 threads[x].join();
             }
         } catch (InterruptedException ex) {
-            Logger.log(Logger.Urgency.URGENT, "CommandGroup interrupted");
+            Logger.log(Logger.Urgency.USERMESSAGE, "CommandGroup interrupted");
             ex.printStackTrace();
         }
     }

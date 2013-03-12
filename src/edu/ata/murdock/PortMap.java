@@ -13,7 +13,7 @@ public interface PortMap {
     int SHOOTER_PORT = PortMapFile.getPort("Shooter", 1);
     int SHOOTER_ALIGNMENT_PORT = PortMapFile.getPort("ShooterAlignment", 2);
     int[] DRIVE = {PortMapFile.getPort("LeftBack", 5), PortMapFile.getPort("LeftFront", 6),
-        PortMapFile.getPort("RightBack", 3), PortMapFile.getPort("JRightFront", 4)};
+        PortMapFile.getPort("RightBack", 3), PortMapFile.getPort("RightFront", 4)};
     // Digital sidecar input
     int HALLEFFECT_PORT = PortMapFile.getPort("HallEffect", 1);
     int[] ENCODER = {PortMapFile.getPort("EncoderA", 2), PortMapFile.getPort("EncoderB", 3)};

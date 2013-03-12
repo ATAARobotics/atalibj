@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public final class MoveToSetpoint extends ThreadableCommand {
+public class MoveToSetpoint extends ThreadableCommand {
 
     private final PIDModule pid;
     private final double setpoint;
@@ -28,7 +28,7 @@ public final class MoveToSetpoint extends ThreadableCommand {
         this.setpoint = setpoint;
     }
 
-    public Runnable getRunnable() {
+    public final Runnable getRunnable() {
         return new Runnable() {
             public void run() {
                 pid.enable();

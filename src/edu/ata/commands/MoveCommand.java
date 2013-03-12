@@ -26,11 +26,11 @@ public class MoveCommand extends CommandGroup {
      * @param nonTurnSide speed of non-turning side
      */
     public MoveCommand(EncoderModule encoder, PIDModule pidm, GyroModule gyro, RobotDriveModule drivetrain,
-            double x, double y, double turnSide, double nonTurnSide) {
+            double x, double y, double maxSpeed) {
         addSequential(new DriveDistance(encoder, pidm, y / 2.0));
-        addSequential(new TurnToAngle(turnSide, nonTurnSide, x > 0 ? -90 : 90, gyro, drivetrain, false));
+        addSequential(new TurnToAngle(maxSpeed, x > 0 ? -90 : 90, gyro, drivetrain, false));
         addSequential(new DriveDistance(encoder, pidm, x));
-        addSequential(new TurnToAngle(nonTurnSide, turnSide, x > 0 ? 90 : -90, gyro, drivetrain, false));
+        addSequential(new TurnToAngle(maxSpeed, x > 0 ? 90 : -90, gyro, drivetrain, false));
         addSequential(new DriveDistance(encoder, pidm, y / 2.0));
     }
 }

@@ -57,13 +57,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Run once when robot starts. Anything thrown inside of
      * {@link Robot#robotInit()} are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void robotInit() {
         try {
             robot.robotInit();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }
@@ -71,13 +71,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Runs once before disabled mode. Anything thrown inside of
      * {@link Robot#disabledInit() } are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void disabledInit() {
         try {
             robot.disabledInit();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }
@@ -85,13 +85,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Runs periodically (20ms) during disabled mode. Anything thrown inside of
      * {@link Robot#disabledPeriodic()} are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void disabledPeriodic() {
         try {
             robot.disabledPeriodic();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }
@@ -99,13 +99,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Runs once before autonomous mode. Anything thrown inside of
      * {@link Robot#autonomousInit()} are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void autonomousInit() {
         try {
             robot.autonomousInit();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }
@@ -113,13 +113,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Runs periodically (20ms) during autonomous mode. Anything thrown inside
      * of {@link Robot#autonomousPeriodic()} are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void autonomousPeriodic() {
         try {
             robot.autonomousPeriodic();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }
@@ -127,13 +127,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Runs once before teleoperated mode. Anything thrown inside of
      * {@link Robot#teleopInit()} are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void teleopInit() {
         try {
             robot.teleopInit();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }
@@ -141,13 +141,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Runs periodically (20ms) during teleoperated mode. Anything thrown inside
      * of {@link Robot#teleopPeriodic()} are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void teleopPeriodic() {
         try {
             robot.teleopPeriodic();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }
@@ -155,13 +155,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Runs once before test mode. Anything thrown inside of
      * {@link Robot#testInit()} are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void testInit() {
         try {
             robot.testInit();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }
@@ -169,13 +169,13 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Runs periodically (20ms) during test mode. Anything thrown inside of
      * {@link Robot#testPeriodic()} are caught and logged as
-     * {@link Logger.Urgency#URGENT}.
+     * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void testPeriodic() {
         try {
             robot.testPeriodic();
         } catch (Throwable t) {
-            Logger.log(Logger.Urgency.URGENT, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
             t.printStackTrace();
         }
     }

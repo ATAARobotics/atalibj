@@ -72,7 +72,7 @@ public final class Shooter extends Subsystem {
      * Coasts the shooter and fires the disc for half a second.
      */
     public void shoot() {
-        Logger.log(Logger.Urgency.STATUSREPORT, "Shooting");
+        Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
         bangBang.setCoast(true);
         if (loadIn != null) {
             loadIn.set(false);

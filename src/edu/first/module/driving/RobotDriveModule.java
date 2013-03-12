@@ -407,6 +407,20 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
         drive.drive(d, d != 0 ? compensation : 0);
     }
 
+    /**
+     * Returns a PID object that turns the drivetrain.
+     *
+     * @param maxSpeed maximum speed to turn
+     * @return pid output for turning
+     */
+    public PIDOutput pidTurn(final double maxSpeed) {
+        return new PIDOutput() {
+            public void pidWrite(double output) {
+                drive.arcadeDrive(0, Math.abs(output) > maxSpeed ? maxSpeed : output);
+            }
+        };
+    }
+
     private double transform(double original) {
         if (original != 0) {
             for (int x = 0; x < speedFunctions.size(); x++) {

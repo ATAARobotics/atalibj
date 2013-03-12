@@ -125,7 +125,7 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("print") {
             public void run(Variable[] args) {
-                System.out.println(args[0].getValue());
+                Logger.log(Logger.Urgency.LOG, args[0].getValue().toString());
             }
         });
         gordian.addMethod(new RunningMethod("wait") {
@@ -170,20 +170,18 @@ public final class GordianAuto {
         gordian.addMethod(new RunningMethod("gyroTurn") {
             public void run(Variable[] args) {
                 double setpoint = ((NumberInterface) args[0]).doubleValue();
-                double lspeed = ((NumberInterface) args[1]).doubleValue();
-                double rspeed = ((NumberInterface) args[2]).doubleValue();
+                double maxSpeed = ((NumberInterface) args[1]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Turning to " + setpoint);
-                new TurnToAngle(lspeed, rspeed, setpoint, gyro, drivetrain, false).run();
+                new TurnToAngle(maxSpeed, setpoint, gyro, drivetrain, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("moveTo") {
             public void run(Variable[] args) {
                 double x = ((NumberInterface) args[0]).doubleValue();
                 double y = ((NumberInterface) args[1]).doubleValue();
-                double turn = ((NumberInterface) args[2]).doubleValue();
-                double nonturn = ((NumberInterface) args[3]).doubleValue();
+                double maxSpeed = ((NumberInterface) args[2]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Moving to " + x + ", " + y);
-                new MoveCommand(encoder, drivetrainPID, gyro, drivetrain, x, y, turn, nonturn).run();
+                new MoveCommand(encoder, drivetrainPID, gyro, drivetrain, x, y, maxSpeed).run();
             }
         });
         gordian.addMethod(new RunningMethod("autoShoot") {

@@ -62,7 +62,7 @@ public class Murdock extends RobotAdapter implements PortMap {
         // Refilling capacity using spike relay always on
         SpikeRelayModule compressor = new SpikeRelayModule(new Relay(COMPRESSOR));
         compressor.enable();
-        Logger.log(Logger.Urgency.STATUSREPORT, "Starting compressor...");
+        Logger.log(Logger.Urgency.USERMESSAGE, "Starting compressor...");
         compressor.set(SpikeRelay.FORWARD);
         // Refilling capacity using spike relay always on
         SETPOINT.create();
@@ -107,7 +107,7 @@ public class Murdock extends RobotAdapter implements PortMap {
         gyro.disable();
         SmartDashboard.putBoolean("PastSetpoint", false);
         SmartDashboard.putBoolean("Enabled", false);
-        Logger.log(Logger.Urgency.STATUSREPORT, "Robot fully disabled");
+        Logger.log(Logger.Urgency.USERMESSAGE, "Robot fully disabled");
     }
 
     public void disabledPeriodic() {
@@ -131,7 +131,7 @@ public class Murdock extends RobotAdapter implements PortMap {
         leftEncoder.reset();
         gyro.enable();
         SmartDashboard.putBoolean("Enabled", true);
-        Logger.log(Logger.Urgency.STATUSREPORT, "Gordian init...");
+        Logger.log(Logger.Urgency.USERMESSAGE, "Gordian init...");
         GordianAuto.ensureInit(shifters, drive, WOLF_SHOOT, WOLF_SHOOTER, WOLF_ALIGN, DRIVETRAIN_PID, leftEncoder, gyro);
         try {
             String current = AUTOMODE.get();
@@ -140,7 +140,7 @@ public class Murdock extends RobotAdapter implements PortMap {
             Logger.log(Logger.Urgency.USERMESSAGE, "Autonomous complete");
         } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.log(Logger.Urgency.URGENT, "AUTO DID NOT RUN");
+            Logger.log(Logger.Urgency.USERMESSAGE, "AUTO DID NOT RUN");
         }
     }
 

@@ -3,7 +3,6 @@ package edu.first.utils;
 import com.sun.squawk.microedition.io.FileConnection;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -27,7 +26,6 @@ public final class Logger {
     private static boolean fileLoggingOn = true;
     private static int lineNum = 1;
     private static FileConnection logFile;
-    private static DataOutputStream outputStream;
     private static DataInputStream inputStream;
 
     // cannot be subclassed or instantiated
@@ -50,23 +48,9 @@ public final class Logger {
         private Urgency() {
         }
         /**
-         * Urgent message. Displayed on DriverStation. (Sent to log and console)
-         */
-        public final static Urgency URGENT = new Urgency();
-        /**
-         * Warning message. Displayed on DriverStation. (Sent to log and
-         * console)
-         */
-        public final static Urgency WARNING = new Urgency();
-        /**
          * User message. Displayed on DriverStation. (Sent to log and console)
          */
         public final static Urgency USERMESSAGE = new Urgency();
-        /**
-         * Status report for logs. Is not displayed to user. (Sent to log and
-         * console)
-         */
-        public final static Urgency STATUSREPORT = new Urgency();
         /**
          * Log message. Is not displayed to user. (Sent to console)
          */
@@ -80,23 +64,15 @@ public final class Logger {
      * <pre>
      * 1. Send to the console (netbeans console that code was deployed on
      *
-     * 2. Send to the log file ({@link Logger#PATH})
-     *
-     * 3. Send to the DriverStation console (box on the right side)
+     * 2. Send to the DriverStation console (box on the right side)
      * </pre>
      *
      * The urgency and logging methods are as follows:
      *
      * <pre>
-     * {@link Urgency#URGENT} - 1, 2, 3
+     * {@link Urgency#USERMESSAGE} - 1, 2
      *
-     * {@link Urgency#WARNING} - 1, 2, 3
-     *
-     * {@link Urgency#USERMESSAGE} - 1, 2, 3
-     *
-     * {@link Urgency#STATUSREPORT} - 1, 2
-     *
-     * {@link Urgency#LOG} - 2
+     * {@link Urgency#LOG} - 1
      * </pre>
      *
      * <p> Use a null urgency to just send the message to log file and console.
@@ -106,32 +82,10 @@ public final class Logger {
      */
     public static void log(Urgency urgency, String msg) {
         String usrMsg = msg;
-        if (urgency == Urgency.URGENT) {
-            displayLCDMessage(usrMsg, true);
-        } else if (urgency == Urgency.WARNING) {
-            displayLCDMessage(usrMsg, true);
-        } else if (urgency == Urgency.USERMESSAGE) {
+        if (urgency == Urgency.USERMESSAGE) {
             displayLCDMessage(usrMsg, true);
         }
-        try {
-            if (fileLoggingOn) {
-                logFile(DriverstationInfo.getGamePeriod() + " " + DriverstationInfo.getMatchTime() + " " + usrMsg.concat("\n"));
-            }
-        } catch (IOException ex) {
-            System.err.println("!!!ERROR WHILE WRITING TO LOG FILE!!!\n\t" + ex.getMessage());
-        }
-    }
-
-    private static DataOutputStream logFile() throws IOException {
-        if (logFile == null || !logFile.isOpen() || !logFile.exists()) {
-            if (logFile != null) {
-                logFile.close();
-            }
-            logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
-            logFile.create();
-            outputStream = logFile.openDataOutputStream();
-        }
-        return outputStream;
+        System.out.println(msg);
     }
 
     private static DataInputStream logFileInput() throws IOException {
@@ -144,38 +98,6 @@ public final class Logger {
             inputStream = logFile.openDataInputStream();
         }
         return inputStream;
-    }
-
-    /**
-     * Appends a message to the log file on a new line. The log file is
-     * available through FTP on {@link Logger#PATH}.
-     *
-     * @param msg message to append to the file
-     * @throws IOException thrown when an error occurs while writing to the file
-     */
-    public static void logFile(String msg) throws IOException {
-        System.out.println(msg);
-        appendToFile(msg, logFile());
-    }
-
-    /**
-     * Appends a string to the text file that is connected in
-     * {@link DataOutputStream}.
-     *
-     * @param msg message to insert as data to the end of the text file
-     * @param outputStream stream to append text to
-     * @throws IOException thrown when file connection cannot be initiated or
-     * writing to the file fails
-     */
-    public static void appendToFile(String msg, DataOutputStream outputStream) throws IOException {
-        if (msg == null || outputStream == null) {
-            throw new NullPointerException();
-        }
-        try {
-            outputStream.write(msg.getBytes());
-        } catch (IOException ex) {
-            System.err.println("Error while printing " + msg + "\n\t" + ex.getMessage());
-        }
     }
 
     /**
