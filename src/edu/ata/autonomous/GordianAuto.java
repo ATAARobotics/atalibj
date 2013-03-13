@@ -68,6 +68,9 @@ public final class GordianAuto {
      * @param shooter the shooter you are using
      * @param bangBangModule the bang-bang module that you are using
      * @param alignmentSystem that alignment system that your are using
+     * @param drivetrainPID pid used to control drivetrain
+     * @param encoder encoder to get distance of drivetrain
+     * @param gyro gyroscope for angle of the drivetrain
      */
     public static void ensureInit(GearShifters gearShifters, RobotDriveModule drivetrain, Shooter shooter,
             BangBangModule bangBangModule, AlignmentSystem alignmentSystem, PIDModule drivetrainPID,

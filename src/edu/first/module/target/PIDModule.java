@@ -197,8 +197,7 @@ class ForwardingPIDController implements edu.first.module.target.PIDController {
     }
 
     /**
-     * Set the percentage error which is considered tolerable for use with
-     * OnTarget.
+     * Set the error which is considered tolerable for use with OnTarget.
      *
      * @param percent error which is tolerable
      */

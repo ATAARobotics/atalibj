@@ -36,6 +36,20 @@ public final class GearShifters extends Subsystem {
     }
 
     /**
+     * Sets the gear to the first gear.
+     */
+    public void setFirstGear() {
+        reversingSolenoids.setIn();
+    }
+
+    /**
+     * Sets the gear to the second gear.
+     */
+    public void setSecondGear() {
+        reversingSolenoids.setOut();
+    }
+
+    /**
      * Returns the gear number currently selected.
      *
      * @return 1 or 2

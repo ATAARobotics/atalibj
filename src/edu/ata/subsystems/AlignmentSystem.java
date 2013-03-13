@@ -42,18 +42,17 @@ public final class AlignmentSystem extends Subsystem {
      * Constructs the alignment system with the solenoids used to control the
      * pistons.
      *
-     * @param in piston to push in
-     * @param out piston to push out
+     * @param left left side piston
+     * @param right right side piston
      */
-    public AlignmentSystem(SolenoidModule in, SolenoidModule out) {
-        super(new Module[]{in, out});
+    public AlignmentSystem(SolenoidModule left, SolenoidModule right) {
+        super(new Module[]{left, right});
         this.leftIn = new NullSolenoid();
-        this.leftOut = new NullSolenoid();
+        this.leftOut = left;
         this.rightIn = new NullSolenoid();
-        this.rightOut = new NullSolenoid();
-        this.in = in;
-        this.out = out;
-        setIn();
+        this.rightOut = right;
+        this.in = new NullSolenoid();
+        this.out = new GroupSolenoid(new Solenoid[]{left, right});
     }
 
     /**
@@ -109,6 +108,18 @@ public final class AlignmentSystem extends Subsystem {
     public void setIn() {
         out.set(false);
         in.set(true);
+    }
+
+    public boolean isIn() {
+        try {
+            return in.get();
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean isRight() {
+        return rightOut.get();
     }
 
     private final class NullSolenoid implements Solenoid {

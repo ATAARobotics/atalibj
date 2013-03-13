@@ -25,7 +25,8 @@ public final class PortMapFile {
             String[] p = ports();
             ports = new Port[p.length];
             for (int x = 0; x < ports.length; x++) {
-                ports[x] = new Port(p[x].substring(0, p[x].indexOf("=")), Integer.parseInt(p[x].substring(p[x].indexOf("=") + 1)));
+                ports[x] = new Port(p[x].substring(0, p[x].indexOf("=")).trim(), 
+                        Integer.parseInt(p[x].substring(p[x].indexOf("=") + 1).trim()));
             }
         } catch (IOException ex) {
             ex.printStackTrace();

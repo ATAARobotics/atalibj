@@ -21,7 +21,6 @@ public final class Shooter extends Subsystem {
 
     private static final double retryThreshold = 0.1;
     private final SolenoidModule loadIn, loadOut;
-    private final DigitalLimitSwitchModule psiSwitch;
     private final PotentiometerModule pot;
     private final SpeedControllerModule alignment;
     private final BangBangModule bangBang;
@@ -36,13 +35,11 @@ public final class Shooter extends Subsystem {
      * @param alignment motor controlling winch
      * @param bangBang bang-bang controlling shooter wheel
      */
-    public Shooter(SolenoidModule loadIn, SolenoidModule loadOut,
-            DigitalLimitSwitchModule psiSwitch, PotentiometerModule pot,
+    public Shooter(SolenoidModule loadIn, SolenoidModule loadOut, PotentiometerModule pot,
             SpeedControllerModule alignment, BangBangModule bangBang) {
-        super(new Module[]{loadIn, loadOut, psiSwitch, pot, alignment, bangBang});
+        super(new Module[]{loadIn, loadOut, pot, alignment, bangBang});
         this.loadIn = loadIn;
         this.loadOut = loadOut;
-        this.psiSwitch = psiSwitch;
         this.pot = pot;
         this.alignment = alignment;
         this.bangBang = bangBang;
@@ -57,12 +54,11 @@ public final class Shooter extends Subsystem {
      * @param alignment motor controlling winch
      * @param bangBang bang-bang controlling shooter wheel
      */
-    public Shooter(SolenoidModule loadOut, DigitalLimitSwitchModule psiSwitch, PotentiometerModule pot,
+    public Shooter(SolenoidModule loadOut, PotentiometerModule pot,
             SpeedControllerModule alignment, BangBangModule bangBang) {
-        super(new Module[]{loadOut, psiSwitch, pot, alignment, bangBang});
+        super(new Module[]{loadOut, pot, alignment, bangBang});
         this.loadIn = null;
         this.loadOut = loadOut;
-        this.psiSwitch = psiSwitch;
         this.pot = pot;
         this.alignment = alignment;
         this.bangBang = bangBang;

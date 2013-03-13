@@ -9,9 +9,6 @@ import edu.ata.subsystems.AlignmentSystem;
  */
 public final class AlignCommand extends ThreadableCommand {
 
-    /**
-     * The type for all three alignment pistons being collapsed.
-     */
     public static final AlignType COLLAPSE = new AlignType(AlignType.COLLAPSE);
     public static final AlignType EXTEND = new AlignType(AlignType.EXTEND);
     public static final AlignType RIGHT = new AlignType(AlignType.RIGHT);

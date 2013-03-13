@@ -35,6 +35,24 @@ public final class ReversingSolenoids extends Subsystem {
         in.set(position);
         out.set(!position);
     }
+    
+    /**
+     * Sets the solenoids to an in position.
+     */
+    public void setIn() {
+        position = true;
+        in.set(true);
+        out.set(false);
+    }
+    
+    /**
+     * Sets the solenoids to an out position.
+     */
+    public void setOut() {
+        position = false;
+        in.set(false);
+        out.set(true);
+    }
 
     /**
      * Returns whether the system is in the "in" position.

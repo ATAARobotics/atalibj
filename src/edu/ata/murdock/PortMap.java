@@ -24,8 +24,8 @@ public interface PortMap {
     // Pneumatics sidecar
     int GEAR_UP = PortMapFile.getPort("GearUp", 3);
     int GEAR_DOWN = PortMapFile.getPort("GearDown", 4);
-    int BACK_IN = PortMapFile.getPort("BackIn", 1);
-    int BACK_OUT = PortMapFile.getPort("BackOut", 2);
+    int BACK_LEFT = PortMapFile.getPort("BackLeft", 1);
+    int BACK_RIGHT = PortMapFile.getPort("BackRight", 2);
     int LOAD_OUT = PortMapFile.getPort("LoadOut", 7);
     int BITCH_BAR_IN_PORT = PortMapFile.getPort("BitchBarIn", 5);
     int BITCH_BAR_OUT_PORT = PortMapFile.getPort("BitchBarOut", 6);

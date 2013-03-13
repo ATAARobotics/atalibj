@@ -1,6 +1,5 @@
 package edu.first.module.speedcontroller;
 
-import edu.first.module.speedcontroller.SpeedControllerModule;
 import edu.first.bindings.AxisBind;
 
 /**
@@ -11,6 +10,7 @@ import edu.first.bindings.AxisBind;
 public class SpeedControllerBinding implements AxisBind {
 
     private final SpeedControllerModule speedController;
+    private final boolean reversed;
 
     /**
      * Makes the speed controller bindable to an axis.
@@ -18,7 +18,18 @@ public class SpeedControllerBinding implements AxisBind {
      * @param speedController the speed controller module used
      */
     public SpeedControllerBinding(SpeedControllerModule speedController) {
+        this(speedController, false);
+    }
+
+    /**
+     * Makes the speed controller bindable to an axis.
+     *
+     * @param speedController the speed controller module used
+     * @param reversed if output should be reversed
+     */
+    public SpeedControllerBinding(SpeedControllerModule speedController, boolean reversed) {
         this.speedController = speedController;
+        this.reversed = reversed;
     }
 
     /**
@@ -27,6 +38,6 @@ public class SpeedControllerBinding implements AxisBind {
      * @param axisValue speed from joystick
      */
     public void set(double axisValue) {
-        speedController.set(axisValue);
+        speedController.set(reversed ? -axisValue : axisValue);
     }
 }

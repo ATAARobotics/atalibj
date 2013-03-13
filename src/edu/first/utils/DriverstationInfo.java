@@ -1,6 +1,7 @@
 package edu.first.utils;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStationEnhancedIO;
 
 /**
  * Contains all DriverStation static methods and other useful methods used for
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public final class DriverstationInfo {
 
     private static final DriverStation DS = DriverStation.getInstance();
+    private static final DriverStationEnhancedIO IO = DS.getEnhancedIO();
     /**
      * Disabled mode. Used in {@link DriverstationInfo#getGamePeriod()}.
      */
@@ -34,6 +36,25 @@ public final class DriverstationInfo {
     // cannot be subclassed or instantiated
     private DriverstationInfo() throws IllegalAccessException {
         throw new IllegalAccessException();
+    }
+
+    /**
+     * Returns the singleton instance of the Driverstation.
+     *
+     * @return driverstation with all features
+     */
+    public static DriverStation getDS() {
+        return DS;
+    }
+
+    /**
+     * Get the interface to the enhanced IO of the driver station.
+     *
+     * @return an enhanced IO object for the advanced features of the driver
+     * station
+     */
+    public static DriverStationEnhancedIO getIO() {
+        return IO;
     }
 
     /**
@@ -96,8 +117,8 @@ public final class DriverstationInfo {
      * is reset to +15.0 seconds. If the robot is disabled, this returns 0.0
      * seconds.
      *
-     * <p> <b> USERMESSAGE: This is not an official time (so it cannot be used to
-     * argue with referees) </b>
+     * <p> <b> USERMESSAGE: This is not an official time (so it cannot be used
+     * to argue with referees) </b>
      *
      * @return match time in seconds since the beginning of autonomous
      */
@@ -116,10 +137,10 @@ public final class DriverstationInfo {
         return DS.isEnabled() ? (DS.isOperatorControl() ? TELEOP
                 : (DS.isAutonomous() ? AUTONOMOUS : DISABLED)) : DISABLED;
     }
-    
+
     /**
-     * Gets a value indicating whether the Driver Station requires the
-     * robot to be enabled.
+     * Gets a value indicating whether the Driver Station requires the robot to
+     * be enabled.
      *
      * @return if the robot is enabled
      */

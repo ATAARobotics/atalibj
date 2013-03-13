@@ -29,7 +29,7 @@ public final class GamePeriods extends IterativeRobot {
     private static Robot robot;
     
     {
-        robot = Murdock.getInstance();
+        robot = Murdock.getInstance().getRobot();
     }
 
     /**
