@@ -21,6 +21,7 @@ import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
 import edu.first.module.target.BangBangModule;
+import edu.first.module.target.MovingModule;
 import edu.first.module.target.PIDModule;
 import edu.first.utils.DriverstationInfo;
 import edu.first.utils.Logger;
@@ -51,7 +52,7 @@ public final class GordianAuto {
     private static Shooter shooter;
     private static BangBangModule bangBangModule;
     private static AlignmentSystem alignmentSystem;
-    private static PIDModule drivetrainPID;
+    private static MovingModule drivetrainControl;
     private static EncoderModule encoder;
     private static GyroModule gyro;
 
@@ -73,7 +74,7 @@ public final class GordianAuto {
      * @param gyro gyroscope for angle of the drivetrain
      */
     public static void ensureInit(GearShifters gearShifters, RobotDriveModule drivetrain, Shooter shooter,
-            BangBangModule bangBangModule, AlignmentSystem alignmentSystem, PIDModule drivetrainPID,
+            BangBangModule bangBangModule, AlignmentSystem alignmentSystem, MovingModule drivetrainControl,
             EncoderModule encoder, GyroModule gyro) {
         if (!init) {
             GordianAuto.gearShifters = gearShifters;
@@ -81,7 +82,7 @@ public final class GordianAuto {
             GordianAuto.shooter = shooter;
             GordianAuto.bangBangModule = bangBangModule;
             GordianAuto.alignmentSystem = alignmentSystem;
-            GordianAuto.drivetrainPID = drivetrainPID;
+            GordianAuto.drivetrainControl = drivetrainControl;
             GordianAuto.encoder = encoder;
             GordianAuto.gyro = gyro;
             init = true;
@@ -167,24 +168,22 @@ public final class GordianAuto {
             public void run(Variable[] args) {
                 double setpoint = ((NumberInterface) args[0]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Driving to " + setpoint);
-                new DriveDistance(encoder, drivetrainPID, setpoint).run();
+                new DriveDistance(drivetrainControl, setpoint, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("gyroTurn") {
             public void run(Variable[] args) {
                 double setpoint = ((NumberInterface) args[0]).doubleValue();
-                double maxSpeed = ((NumberInterface) args[1]).doubleValue();
                 Logger.log(Logger.Urgency.USERMESSAGE, "Turning to " + setpoint);
-                new TurnToAngle(maxSpeed, setpoint, gyro, drivetrain, false).run();
+                new TurnToAngle(drivetrainControl, setpoint, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("moveTo") {
             public void run(Variable[] args) {
-                double x = ((NumberInterface) args[0]).doubleValue();
-                double y = ((NumberInterface) args[1]).doubleValue();
-                double maxSpeed = ((NumberInterface) args[2]).doubleValue();
-                Logger.log(Logger.Urgency.USERMESSAGE, "Moving to " + x + ", " + y);
-                new MoveCommand(encoder, drivetrainPID, gyro, drivetrain, x, y, maxSpeed).run();
+                double forwards = ((NumberInterface) args[0]).doubleValue();
+                double right = ((NumberInterface) args[1]).doubleValue();
+                Logger.log(Logger.Urgency.USERMESSAGE, "Moving " + forwards + " and " + right + " to the right");
+                new MoveCommand(drivetrainControl, forwards, right).run();
             }
         });
         gordian.addMethod(new RunningMethod("autoShoot") {

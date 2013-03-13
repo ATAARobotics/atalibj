@@ -1,12 +1,14 @@
 package edu.first.utils.preferences;
 
+import edu.first.utils.Logger;
+
 /**
  * Preference that holds a boolean value.
  *
  * @author Joel Gallant
  */
 public final class BooleanPreference extends Preference {
-
+    
     private final boolean defaultValue;
 
     /**
@@ -27,6 +29,7 @@ public final class BooleanPreference extends Preference {
      * @param value new value of preference
      */
     public void set(boolean value) {
+        Logger.log(Logger.Urgency.USERMESSAGE, "Setting " + getKey() + " to " + value);
         PREFERENCES.putBoolean(getKey(), value);
     }
 

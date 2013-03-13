@@ -35,20 +35,26 @@ public final class MovingModule extends Subsystem {
      * @param tP turning P coefficient
      * @param tI turning I coefficient
      * @param tD turning D coefficient
-     * @param maxSpeed maximum speed to run turning
      * @param distanceTolerance maximum acceptable distance error
      * @param turningTolerance maximum acceptable angle error
+     * @param sMaxSpeed maximum speed
+     * @param sMinSpeed minimum speed
+     * @param tMaxSpeed maximum turn
+     * @param tMinSpeed minimum turn
      */
     public MovingModule(EncoderModule forwards, GyroModule turning, RobotDriveModule moving,
-            double fP, double fI, double fD, double tP, double tI, double tD, double maxSpeed,
-            double distanceTolerance, double turningTolerance) {
+            double fP, double fI, double fD, double tP, double tI, double tD,
+            double distanceTolerance, double turningTolerance,
+            double sMaxSpeed, double sMinSpeed, double tMaxSpeed, double tMinSpeed) {
         super(new Module[]{forwards, turning, moving});
         this.distanceTolerance = distanceTolerance;
         this.turningTolerance = turningTolerance;
         this.encoder = forwards;
         this.gyro = turning;
-        this.forwards = new edu.wpi.first.wpilibj.PIDController(fP, fI, fD, forwards, moving);
-        this.turning = new edu.wpi.first.wpilibj.PIDController(tP, tI, tD, turning, moving.pidTurn(maxSpeed));
+        this.forwards = new edu.wpi.first.wpilibj.PIDController(fP, fI, fD, forwards, 
+                moving.pidForward(sMinSpeed, sMaxSpeed));
+        this.turning = new edu.wpi.first.wpilibj.PIDController(tP, tI, tD, turning, 
+                moving.pidTurn(tMinSpeed, tMaxSpeed));
     }
 
     /**
@@ -102,39 +108,6 @@ public final class MovingModule extends Subsystem {
             Timer.delay(0.02);
         }
 
-        turning.disable();
-    }
-
-    /**
-     * Moves the drivetrain until the distance and angle are at the setpoints.
-     *
-     * @param distance encoder value to move to
-     * @param angle angle to turn to
-     */
-    public void move(double distance, double angle) {
-        encoder.reset();
-        gyro.reset();
-        forwards.setSetpoint(distance);
-        turning.setSetpoint(angle);
-
-        forwards.enable();
-        turning.enable();
-
-
-        while (true) {
-            if (Math.abs(encoder.getDistance() - distance) > distanceTolerance
-                    && Math.abs(gyro.getAngle() - angle) > turningTolerance) {
-                // Has to be at setpoint for > 0.3 seconds
-                Timer.delay(0.3);
-                if (Math.abs(encoder.getDistance() - distance) > distanceTolerance
-                        && Math.abs(gyro.getAngle() - angle) > turningTolerance) {
-                    break;
-                }
-            }
-            Timer.delay(0.02);
-        }
-
-        forwards.disable();
         turning.disable();
     }
 }

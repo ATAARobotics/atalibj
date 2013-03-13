@@ -1,5 +1,7 @@
 package edu.first.utils.preferences;
 
+import edu.first.utils.Logger;
+
 /**
  * Preference that holds a float value.
  *
@@ -27,6 +29,7 @@ public final class FloatPreference extends Preference {
      * @param value new value of preference
      */
     public void set(float value) {
+        Logger.log(Logger.Urgency.USERMESSAGE, "Setting " + getKey() + " to " + value);
         PREFERENCES.putFloat(getKey(), value);
     }
 

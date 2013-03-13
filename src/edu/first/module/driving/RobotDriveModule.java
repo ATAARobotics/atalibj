@@ -81,12 +81,11 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
  *
  * @author Joel Gallant
  */
-class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOutput {
+class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
 
     private final edu.wpi.first.wpilibj.RobotDrive drive;
     private final List speedFunctions = new List();
     private final boolean reverseSpeed, reverseTurn;
-    private double pidMinSpeed, pidMinTurn;
     private double lastLeft, lastRight, lastForward, lastTurn;
 
     /**
@@ -396,37 +395,42 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
         drive.stopMotor();
     }
 
-    public void setPidMinSpeed(double pidMinSpeed) {
-        this.pidMinSpeed = Math.abs(pidMinSpeed);
-    }
-
-    public void setPidMinTurn(double pidMinTurn) {
-        this.pidMinTurn = Math.abs(pidMinTurn);
-    }
-
     /**
-     * {@inheritDoc}
+     * Returns a PID object that drives the drivetrain.
+     *
+     * @param minSpeed minimum possible speed
+     * @param maxSpeed maximum possible speed
+     * @return pid output for driving
      */
-    public void pidWrite(double d) {
-        if (Math.abs(d) < pidMinSpeed) {
-            d = d < 0 ? -pidMinSpeed : pidMinSpeed;
-        }
-        setForwardValue(d);
+    public PIDOutput pidForward(final double minSpeed, final double maxSpeed) {
+        return new PIDOutput() {
+            public void pidWrite(double output) {
+                if (Math.abs(output) < minSpeed && output != 0) {
+                    output = output < 0 ? -minSpeed : minSpeed;
+                } else if (Math.abs(output) > maxSpeed && output != 0) {
+                    output = output < 0 ? -maxSpeed : maxSpeed;
+                }
+                setForwardValue(output);
+            }
+        };
     }
 
     /**
      * Returns a PID object that turns the drivetrain.
      *
-     * @param maxSpeed maximum speed to turn
+     * @param minSpeed minimum possible turn
+     * @param maxSpeed maximum possible turn
      * @return pid output for turning
      */
-    public PIDOutput pidTurn(final double maxSpeed) {
+    public PIDOutput pidTurn(final double minSpeed, final double maxSpeed) {
         return new PIDOutput() {
             public void pidWrite(double output) {
-                if (Math.abs(output) < pidMinTurn) {
-                    output = output < 0 ? -pidMinTurn : pidMinTurn;
+                if (Math.abs(output) < minSpeed && output != 0) {
+                    output = output < 0 ? -minSpeed : minSpeed;
+                } else if (Math.abs(output) > maxSpeed && output != 0) {
+                    output = output < 0 ? -maxSpeed : maxSpeed;
                 }
-                setRotateValue(Math.abs(output) > maxSpeed ? maxSpeed : output);
+                setRotateValue(output);
             }
         };
     }

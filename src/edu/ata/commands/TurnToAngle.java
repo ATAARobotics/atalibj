@@ -1,9 +1,6 @@
 package edu.ata.commands;
 
-import edu.first.module.driving.RobotDriveModule;
-import edu.first.module.sensor.GyroModule;
-import edu.first.utils.DriverstationInfo;
-import edu.wpi.first.wpilibj.Timer;
+import edu.first.module.target.MovingModule;
 
 /**
  * Command to turn the robot to a certain angle using a gyro and drivetrain.
@@ -12,48 +9,26 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public final class TurnToAngle extends ThreadableCommand {
 
-    private final double setpoint;
-    private final double maxSpeed;
-    private final GyroModule gyro;
-    private final RobotDriveModule drive;
+    private final double angle;
+    private final MovingModule movingModule;
 
     /**
-     * Constructs the command using the values and components to move it.
+     * Constructs the command using the moving module and the angle to move to.
      *
-     * @param left left speed
-     * @param right right speed
-     * @param setpoint angle setpoint
-     * @param gyro gyroscope object
-     * @param drivetrain drivetrain to turn with
-     * @param newThread if command should run in a new thread
+     * @param movingModule module to move with
+     * @param angle gyro value from current position to move to
+     * @param newThread whether command should run in a new thread
      */
-    public TurnToAngle(double maxSpeed, double setpoint, GyroModule gyro,
-            RobotDriveModule drivetrain, boolean newThread) {
+    public TurnToAngle(MovingModule movingModule, double angle, boolean newThread) {
         super(newThread);
-        this.gyro = gyro;
-        this.drive = drivetrain;
-        this.setpoint = setpoint;
-        this.maxSpeed = maxSpeed;
+        this.angle = angle;
+        this.movingModule = movingModule;
     }
 
     public final Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                final String mode = DriverstationInfo.getGamePeriod();
-                final double start = gyro.getAngle();
-                while (Math.abs(gyro.getAngle() - start) < Math.abs(setpoint) && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    drive.tankDrive((setpoint > 0 ? 1 : -1) * maxSpeed, (setpoint > 0 ? -1 : 1) * maxSpeed);
-                    Timer.delay(0.02);
-                }
-                while (Math.abs(gyro.getAngle() - start) > Math.abs(setpoint - 3) && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    drive.tankDrive((setpoint > 0 ? -1 : 1) * maxSpeed, (setpoint > 0 ? 1 : -1) * maxSpeed);
-                    Timer.delay(0.02);
-                }
-                while (Math.abs(gyro.getAngle() - start) < Math.abs(setpoint - 3) && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    drive.tankDrive((setpoint > 0 ? 1 : -1) * maxSpeed, (setpoint > 0 ? -1 : 1) * maxSpeed);
-                    Timer.delay(0.02);
-                }
-                drive.stopMotors();
+                movingModule.turn(angle);
             }
         };
     }

@@ -63,14 +63,17 @@ public final class Murdock implements PortMap {
     private static final double tP = 1, tI = 0, tD = 0;
     private static final double drivetrainDistanceTolerance = 40;
     private static final double drivetrainTurningTolerance = 3;
-    private static final double drivetrainPIDMaxOutput = 0.3;
+    private static final double drivetrainPIDMaxSpeed = 0.3;
     private static final double drivetrainPIDMinSpeed = 0.3;
+    private static final double drivetrainPIDMaxTurn = 0.8;
     private static final double drivetrainPIDMinTurn = 0.5;
     private static final String defaultAuto = "auto";
     private static final boolean reverseSpeed = false;
     private static final boolean reverseTurn = false;
     private static final boolean reverseShooter = true;
     private static final boolean reverseAlignmentTriggers = false;
+    private static final int competitionPort = 1;
+    private static final int smartDashboardPort = 2;
     private static final Function DRIVER_FUNCTION = new Function() {
         public double F(double input) {
             return input != 0 ? ((input * input * input) + 0.12) : 0;
@@ -130,7 +133,7 @@ public final class Murdock implements PortMap {
     private final SolenoidModule backRight = new SolenoidModule(_backRight);
     // Subsystems //
     private final BangBangModule shooterController =
-            new BangBangModule(hallEffect, shooter, DEFAULTSPEED.get(), reverseShooter);
+            new BangBangModule(hallEffect, shooter, DEFAULTSPEED.get(), shooterRPMTolerance, reverseShooter);
     private final Shooter shotController =
             new Shooter(loadOut, potentiometer, shooterAligner, shooterController);
     private final GearShifters gearShifterController =
@@ -140,8 +143,9 @@ public final class Murdock implements PortMap {
     private final AlignmentSystem alignment =
             new AlignmentSystem(backLeft, backRight);
     private final MovingModule drivetrainController =
-            new MovingModule(encoder, gyro, drive, dP, dI, dD, tP, tI, tD, 
-            drivetrainPIDMaxOutput, drivetrainDistanceTolerance, drivetrainTurningTolerance);
+            new MovingModule(encoder, gyro, drive, dP, dI, dD, tP, tI, tD,
+            drivetrainDistanceTolerance, drivetrainTurningTolerance,
+            drivetrainPIDMaxSpeed, drivetrainPIDMinSpeed, drivetrainPIDMaxTurn, drivetrainPIDMinTurn);
 
     public static Murdock getInstance() {
         return MURDOCK;
@@ -155,7 +159,7 @@ public final class Murdock implements PortMap {
     }
 
     private RobotMode getSelectedRobot() {
-        if (DriverstationInfo.getDS().getDigitalIn(1)) {
+        if (DriverstationInfo.getDS().getDigitalIn(competitionPort)) {
             return competitionMode;
         } else {
             return fullTestingMode;
@@ -163,8 +167,8 @@ public final class Murdock implements PortMap {
     }
 
     private void init() {
-        Logger.log(Logger.Urgency.USERMESSAGE, "IO 1 = Competition");
-        Logger.log(Logger.Urgency.USERMESSAGE, "IO 2 = SmartDashboard");
+        Logger.log(Logger.Urgency.USERMESSAGE, "IO " + competitionPort + " = Competition");
+        Logger.log(Logger.Urgency.USERMESSAGE, "IO " + smartDashboardPort + " = SmartDashboard");
         SETPOINT.create();
         DEFAULTSPEED.create();
         AUTOMODE.create();
@@ -172,11 +176,7 @@ public final class Murdock implements PortMap {
         compressor.enable();
         compressor.set(Relay.Value.kForward);
 
-        shooterController.setPastSetpoint(shooterRPMTolerance);
-
         drive.addFunction(DRIVER_FUNCTION);
-        drive.setPidMinSpeed(drivetrainPIDMinSpeed);
-        drive.setPidMinTurn(drivetrainPIDMinTurn);
     }
 
     private void disabled() {
@@ -213,7 +213,7 @@ public final class Murdock implements PortMap {
         Logger.log(Logger.Urgency.USERMESSAGE, "Robot is disabled.");
     }
 
-    private void doAutonomous() {
+    private void doScriptAutonomous() {
         gearShifterController.enable();
         drive.enable();
         shotController.enable();
@@ -271,7 +271,7 @@ public final class Murdock implements PortMap {
         joystick2.bindWhenPressed(XboxController.BACK,
                 new BangBangCommand(shooterController, 0, false));
         joystick2.bindWhenPressed(XboxController.START,
-                new BangBangCommand(shooterController, SETPOINT.get(), false));
+                new BangBangCommand(shooterController, SETPOINT, false));
         joystick2.bindWhenPressed(XboxController.Y,
                 new ChangeSetpointCommand(SETPOINT, +20, shooterController, false));
         joystick2.bindWhenPressed(XboxController.A,
@@ -283,13 +283,13 @@ public final class Murdock implements PortMap {
     }
 
     private boolean isSmartDashboard() {
-        return DriverstationInfo.getDS().getDigitalIn(2);
+        return DriverstationInfo.getDS().getDigitalIn(smartDashboardPort);
     }
 
     public final class FullTestingMode extends RobotMode {
 
         public void autonomousInit() {
-            doAutonomous();
+            doScriptAutonomous();
         }
 
         public void teleopInit() {
@@ -305,6 +305,7 @@ public final class Murdock implements PortMap {
             shooterController.enable();
             shotController.enable();
 
+            shooterController.setSetpoint(SETPOINT.get());
             shooterController.setDefaultSpeed(DEFAULTSPEED.get());
             shooterController.setSetpoint(0);
             drive.setSafetyEnabled(true);
@@ -335,7 +336,7 @@ public final class Murdock implements PortMap {
         private int counter = 0;
 
         public void autonomousInit() {
-            doAutonomous();
+            doScriptAutonomous();
         }
 
         public void teleopInit() {
@@ -348,6 +349,7 @@ public final class Murdock implements PortMap {
             shooterController.enable();
             shotController.enable();
 
+            shooterController.setSetpoint(SETPOINT.get());
             shooterController.setDefaultSpeed(DEFAULTSPEED.get());
             shooterController.setSetpoint(0);
             drive.setSafetyEnabled(true);
@@ -369,6 +371,7 @@ public final class Murdock implements PortMap {
         }
     }
 
+    // Meant to restrict access to robotInit() and disabledInit()
     private static class RobotMode extends RobotAdapter {
 
         public final void robotInit() {

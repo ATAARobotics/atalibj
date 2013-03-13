@@ -1,5 +1,6 @@
 package edu.first.utils.preferences;
 
+import edu.first.utils.Logger;
 import edu.wpi.first.wpilibj.Preferences;
 
 /**
@@ -29,6 +30,7 @@ public final class StringPreference extends Preference {
      * @param value new value of preference
      */
     public void set(String value) {
+        Logger.log(Logger.Urgency.USERMESSAGE, "Setting " + getKey() + " to " + value);
         PREFERENCES.putString(getKey(), value);
     }
 

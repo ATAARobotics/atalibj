@@ -79,6 +79,7 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      * @param source the source to check setpoints
      * @param output output of the controller
      * @param defaultSpeed speed to run when above setpoint
+     * @param reverse if output should be reversed
      */
     public BangBangModule(PIDSource source, PIDOutput output, double defaultSpeed, boolean reverse) {
         if (source == null || output == null) {
@@ -87,6 +88,28 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
         this.source = source;
         this.output = output;
         this.defaultSpeed = defaultSpeed;
+        this.reversed = reverse;
+        timer.scheduleAtFixedRate(task, 0L, 20L);
+    }
+
+    /**
+     * Constructs and begins the thread. This will not start moving, but rather
+     * be "ready" to move when enabled.
+     *
+     * @param source the source to check setpoints
+     * @param output output of the controller
+     * @param defaultSpeed speed to run when above setpoint
+     * @param pastSetpoint what tolerance pastSetpoint() should have
+     * @param reverse if output should be reversed
+     */
+    public BangBangModule(PIDSource source, PIDOutput output, double defaultSpeed, double pastSetpoint, boolean reverse) {
+        if (source == null || output == null) {
+            throw new NullPointerException();
+        }
+        this.source = source;
+        this.output = output;
+        this.defaultSpeed = defaultSpeed;
+        this.pastSetpoint = pastSetpoint;
         this.reversed = reverse;
         timer.scheduleAtFixedRate(task, 0L, 20L);
     }

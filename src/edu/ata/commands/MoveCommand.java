@@ -4,6 +4,7 @@ import edu.first.commands.CommandGroup;
 import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
+import edu.first.module.target.MovingModule;
 import edu.first.module.target.PIDModule;
 
 /**
@@ -13,24 +14,23 @@ import edu.first.module.target.PIDModule;
  */
 public class MoveCommand extends CommandGroup {
 
-    /**
-     * Constructs the command using the various required variables.
-     *
-     * @param encoder encoder to get distance from
-     * @param pidm PID to move the drivetrain
-     * @param gyro gyro to get angle from
-     * @param drivetrain drivetrain to move with
-     * @param x how far right to move
-     * @param y how far behind to move
-     * @param turnSide speed of turning side
-     * @param nonTurnSide speed of non-turning side
-     */
-    public MoveCommand(EncoderModule encoder, PIDModule pidm, GyroModule gyro, RobotDriveModule drivetrain,
-            double x, double y, double maxSpeed) {
-        addSequential(new DriveDistance(encoder, pidm, y / 2.0));
-        addSequential(new TurnToAngle(maxSpeed, x > 0 ? -90 : 90, gyro, drivetrain, false));
-        addSequential(new DriveDistance(encoder, pidm, x));
-        addSequential(new TurnToAngle(maxSpeed, x > 0 ? 90 : -90, gyro, drivetrain, false));
-        addSequential(new DriveDistance(encoder, pidm, y / 2.0));
+    public MoveCommand(MovingModule movingModule, double forwards, double right) {
+        double firstAngle;
+        double secondAngle;
+
+        if ((forwards > 0 && right > 0) || (forwards < 0 && right < 0)) {
+            firstAngle = 90;
+            secondAngle = -90;
+        } else {
+            // ((forwards > 0 && right < 0) || (forwards < 0 && right > 0)) || right == 0 || forwards == 0
+            firstAngle = -90;
+            secondAngle = 90;
+        }
+
+        addSequential(new DriveDistance(movingModule, forwards / 2.0, false));
+        addSequential(new TurnToAngle(movingModule, firstAngle, false));
+        addSequential(new DriveDistance(movingModule, right, false));
+        addSequential(new TurnToAngle(movingModule, secondAngle, false));
+        addSequential(new DriveDistance(movingModule, forwards / 2.0, false));
     }
 }
