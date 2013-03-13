@@ -160,7 +160,7 @@ public final class GordianAuto {
         });
         gordian.addMethod(new RunningMethod("shiftGear") {
             public void run(Variable[] args) {
-                new GearShiftCommand(gearShifters, false).run();
+                new GearShiftCommand(gearShifters, GearShiftCommand.SHIFT, false).run();
             }
         });
         gordian.addMethod(new RunningMethod("driveToSetpoint") {

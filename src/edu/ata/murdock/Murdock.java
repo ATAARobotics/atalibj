@@ -27,7 +27,7 @@ import edu.first.module.speedcontroller.SpeedControllerBinding;
 import edu.first.module.speedcontroller.SpeedControllerModule;
 import edu.first.module.speedcontroller.SpikeRelayModule;
 import edu.first.module.target.BangBangModule;
-import edu.first.module.target.PIDModule;
+import edu.first.module.target.MovingModule;
 import edu.first.robot.Robot;
 import edu.first.robot.RobotAdapter;
 import edu.first.utils.DriverstationInfo;
@@ -40,7 +40,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -61,8 +60,12 @@ public final class Murdock implements PortMap {
     private static final double defaultDefaultSpeed = 0.5;
     private static final double shooterRPMTolerance = 40;
     private static final double dP = 0.001, dI = 0, dD = 0.001;
-    private static final double drivetrainPIDTolerance = 40;
-    private static final double driverainPIDMaxOutput = 0.3;
+    private static final double tP = 1, tI = 0, tD = 0;
+    private static final double drivetrainDistanceTolerance = 40;
+    private static final double drivetrainTurningTolerance = 3;
+    private static final double drivetrainPIDMaxOutput = 0.3;
+    private static final double drivetrainPIDMinSpeed = 0.3;
+    private static final double drivetrainPIDMinTurn = 0.5;
     private static final String defaultAuto = "auto";
     private static final boolean reverseSpeed = false;
     private static final boolean reverseTurn = false;
@@ -136,10 +139,9 @@ public final class Murdock implements PortMap {
             new ReversingSolenoids(bitchBarIn, bitchBarOut);
     private final AlignmentSystem alignment =
             new AlignmentSystem(backLeft, backRight);
-    private final PIDController _drivetrainController =
-            new PIDController(dP, dI, dD, encoder, drive);
-    private final PIDModule drivetrainController =
-            new PIDModule(_drivetrainController);
+    private final MovingModule drivetrainController =
+            new MovingModule(encoder, gyro, drive, dP, dI, dD, tP, tI, tD, 
+            drivetrainPIDMaxOutput, drivetrainDistanceTolerance, drivetrainTurningTolerance);
 
     public static Murdock getInstance() {
         return MURDOCK;
@@ -173,10 +175,8 @@ public final class Murdock implements PortMap {
         shooterController.setPastSetpoint(shooterRPMTolerance);
 
         drive.addFunction(DRIVER_FUNCTION);
-
-        drivetrainController.setTolerance(drivetrainPIDTolerance);
-        drivetrainController.setOutputRange(-Math.abs(driverainPIDMaxOutput),
-                Math.abs(driverainPIDMaxOutput));
+        drive.setPidMinSpeed(drivetrainPIDMinSpeed);
+        drive.setPidMinTurn(drivetrainPIDMinTurn);
     }
 
     private void disabled() {
@@ -264,21 +264,21 @@ public final class Murdock implements PortMap {
         // Shooting
         joystick1.bindAxis(XboxController.TRIGGERS + XboxController.SHIFT,
                 new SpeedControllerBinding(shooterAligner, reverseAlignmentTriggers));
-        joystick2.bindWhenPressed(XboxController.RIGHT_BUMPER, 
+        joystick2.bindWhenPressed(XboxController.RIGHT_BUMPER,
                 new ShootCommand(shotController, true));
-        joystick2.bindWhenPressed(XboxController.RIGHT_STICK, 
+        joystick2.bindWhenPressed(XboxController.RIGHT_STICK,
                 new AutoShoot(shotController, shooterController, true));
-        joystick2.bindWhenPressed(XboxController.BACK, 
+        joystick2.bindWhenPressed(XboxController.BACK,
                 new BangBangCommand(shooterController, 0, false));
-        joystick2.bindWhenPressed(XboxController.START, 
+        joystick2.bindWhenPressed(XboxController.START,
                 new BangBangCommand(shooterController, SETPOINT.get(), false));
-        joystick2.bindWhenPressed(XboxController.Y, 
+        joystick2.bindWhenPressed(XboxController.Y,
                 new ChangeSetpointCommand(SETPOINT, +20, shooterController, false));
-        joystick2.bindWhenPressed(XboxController.A, 
+        joystick2.bindWhenPressed(XboxController.A,
                 new ChangeSetpointCommand(SETPOINT, -20, shooterController, false));
-        joystick2.bindWhenPressed(XboxController.B, 
+        joystick2.bindWhenPressed(XboxController.B,
                 new ChangeDefaultSpeedCommand(DEFAULTSPEED, +0.05, shooterController, false));
-        joystick2.bindWhenPressed(XboxController.X, 
+        joystick2.bindWhenPressed(XboxController.X,
                 new ChangeDefaultSpeedCommand(DEFAULTSPEED, -0.05, shooterController, false));
     }
 
@@ -351,7 +351,7 @@ public final class Murdock implements PortMap {
             shooterController.setDefaultSpeed(DEFAULTSPEED.get());
             shooterController.setSetpoint(0);
             drive.setSafetyEnabled(true);
-            
+
             doTeleopBinds();
         }
 

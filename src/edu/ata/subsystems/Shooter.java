@@ -95,12 +95,12 @@ public final class Shooter extends Subsystem {
             final String mode = DriverstationInfo.getGamePeriod();
             if (pot.getPosition() > setpoint) {
                 while (pot.getPosition() > setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    alignment.set(+1);
+                    alignment.set(-1);
                     Timer.delay(0.02);
                 }
             } else if (pot.getPosition() < setpoint) {
                 while (pot.getPosition() < setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    alignment.set(-1);
+                    alignment.set(+1);
                     Timer.delay(0.02);
                 }
             }

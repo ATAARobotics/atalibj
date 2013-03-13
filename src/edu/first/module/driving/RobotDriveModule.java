@@ -86,8 +86,8 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
     private final edu.wpi.first.wpilibj.RobotDrive drive;
     private final List speedFunctions = new List();
     private final boolean reverseSpeed, reverseTurn;
+    private double pidMinSpeed, pidMinTurn;
     private double lastLeft, lastRight, lastForward, lastTurn;
-    private double compensation = 0;
 
     /**
      * Constructs the object by using composition, using the given robot drive
@@ -396,15 +396,22 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
         drive.stopMotor();
     }
 
-    public void setCompensation(double compensation) {
-        this.compensation = compensation;
+    public void setPidMinSpeed(double pidMinSpeed) {
+        this.pidMinSpeed = Math.abs(pidMinSpeed);
+    }
+
+    public void setPidMinTurn(double pidMinTurn) {
+        this.pidMinTurn = Math.abs(pidMinTurn);
     }
 
     /**
      * {@inheritDoc}
      */
     public void pidWrite(double d) {
-        drive.drive(d, d != 0 ? compensation : 0);
+        if (Math.abs(d) < pidMinSpeed) {
+            d = d < 0 ? -pidMinSpeed : pidMinSpeed;
+        }
+        setForwardValue(d);
     }
 
     /**
@@ -416,7 +423,10 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive, PIDOu
     public PIDOutput pidTurn(final double maxSpeed) {
         return new PIDOutput() {
             public void pidWrite(double output) {
-                drive.arcadeDrive(0, Math.abs(output) > maxSpeed ? maxSpeed : output);
+                if (Math.abs(output) < pidMinTurn) {
+                    output = output < 0 ? -pidMinTurn : pidMinTurn;
+                }
+                setRotateValue(Math.abs(output) > maxSpeed ? maxSpeed : output);
             }
         };
     }
