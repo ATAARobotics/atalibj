@@ -1,6 +1,7 @@
 package edu.ata.commands;
 
 import edu.ata.subsystems.Shooter;
+import edu.first.utils.preferences.DoublePreference;
 
 /**
  * Command to align the shooter.
@@ -11,6 +12,7 @@ public final class AlignShooter extends ThreadableCommand {
 
     private final Shooter shooter;
     private final double setpoint;
+    private final DoublePreference setpointPreference;
 
     /**
      * Constructs the command with the shooter and the position.
@@ -23,12 +25,24 @@ public final class AlignShooter extends ThreadableCommand {
         super(newThread);
         this.shooter = shooter;
         this.setpoint = setpoint;
+        this.setpointPreference = null;
+    }
+
+    public AlignShooter(Shooter shooter, DoublePreference setpointPreference, boolean newThread) {
+        super(newThread);
+        this.shooter = shooter;
+        this.setpoint = 0;
+        this.setpointPreference = setpointPreference;
     }
 
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                shooter.alignTo(setpoint);
+                if (setpointPreference != null) {
+                    shooter.alignTo(setpointPreference.get());
+                } else {
+                    shooter.alignTo(setpoint);
+                }
             }
         };
     }

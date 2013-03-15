@@ -1,7 +1,7 @@
 package edu.ata.preferences;
 
+import edu.first.utils.Logger;
 import edu.first.utils.preferences.DoublePreference;
-import edu.first.utils.preferences.Preference;
 
 /**
  * Preference that stores an RPM and default speed value.
@@ -52,6 +52,8 @@ public class RPMPreference {
     public void set(double value) {
         rpm.set(value);
         defaultSpeed.set(convertToDefaultSpeed(value));
+        Logger.log(Logger.Urgency.USERMESSAGE, "RPM - " + (int) rpm.get());
+        Logger.log(Logger.Urgency.USERMESSAGE, "DefSpeed - " + defaultSpeed.get());
     }
 
     /**

@@ -1,5 +1,6 @@
 package edu.ata.subsystems;
 
+import edu.ata.modules.AlignmentMotor;
 import edu.first.module.Module;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.module.sensor.DigitalLimitSwitchModule;
@@ -22,8 +23,9 @@ public final class Shooter extends Subsystem {
     private static final double retryThreshold = 0.1;
     private final SolenoidModule loadIn, loadOut;
     private final PotentiometerModule pot;
-    private final SpeedControllerModule alignment;
+    private final AlignmentMotor alignment;
     private final BangBangModule bangBang;
+    private boolean lock;
 
     /**
      * Constructs the shooter using all of the components used.
@@ -36,7 +38,7 @@ public final class Shooter extends Subsystem {
      * @param bangBang bang-bang controlling shooter wheel
      */
     public Shooter(SolenoidModule loadIn, SolenoidModule loadOut, PotentiometerModule pot,
-            SpeedControllerModule alignment, BangBangModule bangBang) {
+            AlignmentMotor alignment, BangBangModule bangBang) {
         super(new Module[]{loadIn, loadOut, pot, alignment, bangBang});
         this.loadIn = loadIn;
         this.loadOut = loadOut;
@@ -55,7 +57,7 @@ public final class Shooter extends Subsystem {
      * @param bangBang bang-bang controlling shooter wheel
      */
     public Shooter(SolenoidModule loadOut, PotentiometerModule pot,
-            SpeedControllerModule alignment, BangBangModule bangBang) {
+            AlignmentMotor alignment, BangBangModule bangBang) {
         super(new Module[]{loadOut, pot, alignment, bangBang});
         this.loadIn = null;
         this.loadOut = loadOut;
@@ -90,25 +92,32 @@ public final class Shooter extends Subsystem {
      * @param setpoint
      */
     public void alignTo(final double setpoint) {
-        synchronized (this) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "Aligning to position");
-            final String mode = DriverstationInfo.getGamePeriod();
-            if (pot.getPosition() > setpoint) {
-                while (pot.getPosition() > setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    alignment.set(-1);
-                    Timer.delay(0.02);
+        final String mode = DriverstationInfo.getGamePeriod();
+        if(!lock) {
+            lock = true;
+            SpeedControllerModule control = alignment.lock();
+            Logger.log(Logger.Urgency.USERMESSAGE, "Aligning to " + setpoint);
+            while (true) {
+                if (pot.getPosition() > setpoint) {
+                    while (pot.getPosition() > setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
+                        control.set(-1);
+                        Timer.delay(0.02);
+                    }
+                } else if (pot.getPosition() < setpoint) {
+                    while (pot.getPosition() < setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
+                        control.set(+1);
+                        Timer.delay(0.02);
+                    }
                 }
-            } else if (pot.getPosition() < setpoint) {
-                while (pot.getPosition() < setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                    alignment.set(+1);
-                    Timer.delay(0.02);
+                if (Math.abs(pot.getPosition() - setpoint) > retryThreshold && DriverstationInfo.getGamePeriod().equals(mode)) {
+                    // Retry for overshoot
+                    continue;
+                } else {
+                    break;
                 }
             }
-            if (Math.abs(pot.getPosition() - setpoint) > retryThreshold) {
-                // Retry for overshoot
-                alignTo(setpoint);
-            }
-            alignment.set(0);
+            alignment.unlock();
+            lock = false;
             Logger.log(Logger.Urgency.USERMESSAGE, "Aligned to " + setpoint);
         }
     }

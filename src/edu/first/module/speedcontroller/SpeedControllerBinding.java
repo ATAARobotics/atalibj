@@ -1,6 +1,7 @@
 package edu.first.module.speedcontroller;
 
 import edu.first.bindings.AxisBind;
+import edu.wpi.first.wpilibj.SpeedController;
 
 /**
  * The class for binding a speed controller value.
@@ -9,7 +10,7 @@ import edu.first.bindings.AxisBind;
  */
 public class SpeedControllerBinding implements AxisBind {
 
-    private final SpeedControllerModule speedController;
+    private final SpeedController speedController;
     private final boolean reversed;
 
     /**
@@ -17,7 +18,7 @@ public class SpeedControllerBinding implements AxisBind {
      *
      * @param speedController the speed controller module used
      */
-    public SpeedControllerBinding(SpeedControllerModule speedController) {
+    public SpeedControllerBinding(SpeedController speedController) {
         this(speedController, false);
     }
 
@@ -27,7 +28,7 @@ public class SpeedControllerBinding implements AxisBind {
      * @param speedController the speed controller module used
      * @param reversed if output should be reversed
      */
-    public SpeedControllerBinding(SpeedControllerModule speedController, boolean reversed) {
+    public SpeedControllerBinding(SpeedController speedController, boolean reversed) {
         this.speedController = speedController;
         this.reversed = reversed;
     }

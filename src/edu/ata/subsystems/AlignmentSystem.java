@@ -110,6 +110,14 @@ public final class AlignmentSystem extends Subsystem {
         out.set(false);
         in.set(true);
     }
+    
+    public void reverse() {
+        if(isOut()) {
+            setIn();
+        } else {
+            setOut();
+        }
+    }
 
     public boolean isOut() {
         try {

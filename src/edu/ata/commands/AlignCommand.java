@@ -11,6 +11,7 @@ public final class AlignCommand extends ThreadableCommand {
 
     public static final AlignType COLLAPSE = new AlignType(AlignType.COLLAPSE);
     public static final AlignType EXTEND = new AlignType(AlignType.EXTEND);
+    public static final AlignType REVERSE = new AlignType(AlignType.REVERSE);
     public static final AlignType RIGHT = new AlignType(AlignType.RIGHT);
     public static final AlignType LEFT = new AlignType(AlignType.LEFT);
     private final AlignmentSystem alignmentSystem;
@@ -36,6 +37,8 @@ public final class AlignCommand extends ThreadableCommand {
                     alignmentSystem.setIn();
                 } else if (type.type == EXTEND.type) {
                     alignmentSystem.setOut();
+                } else if (type.type == REVERSE.type) {
+                    alignmentSystem.reverse();
                 } else if (type.type == RIGHT.type) {
                     alignmentSystem.setRight();
                 } else if (type.type == LEFT.type) {
@@ -51,7 +54,7 @@ public final class AlignCommand extends ThreadableCommand {
      */
     public static final class AlignType {
 
-        private static final int COLLAPSE = 1, EXTEND = 2, RIGHT = 3, LEFT = 4;
+        private static final int COLLAPSE = 1, EXTEND = 2, REVERSE = 3, RIGHT = 4, LEFT = 5;
         private final int type;
 
         private AlignType(int type) {

@@ -29,7 +29,7 @@ public final class BooleanPreference extends Preference {
      * @param value new value of preference
      */
     public void set(boolean value) {
-        Logger.log(Logger.Urgency.USERMESSAGE, "Setting " + getKey() + " to " + value);
+        Logger.log(Logger.Urgency.LOG, "Setting " + getKey() + " to " + value);
         PREFERENCES.putBoolean(getKey(), value);
     }
 

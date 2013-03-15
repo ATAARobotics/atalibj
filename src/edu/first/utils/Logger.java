@@ -178,7 +178,7 @@ public final class Logger {
         }
         DriverStationLCD.getInstance().println(line, 1, msg + "                      ");
         if (blank) {
-            DriverStationLCD.getInstance().println(blankLine, 1, "                      ");
+            DriverStationLCD.getInstance().println(blankLine, 1, "^---^                ");
         }
         DriverStationLCD.getInstance().updateLCD();
         if (++lineNum > 6) {

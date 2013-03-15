@@ -29,7 +29,7 @@ public final class LongPreference extends Preference {
      * @param value new value of preference
      */
     public void set(long value) {
-        Logger.log(Logger.Urgency.USERMESSAGE, "Setting " + getKey() + " to " + value);
+        Logger.log(Logger.Urgency.LOG, "Setting " + getKey() + " to " + value);
         PREFERENCES.putLong(getKey(), value);
     }
 
