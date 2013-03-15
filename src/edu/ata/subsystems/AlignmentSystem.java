@@ -53,6 +53,7 @@ public final class AlignmentSystem extends Subsystem {
         this.rightOut = right;
         this.in = new NullSolenoid();
         this.out = new GroupSolenoid(new Solenoid[]{left, right});
+        setIn();
     }
 
     /**
@@ -110,9 +111,10 @@ public final class AlignmentSystem extends Subsystem {
         in.set(true);
     }
 
-    public boolean isIn() {
+    public boolean isOut() {
         try {
-            return in.get();
+            // out is always non-null
+            return out.get();
         } catch (Exception ex) {
             return false;
         }

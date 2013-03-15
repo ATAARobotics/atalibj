@@ -330,7 +330,7 @@ public final class Murdock {
                 SmartDashboard.putBoolean("PastSetpoint", shooterController.pastSetpoint());
                 SmartDashboard.putBoolean("60 PSI", !psiSwitch.isPushed());
                 SmartDashboard.putBoolean("BBOut", !bitchBar.isIn());
-                SmartDashboard.putBoolean("AlignOut", !alignment.isIn());
+                SmartDashboard.putBoolean("AlignOut", alignment.isOut());
                 SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
                 SmartDashboard.putNumber("Distance", encoder.getDistance());
                 SmartDashboard.putNumber("Angle", gyro.getAngle());

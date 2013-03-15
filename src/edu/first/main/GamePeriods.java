@@ -28,6 +28,10 @@ public final class GamePeriods extends IterativeRobot {
 
     private static Robot robot;
 
+    {
+        setRobot(Murdock.getInstance().getRobot());
+    }
+
     /**
      * Sets the robot to run by all instances of {@link GamePeriods}. All of the
      * methods in {@link IterativeRobot} are included in {@link Robot}, and
@@ -56,7 +60,6 @@ public final class GamePeriods extends IterativeRobot {
      * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void robotInit() {
-        setRobot(Murdock.getInstance().getRobot());
         try {
             robot.robotInit();
         } catch (Throwable t) {

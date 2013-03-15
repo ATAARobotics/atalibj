@@ -24,9 +24,15 @@ public final class PortMapFile {
     private Port[] ports;
 
     private PortMapFile() {
+        long start = System.currentTimeMillis();
         while(Preferences.getInstance().getKeys().size() < 1) {
             System.out.println("Waiting for preferences...");
             Timer.delay(0.02);
+            if(System.currentTimeMillis() - start > 10000) {
+                Logger.log(Logger.Urgency.USERMESSAGE, "Preferences took too long to initialize -  using default ports!!!");
+                ports = new Port[0];
+                return;
+            }
         }
         try {
             String[] p = ports();
