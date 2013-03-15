@@ -21,16 +21,12 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory. (<i>/resources/META-INF/MANIFEST.MF</i> under "MIDlet-1")</b>
- * 
+ *
  * @author Joel Gallant
  */
 public final class GamePeriods extends IterativeRobot {
 
     private static Robot robot;
-    
-    {
-        robot = Murdock.getInstance().getRobot();
-    }
 
     /**
      * Sets the robot to run by all instances of {@link GamePeriods}. All of the
@@ -60,6 +56,7 @@ public final class GamePeriods extends IterativeRobot {
      * {@link Logger.Urgency#USERMESSAGE}.
      */
     public void robotInit() {
+        setRobot(Murdock.getInstance().getRobot());
         try {
             robot.robotInit();
         } catch (Throwable t) {

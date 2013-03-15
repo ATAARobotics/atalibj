@@ -1,11 +1,7 @@
 package edu.ata.commands;
 
 import edu.first.commands.CommandGroup;
-import edu.first.module.driving.RobotDriveModule;
-import edu.first.module.sensor.EncoderModule;
-import edu.first.module.sensor.GyroModule;
 import edu.first.module.target.MovingModule;
-import edu.first.module.target.PIDModule;
 
 /**
  * Command to move the robot to a position.

@@ -4,6 +4,7 @@ import com.sun.squawk.microedition.io.FileConnection;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.microedition.io.Connector;
 
 /**
@@ -26,7 +27,6 @@ public final class Logger {
     private static boolean fileLoggingOn = true;
     private static int lineNum = 1;
     private static FileConnection logFile;
-    private static DataInputStream inputStream;
 
     // cannot be subclassed or instantiated
     private Logger() throws IllegalAccessException {
@@ -88,16 +88,12 @@ public final class Logger {
         System.out.println(msg);
     }
 
-    private static DataInputStream logFileInput() throws IOException {
-        if (logFile == null || !logFile.isOpen() || !logFile.exists()) {
-            if (logFile != null) {
-                logFile.close();
-            }
-            logFile = (FileConnection) Connector.open(PATH, Connector.READ_WRITE);
+    private static FileConnection logFileInput() throws IOException {
+        if (logFile == null) {
+            logFile = (FileConnection) Connector.open(PATH, Connector.READ);
             logFile.create();
-            inputStream = logFile.openDataInputStream();
         }
-        return inputStream;
+        return logFile;
     }
 
     /**
@@ -116,21 +112,18 @@ public final class Logger {
      * Returns the full text from a text file based on its
      * {@link DataInputStream}.
      *
-     * @param inputStream stream to get text from
-     * @throws IOException thrown when connection cannot be created or file
-     * cannot be accessed / read from
-     * @return text text in the text file
      */
-    public static String getTextFromFile(DataInputStream inputStream) throws IOException {
-        if (inputStream == null) {
+    public static synchronized String getTextFromFile(FileConnection connection) throws IOException {
+        if (connection == null) {
             throw new NullPointerException();
         }
-        String tmp = "";
-        byte cur;
-        while ((cur = (byte) inputStream.read()) > 0) {
-            tmp += (char) cur;
+        InputStream stream = connection.openInputStream();
+        StringBuffer buffer = new StringBuffer();
+        char buf;
+        while ((buf = (char) stream.read()) != -1 && buf != 65535) {
+            buffer.append(buf);
         }
-        return tmp;
+        return buffer.toString();
     }
 
     /**

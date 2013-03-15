@@ -1,5 +1,6 @@
 package edu.ata.autonomous;
 
+import com.sun.squawk.microedition.io.FileConnection;
 import edu.ata.commands.AlignCommand;
 import edu.ata.commands.AlignShooter;
 import edu.ata.commands.ArcadeDriveCommand;
@@ -22,7 +23,6 @@ import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
 import edu.first.module.target.BangBangModule;
 import edu.first.module.target.MovingModule;
-import edu.first.module.target.PIDModule;
 import edu.first.utils.DriverstationInfo;
 import edu.first.utils.Logger;
 import edu.gordian.Gordian;
@@ -31,7 +31,6 @@ import edu.gordian.method.BooleanReturningMethod;
 import edu.gordian.method.NumberReturningMethod;
 import edu.gordian.method.RunningMethod;
 import edu.gordian.variable.NumberInterface;
-import java.io.DataInputStream;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -97,9 +96,9 @@ public final class GordianAuto {
      * @throws IOException thrown when accessing file fails
      */
     public static void run(String fileName) throws IOException {
-        DataInputStream stream = Connector.openDataInputStream("file:///" + fileName);
-        String script = Logger.getTextFromFile(stream);
-        stream.close();
+        FileConnection connection = (FileConnection) Connector.open("file:///" + fileName, Connector.READ);
+        String script = Logger.getTextFromFile(connection);
+        connection.close();
         gordian = new Gordian(script);
         init();
         gordian.run();

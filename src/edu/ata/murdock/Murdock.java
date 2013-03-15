@@ -53,7 +53,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author Joel Gallant
  */
-public final class Murdock implements PortMap {
+public final class Murdock {
 
     // Preferences in code //
     private static final double defaultSetpoint = 4000;
@@ -67,6 +67,8 @@ public final class Murdock implements PortMap {
     private static final double drivetrainPIDMinSpeed = 0.3;
     private static final double drivetrainPIDMaxTurn = 0.8;
     private static final double drivetrainPIDMinTurn = 0.5;
+    private static final double shooterRPMSpeedChange = 20;
+    private static final double shooterDefaultSpeedChange = 0.05;
     private static final String defaultAuto = "auto";
     private static final boolean reverseSpeed = false;
     private static final boolean reverseTurn = false;
@@ -80,7 +82,7 @@ public final class Murdock implements PortMap {
         }
     };
     // Preferences in code //
-    private static final Murdock MURDOCK = new Murdock();
+    private static Murdock MURDOCK;
     private final Robot murdock = new MurdockRobot();
     private final RobotMode fullTestingMode = new FullTestingMode();
     private final RobotMode competitionMode = new CompetitionMode();
@@ -89,28 +91,29 @@ public final class Murdock implements PortMap {
     private DoublePreference DEFAULTSPEED = new DoublePreference("DefaultSpeed", defaultDefaultSpeed);
     private StringPreference AUTOMODE = new StringPreference("AutonomousMode", defaultAuto);
     // WPILIBJ //
-    private final DigitalInput _psiSwitch = new DigitalInput(PSI_SWITCH);
-    private final AnalogChannel _potentiometer = new AnalogChannel(SHOOTER_POSITION);
-    private final DigitalInput _hallEffect = new DigitalInput(HALLEFFECT_PORT);
-    private final Encoder _encoder = new Encoder(ENCODER[0], ENCODER[1]);
-    private final Gyro _gyro = new Gyro(GYRO);
-    private final Relay _compressor = new Relay(COMPRESSOR);
-    private final Joystick _joystick1 = new Joystick(JOYSTICK_1);
-    private final Joystick _joystick2 = new Joystick(JOYSTICK_2);
-    private final Talon _shooter = new Talon(SHOOTER_PORT);
-    private final Victor _shooterAligner = new Victor(SHOOTER_ALIGNMENT_PORT);
-    private final Victor _leftBack = new Victor(DRIVE[0]);
-    private final Victor _leftFront = new Victor(DRIVE[1]);
-    private final Victor _rightBack = new Victor(DRIVE[2]);
-    private final Victor _rightFront = new Victor(DRIVE[3]);
+    private final DigitalInput _psiSwitch = new DigitalInput(PortMapFile.getInstance().getPort("PSISwitch", 5));
+    private final AnalogChannel _potentiometer = new AnalogChannel(PortMapFile.getInstance().getPort("Pot", 1));
+    private final DigitalInput _hallEffect = new DigitalInput(PortMapFile.getInstance().getPort("HallEffect", 1));
+    private final Encoder _encoder = new Encoder(PortMapFile.getInstance().getPort("EncoderA", 2),
+            PortMapFile.getInstance().getPort("EncoderB", 3));
+    private final Gyro _gyro = new Gyro(PortMapFile.getInstance().getPort("Gyro", 2));
+    private final Relay _compressor = new Relay(PortMapFile.getInstance().getPort("Compressor", 1));
+    private final Joystick _joystick1 = new Joystick(PortMapFile.getInstance().getPort("Joystick1", 1));
+    private final Joystick _joystick2 = new Joystick(PortMapFile.getInstance().getPort("Joystick2", 2));
+    private final Talon _shooter = new Talon(PortMapFile.getInstance().getPort("Shooter", 1));
+    private final Victor _shooterAligner = new Victor(PortMapFile.getInstance().getPort("ShooterAlignment", 2));
+    private final Victor _leftBack = new Victor(PortMapFile.getInstance().getPort("LeftBack", 5));
+    private final Victor _leftFront = new Victor(PortMapFile.getInstance().getPort("LeftFront", 6));
+    private final Victor _rightBack = new Victor(PortMapFile.getInstance().getPort("RightBack", 3));
+    private final Victor _rightFront = new Victor(PortMapFile.getInstance().getPort("RightFront", 4));
     private final RobotDrive _drive = new RobotDrive(_leftFront, _leftBack, _rightFront, _rightBack);
-    private final Solenoid _loadOut = new Solenoid(LOAD_OUT);
-    private final Solenoid _gearUp = new Solenoid(GEAR_UP);
-    private final Solenoid _gearDown = new Solenoid(GEAR_DOWN);
-    private final Solenoid _bitchBarIn = new Solenoid(BITCH_BAR_IN_PORT);
-    private final Solenoid _bitchBarOut = new Solenoid(BITCH_BAR_OUT_PORT);
-    private final Solenoid _backLeft = new Solenoid(BACK_LEFT);
-    private final Solenoid _backRight = new Solenoid(BACK_RIGHT);
+    private final Solenoid _loadOut = new Solenoid(PortMapFile.getInstance().getPort("LoadOut", 7));
+    private final Solenoid _gearUp = new Solenoid(PortMapFile.getInstance().getPort("GearUp", 3));
+    private final Solenoid _gearDown = new Solenoid(PortMapFile.getInstance().getPort("GearDown", 4));
+    private final Solenoid _bitchBarIn = new Solenoid(PortMapFile.getInstance().getPort("BitchBarIn", 5));
+    private final Solenoid _bitchBarOut = new Solenoid(PortMapFile.getInstance().getPort("BitchBarOut", 6));
+    private final Solenoid _backLeft = new Solenoid(PortMapFile.getInstance().getPort("BackLeft", 1));
+    private final Solenoid _backRight = new Solenoid(PortMapFile.getInstance().getPort("BackRight", 2));
     // Robot //
     private final TransferRateCalculator transferRate = new TransferRateCalculator();
     private final DigitalLimitSwitchModule psiSwitch = new DigitalLimitSwitchModule(_psiSwitch);
@@ -148,6 +151,11 @@ public final class Murdock implements PortMap {
             drivetrainPIDMaxSpeed, drivetrainPIDMinSpeed, drivetrainPIDMaxTurn, drivetrainPIDMinTurn);
 
     public static Murdock getInstance() {
+        synchronized (Murdock.class) {
+            if (MURDOCK == null) {
+                MURDOCK = new Murdock();
+            }
+        }
         return MURDOCK;
     }
 
@@ -273,13 +281,15 @@ public final class Murdock implements PortMap {
         joystick2.bindWhenPressed(XboxController.START,
                 new BangBangCommand(shooterController, SETPOINT, false));
         joystick2.bindWhenPressed(XboxController.Y,
-                new ChangeSetpointCommand(SETPOINT, +20, shooterController, false));
+                new ChangeSetpointCommand(SETPOINT, +shooterRPMSpeedChange, shooterController, false));
         joystick2.bindWhenPressed(XboxController.A,
-                new ChangeSetpointCommand(SETPOINT, -20, shooterController, false));
+                new ChangeSetpointCommand(SETPOINT, -shooterRPMSpeedChange, shooterController, false));
         joystick2.bindWhenPressed(XboxController.B,
-                new ChangeDefaultSpeedCommand(DEFAULTSPEED, +0.05, shooterController, false));
+                new ChangeDefaultSpeedCommand(DEFAULTSPEED, +shooterDefaultSpeedChange, shooterController, false));
         joystick2.bindWhenPressed(XboxController.X,
-                new ChangeDefaultSpeedCommand(DEFAULTSPEED, -0.05, shooterController, false));
+                new ChangeDefaultSpeedCommand(DEFAULTSPEED, -shooterDefaultSpeedChange, shooterController, false));
+        
+        Logger.log(Logger.Urgency.USERMESSAGE, "Teleop Binds Ready");
     }
 
     private boolean isSmartDashboard() {

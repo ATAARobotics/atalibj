@@ -1,7 +1,10 @@
 package edu.ata.murdock;
 
+import com.sun.squawk.microedition.io.FileConnection;
+import com.sun.squawk.util.StringTokenizer;
 import edu.first.utils.Logger;
-import edu.gordian.StringUtils;
+import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -17,16 +20,22 @@ public final class PortMapFile {
      * Path to the port map file.
      */
     public static final String PATH = "file:///PortMap.txt";
-    private static final PortMapFile PORT_MAP_FILE = new PortMapFile();
-    private static Port[] ports;
+    private static PortMapFile PORT_MAP_FILE;
+    private Port[] ports;
 
-    static {
+    private PortMapFile() {
+        while(Preferences.getInstance().getKeys().size() < 1) {
+            System.out.println("Waiting for preferences...");
+            Timer.delay(0.02);
+        }
         try {
             String[] p = ports();
             ports = new Port[p.length];
             for (int x = 0; x < ports.length; x++) {
-                ports[x] = new Port(p[x].substring(0, p[x].indexOf("=")).trim(), 
-                        Integer.parseInt(p[x].substring(p[x].indexOf("=") + 1).trim()));
+                String name = p[x].substring(0, p[x].indexOf("=")).trim();
+                String num = p[x].substring(p[x].indexOf("=") + 1).trim();
+                Logger.log(Logger.Urgency.LOG, name + " is " + num);
+                ports[x] = new Port(name, Integer.parseInt(num));
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -41,6 +50,9 @@ public final class PortMapFile {
      * @return singleton instance
      */
     public static PortMapFile getInstance() {
+        if (PORT_MAP_FILE == null) {
+            PORT_MAP_FILE = new PortMapFile();
+        }
         return PORT_MAP_FILE;
     }
 
@@ -49,7 +61,7 @@ public final class PortMapFile {
      *
      * @return all ports found
      */
-    public static Port[] getAllPorts() {
+    public Port[] getAllPorts() {
         return ports;
     }
 
@@ -60,10 +72,9 @@ public final class PortMapFile {
      * @param def default if the port does not exist
      * @return port number in the text file or the default given
      */
-    public static int getPort(String name, int def) {
+    public int getPort(String name, int def) {
         for (int x = 0; x < ports.length; x++) {
             if (ports[x].name.equals(name)) {
-                Logger.log(Logger.Urgency.LOG, name + " is " + ports[x].port);
                 return ports[x].port;
             }
         }
@@ -71,11 +82,20 @@ public final class PortMapFile {
         return def;
     }
 
-    private static String[] ports() throws IOException {
-        return StringUtils.split(Logger.getTextFromFile(Connector.openDataInputStream(PATH)), '\n');
+    private String[] ports() throws IOException {
+        FileConnection connection = (FileConnection) Connector.open(PATH, Connector.READ);
+        String file = Logger.getTextFromFile(connection);
+        connection.close();
+        StringTokenizer tokenizer = new StringTokenizer(file);
+        String[] s = new String[tokenizer.countTokens()];
+        int x = 0;
+        while (tokenizer.hasMoreElements()) {
+            s[x++] = tokenizer.nextToken();
+        }
+        return s;
     }
 
-    private static final class Port {
+    public static final class Port {
 
         public final String name;
         public final int port;
