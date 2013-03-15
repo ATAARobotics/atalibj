@@ -4,12 +4,12 @@ import edu.ata.autonomous.GordianAuto;
 import edu.ata.commands.AlignCommand;
 import edu.ata.commands.AutoShoot;
 import edu.ata.commands.BangBangCommand;
-import edu.ata.commands.ChangeDefaultSpeedCommand;
-import edu.ata.commands.ChangeSetpointCommand;
+import edu.ata.commands.ChangeRPMCommand;
 import edu.ata.commands.GearShiftCommand;
 import edu.ata.commands.ShootCommand;
 import edu.ata.commands.SwitchBitchBar;
 import edu.ata.modules.XboxController;
+import edu.ata.preferences.RPMPreference;
 import edu.ata.subsystems.AlignmentSystem;
 import edu.ata.subsystems.GearShifters;
 import edu.ata.subsystems.ReversingSolenoids;
@@ -33,7 +33,6 @@ import edu.first.robot.RobotAdapter;
 import edu.first.utils.DriverstationInfo;
 import edu.first.utils.Logger;
 import edu.first.utils.TransferRateCalculator;
-import edu.first.utils.preferences.DoublePreference;
 import edu.first.utils.preferences.StringPreference;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -57,7 +56,6 @@ public final class Murdock {
 
     // Preferences in code //
     private static final double defaultSetpoint = 4000;
-    private static final double defaultDefaultSpeed = 0.5;
     private static final double shooterRPMTolerance = 40;
     private static final double dP = 0.001, dI = 0, dD = 0.001;
     private static final double tP = 1, tI = 0, tD = 0;
@@ -68,7 +66,6 @@ public final class Murdock {
     private static final double drivetrainPIDMaxTurn = 0.8;
     private static final double drivetrainPIDMinTurn = 0.5;
     private static final double shooterRPMSpeedChange = 20;
-    private static final double shooterDefaultSpeedChange = 0.05;
     private static final String defaultAuto = "auto";
     private static final boolean reverseSpeed = false;
     private static final boolean reverseTurn = false;
@@ -87,8 +84,7 @@ public final class Murdock {
     private final RobotMode fullTestingMode = new FullTestingMode();
     private final RobotMode competitionMode = new CompetitionMode();
     private long lastSave = System.currentTimeMillis();
-    private DoublePreference SETPOINT = new DoublePreference("ShooterSetpoint", defaultSetpoint);
-    private DoublePreference DEFAULTSPEED = new DoublePreference("DefaultSpeed", defaultDefaultSpeed);
+    private RPMPreference RPM = new RPMPreference("Shooter", defaultSetpoint);
     private StringPreference AUTOMODE = new StringPreference("AutonomousMode", defaultAuto);
     // WPILIBJ //
     private final DigitalInput _psiSwitch = new DigitalInput(PortMapFile.getInstance().getPort("PSISwitch", 5));
@@ -136,7 +132,7 @@ public final class Murdock {
     private final SolenoidModule backRight = new SolenoidModule(_backRight);
     // Subsystems //
     private final BangBangModule shooterController =
-            new BangBangModule(hallEffect, shooter, DEFAULTSPEED.get(), shooterRPMTolerance, reverseShooter);
+            new BangBangModule(hallEffect, shooter, RPM.getDefaultSpeed(), shooterRPMTolerance, reverseShooter);
     private final Shooter shotController =
             new Shooter(loadOut, potentiometer, shooterAligner, shooterController);
     private final GearShifters gearShifterController =
@@ -177,8 +173,7 @@ public final class Murdock {
     private void init() {
         Logger.log(Logger.Urgency.USERMESSAGE, "IO " + competitionPort + " = Competition");
         Logger.log(Logger.Urgency.USERMESSAGE, "IO " + smartDashboardPort + " = SmartDashboard");
-        SETPOINT.create();
-        DEFAULTSPEED.create();
+        RPM.create();
         AUTOMODE.create();
 
         compressor.enable();
@@ -279,15 +274,11 @@ public final class Murdock {
         joystick2.bindWhenPressed(XboxController.BACK,
                 new BangBangCommand(shooterController, 0, false));
         joystick2.bindWhenPressed(XboxController.START,
-                new BangBangCommand(shooterController, SETPOINT, false));
+                new BangBangCommand(shooterController, RPM, false));
         joystick2.bindWhenPressed(XboxController.Y,
-                new ChangeSetpointCommand(SETPOINT, +shooterRPMSpeedChange, shooterController, false));
+                new ChangeRPMCommand(RPM, +shooterRPMSpeedChange, shooterController, false));
         joystick2.bindWhenPressed(XboxController.A,
-                new ChangeSetpointCommand(SETPOINT, -shooterRPMSpeedChange, shooterController, false));
-        joystick2.bindWhenPressed(XboxController.B,
-                new ChangeDefaultSpeedCommand(DEFAULTSPEED, +shooterDefaultSpeedChange, shooterController, false));
-        joystick2.bindWhenPressed(XboxController.X,
-                new ChangeDefaultSpeedCommand(DEFAULTSPEED, -shooterDefaultSpeedChange, shooterController, false));
+                new ChangeRPMCommand(RPM, -shooterRPMSpeedChange, shooterController, false));
         
         Logger.log(Logger.Urgency.USERMESSAGE, "Teleop Binds Ready");
     }
@@ -315,8 +306,8 @@ public final class Murdock {
             shooterController.enable();
             shotController.enable();
 
-            shooterController.setSetpoint(SETPOINT.get());
-            shooterController.setDefaultSpeed(DEFAULTSPEED.get());
+            shooterController.setSetpoint(RPM.getRPM());
+            shooterController.setDefaultSpeed(RPM.getDefaultSpeed());
             shooterController.setSetpoint(0);
             drive.setSafetyEnabled(true);
 
@@ -359,8 +350,8 @@ public final class Murdock {
             shooterController.enable();
             shotController.enable();
 
-            shooterController.setSetpoint(SETPOINT.get());
-            shooterController.setDefaultSpeed(DEFAULTSPEED.get());
+            shooterController.setSetpoint(RPM.getRPM());
+            shooterController.setDefaultSpeed(RPM.getDefaultSpeed());
             shooterController.setSetpoint(0);
             drive.setSafetyEnabled(true);
 

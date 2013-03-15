@@ -1,19 +1,19 @@
 package edu.ata.commands;
 
+import edu.ata.preferences.RPMPreference;
 import edu.first.module.target.BangBangModule;
-import edu.first.utils.preferences.DoublePreference;
 
 /**
  *
  * @author Joel Gallant
  */
-public class ChangeSetpointCommand extends ThreadableCommand {
+public class ChangeRPMCommand extends ThreadableCommand {
 
-    private final DoublePreference current;
+    private final RPMPreference current;
     private final double change;
     private final BangBangModule controller;
 
-    public ChangeSetpointCommand(DoublePreference current, double change, BangBangModule controller, boolean newThread) {
+    public ChangeRPMCommand(RPMPreference current, double change, BangBangModule controller, boolean newThread) {
         super(newThread);
         this.current = current;
         this.change = change;
@@ -23,9 +23,10 @@ public class ChangeSetpointCommand extends ThreadableCommand {
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                double newSetpoint = current.get() + change;
+                double newSetpoint = current.getRPM() + change;
                 current.set(newSetpoint);
-                controller.setSetpoint(newSetpoint);
+                controller.setSetpoint(current.getRPM());
+                controller.setDefaultSpeed(current.getDefaultSpeed());
             }
         };
     }

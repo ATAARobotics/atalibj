@@ -1,7 +1,7 @@
 package edu.ata.commands;
 
+import edu.ata.preferences.RPMPreference;
 import edu.first.module.target.BangBangModule;
-import edu.first.utils.preferences.DoublePreference;
 
 /**
  * Command to set the setpoint of a bang bang module.
@@ -11,7 +11,7 @@ import edu.first.utils.preferences.DoublePreference;
 public final class BangBangCommand extends ThreadableCommand {
 
     private final BangBangModule bangBangModule;
-    private DoublePreference setpointPreference;
+    private RPMPreference setpointPreference;
     private final double setpoint;
 
     /**
@@ -36,7 +36,7 @@ public final class BangBangCommand extends ThreadableCommand {
      * @param setpoint setpoint preference of bang bang
      * @param newThread if command should run in a new thread
      */
-    public BangBangCommand(BangBangModule bangBangModule, DoublePreference setpoint, boolean newThread) {
+    public BangBangCommand(BangBangModule bangBangModule, RPMPreference setpoint, boolean newThread) {
         super(newThread);
         this.bangBangModule = bangBangModule;
         this.setpointPreference = setpoint;
@@ -47,7 +47,8 @@ public final class BangBangCommand extends ThreadableCommand {
         return new Runnable() {
             public void run() {
                 if (setpointPreference != null) {
-                    bangBangModule.setSetpoint(setpointPreference.get());
+                    bangBangModule.setSetpoint(setpointPreference.getRPM());
+                    bangBangModule.setDefaultSpeed(setpointPreference.getDefaultSpeed());
                 } else {
                     bangBangModule.setSetpoint(setpoint);
                 }
