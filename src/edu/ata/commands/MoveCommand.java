@@ -10,6 +10,12 @@ import edu.first.module.target.MovingModule;
  */
 public class MoveCommand extends CommandGroup {
 
+    /**
+     *
+     * @param movingModule
+     * @param forwards
+     * @param right
+     */
     public MoveCommand(MovingModule movingModule, double forwards, double right) {
         double firstAngle;
         double secondAngle;

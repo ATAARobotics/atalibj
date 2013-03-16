@@ -112,6 +112,13 @@ public final class Logger {
      * Returns the full text from a text file based on its
      * {@link DataInputStream}.
      *
+     * <i> Note: </i> If preferences are currently being read, this method can
+     * escape into an infinite loop. Be sure that they are not (only done at the
+     * start of the robot code)
+     *
+     * @param connection the file connection to read from
+     * @return text from the file
+     * @throws IOException thrown when error occurs
      */
     public static synchronized String getTextFromFile(FileConnection connection) throws IOException {
         if (connection == null) {
@@ -135,6 +142,7 @@ public final class Logger {
      * etc.
      *
      * @param msg message to display on next line
+     * @param blank if a blank line should be added after the line
      */
     public static void displayLCDMessage(String msg, boolean blank) {
         if (msg == null) {

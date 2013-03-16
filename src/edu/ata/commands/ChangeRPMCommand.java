@@ -13,6 +13,13 @@ public class ChangeRPMCommand extends ThreadableCommand {
     private final double change;
     private final BangBangModule controller;
 
+    /**
+     *
+     * @param current
+     * @param change
+     * @param controller
+     * @param newThread
+     */
     public ChangeRPMCommand(RPMPreference current, double change, BangBangModule controller, boolean newThread) {
         super(newThread);
         this.current = current;

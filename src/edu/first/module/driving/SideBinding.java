@@ -11,7 +11,14 @@ import edu.first.bindings.AxisBind;
  */
 public final class SideBinding implements AxisBind {
 
-    public static final Side RIGHT = new Side(Side.RIGHT), LEFT = new Side(Side.LEFT);
+    /**
+     *
+     */
+    public static final Side RIGHT = new Side(Side.RIGHT),
+    /**
+     *
+     */
+    LEFT = new Side(Side.LEFT);
     private final RobotDriveModule driveModule;
     private final Side side;
 

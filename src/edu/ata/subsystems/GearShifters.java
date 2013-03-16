@@ -17,7 +17,8 @@ public final class GearShifters extends Subsystem {
     /**
      * Constructs the shifter with a {@link ReversingSolenoids} object.
      *
-     * @param reversingSolenoids duel solenoid system to switch gears
+     * @param gearOne first gear
+     * @param gearTwo second gear
      */
     public GearShifters(SolenoidModule gearOne, SolenoidModule gearTwo) {
         this(new ReversingSolenoids(gearOne, gearTwo));

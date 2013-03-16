@@ -101,11 +101,25 @@ public final class PortMapFile {
         return s;
     }
 
+    /**
+     *
+     */
     public static final class Port {
 
+        /**
+         *
+         */
         public final String name;
+        /**
+         *
+         */
         public final int port;
 
+        /**
+         *
+         * @param name
+         * @param port
+         */
         public Port(String name, int port) {
             this.name = name;
             this.port = port;
