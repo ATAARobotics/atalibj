@@ -76,8 +76,8 @@ public final class Murdock {
     private static final double defaultY = 4;
     private static final String defaultAuto = "auto";
     private static final boolean reverseSpeed = false;
-    private static final boolean reverseTurn = false;
-    private static final boolean reverseShooter = true;
+    private static final boolean reverseTurn = true;
+    private static final boolean reverseShooter = false;
     private static final boolean reverseAlignmentTriggers = false;
     private static final int competitionPort = 1;
     private static final int smartDashboardPort = 2;
