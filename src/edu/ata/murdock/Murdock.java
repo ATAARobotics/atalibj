@@ -64,7 +64,7 @@ public final class Murdock {
     private static final double tP = 1, tI = 0, tD = 0;
     private static final double drivetrainDistanceTolerance = 40;
     private static final double drivetrainTurningTolerance = 3;
-    private static final double drivetrainPIDMaxSpeed = 0.3;
+    private static final double drivetrainPIDMaxSpeed = 0.7;
     private static final double drivetrainPIDMinSpeed = 0.3;
     private static final double drivetrainPIDMaxTurn = 0.8;
     private static final double drivetrainPIDMinTurn = 0.5;
@@ -159,6 +159,10 @@ public final class Murdock {
             drivetrainDistanceTolerance, drivetrainTurningTolerance,
             drivetrainPIDMaxSpeed, drivetrainPIDMinSpeed, drivetrainPIDMaxTurn, drivetrainPIDMinTurn);
 
+    /**
+     *
+     * @return
+     */
     public static Murdock getInstance() {
         synchronized (Murdock.class) {
             if (MURDOCK == null) {
@@ -171,6 +175,10 @@ public final class Murdock {
     private Murdock() {
     }
 
+    /**
+     *
+     * @return
+     */
     public Robot getRobot() {
         return murdock;
     }
@@ -316,6 +324,9 @@ public final class Murdock {
         return DriverstationInfo.getDS().getDigitalIn(smartDashboardPort);
     }
 
+    /**
+     *
+     */
     public final class FullTestingMode extends RobotMode {
 
         public void autonomousInit() {
@@ -361,6 +372,9 @@ public final class Murdock {
         }
     }
 
+    /**
+     *
+     */
     public final class CompetitionMode extends RobotMode {
 
         private int counter = 0;

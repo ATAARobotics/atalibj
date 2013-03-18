@@ -46,7 +46,6 @@ public final class DoublePreference extends Preference {
      * If the preference does not exist ({@link Preference#exists()}), creates
      * it with the default value.
      *
-     * @param initialValue value to set to
      */
     public void create() {
         if (!exists()) {

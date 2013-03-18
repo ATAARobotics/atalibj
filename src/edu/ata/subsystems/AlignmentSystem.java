@@ -111,6 +111,9 @@ public final class AlignmentSystem extends Subsystem {
         in.set(true);
     }
     
+    /**
+     *
+     */
     public void reverse() {
         if(isOut()) {
             setIn();
@@ -119,6 +122,10 @@ public final class AlignmentSystem extends Subsystem {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isOut() {
         try {
             // out is always non-null
@@ -128,6 +135,10 @@ public final class AlignmentSystem extends Subsystem {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isRight() {
         return rightOut.get();
     }

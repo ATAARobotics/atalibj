@@ -13,6 +13,7 @@ public interface Accelerometer extends PIDSource {
     /**
      * Returns the acceleration in G's.
      *
+     * @param axes which axis to measure
      * @return acceleration measured by sensor
      */
     public double getAcceleration(ADXL345_I2C.Axes axes);

@@ -28,6 +28,12 @@ public final class AlignShooter extends ThreadableCommand {
         this.setpointPreference = null;
     }
 
+    /**
+     *
+     * @param shooter
+     * @param setpointPreference
+     * @param newThread
+     */
     public AlignShooter(Shooter shooter, DoublePreference setpointPreference, boolean newThread) {
         super(newThread);
         this.shooter = shooter;

@@ -64,11 +64,12 @@ public final class GordianAuto {
      * methods, variables, etc. You can generally accept that everything is
      * ready to be run after running this method.
      *
+     * @param gearShifters shifting mechanism
      * @param drivetrain the drivetrain you are using
      * @param shooter the shooter you are using
      * @param bangBangModule the bang-bang module that you are using
      * @param alignmentSystem that alignment system that your are using
-     * @param drivetrainPID pid used to control drivetrain
+     * @param drivetrainControl moving module to move drivetrain
      * @param encoder encoder to get distance of drivetrain
      * @param gyro gyroscope for angle of the drivetrain
      */

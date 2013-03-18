@@ -13,6 +13,10 @@ public final class AlignmentMotor implements SpeedController, Module {
     private final SpeedControllerModule speedController;
     private boolean locked = false;
 
+    /**
+     *
+     * @param speedController
+     */
     public AlignmentMotor(SpeedControllerModule speedController) {
         this.speedController = speedController;
     }
@@ -41,11 +45,18 @@ public final class AlignmentMotor implements SpeedController, Module {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized SpeedControllerModule lock() {
         locked = true;
         return speedController;
     }
 
+    /**
+     *
+     */
     public synchronized void unlock() {
         locked = false;
         speedController.set(0);

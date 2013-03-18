@@ -17,7 +17,8 @@ public class AccelerometerModule extends ForwardingAccelerometer implements Modu
      * Constructs the object by using composition, using the given accelerometer
      * object to control methods in this class.
      *
-     * @param button actual underlying object used
+     * @param accelerometer sensor to use
+     * @param filterLength how much to filter the signal (1 = none)
      */
     public AccelerometerModule(ADXL345_I2C accelerometer, int filterLength) {
         super(accelerometer, filterLength);
@@ -57,6 +58,7 @@ public class AccelerometerModule extends ForwardingAccelerometer implements Modu
     /**
      * Returns the acceleration in G's. Returns 0 if it is disabled.
      *
+     * @param axes 
      * @return acceleration measured by sensor
      */
     public double getAcceleration(ADXL345_I2C.Axes axes) {

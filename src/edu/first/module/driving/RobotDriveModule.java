@@ -28,6 +28,14 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
         this(drive, false, false);
     }
 
+    /**
+     * Constructs the object by using composition, using the given robot drive
+     * object to control methods in this class.
+     *
+     * @param drive actual underlying class used
+     * @param reverseSpeed if class should be reversed speed
+     * @param reverseTurn if class should be reversed turn
+     */
     public RobotDriveModule(RobotDrive drive, boolean reverseSpeed, boolean reverseTurn) {
         super(drive, reverseSpeed, reverseTurn);
     }

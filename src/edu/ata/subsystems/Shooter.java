@@ -32,7 +32,6 @@ public final class Shooter extends Subsystem {
      *
      * @param loadIn loader in solenoid
      * @param loadOut loader out solenoid
-     * @param psiSwitch 60 psi switch
      * @param pot potentiometer measuring alignment
      * @param alignment motor controlling winch
      * @param bangBang bang-bang controlling shooter wheel
@@ -51,7 +50,6 @@ public final class Shooter extends Subsystem {
      * Constructs the shooter using all of the components used.
      *
      * @param loadOut loader out solenoid
-     * @param psiSwitch 60 psi switch
      * @param pot potentiometer measuring alignment
      * @param alignment motor controlling winch
      * @param bangBang bang-bang controlling shooter wheel
