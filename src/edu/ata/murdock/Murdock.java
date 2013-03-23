@@ -60,6 +60,9 @@ public final class Murdock {
     // Preferences in code //
     private static final double defaultSetpoint = 4000;
     private static final double shooterRPMTolerance = 40;
+    private static final double shiftersInputThreshhold = 0.7;
+    private static final double shiftersSpeedThreshhold = 10000;
+    private static final double shiftersShiftTimeLimit = 0.5;
     private static final double dP = 0.001, dI = 0, dD = 0.001;
     private static final double tP = 1, tI = 0, tD = 0;
     private static final double drivetrainDistanceTolerance = 40;
@@ -86,7 +89,23 @@ public final class Murdock {
             return input != 0 ? ((input * input * input) + 0.12) : 0;
         }
     };
-    // Preferences in code //
+    private static final Function SHIFTER_FUNCTION = new Function() {
+        private final Murdock m = getInstance();
+        private long lastShift = 0;
+
+        public double F(double input) {
+//            if (input > shiftersInputThreshhold && m.encoder.getRate() > shiftersSpeedThreshhold 
+//                    // Make sure not to shift too much
+//                    && (System.currentTimeMillis() - lastShift) > shiftersShiftTimeLimit * 1000) {
+//                m.gearShifterController.setSecondGear();
+//                lastShift = System.currentTimeMillis();
+//            } else {
+//                m.gearShifterController.setFirstGear();
+//            }
+            return input;
+        }
+    };
+    // Important things //
     private static Murdock MURDOCK;
     private final Robot murdock = new MurdockRobot();
     private final RobotMode fullTestingMode = new FullTestingMode();
@@ -194,7 +213,7 @@ public final class Murdock {
     private void init() {
         Logger.log(Logger.Urgency.USERMESSAGE, "IO " + competitionPort + " = Competition");
         Logger.log(Logger.Urgency.USERMESSAGE, "IO " + smartDashboardPort + " = SmartDashboard");
-        if(DriverstationInfo.FMSattached()) {
+        if (DriverstationInfo.FMSattached()) {
             Logger.log(Logger.Urgency.USERMESSAGE, "FMS attached - reverting to competition mode");
             DriverstationInfo.getDS().setDigitalOut(1, true);
         }
@@ -209,6 +228,7 @@ public final class Murdock {
         compressor.set(Relay.Value.kForward);
 
         drive.addFunction(DRIVER_FUNCTION);
+        drive.addFunction(SHIFTER_FUNCTION);
     }
 
     private void disabled() {
@@ -299,14 +319,14 @@ public final class Murdock {
                 new SpeedControllerBinding(alignmentMotor, reverseAlignmentTriggers));
         // Shooting
         joystick2.bindWhenPressed(XboxController.RIGHT_BUMPER,
-                new ShootCommand(shotController, false));
-        joystick2.bindWhenPressed(XboxController.RIGHT_STICK,
-                new AutoShoot(shotController, shooterController, false));
+                new ShootCommand(shotController, true));
+        joystick2.bindWhilePressed(XboxController.RIGHT_STICK,
+                new AutoShoot(shotController, shooterController, true));
         joystick2.bindWhenPressed(XboxController.BACK,
                 new BangBangCommand(shooterController, 0, false));
         joystick2.bindWhenPressed(XboxController.START,
                 new BangBangCommand(shooterController, RPM, false));
-        joystick2.bindWhenPressed(XboxController.LEFT_STICK, 
+        joystick2.bindWhenPressed(XboxController.LEFT_STICK,
                 new SwitchBitchBar(bitchBar, false));
         joystick2.bindWhenPressed(XboxController.B,
                 new ChangeRPMCommand(RPM, +shooterRPMSpeedChange, shooterController, false));
@@ -324,9 +344,6 @@ public final class Murdock {
         return DriverstationInfo.getDS().getDigitalIn(smartDashboardPort);
     }
 
-    /**
-     *
-     */
     public final class FullTestingMode extends RobotMode {
 
         public void autonomousInit() {
@@ -372,9 +389,6 @@ public final class Murdock {
         }
     }
 
-    /**
-     *
-     */
     public final class CompetitionMode extends RobotMode {
 
         private int counter = 0;

@@ -141,7 +141,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
         if (reverseTurn) {
             curve = -curve;
         }
-        drive.drive(transform(outputMagnitude), curve);
+        drive.drive(transformSpeed(outputMagnitude), curve);
     }
 
     /**
@@ -158,7 +158,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
             leftValue = -leftValue;
             rightValue = -rightValue;
         }
-        drive.tankDrive(transform(leftValue), transform(rightValue), squaredInputs);
+        drive.tankDrive(transformSpeed(leftValue), transformSpeed(rightValue), squaredInputs);
     }
 
     /**
@@ -187,8 +187,8 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
         if (reverseTurn) {
             rotateValue = -rotateValue;
         }
-        lastForward = transform(moveValue);
-        lastTurn = transform(rotateValue);
+        lastForward = transformSpeed(moveValue);
+        lastTurn = transformSpeed(rotateValue);
         drive.arcadeDrive(moveValue, rotateValue, squaredInputs);
     }
 
@@ -276,7 +276,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * implement field-oriented controls.
      */
     public void mecanumDrive_Cartesian(double x, double y, double rotation, double gyroAngle) {
-        drive.mecanumDrive_Cartesian(x, transform(y), rotation, gyroAngle);
+        drive.mecanumDrive_Cartesian(x, transformSpeed(y), rotation, gyroAngle);
     }
 
     /**
@@ -293,7 +293,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * independent of the magnitude or direction. [-1.0..1.0]
      */
     public void mecanumDrive_Polar(double magnitude, double direction, double rotation) {
-        drive.mecanumDrive_Polar(transform(magnitude), direction, rotation);
+        drive.mecanumDrive_Polar(transformSpeed(magnitude), direction, rotation);
     }
 
     /**
@@ -307,8 +307,8 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
         }
-        lastLeft = transform(leftOutput);
-        lastRight = transform(rightOutput);
+        lastLeft = transformSpeed(leftOutput);
+        lastRight = transformSpeed(rightOutput);
         drive.setLeftRightMotorOutputs(leftOutput, rightOutput);
     }
 
@@ -443,7 +443,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
         };
     }
 
-    private double transform(double original) {
+    private double transformSpeed(double original) {
         if (original != 0) {
             for (int x = 0; x < speedFunctions.size(); x++) {
                 original = ((Function) speedFunctions.get(x)).F(original);

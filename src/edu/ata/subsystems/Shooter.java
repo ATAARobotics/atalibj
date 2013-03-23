@@ -19,13 +19,13 @@ import edu.wpi.first.wpilibj.Timer;
  * @author Team 4334
  */
 public final class Shooter extends Subsystem {
-
+    
     private static final double retryThreshold = 0.1;
     private final SolenoidModule loadIn, loadOut;
     private final PotentiometerModule pot;
     private final AlignmentMotor alignment;
     private final BangBangModule bangBang;
-    private boolean lock;
+    private boolean shotLock, alignLock;
 
     /**
      * Constructs the shooter using all of the components used.
@@ -68,18 +68,23 @@ public final class Shooter extends Subsystem {
      * Coasts the shooter and fires the disc for half a second.
      */
     public void shoot() {
-        Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
-        bangBang.setCoast(true);
-        if (loadIn != null) {
-            loadIn.set(false);
+        if (!shotLock) {
+            shotLock = true;
+            Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
+            Logger.log(Logger.Urgency.LOG, "Shot @ " + DriverstationInfo.getGamePeriod() + " " + DriverstationInfo.getMatchTime());
+            bangBang.setCoast(true);
+            if (loadIn != null) {
+                loadIn.set(false);
+            }
+            loadOut.set(true);
+            Timer.delay(0.5);
+            if (loadIn != null) {
+                loadIn.set(true);
+            }
+            loadOut.set(false);
+            bangBang.setCoast(false);
+            shotLock = false;
         }
-        loadOut.set(true);
-        Timer.delay(0.5);
-        if (loadIn != null) {
-            loadIn.set(true);
-        }
-        loadOut.set(false);
-        bangBang.setCoast(false);
     }
 
     /**
@@ -91,8 +96,8 @@ public final class Shooter extends Subsystem {
      */
     public void alignTo(final double setpoint) {
         final String mode = DriverstationInfo.getGamePeriod();
-        if(!lock) {
-            lock = true;
+        if (!alignLock) {
+            alignLock = true;
             SpeedControllerModule control = alignment.lock();
             Logger.log(Logger.Urgency.USERMESSAGE, "Aligning to " + setpoint);
             while (true) {
@@ -115,7 +120,7 @@ public final class Shooter extends Subsystem {
                 }
             }
             alignment.unlock();
-            lock = false;
+            alignLock = false;
             Logger.log(Logger.Urgency.USERMESSAGE, "Aligned to " + setpoint);
         }
     }
