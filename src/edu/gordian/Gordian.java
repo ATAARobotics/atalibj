@@ -15,14 +15,14 @@ import edu.gordian.variable.StringVariable;
 import edu.gordian.variable.field.BooleanField;
 import edu.gordian.variable.field.NumberField;
 import edu.gordian.variable.field.StringField;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import java.utils.ArrayList;
 
 public class Gordian {
 
     private final String script;
-    private final List methods;
-    private final List fields;
-    private final List blockStack = new List();
+    private final ArrayList methods;
+    private final ArrayList fields;
+    private final ArrayList blockStack = new ArrayList();
     private int count = 0;
     private If prevIf;
 
@@ -30,8 +30,8 @@ public class Gordian {
         if (script == null) {
             throw new NullPointerException("Null script");
         }
-        this.methods = new List();
-        this.fields = new List();
+        this.methods = new ArrayList();
+        this.fields = new ArrayList();
         if (methods != null) {
             for (int x = 0; x < methods.length; x++) {
                 this.methods.add(methods[x]);

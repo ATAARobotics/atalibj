@@ -1,7 +1,7 @@
 package edu.first.bindings;
 
 import edu.first.command.Command;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import java.utils.ArrayList;
 
 /**
  * Object representing a joystick (although not explictly) that can bind axises
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
  */
 public abstract class Bindable {
 
-    protected final List binds = new List();
+    protected final ArrayList binds = new ArrayList();
 
     public final void addBind(BindAction action) {
         binds.add(action);

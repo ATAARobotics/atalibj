@@ -3,7 +3,7 @@ package edu.first.module.driving;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import java.utils.ArrayList;
 
 /**
  * Module designed to drive robots. Has all of the benefits of
@@ -92,7 +92,7 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
 class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
 
     private final edu.wpi.first.wpilibj.RobotDrive drive;
-    private final List speedFunctions = new List();
+    private final ArrayList speedFunctions = new ArrayList();
     private final boolean reverseSpeed, reverseTurn;
     private double lastLeft, lastRight, lastForward, lastTurn;
 

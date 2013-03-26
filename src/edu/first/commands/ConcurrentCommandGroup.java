@@ -2,7 +2,7 @@ package edu.first.commands;
 
 import edu.first.command.Command;
 import edu.first.utils.Logger;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import java.utils.ArrayList;
 
 /**
  * Basic command group that runs multiple commands in parallel. Each command is
@@ -35,7 +35,7 @@ public class ConcurrentCommandGroup implements Command {
      *
      * @param commands commands to run concurrently
      */
-    public ConcurrentCommandGroup(List commands) {
+    public ConcurrentCommandGroup(ArrayList commands) {
         if (commands == null) {
             throw new NullPointerException();
         }

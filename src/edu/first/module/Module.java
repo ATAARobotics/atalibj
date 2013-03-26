@@ -3,7 +3,7 @@ package edu.first.module;
 import edu.first.module.target.PIDModule;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import java.utils.ArrayList;
 
 /**
  * Very basic framework for all "things". This interface makes things easy for
@@ -56,7 +56,7 @@ public interface Module {
      * object is not thread-safe, and uses an unsynchronized list. Extreme
      * precaution should be taken when using this object.
      */
-    List MODULES = new List();
+    ArrayList MODULES = new ArrayList();
 
     /**
      * "Enables" the module. This has very loose standards, and could mean many
