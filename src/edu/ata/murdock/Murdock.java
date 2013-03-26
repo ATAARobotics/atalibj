@@ -7,6 +7,7 @@ import edu.ata.commands.AutoShoot;
 import edu.ata.commands.BangBangCommand;
 import edu.ata.commands.ChangeRPMCommand;
 import edu.ata.commands.GearShiftCommand;
+import edu.ata.commands.SetRPMCommand;
 import edu.ata.commands.ShootCommand;
 import edu.ata.commands.SwitchBitchBar;
 import edu.ata.modules.AlignmentMotor;
@@ -16,6 +17,7 @@ import edu.ata.subsystems.AlignmentSystem;
 import edu.ata.subsystems.GearShifters;
 import edu.ata.subsystems.ReversingSolenoids;
 import edu.ata.subsystems.Shooter;
+import edu.first.command.Command;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.module.driving.ArcadeBinding;
 import edu.first.module.driving.Function;
@@ -71,19 +73,16 @@ public final class Murdock {
     private static final double drivetrainPIDMinSpeed = 0.3;
     private static final double drivetrainPIDMaxTurn = 0.8;
     private static final double drivetrainPIDMinTurn = 0.5;
-    private static final double shooterRPMSpeedChange = 20;
-    private static final double shooterRPMBigSpeedChange = 1000;
-    private static final double defaultA = 7;
-    private static final double defaultB = 6;
-    private static final double defaultX = 5;
-    private static final double defaultY = 4;
+    private static final double fineAdjustmentCoefficient = 0.6;
+    private static final double shooterRPMSpeedChange = 25;
+    private static final double defaultArm = 5;
+    private static final double defaultRPM = 4000;
     private static final String defaultAuto = "auto";
     private static final boolean reverseSpeed = false;
     private static final boolean reverseTurn = true;
     private static final boolean reverseShooter = false;
-    private static final boolean reverseAlignmentTriggers = false;
-    private static final int competitionPort = 1;
-    private static final int smartDashboardPort = 2;
+    public static final int competitionPort = 1;
+    public static final int smartDashboardPort = 2;
     private static final Function DRIVER_FUNCTION = new Function() {
         public double F(double input) {
             return input != 0 ? ((input * input * input) + 0.12) : 0;
@@ -113,10 +112,14 @@ public final class Murdock {
     private long lastSave = System.currentTimeMillis();
     private RPMPreference RPM = new RPMPreference("Shooter", defaultSetpoint);
     private StringPreference AUTOMODE = new StringPreference("AutonomousMode", defaultAuto);
-    private DoublePreference ASetpoint = new DoublePreference("ASetpoint", defaultA);
-    private DoublePreference BSetpoint = new DoublePreference("BSetpoint", defaultB);
-    private DoublePreference XSetpoint = new DoublePreference("XSetpoint", defaultX);
-    private DoublePreference YSetpoint = new DoublePreference("YSetpoint", defaultY);
+    private DoublePreference ASetpoint = new DoublePreference("ASetpoint", defaultArm);
+    private DoublePreference ARPM = new DoublePreference("ARPM", defaultRPM);
+    private DoublePreference BSetpoint = new DoublePreference("BSetpoint", defaultArm);
+    private DoublePreference BRPM = new DoublePreference("BRPM", defaultRPM);
+    private DoublePreference XSetpoint = new DoublePreference("XSetpoint", defaultArm);
+    private DoublePreference XRPM = new DoublePreference("XRPM", defaultRPM);
+    private DoublePreference YSetpoint = new DoublePreference("YSetpoint", defaultArm);
+    private DoublePreference YRPM = new DoublePreference("YRPM", defaultRPM);
     // WPILIBJ //
     private final DigitalInput _psiSwitch = new DigitalInput(PortMapFile.getInstance().getPort("PSISwitch", 5));
     private final AnalogChannel _potentiometer = new AnalogChannel(PortMapFile.getInstance().getPort("Pot", 1));
@@ -294,48 +297,69 @@ public final class Murdock {
     private void doTeleopBinds() {
         joystick1.removeAllBinds();
         joystick2.removeAllBinds();
+
         // Driving
-        joystick1.bindAxis(XboxController.LEFT_FROM_MIDDLE,
-                new ArcadeBinding(drive, ArcadeBinding.FORWARD));
-        joystick1.bindAxis(XboxController.RIGHT_X,
-                new ArcadeBinding(drive, ArcadeBinding.ROTATE));
-        joystick1.bindWhenPressed(XboxController.RIGHT_STICK,
-                new AlignCommand(alignment, AlignCommand.REVERSE, false));
-        joystick1.bindWhenPressed(XboxController.LEFT_STICK,
-                new AlignCommand(alignment, AlignCommand.RIGHT, false));
-        joystick1.bindWhenPressed(XboxController.RIGHT_BUMPER,
-                new GearShiftCommand(gearShifterController, GearShiftCommand.SECOND, false));
-        joystick1.bindWhenPressed(XboxController.LEFT_BUMPER,
+        joystick1.addWhenPressed(joystick1.getLeftBumper(),
                 new GearShiftCommand(gearShifterController, GearShiftCommand.FIRST, false));
-        joystick1.bindWhenPressed(XboxController.A,
-                new AlignShooter(shotController, ASetpoint, true));
-        joystick1.bindWhenPressed(XboxController.B,
-                new AlignShooter(shotController, BSetpoint, true));
-        joystick1.bindWhenPressed(XboxController.X,
-                new AlignShooter(shotController, XSetpoint, true));
-        joystick1.bindWhenPressed(XboxController.Y,
-                new AlignShooter(shotController, YSetpoint, true));
-        joystick1.bindAxis(XboxController.TRIGGERS,
-                new SpeedControllerBinding(alignmentMotor, reverseAlignmentTriggers));
-        // Shooting
-        joystick2.bindWhenPressed(XboxController.RIGHT_BUMPER,
-                new ShootCommand(shotController, true));
-        joystick2.bindWhilePressed(XboxController.RIGHT_STICK,
+        joystick1.addWhenPressed(joystick1.getRightBumper(),
+                new GearShiftCommand(gearShifterController, GearShiftCommand.SECOND, false));
+        joystick1.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, 0.7),
                 new AutoShoot(shotController, shooterController, true));
-        joystick2.bindWhenPressed(XboxController.BACK,
-                new BangBangCommand(shooterController, 0, false));
-        joystick2.bindWhenPressed(XboxController.START,
-                new BangBangCommand(shooterController, RPM, false));
-        joystick2.bindWhenPressed(XboxController.LEFT_STICK,
+        joystick1.addWhenPressed(joystick1.getBButton(),
+                new ShootCommand(shotController, true));
+        joystick1.addWhenPressed(joystick1.getAButton(),
                 new SwitchBitchBar(bitchBar, false));
-        joystick2.bindWhenPressed(XboxController.B,
-                new ChangeRPMCommand(RPM, +shooterRPMSpeedChange, shooterController, false));
-        joystick2.bindWhenPressed(XboxController.A,
+        joystick1.addWhenPressed(joystick1.getLeftJoystickButton(),
+                new AlignCommand(alignment, AlignCommand.REVERSE, false));
+        joystick1.addWhenPressed(joystick1.getRightJoystickButton(),
+                new AlignCommand(alignment, AlignCommand.RIGHT, false));
+        joystick1.addAxis(joystick1.getLeftY(),
+                new ArcadeBinding(drive, ArcadeBinding.FORWARD));
+        joystick1.addAxis(joystick1.getRightX(),
+                new ArcadeBinding(drive, ArcadeBinding.ROTATE));
+        // Shooter
+        joystick2.addWhenPressed(joystick2.getLeftBumper(),
                 new ChangeRPMCommand(RPM, -shooterRPMSpeedChange, shooterController, false));
-        joystick2.bindWhenPressed(XboxController.Y,
-                new ChangeRPMCommand(RPM, +shooterRPMBigSpeedChange, shooterController, false));
-        joystick2.bindWhenPressed(XboxController.X,
-                new ChangeRPMCommand(RPM, -shooterRPMBigSpeedChange, shooterController, false));
+        joystick2.addWhenPressed(joystick2.getRightBumper(),
+                new ChangeRPMCommand(RPM, +shooterRPMSpeedChange, shooterController, false));
+        joystick2.addAxis(joystick2.getTriggers(),
+                new SpeedControllerBinding(alignmentMotor));
+        joystick2.addWhenPressed(joystick2.getAButton(),
+                new AlignShooter(shotController, ASetpoint, false));
+        joystick2.addWhenPressed(joystick2.getAButton(),
+                new SetRPMCommand(RPM, ARPM, shooterController, false));
+        joystick2.addWhenPressed(joystick2.getBButton(),
+                new AlignShooter(shotController, BSetpoint, false));
+        joystick2.addWhenPressed(joystick2.getBButton(),
+                new SetRPMCommand(RPM, BRPM, shooterController, false));
+        joystick2.addWhenPressed(joystick2.getXButton(),
+                new AlignShooter(shotController, XSetpoint, false));
+        joystick2.addWhenPressed(joystick2.getXButton(),
+                new SetRPMCommand(RPM, XRPM, shooterController, false));
+        joystick2.addWhenPressed(joystick2.getYButton(),
+                new AlignShooter(shotController, YSetpoint, false));
+        joystick2.addWhenPressed(joystick2.getYButton(),
+                new SetRPMCommand(RPM, YRPM, shooterController, false));
+        joystick2.addWhenPressed(joystick2.getLeftJoystickButton(),
+                new Command() {
+            public void run() {
+                joystick1.removeAxisBinds(XboxController.RIGHT_X);
+                joystick2.addAxis(joystick2.getRightX(),
+                        new ArcadeBinding(drive, ArcadeBinding.ROTATE), fineAdjustmentCoefficient);
+            }
+        });
+        joystick2.addWhenReleased(joystick2.getLeftJoystickButton(),
+                new Command() {
+            public void run() {
+                joystick1.addAxis(joystick1.getRightX(),
+                        new ArcadeBinding(drive, ArcadeBinding.ROTATE));
+                joystick2.removeAxisBinds(XboxController.RIGHT_X);
+            }
+        });
+        joystick2.addWhenPressed(joystick2.getStartButton(),
+                new BangBangCommand(shooterController, RPM, false));
+        joystick2.addWhenPressed(joystick1.getBackButton(),
+                new BangBangCommand(shooterController, 0, false));
 
         Logger.log(Logger.Urgency.USERMESSAGE, "Teleop Binds Ready");
     }

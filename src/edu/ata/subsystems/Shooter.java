@@ -1,9 +1,9 @@
 package edu.ata.subsystems;
 
 import edu.ata.modules.AlignmentMotor;
+import edu.ata.murdock.Murdock;
 import edu.first.module.Module;
 import edu.first.module.actuator.SolenoidModule;
-import edu.first.module.sensor.DigitalLimitSwitchModule;
 import edu.first.module.sensor.PotentiometerModule;
 import edu.first.module.speedcontroller.SpeedControllerModule;
 import edu.first.module.subsystem.Subsystem;
@@ -11,6 +11,7 @@ import edu.first.module.target.BangBangModule;
 import edu.first.utils.DriverstationInfo;
 import edu.first.utils.Logger;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Shooter subsystem that does everything to control the shooter. Includes the
@@ -19,12 +20,13 @@ import edu.wpi.first.wpilibj.Timer;
  * @author Team 4334
  */
 public final class Shooter extends Subsystem {
-    
+
     private static final double retryThreshold = 0.1;
     private final SolenoidModule loadIn, loadOut;
     private final PotentiometerModule pot;
     private final AlignmentMotor alignment;
     private final BangBangModule bangBang;
+    private int shotCount;
     private boolean shotLock, alignLock;
 
     /**
@@ -69,6 +71,7 @@ public final class Shooter extends Subsystem {
      */
     public void shoot() {
         if (!shotLock) {
+            shotCount++;
             shotLock = true;
             Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
             Logger.log(Logger.Urgency.LOG, "Shot @ " + DriverstationInfo.getGamePeriod() + " " + DriverstationInfo.getMatchTime());
@@ -84,6 +87,9 @@ public final class Shooter extends Subsystem {
             loadOut.set(false);
             bangBang.setCoast(false);
             shotLock = false;
+            if (DriverstationInfo.getDS().getDigitalIn(Murdock.smartDashboardPort)) {
+                SmartDashboard.putNumber("Shots", shotCount);
+            }
         }
     }
 

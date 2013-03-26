@@ -2,6 +2,7 @@ package edu.ata.commands;
 
 import edu.ata.subsystems.Shooter;
 import edu.first.module.target.BangBangModule;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Command to fire the shooter depending on whether the it is at the correct
@@ -32,7 +33,10 @@ public final class AutoShoot extends ThreadableCommand {
         return new Runnable() {
             public void run() {
                 if (bangBang.pastSetpoint()) {
-                    shooter.shoot();
+                    Timer.delay(0.25);
+                    if (bangBang.pastSetpoint()) {
+                        shooter.shoot();
+                    }
                 }
             }
         };
