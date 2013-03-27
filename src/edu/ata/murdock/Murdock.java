@@ -137,6 +137,7 @@ public final class Murdock {
     private final Victor _rightBack = new Victor(PortMapFile.getInstance().getPort("RightBack", 3));
     private final Victor _rightFront = new Victor(PortMapFile.getInstance().getPort("RightFront", 4));
     private final RobotDrive _drive = new RobotDrive(_leftFront, _leftBack, _rightFront, _rightBack);
+    private final Solenoid _loadIn = new Solenoid(PortMapFile.getInstance().getPort("LoadIn", 8));
     private final Solenoid _loadOut = new Solenoid(PortMapFile.getInstance().getPort("LoadOut", 7));
     private final Solenoid _gearUp = new Solenoid(PortMapFile.getInstance().getPort("GearUp", 3));
     private final Solenoid _gearDown = new Solenoid(PortMapFile.getInstance().getPort("GearDown", 4));
@@ -157,6 +158,7 @@ public final class Murdock {
     private final SpeedControllerModule shooter = new SpeedControllerModule(_shooter);
     private final SpeedControllerModule shooterAligner = new SpeedControllerModule(_shooterAligner);
     private final RobotDriveModule drive = new RobotDriveModule(_drive, reverseSpeed, reverseTurn);
+    private final SolenoidModule loadIn = new SolenoidModule(_loadIn);
     private final SolenoidModule loadOut = new SolenoidModule(_loadOut);
     private final SolenoidModule gearUp = new SolenoidModule(_gearUp);
     private final SolenoidModule gearDown = new SolenoidModule(_gearDown);
@@ -169,7 +171,7 @@ public final class Murdock {
             new BangBangModule(hallEffect, shooter, RPM.getDefaultSpeed(), shooterRPMTolerance, reverseShooter);
     private final AlignmentMotor alignmentMotor = new AlignmentMotor(shooterAligner);
     private final Shooter shotController =
-            new Shooter(loadOut, potentiometer, alignmentMotor, shooterController);
+            new Shooter(loadIn, loadOut, potentiometer, alignmentMotor, shooterController);
     private final GearShifters gearShifterController =
             new GearShifters(gearDown, gearUp);
     private final ReversingSolenoids bitchBar =
@@ -309,10 +311,19 @@ public final class Murdock {
                 new ShootCommand(shotController, true));
         joystick1.addWhenPressed(joystick1.getAButton(),
                 new SwitchBitchBar(bitchBar, false));
+        // Always bring alignment in when bitch bar is changed
+        joystick1.addWhenPressed(joystick1.getAButton(),
+                new AlignCommand(alignment, AlignCommand.COLLAPSE, false));
         joystick1.addWhenPressed(joystick1.getLeftJoystickButton(),
                 new AlignCommand(alignment, AlignCommand.REVERSE, false));
+        joystick1.addWhenPressed(joystick1.getLeftJoystickButton(),
+        // Always bring bitch bar in when alignment is changed
+                new SwitchBitchBar(bitchBar, SwitchBitchBar.IN, false));
         joystick1.addWhenPressed(joystick1.getRightJoystickButton(),
                 new AlignCommand(alignment, AlignCommand.RIGHT, false));
+        // Always bring bitch bar in when alignment is changed
+        joystick1.addWhenPressed(joystick1.getRightJoystickButton(),
+                new SwitchBitchBar(bitchBar, SwitchBitchBar.IN, false));
         joystick1.addAxis(joystick1.getLeftY(),
                 new ArcadeBinding(drive, ArcadeBinding.FORWARD));
         joystick1.addAxis(joystick1.getRightX(),

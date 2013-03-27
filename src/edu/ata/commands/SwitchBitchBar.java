@@ -9,23 +9,30 @@ import edu.ata.subsystems.ReversingSolenoids;
  */
 public final class SwitchBitchBar extends ThreadableCommand {
 
+    public static final int IN = 1, OUT = 2, SWITCH = 3;
     private final ReversingSolenoids bitchBar;
+    private final int type;
 
-    /**
-     * Constructs the command using the bitch bar.
-     *
-     * @param bitchBar system to switch the bitch bar with
-     * @param newThread if command should run in a new thread
-     */
-    public SwitchBitchBar(ReversingSolenoids bitchBar, boolean newThread) {
+    public SwitchBitchBar(ReversingSolenoids bitchBar, int type, boolean newThread) {
         super(newThread);
         this.bitchBar = bitchBar;
+        this.type = type;
+    }
+    
+    public SwitchBitchBar(ReversingSolenoids bitchBar, boolean newThread) {
+        this(bitchBar, SWITCH, false);
     }
 
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                bitchBar.switchPosition();
+                if(type == IN) {
+                    bitchBar.setIn();
+                } else if(type == OUT) {
+                    bitchBar.setOut();
+                } else {
+                    bitchBar.switchPosition();
+                }
             }
         };
     }
