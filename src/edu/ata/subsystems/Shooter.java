@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public final class Shooter extends Subsystem {
 
-    private static final double retryThreshold = 0.1;
+    private static final double retryThreshold = 0.02;
     private final SolenoidModule loadIn, loadOut;
     private final PotentiometerModule pot;
     private final AlignmentMotor alignment;
@@ -76,15 +76,27 @@ public final class Shooter extends Subsystem {
             Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
             Logger.log(Logger.Urgency.LOG, "Shot @ " + DriverstationInfo.getGamePeriod() + " " + DriverstationInfo.getMatchTime());
             bangBang.setCoast(true);
-            if (loadIn != null) {
-                loadIn.set(false);
+
+            // Out
+            if (!loadOut.get()) {
+                loadOut.set(true);
+                Timer.delay(0.3);
             }
-            loadOut.set(true);
-            Timer.delay(0.5);
+
+            // In
             if (loadIn != null) {
                 loadIn.set(true);
             }
             loadOut.set(false);
+
+            Timer.delay(0.5);
+
+            // Out
+            if (loadIn != null) {
+                loadIn.set(false);
+            }
+            loadOut.set(true);
+
             bangBang.setCoast(false);
             shotLock = false;
             if (DriverstationInfo.getDS().getDigitalIn(Murdock.smartDashboardPort)) {
@@ -107,14 +119,14 @@ public final class Shooter extends Subsystem {
             SpeedControllerModule control = alignment.lock();
             Logger.log(Logger.Urgency.USERMESSAGE, "Aligning to " + setpoint);
             while (true) {
-                if (pot.getPosition() > setpoint) {
-                    while (pot.getPosition() > setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                        control.set(-1);
+                if (pot.getPosition() - retryThreshold > setpoint) {
+                    while (pot.getPosition() - retryThreshold > setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
+                        control.set(+1);
                         Timer.delay(0.02);
                     }
-                } else if (pot.getPosition() < setpoint) {
-                    while (pot.getPosition() < setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                        control.set(+1);
+                } else if (pot.getPosition() + retryThreshold < setpoint) {
+                    while (pot.getPosition() + retryThreshold < setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
+                        control.set(-1);
                         Timer.delay(0.02);
                     }
                 }

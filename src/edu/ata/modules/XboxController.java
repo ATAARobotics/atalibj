@@ -70,6 +70,15 @@ public final class XboxController extends BindableJoystick {
         super(joystick);
     }
 
+    public double getRawAxis(int port) {
+        double v = super.getRawAxis(port);
+        if (Math.abs(v) > DEADZONE) {
+            return super.getRawAxis(port);
+        } else {
+            return 0;
+        }
+    }
+
     public Button getAButton() {
         return getButton(A);
     }

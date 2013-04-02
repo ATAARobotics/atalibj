@@ -101,7 +101,7 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
      * @param port the port of the axis
      * @return value of where the joystick is (usually -1 to +1)
      */
-    public final double getRawAxis(int port) {
+    public double getRawAxis(int port) {
         return joystick.getRawAxis(port);
     }
 
@@ -113,7 +113,7 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
      * @param button button number defined in windows
      * @return whether the button is pressed
      */
-    public final boolean getRawButton(int button) {
+    public boolean getRawButton(int button) {
         return joystick.getRawButton(button);
     }
 
@@ -150,7 +150,11 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
     public final Bindable.Button getAxisAsButton(final int port, final double threshold) {
         return new Bindable.Button("Axis " + port + " as button") {
             public boolean isPressed() {
-                return Math.abs(getRawAxis(port)) > Math.abs(threshold);
+                if(threshold > 0) {
+                    return getRawAxis(port) > threshold;
+                } else {
+                    return getRawAxis(port) < threshold;
+                }
             }
         };
     }

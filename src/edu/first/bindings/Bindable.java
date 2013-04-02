@@ -1,7 +1,7 @@
 package edu.first.bindings;
 
 import edu.first.command.Command;
-import java.utils.ArrayList;
+import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
  * Object representing a joystick (although not explictly) that can bind axises
@@ -12,16 +12,16 @@ import java.utils.ArrayList;
  */
 public abstract class Bindable {
 
-    protected final ArrayList binds = new ArrayList();
+    protected final List binds = new List();
 
     public final void addBind(BindAction action) {
         binds.add(action);
     }
-    
+
     public final void addWhenPressed(Button button, Command command) {
         addBind(new WhenPressed(button, command));
     }
-    
+
     public final void addWhilePressed(Button button, Command command) {
         addBind(new WhilePressed(button, command));
     }
@@ -29,23 +29,23 @@ public abstract class Bindable {
     public final void addWhenReleased(Button button, Command command) {
         addBind(new WhenReleased(button, command));
     }
-    
+
     public final void addWhileReleased(Button button, Command command) {
         addBind(new WhileReleased(button, command));
     }
-    
+
     public final void addAxis(Axis axis, AxisBind bind) {
         addBind(new SetAxis(bind, axis));
     }
-    
+
     public final void addAxis(Axis axis, AxisBind bind, double coefficient) {
         addBind(new SetAxis(bind, axis, coefficient));
     }
-    
+
     public final void removeBind(BindAction action) {
         binds.remove(action);
     }
-    
+
     public final void removeAllBinds() {
         binds.clear();
     }
@@ -120,7 +120,7 @@ public abstract class Bindable {
             if (button.isPressed() && !wasPressed) {
                 bind.run();
                 wasPressed = true;
-            } else {
+            } else if (!button.isPressed()) {
                 wasPressed = false;
             }
         }

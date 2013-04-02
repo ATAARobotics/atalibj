@@ -1,7 +1,7 @@
 package edu.first.commands;
 
 import edu.first.command.Command;
-import java.utils.ArrayList;
+import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
  * Command that encompasses multiple commands strung together. Runs commands
@@ -26,8 +26,8 @@ public class CommandGroup implements Command {
 
     private final Type CONCURRENT = new Type(Type.CONCURRENT),
             SEQUENTIAL = new Type(Type.SEQUENTIAL);
-    private final ArrayList types = new ArrayList();
-    private final ArrayList commands = new ArrayList();
+    private final List types = new List();
+    private final List commands = new List();
 
     /**
      * Protected constructor to prevent instantiating from other classes.
@@ -79,14 +79,14 @@ public class CommandGroup implements Command {
      * {@link CommandGroup#addConcurrent(edu.ATA.command.Command) addConcurrent(Command)}.
      */
     public final void run() {
-        ArrayList concurrent = new ArrayList();
+        List concurrent = new List();
         for (int x = 0; x < commands.size(); x++) {
             if (types.get(x).equals(CONCURRENT)) {
                 concurrent.add(commands.get(x));
             } else {
                 if (!concurrent.isEmpty()) {
                     new ConcurrentCommandGroup(concurrent).run();
-                    concurrent = new ArrayList();
+                    concurrent = new List();
                 }
                 ((Command) commands.get(x)).run();
             }

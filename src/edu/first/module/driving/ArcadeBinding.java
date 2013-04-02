@@ -11,14 +11,8 @@ import edu.first.bindings.AxisBind;
  */
 public class ArcadeBinding implements AxisBind {
 
-    /**
-     *
-     */
     public static final Value FORWARD = new Value(Value.FORWARD),
-    /**
-     *
-     */
-    ROTATE = new Value(Value.ROTATE);
+            ROTATE = new Value(Value.ROTATE);
     private final RobotDriveModule robotDrive;
     private final Value value;
 

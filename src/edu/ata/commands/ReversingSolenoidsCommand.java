@@ -1,39 +1,32 @@
 package edu.ata.commands;
 
 import edu.ata.subsystems.ReversingSolenoids;
+import edu.first.module.actuator.SolenoidModule;
 
-/**
- * Command to switch the bitch bar's position.
- *
- * @author Joel Gallant <joelgallant236@gmail.com>
- */
-public final class SwitchBitchBar extends ThreadableCommand {
+public class ReversingSolenoidsCommand extends ThreadableCommand {
 
     public static final SwitchType IN = new SwitchType(SwitchType.IN),
             OUT = new SwitchType(SwitchType.OUT),
             SWITCH = new SwitchType(SwitchType.SWITCH);
-    private final ReversingSolenoids bitchBar;
+    private final ReversingSolenoids solenoids;
     private final SwitchType type;
 
-    public SwitchBitchBar(ReversingSolenoids bitchBar, SwitchType type, boolean newThread) {
+    public ReversingSolenoidsCommand(SolenoidModule in, SolenoidModule out, SwitchType type, boolean newThread) {
         super(newThread);
-        this.bitchBar = bitchBar;
+        this.solenoids = new ReversingSolenoids(in, out);
         this.type = type;
-    }
-
-    public SwitchBitchBar(ReversingSolenoids bitchBar, boolean newThread) {
-        this(bitchBar, SWITCH, false);
     }
 
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
+                solenoids.enable();
                 if (type.type == IN.type) {
-                    bitchBar.setIn();
+                    solenoids.setIn();
                 } else if (type.type == OUT.type) {
-                    bitchBar.setOut();
+                    solenoids.setOut();
                 } else if (type.type == SWITCH.type) {
-                    bitchBar.switchPosition();
+                    solenoids.switchPosition();
                 }
             }
         };

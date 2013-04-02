@@ -127,6 +127,11 @@ public final class GordianAuto {
                 return DriverstationInfo.isEnabled();
             }
         });
+        gordian.addMethod(new BooleanReturningMethod("isAutonomous") {
+            public boolean getBoolean() {
+                return DriverstationInfo.getGamePeriod().equals(DriverstationInfo.AUTONOMOUS);
+            }
+        });
         gordian.addMethod(new RunningMethod("print") {
             public void run(Variable[] args) {
                 Logger.log(Logger.Urgency.LOG, args[0].getValue().toString());

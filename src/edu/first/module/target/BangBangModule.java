@@ -92,7 +92,7 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
         this.output = output;
         this.defaultSpeed = defaultSpeed;
         this.reversed = reverse;
-        timer.scheduleAtFixedRate(task, 0L, 20L);
+        timer.scheduleAtFixedRate(task, 0L, 10L);
     }
 
     /**
@@ -114,7 +114,7 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
         this.defaultSpeed = defaultSpeed;
         this.pastSetpoint = pastSetpoint;
         this.reversed = reverse;
-        timer.scheduleAtFixedRate(task, 0L, 20L);
+        timer.scheduleAtFixedRate(task, 0L, 10L);
     }
 
     /**
