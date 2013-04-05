@@ -30,7 +30,10 @@ import edu.gordian.Variable;
 import edu.gordian.method.BooleanReturningMethod;
 import edu.gordian.method.NumberReturningMethod;
 import edu.gordian.method.RunningMethod;
+import edu.gordian.variable.BooleanInterface;
 import edu.gordian.variable.NumberInterface;
+import edu.gordian.variable.StringInterface;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -122,6 +125,11 @@ public final class GordianAuto {
                 return gyro.getAngle();
             }
         });
+        gordian.addMethod(new NumberReturningMethod("encoder") {
+            public double getDouble() {
+                return encoder.getDistance();
+            }
+        });
         gordian.addMethod(new BooleanReturningMethod("isEnabled") {
             public boolean getBoolean() {
                 return DriverstationInfo.isEnabled();
@@ -145,6 +153,17 @@ public final class GordianAuto {
         gordian.addMethod(new RunningMethod("log") {
             public void run(Variable[] args) {
                 new LogCommand(args[0].getValue().toString()).run();
+            }
+        });
+        gordian.addMethod(new RunningMethod("dashboard") {
+            public void run(Variable[] args) {
+                if (args[1] instanceof StringInterface) {
+                    SmartDashboard.putString(args[0].getValue().toString(), ((StringInterface) args[1]).stringValue());
+                } else if (args[1] instanceof NumberInterface) {
+                    SmartDashboard.putNumber(args[0].getValue().toString(), ((NumberInterface) args[1]).doubleValue());
+                } else if (args[1] instanceof BooleanInterface) {
+                    SmartDashboard.putBoolean(args[0].getValue().toString(), ((BooleanInterface) args[1]).booleanValue());
+                }
             }
         });
         gordian.addMethod(new RunningMethod("arcade") {
@@ -223,6 +242,11 @@ public final class GordianAuto {
                 new ResetEncoderCommand(encoder, false).run();
             }
         });
+        gordian.addMethod(new RunningMethod("resetAngle") {
+            public void run(Variable[] args) {
+                gyro.reset();
+            }
+        });
         gordian.addMethod(new RunningMethod("collapseAlignment") {
             public void run(Variable[] args) {
                 new AlignCommand(alignmentSystem, AlignCommand.COLLAPSE, false).run();
@@ -231,6 +255,21 @@ public final class GordianAuto {
         gordian.addMethod(new RunningMethod("extendAlignment") {
             public void run(Variable[] args) {
                 new AlignCommand(alignmentSystem, AlignCommand.EXTEND, false).run();
+            }
+        });
+        gordian.addMethod(new RunningMethod("turn") {
+            public void run(Variable[] args) {
+                final double angle = ((NumberInterface) args[0]).doubleValue();
+                final double speed = ((NumberInterface) args[1]).doubleValue();
+
+                final String mode = DriverstationInfo.getGamePeriod();
+                gyro.reset();
+
+                while (mode.equals(DriverstationInfo.getGamePeriod()) && gyro.getAngle() < angle) {
+                    drivetrain.arcadeDrive(0, +speed);
+                }
+
+                drivetrain.stopMotors();
             }
         });
     }

@@ -3,6 +3,7 @@ package edu.first.module.driving;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
@@ -187,8 +188,11 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
         if (reverseTurn) {
             rotateValue = -rotateValue;
         }
-        lastForward = transformSpeed(moveValue);
-        lastTurn = transformSpeed(rotateValue);
+
+        moveValue = transformSpeed(moveValue);
+
+        lastForward = moveValue;
+        lastTurn = rotateValue;
         drive.arcadeDrive(moveValue, rotateValue, squaredInputs);
     }
 
@@ -439,6 +443,33 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
                     output = output < 0 ? -maxSpeed : maxSpeed;
                 }
                 setRotateValue(output);
+            }
+        };
+    }
+
+    public SpeedController turn(final double minSpeed, final double maxSpeed) {
+        return new SpeedController() {
+            public double get() {
+                return 0;
+            }
+
+            public void set(double speed, byte syncGroup) {
+                set(speed);
+            }
+
+            public void set(double output) {
+                if (Math.abs(output) < minSpeed && output != 0) {
+                    output = output < 0 ? -minSpeed : minSpeed;
+                } else if (Math.abs(output) > maxSpeed && output != 0) {
+                    output = output < 0 ? -maxSpeed : maxSpeed;
+                }
+                setRotateValue(output);
+            }
+
+            public void disable() {
+            }
+
+            public void pidWrite(double output) {
             }
         };
     }

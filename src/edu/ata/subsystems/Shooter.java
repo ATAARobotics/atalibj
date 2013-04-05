@@ -22,12 +22,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public final class Shooter extends Subsystem {
 
     private static final double retryThreshold = 0.02;
+    private static final double pusherSpeed = 0.4;
+    private static final double in = 0.6;
     private final SolenoidModule loadIn, loadOut;
     private final PotentiometerModule pot;
     private final AlignmentMotor alignment;
     private final BangBangModule bangBang;
+    private final VexIntegratedMotorEncoder frisbeePusherEncoder;
+    private final SpeedControllerModule frisbeePusher;
     private int shotCount;
-    private boolean shotLock, alignLock;
+    private boolean shotLock, alignLock, pusherLock;
 
     /**
      * Constructs the shooter using all of the components used.
@@ -39,13 +43,16 @@ public final class Shooter extends Subsystem {
      * @param bangBang bang-bang controlling shooter wheel
      */
     public Shooter(SolenoidModule loadIn, SolenoidModule loadOut, PotentiometerModule pot,
-            AlignmentMotor alignment, BangBangModule bangBang) {
-        super(new Module[]{loadIn, loadOut, pot, alignment, bangBang});
+            AlignmentMotor alignment, BangBangModule bangBang, VexIntegratedMotorEncoder frisbeePusherEncoder,
+            SpeedControllerModule frisbeePusher) {
+        super(new Module[]{loadIn, loadOut, pot, alignment, bangBang, frisbeePusher});
         this.loadIn = loadIn;
         this.loadOut = loadOut;
         this.pot = pot;
         this.alignment = alignment;
         this.bangBang = bangBang;
+        this.frisbeePusherEncoder = frisbeePusherEncoder;
+        this.frisbeePusher = frisbeePusher;
     }
 
     /**
@@ -57,13 +64,16 @@ public final class Shooter extends Subsystem {
      * @param bangBang bang-bang controlling shooter wheel
      */
     public Shooter(SolenoidModule loadOut, PotentiometerModule pot,
-            AlignmentMotor alignment, BangBangModule bangBang) {
-        super(new Module[]{loadOut, pot, alignment, bangBang});
+            AlignmentMotor alignment, BangBangModule bangBang, VexIntegratedMotorEncoder frisbeePusherEncoder,
+            SpeedControllerModule frisbeePusher) {
+        super(new Module[]{loadOut, pot, alignment, bangBang, frisbeePusher});
         this.loadIn = null;
         this.loadOut = loadOut;
         this.pot = pot;
         this.alignment = alignment;
         this.bangBang = bangBang;
+        this.frisbeePusherEncoder = frisbeePusherEncoder;
+        this.frisbeePusher = frisbeePusher;
     }
 
     /**
@@ -114,20 +124,26 @@ public final class Shooter extends Subsystem {
      */
     public void alignTo(final double setpoint) {
         final String mode = DriverstationInfo.getGamePeriod();
+        final long start = System.currentTimeMillis();
+        final double timeout = 6000 * Math.abs(pot.getPosition() - setpoint);
+        final double P = 0.16;
+
         if (!alignLock) {
             alignLock = true;
             SpeedControllerModule control = alignment.lock();
             Logger.log(Logger.Urgency.USERMESSAGE, "Aligning to " + setpoint);
-            while (true) {
-                if (pot.getPosition() - retryThreshold > setpoint) {
-                    while (pot.getPosition() - retryThreshold > setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                        control.set(+1);
-                        Timer.delay(0.02);
+            while ((System.currentTimeMillis() - start) < timeout) {
+                if (pot.getPosition() > setpoint) {
+                    while (pot.getPosition() > setpoint && DriverstationInfo.getGamePeriod().equals(mode)
+                            && (System.currentTimeMillis() - start) < timeout) {
+                        control.set((pot.getPosition() - setpoint) / P);
+                        Timer.delay(0.002);
                     }
-                } else if (pot.getPosition() + retryThreshold < setpoint) {
-                    while (pot.getPosition() + retryThreshold < setpoint && DriverstationInfo.getGamePeriod().equals(mode)) {
-                        control.set(-1);
-                        Timer.delay(0.02);
+                } else if (pot.getPosition() < setpoint) {
+                    while (pot.getPosition() < setpoint && DriverstationInfo.getGamePeriod().equals(mode)
+                            && (System.currentTimeMillis() - start) < timeout) {
+                        control.set((pot.getPosition() - setpoint) / P);
+                        Timer.delay(0.002);
                     }
                 }
                 if (Math.abs(pot.getPosition() - setpoint) > retryThreshold && DriverstationInfo.getGamePeriod().equals(mode)) {
@@ -140,6 +156,41 @@ public final class Shooter extends Subsystem {
             alignment.unlock();
             alignLock = false;
             Logger.log(Logger.Urgency.USERMESSAGE, "Aligned to " + setpoint);
+        }
+    }
+
+    public void setFrisbeePusher(double speed) {
+        if (!pusherLock) {
+            frisbeePusher.set(speed * pusherSpeed);
+        }
+    }
+
+    public void pushFrisbees() {
+        if (!pusherLock) {
+            pusherLock = true;
+            
+            Timer t = new Timer();
+            t.start();
+
+            frisbeePusherEncoder.reset();
+
+            while (frisbeePusherEncoder.getRevs() < in && t.get() < 3) {
+                frisbeePusher.set(0.4);
+                Timer.delay(0.002);
+            }
+            frisbeePusher.set(0);
+            frisbeePusher.set(-0.5);
+            Timer.delay(0.01);
+            while (frisbeePusherEncoder.getRevs() > 0 && t.get() < 3) {
+                frisbeePusher.set(-0.4);
+                Timer.delay(0.002);
+            }
+            frisbeePusher.set(+0.5);
+            Timer.delay(0.03);
+
+            frisbeePusher.set(0);
+
+            pusherLock = false;
         }
     }
 }

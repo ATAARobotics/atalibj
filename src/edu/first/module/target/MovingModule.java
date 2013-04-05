@@ -64,18 +64,15 @@ public final class MovingModule extends Subsystem {
      */
     public void moveForwards(double distance) {
         encoder.reset();
-        gyro.reset();
         forwards.setSetpoint(distance);
-        turning.setSetpoint(0);
 
         forwards.enable();
-        turning.enable();
 
         while (true) {
-            if (Math.abs(encoder.getDistance() - distance) > distanceTolerance) {
+            if (Math.abs(encoder.getDistance() - distance) < distanceTolerance) {
                 // Has to be at setpoint for > 0.3 seconds
                 Timer.delay(0.3);
-                if (Math.abs(encoder.getDistance() - distance) > distanceTolerance) {
+                if (Math.abs(encoder.getDistance() - distance) < distanceTolerance) {
                     break;
                 }
             }
@@ -83,7 +80,6 @@ public final class MovingModule extends Subsystem {
         }
 
         forwards.disable();
-        turning.disable();
     }
 
     /**
@@ -98,10 +94,10 @@ public final class MovingModule extends Subsystem {
         turning.enable();
 
         while (true) {
-            if (Math.abs(gyro.getAngle() - angle) > turningTolerance) {
+            if (Math.abs(gyro.getAngle() - angle) < turningTolerance) {
                 // Has to be at setpoint for > 0.3 seconds
                 Timer.delay(0.3);
-                if (Math.abs(gyro.getAngle() - angle) > turningTolerance) {
+                if (Math.abs(gyro.getAngle() - angle) < turningTolerance) {
                     break;
                 }
             }

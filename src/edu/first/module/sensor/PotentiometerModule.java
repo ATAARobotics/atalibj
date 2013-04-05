@@ -78,6 +78,7 @@ public final class PotentiometerModule extends ForwardingPotentiometer implement
 class ForwardingPotentiometer implements Potentiometer {
 
     private final AnalogChannel potentiometer;
+    private double c;
 
     /**
      * Constructs the object by using composition, using the given analog
@@ -90,6 +91,7 @@ class ForwardingPotentiometer implements Potentiometer {
             throw new NullPointerException();
         }
         this.potentiometer = potentiometer;
+        this.c = potentiometer.getVoltage();
     }
 
     /**
@@ -110,6 +112,7 @@ class ForwardingPotentiometer implements Potentiometer {
      * @return position of the potentiometer
      */
     public double getPosition() {
-        return potentiometer.getVoltage();
+        c = potentiometer.getVoltage() * 0.1 + 0.9 * c;
+        return c;
     }
 }

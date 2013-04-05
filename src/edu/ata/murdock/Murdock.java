@@ -7,7 +7,9 @@ import edu.ata.commands.AutoShoot;
 import edu.ata.commands.BangBangCommand;
 import edu.ata.commands.ChangeRPMCommand;
 import edu.ata.commands.GearShiftCommand;
+import edu.ata.commands.PushFrisbeeCommand;
 import edu.ata.commands.ReversingSolenoidsCommand;
+import edu.ata.commands.SetFrisbeePusher;
 import edu.ata.commands.SetRPMCommand;
 import edu.ata.commands.ShootCommand;
 import edu.ata.commands.SwitchBitchBar;
@@ -18,6 +20,7 @@ import edu.ata.subsystems.AlignmentSystem;
 import edu.ata.subsystems.GearShifters;
 import edu.ata.subsystems.ReversingSolenoids;
 import edu.ata.subsystems.Shooter;
+import edu.ata.subsystems.VexIntegratedMotorEncoder;
 import edu.first.bindings.Bindable;
 import edu.first.command.Command;
 import edu.first.module.actuator.SolenoidModule;
@@ -25,7 +28,6 @@ import edu.first.module.driving.ArcadeBinding;
 import edu.first.module.driving.Function;
 import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.driving.SideBinding;
-import edu.first.module.sensor.AccelerometerModule;
 import edu.first.module.sensor.DigitalLimitSwitchModule;
 import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
@@ -43,7 +45,6 @@ import edu.first.utils.Logger;
 import edu.first.utils.TransferRateCalculator;
 import edu.first.utils.preferences.DoublePreference;
 import edu.first.utils.preferences.StringPreference;
-import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -72,17 +73,16 @@ public final class Murdock {
     private static final double shiftersSpeedThreshhold = 10000;
     private static final double shiftersShiftTimeLimit = 0.5;
     private static final double dP = 0.001, dI = 0, dD = 0.001;
-    private static final double tP = 1, tI = 0, tD = 0;
+    private static final double tP = 0.007, tI = 0, tD = 0.001;
     private static final double drivetrainDistanceTolerance = 40;
-    private static final double drivetrainTurningTolerance = 3;
+    private static final double drivetrainTurningTolerance = 0;
     private static final double drivetrainPIDMaxSpeed = 0.7;
     private static final double drivetrainPIDMinSpeed = 0.3;
-    private static final double drivetrainPIDMaxTurn = 0.8;
-    private static final double drivetrainPIDMinTurn = 0.5;
+    private static final double drivetrainPIDMaxTurn = 0.4;
+    private static final double drivetrainPIDMinTurn = 0.3;
     private static final double fineAdjustmentCoefficient = 0.5;
     private static final double triggerShotThreashold = 0.7;
     private static final double shooterRPMSpeedChange = 25;
-    private static final double frisbeePusherCoefficient = 0.4;
     private static final double defaultArm = 5;
     private static final double defaultRPM = 4000;
     private static final String defaultAuto = "auto";
@@ -136,9 +136,8 @@ public final class Murdock {
     private final DigitalInput _hallEffect = new DigitalInput(PortMapFile.getInstance().getPort("HallEffect", 1));
     private final Encoder _encoder = new Encoder(PortMapFile.getInstance().getPort("EncoderA", 2),
             PortMapFile.getInstance().getPort("EncoderB", 3));
+    private final VexIntegratedMotorEncoder _frisbeePusherEncoder = new VexIntegratedMotorEncoder(1, (byte) 0x60, "speed", true);
     private final Gyro _gyro = new Gyro(PortMapFile.getInstance().getPort("Gyro", 2));
-    private final ADXL345_I2C _accelerometer = new ADXL345_I2C(PortMapFile.getInstance().getPort("Accelerometer", 4),
-            ADXL345_I2C.DataFormat_Range.k16G);
     private final Relay _compressor = new Relay(PortMapFile.getInstance().getPort("Compressor", 1));
     private final Joystick _joystick1 = new Joystick(PortMapFile.getInstance().getPort("Joystick1", 1));
     private final Joystick _joystick2 = new Joystick(PortMapFile.getInstance().getPort("Joystick2", 2));
@@ -166,7 +165,6 @@ public final class Murdock {
     private final HallEffectModule hallEffect = new HallEffectModule(_hallEffect);
     private final EncoderModule encoder = new EncoderModule(_encoder, Encoder.PIDSourceParameter.kDistance);
     private final GyroModule gyro = new GyroModule(_gyro);
-    private final AccelerometerModule accelerometer = new AccelerometerModule(_accelerometer);
     private final SpikeRelayModule compressor = new SpikeRelayModule(_compressor);
     private final XboxController joystick1 = new XboxController(_joystick1);
     private final XboxController joystick2 = new XboxController(_joystick2);
@@ -187,7 +185,7 @@ public final class Murdock {
             new BangBangModule(hallEffect, shooter, RPM.getDefaultSpeed(), shooterRPMTolerance, reverseShooter);
     private final AlignmentMotor alignmentMotor = new AlignmentMotor(shooterAligner);
     private final Shooter shotController =
-            new Shooter(loadIn, loadOut, potentiometer, alignmentMotor, shooterController);
+            new Shooter(loadIn, loadOut, potentiometer, alignmentMotor, shooterController, _frisbeePusherEncoder, frisbeePusher);
     private final GearShifters gearShifterController =
             new GearShifters(gearDown, gearUp);
     private final ReversingSolenoids bitchBar =
@@ -249,6 +247,8 @@ public final class Murdock {
 
         compressor.enable();
 
+        _frisbeePusherEncoder.reset();
+
         drive.addFunction(DRIVER_FUNCTION);
         drive.addFunction(SHIFTER_FUNCTION);
     }
@@ -266,7 +266,6 @@ public final class Murdock {
         hallEffect.disable();
         encoder.disable();
         gyro.disable();
-        accelerometer.disable();
         joystick1.disable();
         joystick2.disable();
         shooter.disable();
@@ -351,7 +350,9 @@ public final class Murdock {
         joystick1.addWhenPressed(joystick1.getBackButton(),
                 new AlignShooter(shotController, BackSetpoint, true));
         joystick1.addAxis(joystick1.getDirectionalPad(),
-                new SpeedControllerBinding(frisbeePusher), frisbeePusherCoefficient);
+                new SetFrisbeePusher(shotController));
+        joystick1.addWhenPressed(joystick1.getYButton(),
+                new PushFrisbeeCommand(shotController, true));
         // Shooter
         joystick2.addWhenPressed(joystick2.getLeftBumper(),
                 new ChangeRPMCommand(RPM, -shooterRPMSpeedChange, shooterController, false));
@@ -426,7 +427,6 @@ public final class Murdock {
             psi120.enable();
             encoder.enable();
             gyro.enable();
-            accelerometer.enable();
             bitchBar.enable();
             alignment.enable();
             gearShifterController.enable();
@@ -453,9 +453,9 @@ public final class Murdock {
                 SmartDashboard.putBoolean("BBOut", !bitchBar.isIn());
                 SmartDashboard.putBoolean("AlignOut", alignment.isOut());
                 SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
+                SmartDashboard.putNumber("Pusher", _frisbeePusherEncoder.getRevs());
                 SmartDashboard.putNumber("Distance", encoder.getDistance());
                 SmartDashboard.putNumber("Angle", gyro.getAngle());
-                SmartDashboard.putNumber("Accelerometer", accelerometer.getAcceleration(ADXL345_I2C.Axes.kX));
                 SmartDashboard.putNumber("ShooterPosition", potentiometer.getPosition());
                 SmartDashboard.putNumber("NetworkLag", transferRate.packetsPerMillisecond());
                 SmartDashboard.putNumber("Gear", gearShifterController.gear());
