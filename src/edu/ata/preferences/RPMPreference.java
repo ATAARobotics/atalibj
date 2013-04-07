@@ -18,17 +18,17 @@ public class RPMPreference {
         if (rpm < 2500) {
             defaultSpeed = 0;
         } else if (rpm < 3000) {
-            defaultSpeed = 0.3;
+            defaultSpeed = 0.07;
         } else if (rpm < 3500) {
-            defaultSpeed = 0.4;
+            defaultSpeed = 0.2;
         } else if (rpm < 4000) {
-            defaultSpeed = 0.5;
+            defaultSpeed = 0.3;
         } else if (rpm < 4500) {
-            defaultSpeed = 0.6;
+            defaultSpeed = 0.4;
         } else if (rpm < 5000) {
-            defaultSpeed = 0.7;
+            defaultSpeed = 0.5;
         } else {
-            defaultSpeed = 0.85;
+            defaultSpeed = 0.6;
         }
         return defaultSpeed;
     }

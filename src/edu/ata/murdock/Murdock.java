@@ -7,7 +7,6 @@ import edu.ata.commands.AutoShoot;
 import edu.ata.commands.BangBangCommand;
 import edu.ata.commands.ChangeRPMCommand;
 import edu.ata.commands.GearShiftCommand;
-import edu.ata.commands.PushFrisbeeCommand;
 import edu.ata.commands.ReversingSolenoidsCommand;
 import edu.ata.commands.SetFrisbeePusher;
 import edu.ata.commands.SetRPMCommand;
@@ -325,9 +324,9 @@ public final class Murdock {
                 new GearShiftCommand(gearShifterController, GearShiftCommand.FIRST, false));
         joystick1.addWhenPressed(joystick1.getRightBumper(),
                 new GearShiftCommand(gearShifterController, GearShiftCommand.SECOND, false));
-        joystick1.addWhilePressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, triggerShotThreashold),
-                new AutoShoot(shotController, shooterController, true));
         joystick1.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, -triggerShotThreashold),
+                new AutoShoot(shotController, shooterController, true));
+        joystick1.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, triggerShotThreashold),
                 new ShootCommand(shotController, true));
         joystick1.addWhenPressed(joystick1.getAButton(),
                 new SwitchBitchBar(bitchBar, false));
@@ -351,15 +350,13 @@ public final class Murdock {
                 new AlignShooter(shotController, BackSetpoint, true));
         joystick1.addAxis(joystick1.getDirectionalPad(),
                 new SetFrisbeePusher(shotController));
-        joystick1.addWhenPressed(joystick1.getYButton(),
-                new PushFrisbeeCommand(shotController, true));
         // Shooter
         joystick2.addWhenPressed(joystick2.getLeftBumper(),
                 new ChangeRPMCommand(RPM, -shooterRPMSpeedChange, shooterController, false));
         joystick2.addWhenPressed(joystick2.getRightBumper(),
                 new ChangeRPMCommand(RPM, +shooterRPMSpeedChange, shooterController, false));
         joystick2.addAxis(joystick2.getTriggers(),
-                new SpeedControllerBinding(alignmentMotor));
+                new SpeedControllerBinding(alignmentMotor, true));
         joystick2.addWhenPressed(joystick2.getAButton(),
                 new AlignShooter(shotController, ASetpoint, true));
         joystick2.addWhenPressed(joystick2.getAButton(),

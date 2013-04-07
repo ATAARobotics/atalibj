@@ -5,6 +5,7 @@ import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
 import edu.first.module.subsystem.Subsystem;
+import edu.first.utils.DriverstationInfo;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -68,14 +69,9 @@ public final class MovingModule extends Subsystem {
 
         forwards.enable();
 
-        while (true) {
-            if (Math.abs(encoder.getDistance() - distance) < distanceTolerance) {
-                // Has to be at setpoint for > 0.3 seconds
-                Timer.delay(0.3);
-                if (Math.abs(encoder.getDistance() - distance) < distanceTolerance) {
-                    break;
-                }
-            }
+        String period = DriverstationInfo.getGamePeriod();
+        while (Math.abs(encoder.getDistance() - distance) > distanceTolerance
+                && period.equals(DriverstationInfo.getGamePeriod())) {
             Timer.delay(0.02);
         }
 

@@ -23,7 +23,7 @@ public final class Shooter extends Subsystem {
 
     private static final double retryThreshold = 0.02;
     private static final double pusherSpeed = 0.4;
-    private static final double in = 0.6;
+    private static final double in = 0.5;
     private final SolenoidModule loadIn, loadOut;
     private final PotentiometerModule pot;
     private final AlignmentMotor alignment;
@@ -85,11 +85,15 @@ public final class Shooter extends Subsystem {
             shotLock = true;
             Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
             Logger.log(Logger.Urgency.LOG, "Shot @ " + DriverstationInfo.getGamePeriod() + " " + DriverstationInfo.getMatchTime());
+            System.out.println("Speed before shot - " + bangBang.getInput());
             bangBang.setCoast(true);
 
             // Out
             if (!loadOut.get()) {
                 loadOut.set(true);
+                if (loadIn != null) {
+                    loadIn.set(false);
+                }
                 Timer.delay(0.3);
             }
 
@@ -100,6 +104,9 @@ public final class Shooter extends Subsystem {
             loadOut.set(false);
 
             Timer.delay(0.5);
+
+
+            System.out.println("Speed after shot - " + bangBang.getInput());
 
             // Out
             if (loadIn != null) {
@@ -168,25 +175,34 @@ public final class Shooter extends Subsystem {
     public void pushFrisbees() {
         if (!pusherLock) {
             pusherLock = true;
-            
+            frisbeePusherEncoder.reset();
+
             Timer t = new Timer();
             t.start();
 
-            frisbeePusherEncoder.reset();
+            // Make sure rev is reset
+            while ((frisbeePusherEncoder.getRevs() > 0 || frisbeePusherEncoder.getRevs() < 0)
+                    && t.get() < 1) {
+                Timer.delay(0.002);
+            }
+
+            t.reset();
 
             while (frisbeePusherEncoder.getRevs() < in && t.get() < 3) {
                 frisbeePusher.set(0.4);
                 Timer.delay(0.002);
             }
             frisbeePusher.set(0);
-            frisbeePusher.set(-0.5);
+            frisbeePusher.set(-0.3);
             Timer.delay(0.01);
+
+            t.reset();
             while (frisbeePusherEncoder.getRevs() > 0 && t.get() < 3) {
-                frisbeePusher.set(-0.4);
+                frisbeePusher.set(-0.45);
                 Timer.delay(0.002);
             }
-            frisbeePusher.set(+0.5);
-            Timer.delay(0.03);
+            frisbeePusher.set(+0.3);
+            Timer.delay(0.01);
 
             frisbeePusher.set(0);
 
