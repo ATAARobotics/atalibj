@@ -26,6 +26,18 @@ public final class ShooterWheel extends Subsystem {
         bangBang.setDefaultSpeed(defSpeed(RPM));
     }
 
+    public double getRPM() {
+        return bangBang.getInput();
+    }
+    
+    public double getSetpointRPM() {
+        return bangBang.getSetpoint();
+    }
+
+    public boolean isPastSetpoint() {
+        return bangBang.pastSetpoint();
+    }
+
     private double defSpeed(double RPM) {
         double s;
         if (RPM < 2500) {

@@ -51,6 +51,18 @@ public final class AlignmentSystem extends Subsystem {
         backLeft.set(false);
         backRight.set(true);
     }
+    
+    public boolean isOut() {
+        return back.get();
+    }
+    
+    public boolean isLeft() {
+        return backLeft.get();
+    }
+    
+    public boolean isRight() {
+        return backRight.get();
+    }
 
     private static class NullSolenoid implements Solenoid {
 

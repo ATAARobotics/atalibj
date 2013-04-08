@@ -68,6 +68,10 @@ class ForwardingDualActionSolenoid implements edu.first.module.actuator.Solenoid
     public final boolean get() {
         return position;
     }
+    
+    public final boolean isOut() {
+        return get() == OUT;
+    }
 
     /**
      * Sets the solenoids to an in position.

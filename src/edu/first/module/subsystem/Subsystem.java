@@ -8,7 +8,7 @@ import java.util.TimerTask;
 public abstract class Subsystem implements Runnable, Module.DisableableModule {
 
     private static final List timers = new List();
-    private final Timer timer = new Timer();
+    private Timer timer = new Timer();
     private final Subsystem instance = this;
     private final TimerTask task = new Task();
     private final Module[] modules;
@@ -51,6 +51,8 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
 
     public final void stop() {
         timer.cancel();
+        
+        timer = new Timer();
     }
 
     protected void startOnce() {
@@ -58,7 +60,7 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
     }
 
     protected void startOnce(long delay) {
-        new Timer().schedule(task, delay);
+        timer.schedule(task, delay);
     }
 
     protected void startAtFixedDelay(long fixedDelay) {

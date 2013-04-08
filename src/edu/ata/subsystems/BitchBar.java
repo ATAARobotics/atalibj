@@ -27,4 +27,20 @@ public final class BitchBar extends Subsystem {
     public void run() {
         // No thread needed
     }
+    
+    public void switchPosition() {
+        solenoid.set(!solenoid.get());
+    }
+    
+    public void setOut() {
+        solenoid.set(true);
+    }
+    
+    public void setIn() {
+        solenoid.set(false);
+    }
+    
+    public boolean isOut() {
+        return solenoid.get();
+    }
 }

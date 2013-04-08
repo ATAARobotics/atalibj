@@ -50,9 +50,13 @@ public final class Winch extends Subsystem implements SetteableNumber, PIDOutput
             winchMotor.set(speed);
         }
     }
+    
+    public double getPosition() {
+        return potentiometer.getPosition();
+    }
 
     public double pidGet() {
-        return potentiometer.getPosition();
+        return getPosition();
     }
 
     public void pidWrite(double output) {

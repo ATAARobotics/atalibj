@@ -4,10 +4,12 @@ import edu.ata.autonomous.GordianAuto;
 import edu.ata.modules.XboxController;
 import edu.ata.subsystems.AlignmentSystem;
 import edu.ata.subsystems.BitchBar;
+import edu.ata.subsystems.Compressor;
 import edu.ata.subsystems.Drivetrain;
 import edu.ata.subsystems.GearShifters;
 import edu.ata.subsystems.Loader;
 import edu.ata.subsystems.ShooterWheel;
+import edu.ata.subsystems.SmartDashboardSender;
 import edu.ata.subsystems.Winch;
 import edu.ata.subsystems.WindshieldWiper;
 import edu.first.module.sensor.VexIntegratedMotorEncoder;
@@ -25,9 +27,11 @@ import edu.first.module.sensor.PotentiometerModule;
 import edu.first.bindings.SpeedControllerBinding;
 import edu.first.identifiers.Function;
 import edu.first.module.actuator.DualActionSolenoid;
+import edu.first.module.joystick.BindableJoystick;
 import edu.first.module.sensor.VexMotorEncoderModule;
 import edu.first.module.speedcontroller.SpeedControllerModule;
 import edu.first.module.speedcontroller.SpikeRelayModule;
+import edu.first.module.subsystem.Subsystem;
 import edu.first.module.target.BangBangModule;
 import edu.first.robot.Robot;
 import edu.first.robot.RobotAdapter;
@@ -87,8 +91,7 @@ public final class Murdock {
     // Important things //
     private static Murdock MURDOCK;
     private final Robot murdock = new MurdockRobot();
-    private final RobotMode fullTestingMode = new FullTestingMode();
-    private final RobotMode competitionMode = new CompetitionMode();
+    private final RobotMode normalMode = new NormalMode();
     private long lastSave = System.currentTimeMillis();
     private DoublePreference RPM = new DoublePreference("RPM", defaultRPM);
     private StringPreference AUTOMODE = new StringPreference("AutonomousMode", defaultAuto);
@@ -110,7 +113,7 @@ public final class Murdock {
             PortMapFile.getInstance().getPort("EncoderB", 3));
     private final VexIntegratedMotorEncoder _windshieldWiperEncoder = new VexIntegratedMotorEncoder(1, (byte) 0x60, "speed", true);
     private final Gyro _gyro = new Gyro(PortMapFile.getInstance().getPort("Gyro", 2));
-    private final Relay _compressor = new Relay(PortMapFile.getInstance().getPort("Compressor", 1));
+    private final Relay _compressorRelay = new Relay(PortMapFile.getInstance().getPort("Compressor", 1));
     private final Joystick _joystick1 = new Joystick(PortMapFile.getInstance().getPort("Joystick1", 1));
     private final Joystick _joystick2 = new Joystick(PortMapFile.getInstance().getPort("Joystick2", 2));
     private final Talon _shooter = new Talon(PortMapFile.getInstance().getPort("Shooter", 1));
@@ -138,7 +141,7 @@ public final class Murdock {
     private final EncoderModule encoder = new EncoderModule(_encoder, Encoder.PIDSourceParameter.kDistance);
     private final VexMotorEncoderModule windshieldWiperEncoder = new VexMotorEncoderModule(_windshieldWiperEncoder);
     private final GyroModule gyro = new GyroModule(_gyro);
-    private final SpikeRelayModule compressor = new SpikeRelayModule(_compressor);
+    private final SpikeRelayModule compressorRelay = new SpikeRelayModule(_compressorRelay);
     private final XboxController joystick1 = new XboxController(_joystick1);
     private final XboxController joystick2 = new XboxController(_joystick2);
     private final SpeedControllerModule shooter = new SpeedControllerModule(_shooter);
@@ -154,13 +157,18 @@ public final class Murdock {
     // Subsystems //
     private final AlignmentSystem alignmentSystem = new AlignmentSystem(backLeft, backRight);
     private final BitchBar bitchBar = new BitchBar(_bitchBar);
+    private final Compressor compressor = new Compressor(psi120, compressorRelay);
     private final Drivetrain drivetrain = new Drivetrain(drive);
     private final GearShifters gearShifters = new GearShifters(_gearShifters);
     private final Loader loader = new Loader(_loader);
     private final ShooterWheel shooterWheel = new ShooterWheel(bangBang);
     private final Winch winch = new Winch(winchMotor, potentiometer);
     private final WindshieldWiper windshieldWiper = new WindshieldWiper(windshieldWiperMotor, windshieldWiperEncoder);
-    
+    private final SmartDashboardSender smartDashboardSender =
+            new SmartDashboardSender(shooterWheel, psi60, psi120, bitchBar, alignmentSystem, winch, gearShifters,
+            windshieldWiper, encoder, gyro, transferRate);
+    private final BindableJoystick BINDS = new BindableJoystick(null);
+
     public static Murdock getInstance() {
         synchronized (Murdock.class) {
             if (MURDOCK == null) {
@@ -178,11 +186,7 @@ public final class Murdock {
     }
 
     private RobotMode getSelectedRobot() {
-        if (DriverstationInfo.getDS().getDigitalIn(competitionPort)) {
-            return competitionMode;
-        } else {
-            return fullTestingMode;
-        }
+        return normalMode;
     }
 
     private void init() {
@@ -204,7 +208,7 @@ public final class Murdock {
         YRPM.create();
         BackSetpoint.create();
 
-        compressor.enable();
+        compressorRelay.enable();
 
         _windshieldWiperEncoder.reset();
     }
@@ -216,39 +220,29 @@ public final class Murdock {
             Logger.log(Logger.Urgency.USERMESSAGE, "Saving Preferences");
             Preferences.getInstance().save();
         }
-        psi120.disable();
-        psi60.disable();
-        potentiometer.disable();
-        hallEffect.disable();
-        encoder.disable();
-        gyro.disable();
+
+        Subsystem.cancelAllSubsystems();
+
         joystick1.disable();
         joystick2.disable();
-        shooter.disable();
-        winchMotor.disable();
-        drive.disable();
-        loadOut.disable();
-        gearUp.disable();
-        gearDown.disable();
-        bitchBarIn.disable();
-        bitchBarOut.disable();
-        backLeft.disable();
-        backRight.disable();
+        alignmentSystem.disable();
+        bitchBar.disable();
+        compressor.disable();
+        drivetrain.disable();
+        gearShifters.disable();
+        loader.disable();
+        shooterWheel.disable();
+        smartDashboardSender.disable();
+        winch.disable();
+        windshieldWiper.disable();
 
         Logger.log(Logger.Urgency.USERMESSAGE, "Robot is disabled.");
     }
 
     private void doScriptAutonomous() {
-        gearShifterController.enable();
-        drive.enable();
-        shotController.enable();
-        shooterController.enable();
-        alignment.enable();
-        encoder.enable();
-        gyro.enable();
-
+        
+        
         drive.setSafetyEnabled(false);
-        shooterController.setDefaultSpeed(0);
         encoder.reset();
 
         GordianAuto.ensureInit(gearShifterController, drive, shotController,
@@ -267,102 +261,13 @@ public final class Murdock {
             new ArcadeBinding(drive, ArcadeBinding.FORWARD), joystick1.getLeftDistanceFromMiddle());
 
     private void doTeleopBinds() {
-        joystick1.removeAllBinds();
-        joystick2.removeAllBinds();
+        BINDS.removeAllBinds();
 
-        // Driving
-        joystick1.addWhenPressed(joystick1.getLeftBumper(),
-                new GearShiftCommand(gearShifterController, GearShiftCommand.FIRST, false));
-        joystick1.addWhenPressed(joystick1.getRightBumper(),
-                new GearShiftCommand(gearShifterController, GearShiftCommand.SECOND, false));
-        joystick1.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, -triggerShotThreashold),
-                new AutoShoot(shotController, shooterController, true));
-        joystick1.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, triggerShotThreashold),
-                new ShootCommand(shotController, true));
-        joystick1.addWhenPressed(joystick1.getAButton(),
-                new SwitchBitchBar(bitchBar, false));
-        // Always bring alignment in when bitch bar is changed
-        joystick1.addWhenPressed(joystick1.getAButton(),
-                new AlignCommand(alignment, AlignCommand.COLLAPSE, false));
-        joystick1.addWhenPressed(joystick1.getRightJoystickButton(),
-                new AlignCommand(alignment, AlignCommand.REVERSE, false));
-        // Always bring bitch bar in when alignment is changed
-        joystick1.addWhenPressed(joystick1.getRightJoystickButton(),
-                new SwitchBitchBar(bitchBar, SwitchBitchBar.IN, false));
-        joystick1.addWhenPressed(joystick1.getLeftJoystickButton(),
-                new AlignCommand(alignment, AlignCommand.LEFT, false));
-        // Always bring bitch bar in when alignment is changed
-        joystick1.addWhenPressed(joystick1.getLeftJoystickButton(),
-                new SwitchBitchBar(bitchBar, SwitchBitchBar.IN, false));
-        joystick1.addBind(forwards);
-        joystick1.addAxis(joystick1.getRightX(),
-                new ArcadeBinding(drive, ArcadeBinding.ROTATE));
-        joystick1.addWhenPressed(joystick1.getBackButton(),
-                new AlignShooter(shotController, BackSetpoint, true));
-        joystick1.addAxis(joystick1.getDirectionalPad(),
-                new SetFrisbeePusher(shotController));
-        // Shooter
-        joystick2.addWhenPressed(joystick2.getLeftBumper(),
-                new ChangeRPMCommand(RPM, -shooterRPMSpeedChange, shooterController, false));
-        joystick2.addWhenPressed(joystick2.getRightBumper(),
-                new ChangeRPMCommand(RPM, +shooterRPMSpeedChange, shooterController, false));
-        joystick2.addAxis(joystick2.getTriggers(),
-                new SpeedControllerBinding(alignmentMotor, true));
-        joystick2.addWhenPressed(joystick2.getAButton(),
-                new AlignShooter(shotController, ASetpoint, true));
-        joystick2.addWhenPressed(joystick2.getAButton(),
-                new SetRPMCommand(RPM, ARPM, shooterController, false));
-        joystick2.addWhenPressed(joystick2.getBButton(),
-                new AlignShooter(shotController, BSetpoint, true));
-        joystick2.addWhenPressed(joystick2.getBButton(),
-                new SetRPMCommand(RPM, BRPM, shooterController, false));
-        joystick2.addWhenPressed(joystick2.getXButton(),
-                new AlignShooter(shotController, XSetpoint, true));
-        joystick2.addWhenPressed(joystick2.getXButton(),
-                new SetRPMCommand(RPM, XRPM, shooterController, false));
-        joystick2.addWhenPressed(joystick2.getYButton(),
-                new AlignShooter(shotController, YSetpoint, true));
-        joystick2.addWhenPressed(joystick2.getYButton(),
-                new SetRPMCommand(RPM, YRPM, shooterController, false));
-        joystick2.addWhenPressed(joystick2.getLeftJoystickButton(),
-                new Command() {
-            public void run() {
-                joystick1.removeBind(forwards);
-                joystick1.removeAxisBinds(XboxController.RIGHT_X);
-
-                joystick2.addAxis(joystick2.getRightY(),
-                        new SideBinding(drive, SideBinding.LEFT), fineAdjustmentCoefficient);
-            }
-        });
-        joystick2.addWhenReleased(joystick2.getLeftJoystickButton(),
-                new Command() {
-            public void run() {
-                joystick2.removeAxisBinds(XboxController.RIGHT_Y);
-
-                joystick1.addBind(forwards);
-                joystick1.addAxis(joystick1.getRightX(),
-                        new ArcadeBinding(drive, ArcadeBinding.ROTATE));
-            }
-        });
-        joystick2.addWhenPressed(joystick2.getStartButton(),
-                new BangBangCommand(shooterController, RPM, false));
-        joystick2.addWhenPressed(joystick2.getStartButton(),
-                new ReversingSolenoidsCommand(loadIn, loadOut,
-                ReversingSolenoidsCommand.OUT, false));
-        joystick2.addWhenPressed(joystick2.getBackButton(),
-                new BangBangCommand(shooterController, 0, false));
-        joystick2.addWhenPressed(joystick2.getBackButton(),
-                new ReversingSolenoidsCommand(loadIn, loadOut,
-                ReversingSolenoidsCommand.IN, false));
 
         Logger.log(Logger.Urgency.USERMESSAGE, "Teleop Binds Ready");
     }
 
-    private boolean isSmartDashboard() {
-        return DriverstationInfo.getDS().getDigitalIn(smartDashboardPort);
-    }
-
-    public final class FullTestingMode extends RobotMode {
+    public final class NormalMode extends RobotMode {
 
         public void autonomousInit() {
             doScriptAutonomous();
@@ -371,21 +276,28 @@ public final class Murdock {
         public void teleopInit() {
             joystick1.enable();
             joystick2.enable();
-            psi60.enable();
-            psi120.enable();
-            encoder.enable();
-            gyro.enable();
+            alignmentSystem.enable();
+            alignmentSystem.start();
             bitchBar.enable();
-            alignment.enable();
-            gearShifterController.enable();
-            drive.enable();
-            windshieldWiperMotor.enable();
-            shooterController.enable();
-            shotController.enable();
+            bitchBar.start();
+            compressor.enable();
+            compressor.start();
+            drivetrain.enable();
+            drivetrain.start();
+            gearShifters.enable();
+            gearShifters.start();
+            loader.enable();
+            loader.start();
+            shooterWheel.enable();
+            shooterWheel.start();
+            smartDashboardSender.enable();
+            smartDashboardSender.start();
+            winch.enable();
+            winch.start();
+            windshieldWiper.enable();
+            windshieldWiper.start();
 
-            shooterController.setSetpoint(RPM.getRPM());
-            shooterController.setDefaultSpeed(RPM.getDefaultSpeed());
-            shooterController.setSetpoint(0);
+            shooterWheel.setRPM(0);
             drive.setSafetyEnabled(true);
 
             doTeleopBinds();
@@ -394,78 +306,6 @@ public final class Murdock {
         public void teleopPeriodic() {
             joystick1.doBinds();
             joystick2.doBinds();
-            if (isSmartDashboard()) {
-                SmartDashboard.putBoolean("PastSetpoint", shooterController.pastSetpoint());
-                SmartDashboard.putBoolean("60 PSI", !psi60.isPushed());
-                SmartDashboard.putBoolean("120 PSI", !psi120.isPushed());
-                SmartDashboard.putBoolean("BBOut", !bitchBar.isOut());
-                SmartDashboard.putBoolean("AlignOut", alignment.isOut());
-                SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
-                SmartDashboard.putNumber("Pusher", _windshieldWiperEncoder.getRevs());
-                SmartDashboard.putNumber("Distance", encoder.getDistance());
-                SmartDashboard.putNumber("Angle", gyro.getAngle());
-                SmartDashboard.putNumber("ShooterPosition", potentiometer.getPosition());
-                SmartDashboard.putNumber("NetworkLag", transferRate.packetsPerMillisecond());
-                SmartDashboard.putNumber("Gear", gearShifterController.gear());
-            }
-
-            if (!psi120.isPushed()) {
-                compressor.set(Relay.Value.kForward);
-            } else {
-                compressor.set(Relay.Value.kOff);
-            }
-        }
-    }
-
-    public final class CompetitionMode extends RobotMode {
-
-        private int counter = 0;
-
-        public void autonomousInit() {
-            doScriptAutonomous();
-        }
-
-        public void teleopInit() {
-            joystick1.enable();
-            joystick2.enable();
-            psi60.enable();
-            psi120.enable();
-            bitchBar.enable();
-            alignment.enable();
-            gearShifterController.enable();
-            drive.enable();
-            windshieldWiperMotor.enable();
-            shooterController.enable();
-            shotController.enable();
-
-            shooterController.setSetpoint(RPM.getRPM());
-            shooterController.setDefaultSpeed(RPM.getDefaultSpeed());
-            shooterController.setSetpoint(0);
-            drive.setSafetyEnabled(true);
-
-            doTeleopBinds();
-        }
-
-        public void teleopPeriodic() {
-            joystick1.doBinds();
-            joystick2.doBinds();
-            // Runs every 5 loops (100ms = 0.1 secs)
-            if (++counter > 5 && isSmartDashboard()) {
-                counter = 0;
-                SmartDashboard.putBoolean("PastSetpoint", shooterController.pastSetpoint());
-                SmartDashboard.putBoolean("60 PSI", !psi60.isPushed());
-                SmartDashboard.putBoolean("120 PSI", !psi120.isPushed());
-                SmartDashboard.putBoolean("BBOut", !bitchBar.isOut());
-                SmartDashboard.putBoolean("AlignOut", alignment.isOut());
-                SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
-                SmartDashboard.putNumber("ShooterPosition", potentiometer.getPosition());
-                SmartDashboard.putNumber("Gear", gearShifterController.gear());
-            }
-            if (!psi120.isPushed()) {
-                compressor.set(Relay.Value.kForward);
-            } else {
-                compressor.set(Relay.Value.kOff);
-            }
         }
     }
 

@@ -71,4 +71,8 @@ public final class Loader extends Subsystem {
         out = true;
         update();
     }
+    
+    public boolean isOut() {
+        return solenoid.isOut();
+    }
 }
