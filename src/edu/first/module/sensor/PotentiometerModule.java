@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.AnalogChannel;
  *
  * @author Team 4334
  */
-public final class PotentiometerModule extends ForwardingPotentiometer implements Module.DisableableModule {
+public class PotentiometerModule extends ForwardingPotentiometer implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -64,7 +64,7 @@ public final class PotentiometerModule extends ForwardingPotentiometer implement
      *
      * @return value of the potentiometer
      */
-    public double getPosition() {
+    public final double getPosition() {
         return isEnabled() ? super.getPosition() : -1;
     }
 }
@@ -78,7 +78,6 @@ public final class PotentiometerModule extends ForwardingPotentiometer implement
 class ForwardingPotentiometer implements Potentiometer {
 
     private final AnalogChannel potentiometer;
-    private double c;
 
     /**
      * Constructs the object by using composition, using the given analog
@@ -91,7 +90,6 @@ class ForwardingPotentiometer implements Potentiometer {
             throw new NullPointerException();
         }
         this.potentiometer = potentiometer;
-        this.c = potentiometer.getVoltage();
     }
 
     /**
@@ -100,7 +98,7 @@ class ForwardingPotentiometer implements Potentiometer {
      *
      * @return composition object under this one
      */
-    protected AnalogChannel getPotentiometer() {
+    protected final AnalogChannel getPotentiometer() {
         return potentiometer;
     }
 
@@ -112,7 +110,10 @@ class ForwardingPotentiometer implements Potentiometer {
      * @return position of the potentiometer
      */
     public double getPosition() {
-        c = potentiometer.getVoltage() * 0.1 + 0.9 * c;
-        return c;
+        return potentiometer.getVoltage();
+    }
+
+    public final double get() {
+        return getPosition();
     }
 }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.ADXL345_I2C;
  */
 public class AccelerometerModule extends ForwardingAccelerometer implements Module.DisableableModule {
 
+    public static final ADXL345_I2C.Axes DEFAULT_AXES = ADXL345_I2C.Axes.kX;
     private boolean enabled;
 
     /**
@@ -60,7 +61,7 @@ public class AccelerometerModule extends ForwardingAccelerometer implements Modu
      * @param axes
      * @return acceleration measured by sensor
      */
-    public double getAcceleration(ADXL345_I2C.Axes axes) {
+    public final double getAcceleration(ADXL345_I2C.Axes axes) {
         return isEnabled() ? super.getAcceleration(axes) : 0;
     }
 }
@@ -79,6 +80,10 @@ class ForwardingAccelerometer implements Accelerometer {
         this.accelerometer = accelerometer;
     }
 
+    protected final ADXL345_I2C getAccelerometer() {
+        return accelerometer;
+    }
+
     /**
      * Returns the acceleration in G's.
      *
@@ -94,6 +99,10 @@ class ForwardingAccelerometer implements Accelerometer {
      * @return acceleration
      */
     public double pidGet() {
-        return getAcceleration(ADXL345_I2C.Axes.kX);
+        return get();
+    }
+
+    public double get() {
+        return getAcceleration(AccelerometerModule.DEFAULT_AXES);
     }
 }

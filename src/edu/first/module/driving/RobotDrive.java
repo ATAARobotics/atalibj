@@ -1,5 +1,7 @@
 package edu.first.module.driving;
 
+import edu.first.identifiers.SetteableNumber;
+
 /**
  * Outline for objects that drive a robot. Acts as a stable form of
  * {@link edu.wpi.first.wpilibj.RobotDrive}, so that expectations of classes
@@ -7,7 +9,7 @@ package edu.first.module.driving;
  *
  * @author Joel Gallant
  */
-interface RobotDrive {
+interface RobotDrive extends SetteableNumber {
 
     /**
      * Drive the motors at "speed" and "curve".

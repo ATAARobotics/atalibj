@@ -115,6 +115,8 @@ public interface Module {
      *
      * <p> For this reason, use this class sparingly, and understand what
      * extending this class means.
+     * 
+     * @deprecated is not very safe to use
      */
     public static abstract class TrackedModule implements Module {
 

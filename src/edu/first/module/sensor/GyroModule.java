@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Gyro;
  *
  * @author Joel Gallant
  */
-public final class GyroModule extends ForwardingGyro implements Module.DisableableModule {
+public class GyroModule extends ForwardingGyro implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -29,7 +29,7 @@ public final class GyroModule extends ForwardingGyro implements Module.Disableab
      *
      * @return if module was enabled successfully
      */
-    public boolean enable() {
+    public final boolean enable() {
         return (enabled = true);
     }
 
@@ -39,7 +39,7 @@ public final class GyroModule extends ForwardingGyro implements Module.Disableab
      *
      * @return if module is enabled
      */
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return enabled;
     }
 
@@ -49,7 +49,7 @@ public final class GyroModule extends ForwardingGyro implements Module.Disableab
      *
      * @return if module is disabled successfully
      */
-    public boolean disable() {
+    public final boolean disable() {
         reset();
         return !(enabled = false);
     }
@@ -67,17 +67,8 @@ public final class GyroModule extends ForwardingGyro implements Module.Disableab
      * @return the current heading of the robot in degrees. This heading is
      * based on integration of the returned rate from the gyro.
      */
-    public double getAngle() {
+    public final double getAngle() {
         return isEnabled() ? super.getAngle() : 0;
-    }
-
-    /**
-     * Returns {@link GyroModule#getAngle()}.
-     *
-     * @return value of {@code getAngle()}
-     */
-    public double pidGet() {
-        return getAngle();
     }
 }
 
@@ -110,7 +101,7 @@ class ForwardingGyro implements edu.first.module.sensor.Gyro {
      *
      * @return composition object under this one
      */
-    protected edu.wpi.first.wpilibj.Gyro getGyro() {
+    protected final edu.wpi.first.wpilibj.Gyro getGyro() {
         return gyro;
     }
 
@@ -135,14 +126,18 @@ class ForwardingGyro implements edu.first.module.sensor.Gyro {
      * significant drift in the gyro and it needs to be calibrated after it has
      * been running.
      */
-    public void reset() {
+    public final void reset() {
         gyro.reset();
     }
 
     /**
      * {@inheritDoc}
      */
-    public double pidGet() {
-        return gyro.pidGet();
+    public final double pidGet() {
+        return getAngle();
+    }
+
+    public final double get() {
+        return getAngle();
     }
 }

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  *
  * @author Team 4334
  */
-public final class HallEffectModule extends ForwardingHallEffectModule implements Module.DisableableModule {
+public class HallEffectModule extends ForwardingHallEffectModule implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -43,7 +43,7 @@ public final class HallEffectModule extends ForwardingHallEffectModule implement
      *
      * @return if module was successfully disabled
      */
-    public boolean disable() {
+    public final boolean disable() {
         stop();
         return !(enabled = false);
     }
@@ -54,7 +54,7 @@ public final class HallEffectModule extends ForwardingHallEffectModule implement
      *
      * @return if module was successfully enabled
      */
-    public boolean enable() {
+    public final boolean enable() {
         start();
         return (enabled = true);
     }
@@ -66,7 +66,7 @@ public final class HallEffectModule extends ForwardingHallEffectModule implement
      *
      * @return whether module is enabled
      */
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return enabled;
     }
 
@@ -75,7 +75,7 @@ public final class HallEffectModule extends ForwardingHallEffectModule implement
      *
      * @return the current polarization of the sensor
      */
-    public boolean isPolarized() {
+    public final boolean isPolarized() {
         return isEnabled() ? super.isPolarized() : false;
     }
 
@@ -84,7 +84,7 @@ public final class HallEffectModule extends ForwardingHallEffectModule implement
      *
      * @return the current count from the Counter
      */
-    public int getCount() {
+    public final int getCount() {
         return isEnabled() ? super.getCount() : 0;
     }
 
@@ -94,7 +94,7 @@ public final class HallEffectModule extends ForwardingHallEffectModule implement
      *
      * @return the rate of sensor
      */
-    public double getRate() {
+    public final double getRate() {
         return isEnabled() ? super.getRate() : 0;
     }
 }
@@ -120,7 +120,7 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      *
      * @param hallEffect underlying hallEffect object used
      */
-    public ForwardingHallEffectModule(DigitalInput hallEffect) {
+    ForwardingHallEffectModule(DigitalInput hallEffect) {
         this(hallEffect, defaultMaxPossible);
     }
 
@@ -131,7 +131,7 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * @param hallEffect actual underlying object used
      * @param maxPossible maximum acceptable value to allow getRate() to return
      */
-    public ForwardingHallEffectModule(DigitalInput hallEffect, double maxPossible) {
+    ForwardingHallEffectModule(DigitalInput hallEffect, double maxPossible) {
         this(hallEffect, new Counter(hallEffect), maxPossible);
     }
 
@@ -142,7 +142,7 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * @param hallEffect actual underlying object used
      * @param counter the counter object it uses
      */
-    public ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter) {
+    ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter) {
         this(hallEffect, counter, defaultMaxPossible);
     }
 
@@ -154,7 +154,7 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * @param counter the counter object it uses
      * @param maxPossible maximum acceptable value to allow getRate() to return
      */
-    public ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter, double maxPossible) {
+    ForwardingHallEffectModule(DigitalInput hallEffect, Counter counter, double maxPossible) {
         this.hallEffect = hallEffect;
         this.counter = counter;
         this.maxPossible = maxPossible;
@@ -163,14 +163,14 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
     /**
      * Starts the the counter.
      */
-    protected void start() {
+    protected final void start() {
         counter.start();
     }
 
     /**
      * Stops and resets the counter.
      */
-    protected void stop() {
+    protected final void stop() {
         counter.stop();
         counter.reset();
     }
@@ -207,6 +207,10 @@ class ForwardingHallEffectModule implements HallEffect, PIDSource {
      * {@inheritDoc}
      */
     public double pidGet() {
+        return getRate();
+    }
+
+    public double get() {
         return getRate();
     }
 }

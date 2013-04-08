@@ -29,7 +29,7 @@ public class GroupSolenoid implements Solenoid {
      *
      * @param on state of solenoids
      */
-    public void set(boolean on) {
+    public final void set(boolean on) {
         for (int x = 0; x < solenoids.length; x++) {
             solenoids[x].set(on);
         }
@@ -41,7 +41,7 @@ public class GroupSolenoid implements Solenoid {
      *
      * @return state of all solenoids
      */
-    public boolean get() {
+    public final boolean get() {
         boolean get = solenoids[0].get();
         for (int x = 1; x < solenoids.length; x++) {
             if (solenoids[x].get() != get) {

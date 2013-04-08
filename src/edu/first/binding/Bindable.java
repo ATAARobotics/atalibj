@@ -1,6 +1,8 @@
-package edu.first.bindings;
+package edu.first.binding;
 
+import edu.first.bindings.AxisBind;
 import edu.first.command.Command;
+import edu.first.identifiers.Function;
 import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
@@ -38,8 +40,8 @@ public abstract class Bindable {
         addBind(new SetAxis(bind, axis));
     }
 
-    public final void addAxis(Axis axis, AxisBind bind, double coefficient) {
-        addBind(new SetAxis(bind, axis, coefficient));
+    public final void addAxis(Axis axis, AxisBind bind, Function function) {
+        addBind(new SetAxis(bind, axis, function));
     }
 
     public final void removeBind(BindAction action) {
@@ -58,23 +60,40 @@ public abstract class Bindable {
         }
     }
 
-    public static abstract class Button {
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        for(int x = 0; x < binds.size(); x++) {
+            buffer.append(binds.get(x).toString()).append("\n");
+        }
+        return buffer.toString();
+    }
+
+    private static class BindingObject {
 
         private final String id;
 
-        public Button(String id) {
+        public BindingObject(String id) {
             this.id = id;
+        }
+
+        public String toString() {
+            return id;
+        }
+    }
+
+    public static abstract class Button extends BindingObject {
+
+        public Button(String id) {
+            super(id);
         }
 
         public abstract boolean isPressed();
     }
 
-    public static abstract class Axis {
-
-        private final String id;
+    public static abstract class Axis extends BindingObject {
 
         public Axis(String id) {
-            this.id = id;
+            super(id);
         }
 
         public abstract double getValue();
@@ -180,21 +199,22 @@ public abstract class Bindable {
 
     public static final class SetAxis extends BindsActionWithAxis {
 
+        private Function function = new Function.DefaultFunction();
         private final AxisBind axisBind;
-        private final double coefficient;
 
         public SetAxis(AxisBind axisBind, Axis axis) {
-            this(axisBind, axis, 1);
-        }
-
-        public SetAxis(AxisBind axisBind, Axis axis, double coefficient) {
             super(axis);
             this.axisBind = axisBind;
-            this.coefficient = coefficient;
+        }
+
+        public SetAxis(AxisBind axisBind, Axis axis, Function function) {
+            super(axis);
+            this.axisBind = axisBind;
+            this.function = function;
         }
 
         public void doBind() {
-            axisBind.set(coefficient * axis.getValue());
+            axisBind.set(function.apply(axis.getValue()));
         }
     }
 }

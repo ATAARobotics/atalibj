@@ -1,6 +1,8 @@
-package edu.first.module.driving;
+package edu.first.bindings;
 
 import edu.first.bindings.AxisBind;
+import edu.first.bindings.AxisBind;
+import edu.first.module.driving.RobotDriveModule;
 
 /**
  * An axis bind that binds the axis to a side of the robot. This means it uses
@@ -11,13 +13,7 @@ import edu.first.bindings.AxisBind;
  */
 public final class SideBinding implements AxisBind {
 
-    /**
-     *
-     */
     public static final Side RIGHT = new Side(Side.RIGHT),
-    /**
-     *
-     */
     LEFT = new Side(Side.LEFT);
     private final RobotDriveModule driveModule;
     private final Side side;

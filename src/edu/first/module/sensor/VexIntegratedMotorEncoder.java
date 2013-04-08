@@ -1,4 +1,4 @@
-package edu.ata.subsystems;
+package edu.first.module.sensor;
 
 import edu.wpi.first.wpilibj.DigitalModule;
 import edu.wpi.first.wpilibj.I2C;
@@ -100,18 +100,16 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
         DigitalModule module = DigitalModule.getInstance(slot);
         //m_i2c = module.getI2C(kAddressRegister);
         m_i2c = module.getI2C(kDefaultAddress);
-        System.out.println("initial device info ++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         System.out.println("device is " + (m_i2c.addressOnly() ? "not " : "") + "present at address 0x" + Integer.toHexString(kDefaultAddress));
-        System.out.println("+++ new device info ++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         if (newAddress != kDefaultAddress) { // change address if not using the default address
-            myTimer.delay(0.5); // put in a delay to see if we can get the second chain device to be connected
+            Timer.delay(0.5); // put in a delay to see if we can get the second chain device to be connected
             setAddress(newAddress);
             m_i2c.free(); // release the previously addressed object
             m_i2c = module.getI2C(m_address);
             System.out.println("device is " + (m_i2c.addressOnly() ? "not " : "") + "present at address 0x" + Integer.toHexString(m_address));
         }
 
-        setTicksPerRev(gearing); // 
+        setTicksPerRev(gearing);
 
         // terminate device as required
         if (setTerminated) { // requesting device to be terminated
@@ -124,18 +122,18 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
     /**
      * Destructor.
      */
-    public void free() {
+    public final void free() {
         if (m_i2c != null) {
             m_i2c.free();
         }
         m_i2c = null;
     }
 
-    public void reset() {
+    public final void reset() {
         m_i2c.write(kClearDeviceCounters, (int) 1); // can write any value to the register
     }
 
-    public double getRaw() {
+    public final double getRaw() {
         byte[] buffer = new byte[1];
         m_i2c.read(kRotationRegisterLowMSB, (byte) buffer.length, buffer);
         byte low_msb = buffer[0];
@@ -149,7 +147,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
 
     }
 
-    public double getRawHigh() {
+    public final double getRawHigh() {
         byte[] buffer = new byte[1];
         m_i2c.read(kRotationRegisterHignMSB, (byte) buffer.length, buffer);
         byte high_msb = buffer[0];
@@ -158,7 +156,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
         return combine2Bytes(high_lsb, high_msb);
     }
 
-    public double combine4Bytes(byte low_lsb, byte low_msb, byte mid_lsb, byte mid_msb) {
+    public final double combine4Bytes(byte low_lsb, byte low_msb, byte mid_lsb, byte mid_msb) {
         long m_low_lsb = (long) (low_lsb & 0xff);
         long m_low_msb = (long) ((low_msb << 8) & 0xff00);
         long m_mid_lsb = (long) ((mid_lsb << 16) & 0xff0000);
@@ -166,7 +164,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
         return (m_low_lsb | m_low_msb | m_mid_lsb | m_mid_msb);
     }
 
-    public double combine2Bytes(byte mid_lsb, byte mid_msb) {
+    public final double combine2Bytes(byte mid_lsb, byte mid_msb) {
         short m_mid_lsb = (short) (mid_lsb & 0xff);
         short m_mid_msb = (short) ((mid_msb << 8) & 0xff00);
         return (m_mid_lsb | m_mid_msb);
@@ -179,7 +177,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
      *
      * @param mode The address to set
      */
-    public void setAddress(byte address) {
+    public final void setAddress(byte address) {
         if (address < kLowestDeviceAddress || address > kHighestDeviceAddress) {
             throw new IntegratedMotorEncoderException("Encoder Address Out Of Range");
         } else if (address % 2 != 0) {
@@ -194,7 +192,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
         }
     }
 
-    public boolean getTerminated() {
+    public final boolean getTerminated() {
         byte[] address = new byte[1];
         m_i2c.read(kDeviceStatusRegister, (byte) address.length, address);
         m_Terminated = ((int) address[0] & 0x1) == 1 ? true : false;
@@ -204,7 +202,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
         return m_Terminated;
     }
 
-    public void setTerminated() {
+    public final void setTerminated() {
         if (!this.getTerminated()) { // if device is not already terminated then write bytes to terminate
             m_i2c.write(kEnableTerminator, 1);
             m_Terminated = true;
@@ -214,7 +212,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
         }
     }
 
-    public void unSetTerminated() {
+    public final void unSetTerminated() {
         if (this.getTerminated()) { // if device is already terminated then write bytes to terminate
             m_i2c.write(kDisableTerminator, 1);
             m_Terminated = false;
@@ -224,15 +222,15 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
         }
     }
 
-    public double getRevs() {
+    public final double getRevs() {
         return this.getRaw() / m_TicksPerRev;
     }
 
-    public double get() {
+    public final double get() {
         return (this.getRevs() % 1) * 360.0;
     }
 
-    public void setTicksPerRev(String gearing) {
+    public final void setTicksPerRev(String gearing) {
         // adjust ticks per revolution depending on gearing
         if (gearing.toLowerCase().equals("torque")) {
             m_TicksPerRev = kTicksPerRevHighTorque;
@@ -249,9 +247,8 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
 
     /*
      * Live Window code, only does anything if live window is activated.
-     * TODO: Should this have its own type?
      */
-    public String getSmartDashboardType() {
+    public final String getSmartDashboardType() {
         return "VexEncoder";
     }
     private ITable m_table;
@@ -259,7 +256,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
     /**
      * {@inheritDoc}
      */
-    public void initTable(ITable subtable) {
+    public final void initTable(ITable subtable) {
         m_table = subtable;
         updateTable();
     }
@@ -267,14 +264,14 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
     /**
      * {@inheritDoc}
      */
-    public ITable getTable() {
+    public final ITable getTable() {
         return m_table;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void updateTable() {
+    public final void updateTable() {
         if (m_table != null) {
             m_table.putNumber("Rotation", get());
         }
@@ -283,12 +280,12 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
     /**
      * {@inheritDoc}
      */
-    public void startLiveWindowMode() {
+    public final void startLiveWindowMode() {
     }
 
     /**
      * {@inheritDoc}
      */
-    public void stopLiveWindowMode() {
+    public final void stopLiveWindowMode() {
     }
 }

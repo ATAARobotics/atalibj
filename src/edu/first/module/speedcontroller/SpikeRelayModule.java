@@ -1,6 +1,6 @@
 package edu.first.module.speedcontroller;
 
-import edu.first.module.speedcontroller.SpikeRelay;
+import edu.first.identifiers.SetteableBoolean;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Relay.Value;
  *
  * @author Joel Gallant
  */
-public final class SpikeRelayModule extends ForwardingSpikeRelay implements Module.DisableableModule {
+public class SpikeRelayModule extends ForwardingSpikeRelay implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -31,7 +31,7 @@ public final class SpikeRelayModule extends ForwardingSpikeRelay implements Modu
      *
      * @return if module was successfully disabled
      */
-    public boolean disable() {
+    public final boolean disable() {
         super.set(OFF);
         return !(enabled = false);
     }
@@ -41,7 +41,7 @@ public final class SpikeRelayModule extends ForwardingSpikeRelay implements Modu
      *
      * @return if module was successfully enabled
      */
-    public boolean enable() {
+    public final boolean enable() {
         return (enabled = true);
     }
 
@@ -51,7 +51,7 @@ public final class SpikeRelayModule extends ForwardingSpikeRelay implements Modu
      *
      * @return if module is enabled
      */
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return enabled;
     }
 
@@ -70,7 +70,7 @@ public final class SpikeRelayModule extends ForwardingSpikeRelay implements Modu
      *
      * @param value the state to set the relay
      */
-    public void set(Value value) {
+    public final void set(Value value) {
         if (isEnabled()) {
             super.set(value);
         }
@@ -83,7 +83,7 @@ public final class SpikeRelayModule extends ForwardingSpikeRelay implements Modu
  *
  * @author Joel Gallant
  */
-class ForwardingSpikeRelay implements SpikeRelay {
+class ForwardingSpikeRelay implements SpikeRelay, SetteableBoolean {
 
     private final Relay spikeRelay;
 
@@ -126,7 +126,7 @@ class ForwardingSpikeRelay implements SpikeRelay {
      *
      * @param on whether spike should be on
      */
-    public void set(boolean on) {
+    public final void set(boolean on) {
         set(on ? ON : OFF);
     }
 
@@ -138,7 +138,7 @@ class ForwardingSpikeRelay implements SpikeRelay {
      *
      * @param direction the direction for the relay to operate in
      */
-    public void setDirection(Direction direction) {
+    public final void setDirection(Direction direction) {
         spikeRelay.setDirection(direction);
     }
 
@@ -150,7 +150,7 @@ class ForwardingSpikeRelay implements SpikeRelay {
      *
      * @return the current state of the relay as a {@link Value}
      */
-    public Value get() {
+    public final Value get() {
         return spikeRelay.get();
     }
 }

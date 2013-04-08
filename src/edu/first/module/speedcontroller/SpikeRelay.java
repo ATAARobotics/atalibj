@@ -11,33 +11,12 @@ import edu.wpi.first.wpilibj.Relay;
  */
 public interface SpikeRelay {
 
-    /**
-     *
-     */
     Relay.Value ON = Relay.Value.kOn;
-    /**
-     *
-     */
     Relay.Value OFF = Relay.Value.kOff;
-    /**
-     *
-     */
     Relay.Value FORWARD = Relay.Value.kForward;
-    /**
-     *
-     */
     Relay.Value BACKWARD = Relay.Value.kReverse;
-    /**
-     *
-     */
     Relay.Direction BOTH = Relay.Direction.kBoth;
-    /**
-     *
-     */
     Relay.Direction FORWARDS_ONLY = Relay.Direction.kForward;
-    /**
-     *
-     */
     Relay.Direction BACKWARDS_ONLY = Relay.Direction.kReverse;
 
     /**

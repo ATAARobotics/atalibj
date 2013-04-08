@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  *
  * @author Joel Gallant
  */
-public final class EncoderModule extends ForwardingEncoder implements Module.DisableableModule {
+public class EncoderModule extends ForwardingEncoder implements Module.DisableableModule {
 
     /**
      * Uses {@link edu.wpi.first.wpilibj.Encoder#getDistance()} for
@@ -55,7 +55,7 @@ public final class EncoderModule extends ForwardingEncoder implements Module.Dis
      *
      * @return if encoder was successfully enabled
      */
-    public boolean enable() {
+    public final boolean enable() {
         start();
         return (enabled = true);
     }
@@ -65,7 +65,7 @@ public final class EncoderModule extends ForwardingEncoder implements Module.Dis
      *
      * @return if module has been enabled
      */
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return enabled;
     }
 
@@ -75,7 +75,7 @@ public final class EncoderModule extends ForwardingEncoder implements Module.Dis
      *
      * @return if module was successfully disabled
      */
-    public boolean disable() {
+    public final boolean disable() {
         stop();
         reset();
         return !(enabled = false);
@@ -88,7 +88,7 @@ public final class EncoderModule extends ForwardingEncoder implements Module.Dis
      *
      * @return the current rate of the encoder.
      */
-    public double getRate() {
+    public final double getRate() {
         return isEnabled() ? super.getRate() : 0;
     }
 }
@@ -110,7 +110,7 @@ class ForwardingEncoder implements edu.first.module.sensor.Encoder {
      * @param encoder actual underlying object used
      */
     ForwardingEncoder(edu.wpi.first.wpilibj.Encoder encoder, edu.wpi.first.wpilibj.Encoder.PIDSourceParameter pidSource) {
-        if(encoder == null || pidSource == null) {
+        if (encoder == null || pidSource == null) {
             throw new NullPointerException();
         }
         this.encoder = encoder;
@@ -123,28 +123,28 @@ class ForwardingEncoder implements edu.first.module.sensor.Encoder {
      *
      * @return composition object under this one
      */
-    protected edu.wpi.first.wpilibj.Encoder getEncoder() {
+    protected final edu.wpi.first.wpilibj.Encoder getEncoder() {
         return encoder;
     }
 
     /**
      * Start the Encoder. Starts counting pulses on the Encoder device.
      */
-    public void start() {
+    public final void start() {
         encoder.start();
     }
 
     /**
      * Stops counting pulses on the Encoder device. The value is not changed.
      */
-    public void stop() {
+    public final void stop() {
         encoder.stop();
     }
 
     /**
      * Reset the Encoder distance to zero.
      */
-    public void reset() {
+    public final void reset() {
         encoder.reset();
     }
 
@@ -155,11 +155,10 @@ class ForwardingEncoder implements edu.first.module.sensor.Encoder {
      * the wheels or other shaft has stopped rotating. This method compensates
      * for the decoding type.
      *
-     *
      * @param maxPeriod the maximum time between rising and falling edges before
      * the FPGA will report the device stopped. This is expressed in seconds.
      */
-    public void setMaxPeriod(double maxPeriod) {
+    public final void setMaxPeriod(double maxPeriod) {
         encoder.setMaxPeriod(maxPeriod);
     }
 
@@ -171,7 +170,7 @@ class ForwardingEncoder implements edu.first.module.sensor.Encoder {
      *
      * @return true if the encoder is considered stopped.
      */
-    public boolean getStopped() {
+    public final boolean getStopped() {
         return encoder.getStopped();
     }
 
@@ -181,7 +180,7 @@ class ForwardingEncoder implements edu.first.module.sensor.Encoder {
      * @return the distance driven since the last reset as scaled by the value
      * from setDistancePerPulse().
      */
-    public double getDistance() {
+    public final double getDistance() {
         return encoder.getDistance();
     }
 
@@ -202,14 +201,14 @@ class ForwardingEncoder implements edu.first.module.sensor.Encoder {
      *
      * @param reverseDirection true if the encoder direction should be reversed
      */
-    public void setReverseDirection(boolean reverseDirection) {
+    public final void setReverseDirection(boolean reverseDirection) {
         encoder.setReverseDirection(reverseDirection);
     }
 
     /**
      * {@inheritDoc}
      */
-    public double pidGet() {
+    public final double pidGet() {
         return encoder.pidGet();
     }
 
@@ -225,7 +224,11 @@ class ForwardingEncoder implements edu.first.module.sensor.Encoder {
      * @param distancePerPulse The scale factor that will be used to convert
      * pulses to useful units.
      */
-    public void setDistancePerPulse(double distancePerPulse) {
+    public final void setDistancePerPulse(double distancePerPulse) {
         encoder.setDistancePerPulse(distancePerPulse);
+    }
+
+    public double get() {
+        return pidGet();
     }
 }

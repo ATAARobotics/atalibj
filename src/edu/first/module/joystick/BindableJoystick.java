@@ -1,8 +1,9 @@
 package edu.first.module.joystick;
 
 import edu.first.bindings.AxisBind;
-import edu.first.bindings.Bindable;
+import edu.first.binding.Bindable;
 import edu.first.command.Command;
+import edu.first.identifiers.Function;
 import edu.first.module.Module;
 import edu.first.module.joystick.BindableJoystick.Axis;
 
@@ -248,6 +249,10 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
      */
     public final void bindAxis(int port, AxisBind axisBind) {
         addAxis(new Axis(port), axisBind);
+    }
+    
+    public final void bindAxis(int port, AxisBind axisBind, Function function) {
+        addAxis(new Axis(port), axisBind, function);
     }
 
     /**

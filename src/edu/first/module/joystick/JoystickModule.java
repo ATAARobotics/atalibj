@@ -58,7 +58,7 @@ public class JoystickModule extends ForwardingJoystick implements Module.Disable
      * @param axis axis number defined in windows
      * @return value of where the joystick is (usually -1 to +1)
      */
-    public double getRawAxis(int axis) {
+    public final double getRawAxis(int axis) {
         return isEnabled() ? super.getRawAxis(axis) : 0;
     }
 
@@ -70,7 +70,7 @@ public class JoystickModule extends ForwardingJoystick implements Module.Disable
      * @param button button number defined in windows
      * @return whether the button is pressed
      */
-    public boolean getRawButton(int button) {
+    public final boolean getRawButton(int button) {
         return isEnabled() ? super.getRawButton(button) : false;
     }
 }
@@ -104,7 +104,7 @@ class ForwardingJoystick implements Joystick {
      *
      * @return composition object under this one
      */
-    protected edu.wpi.first.wpilibj.Joystick getJoystick() {
+    protected final edu.wpi.first.wpilibj.Joystick getJoystick() {
         return joystick;
     }
 

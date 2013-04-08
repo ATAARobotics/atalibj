@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.PIDController;
  *
  * @author Joel Gallant
  */
-public final class PIDModule extends ForwardingPIDController implements Module.DisableableModule {
+public class PIDModule extends ForwardingPIDController implements Module.DisableableModule {
 
     /**
      * Constructs the object by using composition, using the given controller
@@ -203,5 +203,9 @@ class ForwardingPIDController implements edu.first.module.target.PIDController {
      */
     public void setTolerance(double tolerance) {
         this.tolerance = tolerance;
+    }
+
+    public void set(double value) {
+        setSetpoint(value);
     }
 }

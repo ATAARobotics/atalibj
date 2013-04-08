@@ -1,6 +1,7 @@
-package edu.first.module.driving;
+package edu.first.bindings;
 
 import edu.first.bindings.AxisBind;
+import edu.first.module.driving.RobotDriveModule;
 
 /**
  * An axis bind that binds the axis to a value of arcade drive. This means it

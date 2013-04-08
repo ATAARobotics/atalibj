@@ -1,42 +1,34 @@
 package edu.ata.murdock;
 
 import edu.ata.autonomous.GordianAuto;
-import edu.ata.commands.AlignCommand;
-import edu.ata.commands.AlignShooter;
-import edu.ata.commands.AutoShoot;
-import edu.ata.commands.BangBangCommand;
-import edu.ata.commands.ChangeRPMCommand;
-import edu.ata.commands.GearShiftCommand;
-import edu.ata.commands.ReversingSolenoidsCommand;
-import edu.ata.commands.SetFrisbeePusher;
-import edu.ata.commands.SetRPMCommand;
-import edu.ata.commands.ShootCommand;
-import edu.ata.commands.SwitchBitchBar;
-import edu.ata.modules.AlignmentMotor;
 import edu.ata.modules.XboxController;
-import edu.ata.preferences.RPMPreference;
 import edu.ata.subsystems.AlignmentSystem;
+import edu.ata.subsystems.BitchBar;
+import edu.ata.subsystems.Drivetrain;
 import edu.ata.subsystems.GearShifters;
-import edu.ata.subsystems.ReversingSolenoids;
-import edu.ata.subsystems.Shooter;
-import edu.ata.subsystems.VexIntegratedMotorEncoder;
-import edu.first.bindings.Bindable;
+import edu.ata.subsystems.Loader;
+import edu.ata.subsystems.ShooterWheel;
+import edu.ata.subsystems.Winch;
+import edu.ata.subsystems.WindshieldWiper;
+import edu.first.module.sensor.VexIntegratedMotorEncoder;
+import edu.first.binding.Bindable;
 import edu.first.command.Command;
 import edu.first.module.actuator.SolenoidModule;
-import edu.first.module.driving.ArcadeBinding;
-import edu.first.module.driving.Function;
+import edu.first.bindings.ArcadeBinding;
 import edu.first.module.driving.RobotDriveModule;
-import edu.first.module.driving.SideBinding;
+import edu.first.bindings.SideBinding;
 import edu.first.module.sensor.DigitalLimitSwitchModule;
 import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
 import edu.first.module.sensor.HallEffectModule;
 import edu.first.module.sensor.PotentiometerModule;
-import edu.first.module.speedcontroller.SpeedControllerBinding;
+import edu.first.bindings.SpeedControllerBinding;
+import edu.first.identifiers.Function;
+import edu.first.module.actuator.DualActionSolenoid;
+import edu.first.module.sensor.VexMotorEncoderModule;
 import edu.first.module.speedcontroller.SpeedControllerModule;
 import edu.first.module.speedcontroller.SpikeRelayModule;
 import edu.first.module.target.BangBangModule;
-import edu.first.module.target.MovingModule;
 import edu.first.robot.Robot;
 import edu.first.robot.RobotAdapter;
 import edu.first.utils.DriverstationInfo;
@@ -68,9 +60,6 @@ public final class Murdock {
     // Preferences in code //
     private static final double defaultSetpoint = 4000;
     private static final double shooterRPMTolerance = 20;
-    private static final double shiftersInputThreshhold = 0.7;
-    private static final double shiftersSpeedThreshhold = 10000;
-    private static final double shiftersShiftTimeLimit = 0.5;
     private static final double dP = 0.001, dI = 0, dD = 0.001;
     private static final double tP = 0.007, tI = 0, tD = 0.001;
     private static final double drivetrainDistanceTolerance = 40;
@@ -90,25 +79,9 @@ public final class Murdock {
     private static final boolean reverseShooter = false;
     public static final int competitionPort = 1;
     public static final int smartDashboardPort = 2;
-    private static final Function DRIVER_FUNCTION = new Function() {
-        public double F(double input) {
-            return input != 0 ? ((input * input * input) + 0.12) : 0;
-        }
-    };
-    private static final Function SHIFTER_FUNCTION = new Function() {
-        private final Murdock m = getInstance();
-        private long lastShift = 0;
-
-        public double F(double input) {
-//            if (input > shiftersInputThreshhold && m.encoder.getRate() > shiftersSpeedThreshhold 
-//                    // Make sure not to shift too much
-//                    && (System.currentTimeMillis() - lastShift) > shiftersShiftTimeLimit * 1000) {
-//                m.gearShifterController.setSecondGear();
-//                lastShift = System.currentTimeMillis();
-//            } else {
-//                m.gearShifterController.setFirstGear();
-//            }
-            return input;
+    private static final Function DRIVE_FUNCTION = new Function() {
+        public double apply(double start) {
+            return start != 0 ? (start * start * start + 0.12) : 0;
         }
     };
     // Important things //
@@ -117,7 +90,7 @@ public final class Murdock {
     private final RobotMode fullTestingMode = new FullTestingMode();
     private final RobotMode competitionMode = new CompetitionMode();
     private long lastSave = System.currentTimeMillis();
-    private RPMPreference RPM = new RPMPreference("Shooter", defaultSetpoint);
+    private DoublePreference RPM = new DoublePreference("RPM", defaultRPM);
     private StringPreference AUTOMODE = new StringPreference("AutonomousMode", defaultAuto);
     private DoublePreference ASetpoint = new DoublePreference("ASetpoint", defaultArm);
     private DoublePreference ARPM = new DoublePreference("ARPM", defaultRPM);
@@ -135,25 +108,25 @@ public final class Murdock {
     private final DigitalInput _hallEffect = new DigitalInput(PortMapFile.getInstance().getPort("HallEffect", 1));
     private final Encoder _encoder = new Encoder(PortMapFile.getInstance().getPort("EncoderA", 2),
             PortMapFile.getInstance().getPort("EncoderB", 3));
-    private final VexIntegratedMotorEncoder _frisbeePusherEncoder = new VexIntegratedMotorEncoder(1, (byte) 0x60, "speed", true);
+    private final VexIntegratedMotorEncoder _windshieldWiperEncoder = new VexIntegratedMotorEncoder(1, (byte) 0x60, "speed", true);
     private final Gyro _gyro = new Gyro(PortMapFile.getInstance().getPort("Gyro", 2));
     private final Relay _compressor = new Relay(PortMapFile.getInstance().getPort("Compressor", 1));
     private final Joystick _joystick1 = new Joystick(PortMapFile.getInstance().getPort("Joystick1", 1));
     private final Joystick _joystick2 = new Joystick(PortMapFile.getInstance().getPort("Joystick2", 2));
     private final Talon _shooter = new Talon(PortMapFile.getInstance().getPort("Shooter", 1));
-    private final Victor _shooterAligner = new Victor(PortMapFile.getInstance().getPort("ShooterAlignment", 2));
+    private final Victor _winchMotor = new Victor(PortMapFile.getInstance().getPort("Winch", 2));
     private final Victor _leftBack = new Victor(PortMapFile.getInstance().getPort("LeftBack", 5));
     private final Victor _leftFront = new Victor(PortMapFile.getInstance().getPort("LeftFront", 6));
     private final Victor _rightBack = new Victor(PortMapFile.getInstance().getPort("RightBack", 3));
     private final Victor _rightFront = new Victor(PortMapFile.getInstance().getPort("RightFront", 4));
-    private final SpeedController _frisbeePusher = new Victor(PortMapFile.getInstance().getPort("FrisbeePusher", 7));
+    private final SpeedController _windshieldWiperMotor = new Victor(PortMapFile.getInstance().getPort("WindshiedWiper", 7));
     private final RobotDrive _drive = new RobotDrive(_leftFront, _leftBack, _rightFront, _rightBack);
     private final Solenoid _loadIn = new Solenoid(PortMapFile.getInstance().getPort("LoadIn", 8));
     private final Solenoid _loadOut = new Solenoid(PortMapFile.getInstance().getPort("LoadOut", 7));
-    private final Solenoid _gearUp = new Solenoid(PortMapFile.getInstance().getPort("GearUp", 4));
-    private final Solenoid _gearDown = new Solenoid(PortMapFile.getInstance().getPort("GearDown", 3));
     private final Solenoid _bitchBarIn = new Solenoid(PortMapFile.getInstance().getPort("BitchBarIn", 5));
     private final Solenoid _bitchBarOut = new Solenoid(PortMapFile.getInstance().getPort("BitchBarOut", 6));
+    private final Solenoid _gearUp = new Solenoid(PortMapFile.getInstance().getPort("GearUp", 4));
+    private final Solenoid _gearDown = new Solenoid(PortMapFile.getInstance().getPort("GearDown", 3));
     private final Solenoid _backLeft = new Solenoid(PortMapFile.getInstance().getPort("BackLeft", 2));
     private final Solenoid _backRight = new Solenoid(PortMapFile.getInstance().getPort("BackRight", 1));
     // Robot //
@@ -163,44 +136,31 @@ public final class Murdock {
     private final PotentiometerModule potentiometer = new PotentiometerModule(_potentiometer);
     private final HallEffectModule hallEffect = new HallEffectModule(_hallEffect);
     private final EncoderModule encoder = new EncoderModule(_encoder, Encoder.PIDSourceParameter.kDistance);
+    private final VexMotorEncoderModule windshieldWiperEncoder = new VexMotorEncoderModule(_windshieldWiperEncoder);
     private final GyroModule gyro = new GyroModule(_gyro);
     private final SpikeRelayModule compressor = new SpikeRelayModule(_compressor);
     private final XboxController joystick1 = new XboxController(_joystick1);
     private final XboxController joystick2 = new XboxController(_joystick2);
     private final SpeedControllerModule shooter = new SpeedControllerModule(_shooter);
-    private final SpeedControllerModule shooterAligner = new SpeedControllerModule(_shooterAligner);
+    private final SpeedControllerModule winchMotor = new SpeedControllerModule(_winchMotor);
     private final RobotDriveModule drive = new RobotDriveModule(_drive, reverseSpeed, reverseTurn);
-    private final SpeedControllerModule frisbeePusher = new SpeedControllerModule(_frisbeePusher);
-    private final SolenoidModule loadIn = new SolenoidModule(_loadIn);
-    private final SolenoidModule loadOut = new SolenoidModule(_loadOut);
-    private final SolenoidModule gearUp = new SolenoidModule(_gearUp);
-    private final SolenoidModule gearDown = new SolenoidModule(_gearDown);
-    private final SolenoidModule bitchBarIn = new SolenoidModule(_bitchBarIn);
-    private final SolenoidModule bitchBarOut = new SolenoidModule(_bitchBarOut);
+    private final SpeedControllerModule windshieldWiperMotor = new SpeedControllerModule(_windshieldWiperMotor);
+    private final DualActionSolenoid _loader = new DualActionSolenoid(_loadIn, _loadOut);
+    private final DualActionSolenoid _bitchBar = new DualActionSolenoid(_bitchBarIn, _bitchBarOut);
+    private final DualActionSolenoid _gearShifters = new DualActionSolenoid(_gearDown, _gearUp);
     private final SolenoidModule backLeft = new SolenoidModule(_backLeft);
     private final SolenoidModule backRight = new SolenoidModule(_backRight);
+    private final BangBangModule bangBang = new BangBangModule(hallEffect, shooter, 0, reverseShooter);
     // Subsystems //
-    private final BangBangModule shooterController =
-            new BangBangModule(hallEffect, shooter, RPM.getDefaultSpeed(), shooterRPMTolerance, reverseShooter);
-    private final AlignmentMotor alignmentMotor = new AlignmentMotor(shooterAligner);
-    private final Shooter shotController =
-            new Shooter(loadIn, loadOut, potentiometer, alignmentMotor, shooterController, _frisbeePusherEncoder, frisbeePusher);
-    private final GearShifters gearShifterController =
-            new GearShifters(gearDown, gearUp);
-    private final ReversingSolenoids bitchBar =
-            new ReversingSolenoids(bitchBarIn, bitchBarOut);
-    // GOING WITH SINGLE-ACTION RIGHT NOW...
-    private final AlignmentSystem alignment =
-            new AlignmentSystem(backLeft, backRight);
-    private final MovingModule drivetrainController =
-            new MovingModule(encoder, gyro, drive, dP, dI, dD, tP, tI, tD,
-            drivetrainDistanceTolerance, drivetrainTurningTolerance,
-            drivetrainPIDMaxSpeed, drivetrainPIDMinSpeed, drivetrainPIDMaxTurn, drivetrainPIDMinTurn);
-
-    /**
-     *
-     * @return
-     */
+    private final AlignmentSystem alignmentSystem = new AlignmentSystem(backLeft, backRight);
+    private final BitchBar bitchBar = new BitchBar(_bitchBar);
+    private final Drivetrain drivetrain = new Drivetrain(drive);
+    private final GearShifters gearShifters = new GearShifters(_gearShifters);
+    private final Loader loader = new Loader(_loader);
+    private final ShooterWheel shooterWheel = new ShooterWheel(bangBang);
+    private final Winch winch = new Winch(winchMotor, potentiometer);
+    private final WindshieldWiper windshieldWiper = new WindshieldWiper(windshieldWiperMotor, windshieldWiperEncoder);
+    
     public static Murdock getInstance() {
         synchronized (Murdock.class) {
             if (MURDOCK == null) {
@@ -246,10 +206,7 @@ public final class Murdock {
 
         compressor.enable();
 
-        _frisbeePusherEncoder.reset();
-
-        drive.addFunction(DRIVER_FUNCTION);
-        drive.addFunction(SHIFTER_FUNCTION);
+        _windshieldWiperEncoder.reset();
     }
 
     private void disabled() {
@@ -268,7 +225,7 @@ public final class Murdock {
         joystick1.disable();
         joystick2.disable();
         shooter.disable();
-        shooterAligner.disable();
+        winchMotor.disable();
         drive.disable();
         loadOut.disable();
         gearUp.disable();
@@ -277,12 +234,6 @@ public final class Murdock {
         bitchBarOut.disable();
         backLeft.disable();
         backRight.disable();
-        shooterController.disable();
-        shotController.disable();
-        gearShifterController.disable();
-        bitchBar.disable();
-        alignment.disable();
-        drivetrainController.disable();
 
         Logger.log(Logger.Urgency.USERMESSAGE, "Robot is disabled.");
     }
@@ -428,7 +379,7 @@ public final class Murdock {
             alignment.enable();
             gearShifterController.enable();
             drive.enable();
-            frisbeePusher.enable();
+            windshieldWiperMotor.enable();
             shooterController.enable();
             shotController.enable();
 
@@ -447,10 +398,10 @@ public final class Murdock {
                 SmartDashboard.putBoolean("PastSetpoint", shooterController.pastSetpoint());
                 SmartDashboard.putBoolean("60 PSI", !psi60.isPushed());
                 SmartDashboard.putBoolean("120 PSI", !psi120.isPushed());
-                SmartDashboard.putBoolean("BBOut", !bitchBar.isIn());
+                SmartDashboard.putBoolean("BBOut", !bitchBar.isOut());
                 SmartDashboard.putBoolean("AlignOut", alignment.isOut());
                 SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
-                SmartDashboard.putNumber("Pusher", _frisbeePusherEncoder.getRevs());
+                SmartDashboard.putNumber("Pusher", _windshieldWiperEncoder.getRevs());
                 SmartDashboard.putNumber("Distance", encoder.getDistance());
                 SmartDashboard.putNumber("Angle", gyro.getAngle());
                 SmartDashboard.putNumber("ShooterPosition", potentiometer.getPosition());
@@ -483,7 +434,7 @@ public final class Murdock {
             alignment.enable();
             gearShifterController.enable();
             drive.enable();
-            frisbeePusher.enable();
+            windshieldWiperMotor.enable();
             shooterController.enable();
             shotController.enable();
 
@@ -504,7 +455,7 @@ public final class Murdock {
                 SmartDashboard.putBoolean("PastSetpoint", shooterController.pastSetpoint());
                 SmartDashboard.putBoolean("60 PSI", !psi60.isPushed());
                 SmartDashboard.putBoolean("120 PSI", !psi120.isPushed());
-                SmartDashboard.putBoolean("BBOut", !bitchBar.isIn());
+                SmartDashboard.putBoolean("BBOut", !bitchBar.isOut());
                 SmartDashboard.putBoolean("AlignOut", alignment.isOut());
                 SmartDashboard.putNumber("HallEffectRate", hallEffect.getRate());
                 SmartDashboard.putNumber("ShooterPosition", potentiometer.getPosition());

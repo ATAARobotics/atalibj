@@ -1,6 +1,5 @@
-package edu.first.module.speedcontroller;
+package edu.first.bindings;
 
-import edu.first.bindings.AxisBind;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**

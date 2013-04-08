@@ -1,5 +1,6 @@
 package edu.first.module.sensor;
 
+import edu.first.identifiers.ReturnableNumber;
 import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.PIDSource;
 
@@ -8,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public interface Accelerometer extends PIDSource {
+public interface Accelerometer extends PIDSource, ReturnableNumber {
 
     /**
      * Returns the acceleration in G's.

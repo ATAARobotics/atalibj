@@ -1,5 +1,6 @@
 package edu.first.utils.preferences;
 
+import edu.first.identifiers.SetteableNumber;
 import edu.first.utils.Logger;
 
 /**
@@ -7,7 +8,7 @@ import edu.first.utils.Logger;
  *
  * @author Joel Gallant
  */
-public final class FloatPreference extends Preference {
+public final class FloatPreference extends Preference implements SetteableNumber {
 
     private final float defaultValue;
 
@@ -31,6 +32,10 @@ public final class FloatPreference extends Preference {
     public void set(float value) {
         Logger.log(Logger.Urgency.LOG, "Setting " + getKey() + " to " + value);
         PREFERENCES.putFloat(getKey(), value);
+    }
+
+    public void set(double value) {
+        set((float) value);
     }
 
     /**

@@ -1,6 +1,6 @@
 package edu.ata.modules;
 
-import edu.first.bindings.Bindable;
+import edu.first.binding.Bindable;
 import edu.first.module.joystick.BindableJoystick;
 import edu.wpi.first.wpilibj.Joystick;
 

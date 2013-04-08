@@ -31,7 +31,7 @@ public class GroupSpikeRelay implements SpikeRelay {
      *
      * @param value setting of the spike relays
      */
-    public void set(Relay.Value value) {
+    public final void set(Relay.Value value) {
         for (int x = 0; x < spikeRelays.length; x++) {
             spikeRelays[x].set(value);
         }
@@ -42,7 +42,7 @@ public class GroupSpikeRelay implements SpikeRelay {
      *
      * @param direction direction of the spike relays
      */
-    public void setDirection(Relay.Direction direction) {
+    public final void setDirection(Relay.Direction direction) {
         for (int x = 0; x < spikeRelays.length; x++) {
             spikeRelays[x].setDirection(direction);
         }
@@ -54,7 +54,7 @@ public class GroupSpikeRelay implements SpikeRelay {
      *
      * @return the setting of all the spike relays
      */
-    public Relay.Value get() {
+    public final Relay.Value get() {
         Relay.Value value = null;
         for (int x = 0; x < spikeRelays.length; x++) {
             Relay.Value v = value;
