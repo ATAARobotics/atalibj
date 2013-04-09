@@ -51,7 +51,7 @@ public final class Loader extends Subsystem {
         }
     }
 
-    public void update() {
+    private void update() {
         synchronized (loaderChanges) {
             loaderChanges.notify();
         }

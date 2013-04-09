@@ -14,17 +14,14 @@ import edu.ata.subsystems.Winch;
 import edu.ata.subsystems.WindshieldWiper;
 import edu.first.module.sensor.VexIntegratedMotorEncoder;
 import edu.first.binding.Bindable;
-import edu.first.command.Command;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.bindings.ArcadeBinding;
 import edu.first.module.driving.RobotDriveModule;
-import edu.first.bindings.SideBinding;
 import edu.first.module.sensor.DigitalLimitSwitchModule;
 import edu.first.module.sensor.EncoderModule;
 import edu.first.module.sensor.GyroModule;
 import edu.first.module.sensor.HallEffectModule;
 import edu.first.module.sensor.PotentiometerModule;
-import edu.first.bindings.SpeedControllerBinding;
 import edu.first.identifiers.Function;
 import edu.first.module.actuator.DualActionSolenoid;
 import edu.first.module.joystick.BindableJoystick;
@@ -52,7 +49,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Our 2013 robot, Murdock. Our beginning and end.
@@ -62,8 +58,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public final class Murdock {
 
     // Preferences in code //
-    private static final double defaultSetpoint = 4000;
-    private static final double shooterRPMTolerance = 20;
     private static final double dP = 0.001, dI = 0, dD = 0.001;
     private static final double tP = 0.007, tI = 0, tD = 0.001;
     private static final double drivetrainDistanceTolerance = 40;
@@ -72,9 +66,6 @@ public final class Murdock {
     private static final double drivetrainPIDMinSpeed = 0.3;
     private static final double drivetrainPIDMaxTurn = 0.4;
     private static final double drivetrainPIDMinTurn = 0.3;
-    private static final double fineAdjustmentCoefficient = 0.5;
-    private static final double triggerShotThreashold = 0.7;
-    private static final double shooterRPMSpeedChange = 25;
     private static final double defaultArm = 5;
     private static final double defaultRPM = 4000;
     private static final String defaultAuto = "auto";
@@ -240,13 +231,33 @@ public final class Murdock {
     }
 
     private void doScriptAutonomous() {
-        
-        
+        alignmentSystem.enable();
+        alignmentSystem.start();
+        bitchBar.enable();
+        bitchBar.start();
+        compressor.enable();
+        compressor.start();
+        drivetrain.enable();
+        drivetrain.start();
+        gearShifters.enable();
+        gearShifters.start();
+        loader.enable();
+        loader.start();
+        shooterWheel.enable();
+        shooterWheel.start();
+        smartDashboardSender.enable();
+        smartDashboardSender.start();
+        winch.enable();
+        winch.start();
+        windshieldWiper.enable();
+        windshieldWiper.start();
+
         drive.setSafetyEnabled(false);
         encoder.reset();
 
-        GordianAuto.ensureInit(gearShifterController, drive, shotController,
-                shooterController, alignment, drivetrainController, encoder, gyro);
+        GordianAuto.ensureInit(alignmentSystem, bitchBar, compressor, drivetrain,
+                gearShifters, loader, shooterWheel, smartDashboardSender, winch,
+                windshieldWiper);
         try {
             String current = AUTOMODE.get();
             Logger.log(Logger.Urgency.USERMESSAGE, "Running auto/" + current + ".txt");
@@ -257,8 +268,6 @@ public final class Murdock {
             Logger.log(Logger.Urgency.USERMESSAGE, "AUTO DID NOT RUN");
         }
     }
-    private final Bindable.BindAction forwards = new Bindable.SetAxis(
-            new ArcadeBinding(drive, ArcadeBinding.FORWARD), joystick1.getLeftDistanceFromMiddle());
 
     private void doTeleopBinds() {
         BINDS.removeAllBinds();
@@ -304,8 +313,7 @@ public final class Murdock {
         }
 
         public void teleopPeriodic() {
-            joystick1.doBinds();
-            joystick2.doBinds();
+            BINDS.doBinds();
         }
     }
 

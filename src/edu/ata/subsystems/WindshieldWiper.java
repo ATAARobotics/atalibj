@@ -15,7 +15,7 @@ public final class WindshieldWiper extends Subsystem {
     private static final double P = 1, I = 0, D = 0;
     private static final double tolerance = 0.05;
     private static final double IN = 1, OUT = 0;
-    private static final double TIMEOUT = 2;
+    private static final double TIMEOUT = 5;
     private final SpeedControllerModule windshieldWiper;
     private final VexMotorEncoderModule windshildWiperEncoder;
     private final PIDModule PID;

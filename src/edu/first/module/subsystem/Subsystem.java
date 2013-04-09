@@ -12,7 +12,8 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
     private final Subsystem instance = this;
     private final TimerTask task = new Task();
     private final Module[] modules;
-    
+    private boolean started = false;
+
     {
         timers.add(timer);
     }
@@ -47,11 +48,15 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         }
     }
 
+    public boolean isStarted() {
+        return started;
+    }
+
     public abstract void start();
 
     public final void stop() {
         timer.cancel();
-        
+        started = false;
         timer = new Timer();
     }
 
@@ -60,7 +65,10 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
     }
 
     protected void startOnce(long delay) {
-        timer.schedule(task, delay);
+        if (!started) {
+            timer.schedule(task, delay);
+            started = true;
+        }
     }
 
     protected void startAtFixedDelay(long fixedDelay) {
@@ -68,15 +76,21 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
     }
 
     protected void startAtFixedDelay(long delay, long fixedDelay) {
-        timer.schedule(task, delay, fixedDelay);
+        if (!started) {
+            timer.schedule(task, delay, fixedDelay);
+            started = true;
+        }
     }
 
     protected void startAtFixedRate(long fixedRate) {
-        timer.scheduleAtFixedRate(task, 0, fixedRate);
+        startAtFixedRate(0, fixedRate);
     }
 
     protected void startAtFixedRate(long delay, long fixedRate) {
-        timer.scheduleAtFixedRate(task, delay, fixedRate);
+        if (!started) {
+            timer.scheduleAtFixedRate(task, delay, fixedRate);
+            started = true;
+        }
     }
 
     /**

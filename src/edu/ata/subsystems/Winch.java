@@ -43,6 +43,11 @@ public final class Winch extends Subsystem implements SetteableNumber, PIDOutput
         PID.enable();
         PID.setSetpoint(value);
     }
+    
+    public void stopMotor() {
+        PID.disable();
+        winchMotor.set(0);
+    }
 
     public void move(double speed) {
         if (speed != 0) {

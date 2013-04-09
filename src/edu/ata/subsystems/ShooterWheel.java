@@ -6,11 +6,13 @@ import edu.first.module.target.BangBangModule;
 
 public final class ShooterWheel extends Subsystem {
 
+    private static final double shooterRPMTolerance = 20;
     private final BangBangModule bangBang;
 
     public ShooterWheel(BangBangModule bangBang) {
         super(new Module[]{bangBang});
         this.bangBang = bangBang;
+        this.bangBang.setPastSetpoint(shooterRPMTolerance);
     }
 
     public void start() {
