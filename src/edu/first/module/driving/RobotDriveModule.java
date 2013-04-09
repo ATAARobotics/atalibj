@@ -2,6 +2,7 @@ package edu.first.module.driving;
 
 import edu.first.identifiers.Function;
 import edu.first.module.Module;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
 
 /**
@@ -93,7 +94,6 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
     private final edu.wpi.first.wpilibj.RobotDrive drive;
     private Function function = new Function.DefaultFunction();
     private final boolean reverseSpeed, reverseTurn;
-    private double lastLeft, lastRight, lastForward, lastTurn;
 
     /**
      * Constructs the object by using composition, using the given robot drive
@@ -198,9 +198,6 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
         }
 
         moveValue = function.apply(moveValue);
-
-        lastForward = moveValue;
-        lastTurn = rotateValue;
         drive.arcadeDrive(moveValue, rotateValue, squaredInputs);
     }
 
@@ -213,60 +210,6 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      */
     public final void arcadeDrive(double moveValue, double rotateValue) {
         arcadeDrive(moveValue, rotateValue, false);
-    }
-
-    /**
-     * Sets the forwards/backwards speed. The last used turn value is used for
-     * rotation. ({@link RobotDriveModule#setRotateValue(double)}, {@link RobotDriveModule#setRotateValue(double, boolean)}
-     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
-     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
-     * turn value as "last used".)
-     *
-     * @param moveValue the value to use for forwards/backwards
-     */
-    public final void setForwardValue(double moveValue) {
-        arcadeDrive(moveValue, lastTurn);
-    }
-
-    /**
-     * Sets the forwards/backwards speed. The last used turn value is used for
-     * rotation. ({@link RobotDriveModule#setRotateValue(double)}, {@link RobotDriveModule#setRotateValue(double, boolean)}
-     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
-     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
-     * turn value as "last used".)
-     *
-     * @param moveValue the value to use for forwards/backwards
-     * @param squaredInputs if set, decreases the sensitivity at low speeds
-     */
-    public final void setForwardValue(double moveValue, boolean squaredInput) {
-        arcadeDrive(moveValue, lastTurn, squaredInput);
-    }
-
-    /**
-     * Sets the forwards/backwards speed. The last used forwards value is used
-     * for rotation. ({@link RobotDriveModule#setForwardValue(double)}, {@link RobotDriveModule#setForwardValue(double, boolean)}
-     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
-     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
-     * forward value as "last used".)
-     *
-     * @param rotateValue the value to use for the rotate right/left
-     */
-    public final void setRotateValue(double rotateValue) {
-        arcadeDrive(lastForward, rotateValue);
-    }
-
-    /**
-     * Sets the forwards/backwards speed. The last used forwards value is used
-     * for rotation. ({@link RobotDriveModule#setForwardValue(double)}, {@link RobotDriveModule#setForwardValue(double, boolean)}
-     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
-     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
-     * forward value as "last used".)
-     *
-     * @param rotateValue the value to use for the rotate right/left
-     * @param squaredInputs if set, decreases the sensitivity at low speeds
-     */
-    public final void setRotateValue(double rotateValue, boolean squaredInput) {
-        arcadeDrive(lastForward, rotateValue, squaredInput);
     }
 
     /**
@@ -319,35 +262,9 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
         }
-        lastLeft = function.apply(leftOutput);
-        lastRight = function.apply(rightOutput);
+        leftOutput = function.apply(leftOutput);
+        rightOutput = function.apply(rightOutput);
         drive.setLeftRightMotorOutputs(leftOutput, rightOutput);
-    }
-
-    /**
-     * Individually sets the left motors. Will set right side to 0 unless
-     * {@link ForwardingRobotDrive#setRightMotorOutput(double)} or
-     * {@link ForwardingRobotDrive#setLeftRightMotorOutputs(double, double)} is
-     * called, in which case it will set the right speed to the last right input
-     * given.
-     *
-     * @param leftOutput speed to set left side
-     */
-    public final void setLeftMotorOutput(double leftOutput) {
-        setLeftRightMotorOutputs(leftOutput, lastRight);
-    }
-
-    /**
-     * Individually sets the right motors. Will set left side to 0 unless
-     * {@link ForwardingRobotDrive#setLeftMotorOutput(double)} or
-     * {@link ForwardingRobotDrive#setLeftRightMotorOutputs(double, double)} is
-     * called, in which case it will set the left speed to the last left input
-     * given.
-     *
-     * @param rightOutput speed to set right side
-     */
-    public final void setRightMotorOutput(double rightOutput) {
-        setLeftRightMotorOutputs(lastLeft, rightOutput);
     }
 
     /**
@@ -404,6 +321,22 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      */
     public final void stopMotors() {
         drive.stopMotor();
+    }
+
+    public final PIDOutput getForwards() {
+        return new PIDOutput() {
+            public void pidWrite(double output) {
+                arcadeDrive(output, 0);
+            }
+        };
+    }
+
+    public final PIDOutput getTurning() {
+        return new PIDOutput() {
+            public void pidWrite(double output) {
+                arcadeDrive(0, output);
+            }
+        };
     }
 
     public void set(double value) {

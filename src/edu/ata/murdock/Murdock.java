@@ -8,14 +8,13 @@ import edu.ata.subsystems.Compressor;
 import edu.ata.subsystems.Drivetrain;
 import edu.ata.subsystems.GearShifters;
 import edu.ata.subsystems.Loader;
+import edu.ata.subsystems.MovementSystem;
 import edu.ata.subsystems.ShooterWheel;
 import edu.ata.subsystems.SmartDashboardSender;
 import edu.ata.subsystems.Winch;
 import edu.ata.subsystems.WindshieldWiper;
 import edu.first.module.sensor.VexIntegratedMotorEncoder;
-import edu.first.binding.Bindable;
 import edu.first.module.actuator.SolenoidModule;
-import edu.first.bindings.ArcadeBinding;
 import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.sensor.DigitalLimitSwitchModule;
 import edu.first.module.sensor.EncoderModule;
@@ -58,14 +57,6 @@ import edu.wpi.first.wpilibj.Victor;
 public final class Murdock {
 
     // Preferences in code //
-    private static final double dP = 0.001, dI = 0, dD = 0.001;
-    private static final double tP = 0.007, tI = 0, tD = 0.001;
-    private static final double drivetrainDistanceTolerance = 40;
-    private static final double drivetrainTurningTolerance = 0;
-    private static final double drivetrainPIDMaxSpeed = 0.7;
-    private static final double drivetrainPIDMinSpeed = 0.3;
-    private static final double drivetrainPIDMaxTurn = 0.4;
-    private static final double drivetrainPIDMinTurn = 0.3;
     private static final double defaultArm = 5;
     private static final double defaultRPM = 4000;
     private static final String defaultAuto = "auto";
@@ -84,7 +75,6 @@ public final class Murdock {
     private final Robot murdock = new MurdockRobot();
     private final RobotMode normalMode = new NormalMode();
     private long lastSave = System.currentTimeMillis();
-    private DoublePreference RPM = new DoublePreference("RPM", defaultRPM);
     private StringPreference AUTOMODE = new StringPreference("AutonomousMode", defaultAuto);
     private DoublePreference ASetpoint = new DoublePreference("ASetpoint", defaultArm);
     private DoublePreference ARPM = new DoublePreference("ARPM", defaultRPM);
@@ -152,6 +142,7 @@ public final class Murdock {
     private final Drivetrain drivetrain = new Drivetrain(drive);
     private final GearShifters gearShifters = new GearShifters(_gearShifters);
     private final Loader loader = new Loader(_loader);
+    private final MovementSystem movementSystem = new MovementSystem(drive, encoder, gyro);
     private final ShooterWheel shooterWheel = new ShooterWheel(bangBang);
     private final Winch winch = new Winch(winchMotor, potentiometer);
     private final WindshieldWiper windshieldWiper = new WindshieldWiper(windshieldWiperMotor, windshieldWiperEncoder);
@@ -187,7 +178,6 @@ public final class Murdock {
             Logger.log(Logger.Urgency.USERMESSAGE, "FMS attached - reverting to competition mode");
             DriverstationInfo.getDS().setDigitalOut(1, true);
         }
-        RPM.create();
         AUTOMODE.create();
         ASetpoint.create();
         ARPM.create();
@@ -198,10 +188,6 @@ public final class Murdock {
         YSetpoint.create();
         YRPM.create();
         BackSetpoint.create();
-
-        compressorRelay.enable();
-
-        _windshieldWiperEncoder.reset();
     }
 
     private void disabled() {
@@ -232,32 +218,24 @@ public final class Murdock {
 
     private void doScriptAutonomous() {
         alignmentSystem.enable();
-        alignmentSystem.start();
         bitchBar.enable();
-        bitchBar.start();
         compressor.enable();
-        compressor.start();
         drivetrain.enable();
-        drivetrain.start();
         gearShifters.enable();
-        gearShifters.start();
         loader.enable();
-        loader.start();
+        movementSystem.enable();
         shooterWheel.enable();
-        shooterWheel.start();
         smartDashboardSender.enable();
-        smartDashboardSender.start();
         winch.enable();
-        winch.start();
         windshieldWiper.enable();
-        windshieldWiper.start();
 
         drive.setSafetyEnabled(false);
         encoder.reset();
+        gyro.reset();
 
         GordianAuto.ensureInit(alignmentSystem, bitchBar, compressor, drivetrain,
-                gearShifters, loader, shooterWheel, smartDashboardSender, winch,
-                windshieldWiper);
+                gearShifters, loader, movementSystem, shooterWheel, smartDashboardSender,
+                winch, windshieldWiper);
         try {
             String current = AUTOMODE.get();
             Logger.log(Logger.Urgency.USERMESSAGE, "Running auto/" + current + ".txt");
@@ -283,28 +261,22 @@ public final class Murdock {
         }
 
         public void teleopInit() {
+            
+            movementSystem.stop();
+            movementSystem.disable();
+            
             joystick1.enable();
             joystick2.enable();
             alignmentSystem.enable();
-            alignmentSystem.start();
             bitchBar.enable();
-            bitchBar.start();
             compressor.enable();
-            compressor.start();
             drivetrain.enable();
-            drivetrain.start();
             gearShifters.enable();
-            gearShifters.start();
             loader.enable();
-            loader.start();
             shooterWheel.enable();
-            shooterWheel.start();
             smartDashboardSender.enable();
-            smartDashboardSender.start();
             winch.enable();
-            winch.start();
             windshieldWiper.enable();
-            windshieldWiper.start();
 
             shooterWheel.setRPM(0);
             drive.setSafetyEnabled(true);
@@ -314,6 +286,8 @@ public final class Murdock {
 
         public void teleopPeriodic() {
             BINDS.doBinds();
+            
+            drivetrain.arcadeDrive(joystick1.LeftDistanceFromMiddle(), joystick1.RightX());
         }
     }
 

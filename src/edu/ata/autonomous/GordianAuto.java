@@ -2,6 +2,7 @@ package edu.ata.autonomous;
 
 import com.sun.squawk.microedition.io.FileConnection;
 import edu.ata.commands.ArcadeDrive;
+import edu.ata.commands.DriveDistance;
 import edu.ata.commands.SetAlignment;
 import edu.ata.commands.SetBitchBar;
 import edu.ata.commands.SetCompressor;
@@ -12,6 +13,7 @@ import edu.ata.commands.SetSmartDashboard;
 import edu.ata.commands.SetWinch;
 import edu.ata.commands.SetWiper;
 import edu.ata.commands.TankDrive;
+import edu.ata.commands.TurnToAngle;
 import edu.ata.commands.WipeWindshieldWiper;
 import edu.ata.subsystems.AlignmentSystem;
 import edu.ata.subsystems.BitchBar;
@@ -19,6 +21,7 @@ import edu.ata.subsystems.Compressor;
 import edu.ata.subsystems.Drivetrain;
 import edu.ata.subsystems.GearShifters;
 import edu.ata.subsystems.Loader;
+import edu.ata.subsystems.MovementSystem;
 import edu.ata.subsystems.ShooterWheel;
 import edu.ata.subsystems.SmartDashboardSender;
 import edu.ata.subsystems.Winch;
@@ -53,6 +56,7 @@ public final class GordianAuto {
     private static Drivetrain drivetrain;
     private static GearShifters gearShifters;
     private static Loader loader;
+    private static MovementSystem movementSystem;
     private static ShooterWheel shooterWheel;
     private static SmartDashboardSender smartDashboardSender;
     private static Winch winch;
@@ -78,8 +82,9 @@ public final class GordianAuto {
      */
     public static void ensureInit(AlignmentSystem alignmentSystem, BitchBar bitchBar,
             Compressor compressor, Drivetrain drivetrain, GearShifters gearShifters,
-            Loader loader, ShooterWheel shooterWheel, SmartDashboardSender smartDashboardSender,
-            Winch winch, WindshieldWiper windshieldWiper) {
+            Loader loader, MovementSystem movementSystem, ShooterWheel shooterWheel,
+            SmartDashboardSender smartDashboardSender, Winch winch,
+            WindshieldWiper windshieldWiper) {
         if (!init) {
             init = true;
             GordianAuto.alignmentSystem = alignmentSystem;
@@ -88,6 +93,7 @@ public final class GordianAuto {
             GordianAuto.drivetrain = drivetrain;
             GordianAuto.gearShifters = gearShifters;
             GordianAuto.loader = loader;
+            GordianAuto.movementSystem = movementSystem;
             GordianAuto.shooterWheel = shooterWheel;
             GordianAuto.smartDashboardSender = smartDashboardSender;
             GordianAuto.winch = winch;
@@ -293,6 +299,16 @@ public final class GordianAuto {
         gordian.addMethod(new RunningMethod("fireLoader") {
             public void run(Variable[] args) {
                 new SetLoader(loader, SetLoader.FIRE, false).run();
+            }
+        });
+        gordian.addMethod(new RunningMethod("driveDistance") {
+            public void run(Variable[] args) {
+                new DriveDistance(movementSystem, ((NumberInterface) args[0]).doubleValue(), false).run();
+            }
+        });
+        gordian.addMethod(new RunningMethod("turnAngle") {
+            public void run(Variable[] args) {
+                new TurnToAngle(movementSystem, ((NumberInterface) args[0]).doubleValue(), false).run();
             }
         });
         gordian.addMethod(new RunningMethod("setShooter") {

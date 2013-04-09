@@ -100,6 +100,8 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
      * @return if there are modules disabled
      */
     public final boolean disable() {
+        this.stop();
+        
         for (int x = 0; x < modules.length; x++) {
             if (modules[x] instanceof DisableableModule) {
                 ((DisableableModule) modules[x]).disable();
@@ -123,7 +125,11 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         for (int x = 0; x < modules.length; x++) {
             modules[x].enable();
         }
-        return isEnabled() && enableSubsystem();
+        boolean success = isEnabled() && enableSubsystem();
+        
+        start();
+        
+        return success;
     }
 
     // Override to use
