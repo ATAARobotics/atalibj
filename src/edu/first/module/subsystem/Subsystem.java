@@ -7,7 +7,7 @@ import java.util.TimerTask;
 
 public abstract class Subsystem implements Runnable, Module.DisableableModule {
 
-    private static final List timers = new List();
+    private static final List subsystems = new List();
     private Timer timer = new Timer();
     private final Subsystem instance = this;
     private final TimerTask task = new Task();
@@ -15,7 +15,7 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
     private boolean started = false;
 
     {
-        timers.add(timer);
+        subsystems.add(this);
     }
 
     /**
@@ -40,10 +40,10 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         this.modules = modules;
     }
 
-    public static void cancelAllSubsystems() {
-        for (int x = 0; x < timers.size(); x++) {
-            if (timers.get(x) instanceof Timer) {
-                ((Timer) timers.get(x)).cancel();
+    public static void stopAllSubsystems() {
+        for (int x = 0; x < subsystems.size(); x++) {
+            if (subsystems.get(x) instanceof Timer) {
+                ((Subsystem) subsystems.get(x)).stop();
             }
         }
     }

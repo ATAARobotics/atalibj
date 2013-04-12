@@ -215,9 +215,7 @@ public final class Murdock {
             Logger.log(Logger.Urgency.USERMESSAGE, "Saving Preferences");
             Preferences.getInstance().save();
         }
-
-        Subsystem.cancelAllSubsystems();
-
+        
         joystick1.disable();
         joystick2.disable();
         alignmentSystem.disable();
