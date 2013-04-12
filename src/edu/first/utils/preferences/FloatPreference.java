@@ -2,6 +2,7 @@ package edu.first.utils.preferences;
 
 import edu.first.identifiers.SetteableNumber;
 import edu.first.utils.Logger;
+import edu.wpi.first.wpilibj.Preferences;
 
 /**
  * Preference that holds a float value.

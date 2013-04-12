@@ -1,5 +1,6 @@
 package edu.first.utils.preferences;
 
+import edu.first.identifiers.ReturnableBoolean;
 import edu.first.identifiers.SetteableBoolean;
 import edu.first.utils.Logger;
 
@@ -8,7 +9,7 @@ import edu.first.utils.Logger;
  *
  * @author Joel Gallant
  */
-public final class BooleanPreference extends Preference implements SetteableBoolean {
+public final class BooleanPreference extends Preference implements SetteableBoolean, ReturnableBoolean {
     
     private final boolean defaultValue;
 

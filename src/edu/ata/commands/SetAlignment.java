@@ -8,6 +8,7 @@ public final class SetAlignment extends ThreadableCommand {
     public static final AlignmentType OUT = new AlignmentType(2);
     public static final AlignmentType LEFT = new AlignmentType(3);
     public static final AlignmentType RIGHT = new AlignmentType(4);
+    public static final AlignmentType SWITCH = new AlignmentType(5);
     private final AlignmentSystem alignmentSystem;
     private final AlignmentType alignmentType;
 
@@ -28,6 +29,8 @@ public final class SetAlignment extends ThreadableCommand {
                     alignmentSystem.setLeft();
                 } else if (alignmentType.equals(RIGHT)) {
                     alignmentSystem.setRight();
+                } else if (alignmentType.equals(SWITCH)) {
+                    alignmentSystem.switchPosition();
                 }
             }
         };

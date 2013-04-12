@@ -6,7 +6,7 @@ import edu.first.module.subsystem.Subsystem;
 
 public final class Drivetrain extends Subsystem {
 
-    private static final long delay = 15L;
+    private static final long delay = 10L;
     private final RobotDriveModule drive;
     private boolean arcade;
     private double left, right;
@@ -45,5 +45,10 @@ public final class Drivetrain extends Subsystem {
             this.left = left;
             this.right = right;
         }
+    }
+
+    protected boolean disableSubsystem() {
+        arcadeDrive(0, 0);
+        return true;
     }
 }

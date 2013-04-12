@@ -1,6 +1,8 @@
 package edu.first.identifiers;
 
-public interface SetteableNumber {
+import edu.first.bindings.AxisBind;
+
+public interface SetteableNumber extends AxisBind {
 
     public void set(double value);
 }

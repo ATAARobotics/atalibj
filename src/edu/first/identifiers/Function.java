@@ -77,6 +77,13 @@ public interface Function {
         }
     }
 
+    public static final class SquaredFunction implements Function {
+
+        public double apply(double start) {
+            return start * start;
+        }
+    }
+
     public static final class CompoundFunction implements Function {
 
         private final Function[] functions;

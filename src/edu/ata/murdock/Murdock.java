@@ -1,11 +1,22 @@
 package edu.ata.murdock;
 
 import edu.ata.autonomous.GordianAuto;
+import edu.ata.binds.SetWinchSpeed;
+import edu.ata.binds.SetWiperSpeed;
+import edu.ata.commands.AdjustRPM;
+import edu.ata.commands.AutoShoot;
+import edu.ata.commands.SetAlignment;
+import edu.ata.commands.SetBitchBar;
+import edu.ata.commands.SetGear;
+import edu.ata.commands.SetLoader;
+import edu.ata.commands.SetShooter;
+import edu.ata.commands.SetWinch;
 import edu.ata.modules.XboxController;
 import edu.ata.subsystems.AlignmentSystem;
 import edu.ata.subsystems.BitchBar;
 import edu.ata.subsystems.Compressor;
 import edu.ata.subsystems.Drivetrain;
+import edu.ata.subsystems.Driving;
 import edu.ata.subsystems.GearShifters;
 import edu.ata.subsystems.Loader;
 import edu.ata.subsystems.MovementSystem;
@@ -13,6 +24,7 @@ import edu.ata.subsystems.ShooterWheel;
 import edu.ata.subsystems.SmartDashboardSender;
 import edu.ata.subsystems.Winch;
 import edu.ata.subsystems.WindshieldWiper;
+import edu.first.bindings.SpeedControllerBinding;
 import edu.first.module.sensor.VexIntegratedMotorEncoder;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.module.driving.RobotDriveModule;
@@ -60,22 +72,21 @@ public final class Murdock {
     private static final double defaultArm = 5;
     private static final double defaultRPM = 4000;
     private static final String defaultAuto = "auto";
+    private static final double triggerShotThreashold = 0.7;
+    private static final double wiperSpeed = 0.4;
+    private static final double rpmAdjustment = 25;
     private static final boolean reverseSpeed = false;
     private static final boolean reverseTurn = true;
     private static final boolean reverseShooter = false;
     public static final int competitionPort = 1;
     public static final int smartDashboardPort = 2;
-    private static final Function DRIVE_FUNCTION = new Function() {
-        public double apply(double start) {
-            return start != 0 ? (start * start * start + 0.12) : 0;
-        }
-    };
     // Important things //
     private static Murdock MURDOCK;
     private final Robot murdock = new MurdockRobot();
     private final RobotMode normalMode = new NormalMode();
     private long lastSave = System.currentTimeMillis();
     private StringPreference AUTOMODE = new StringPreference("AutonomousMode", defaultAuto);
+    private DoublePreference ShooterRPM = new DoublePreference("ShooterRPM", defaultRPM);
     private DoublePreference ASetpoint = new DoublePreference("ASetpoint", defaultArm);
     private DoublePreference ARPM = new DoublePreference("ARPM", defaultRPM);
     private DoublePreference BSetpoint = new DoublePreference("BSetpoint", defaultArm);
@@ -140,6 +151,7 @@ public final class Murdock {
     private final BitchBar bitchBar = new BitchBar(_bitchBar);
     private final Compressor compressor = new Compressor(psi120, compressorRelay);
     private final Drivetrain drivetrain = new Drivetrain(drive);
+    private final Driving driving = new Driving(drivetrain, joystick1, joystick2);
     private final GearShifters gearShifters = new GearShifters(_gearShifters);
     private final Loader loader = new Loader(_loader);
     private final MovementSystem movementSystem = new MovementSystem(drive, encoder, gyro);
@@ -172,13 +184,19 @@ public final class Murdock {
     }
 
     private void init() {
+        Logger.log(Logger.Urgency.USERMESSAGE, "Initializing...");
         Logger.log(Logger.Urgency.USERMESSAGE, "IO " + competitionPort + " = Competition");
         Logger.log(Logger.Urgency.USERMESSAGE, "IO " + smartDashboardPort + " = SmartDashboard");
         if (DriverstationInfo.FMSattached()) {
             Logger.log(Logger.Urgency.USERMESSAGE, "FMS attached - reverting to competition mode");
             DriverstationInfo.getDS().setDigitalOut(1, true);
         }
+        Logger.log(Logger.Urgency.USERMESSAGE, DriverstationInfo.getAllianceName() + " "
+                + DriverstationInfo.getAllianceLocation());
+        Logger.log(Logger.Urgency.USERMESSAGE, "Battery: " + DriverstationInfo.getBatteryVoltage());
+        Logger.log(Logger.Urgency.USERMESSAGE, "Good luck Team " + DriverstationInfo.getTeamNumber() + "!");
         AUTOMODE.create();
+        ShooterRPM.create();
         ASetpoint.create();
         ARPM.create();
         BSetpoint.create();
@@ -206,6 +224,7 @@ public final class Murdock {
         bitchBar.disable();
         compressor.disable();
         drivetrain.disable();
+        driving.disable();
         gearShifters.disable();
         loader.disable();
         shooterWheel.disable();
@@ -217,6 +236,10 @@ public final class Murdock {
     }
 
     private void doScriptAutonomous() {
+
+        // End any teleop
+        driving.disable();
+
         alignmentSystem.enable();
         bitchBar.enable();
         compressor.enable();
@@ -250,6 +273,74 @@ public final class Murdock {
     private void doTeleopBinds() {
         BINDS.removeAllBinds();
 
+        BINDS.addWhenPressed(joystick1.getLeftBumper(),
+                new SetGear(gearShifters, SetGear.FIRST, false));
+        BINDS.addWhenPressed(joystick1.getRightBumper(),
+                new SetGear(gearShifters, SetGear.SECOND, false));
+
+        BINDS.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, -triggerShotThreashold),
+                new AutoShoot(shooterWheel, loader, false));
+        BINDS.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, triggerShotThreashold),
+                new SetLoader(loader, SetLoader.FIRE, false));
+
+        BINDS.addWhenPressed(joystick1.getAButton(),
+                new SetBitchBar(bitchBar, SetBitchBar.SWITCH, false));
+        BINDS.addWhenPressed(joystick1.getAButton(),
+                new SetAlignment(alignmentSystem, SetAlignment.IN, false));
+
+        BINDS.addWhenPressed(joystick1.getRightJoystickButton(),
+                new SetAlignment(alignmentSystem, SetAlignment.SWITCH, false));
+        BINDS.addWhenPressed(joystick1.getRightJoystickButton(),
+                new SetBitchBar(bitchBar, SetBitchBar.IN, false));
+
+        BINDS.addWhenPressed(joystick1.getLeftJoystickButton(),
+                new SetAlignment(alignmentSystem, SetAlignment.LEFT, false));
+        BINDS.addWhenPressed(joystick1.getLeftJoystickButton(),
+                new SetBitchBar(bitchBar, SetBitchBar.IN, false));
+
+        BINDS.addWhenPressed(joystick1.getBackButton(),
+                new SetWinch(winch, SetWinch.POSITION, BackSetpoint, false));
+
+        BINDS.addAxis(joystick1.getDirectionalPad(),
+                new SetWiperSpeed(windshieldWiper), new Function.ProductFunction(wiperSpeed));
+
+        BINDS.addWhenPressed(joystick2.getLeftBumper(),
+                new AdjustRPM(shooterWheel, -rpmAdjustment, false));
+        BINDS.addWhenPressed(joystick2.getRightBumper(),
+                new AdjustRPM(shooterWheel, +rpmAdjustment, false));
+
+        BINDS.addAxis(joystick2.getTriggers(),
+                new SetWinchSpeed(winch), new Function.SquaredFunction());
+
+        BINDS.addWhenPressed(joystick2.getAButton(),
+                new SetWinch(winch, SetWinch.POSITION, ASetpoint, false));
+        BINDS.addWhenPressed(joystick2.getAButton(),
+                new SetShooter(shooterWheel, ARPM, false));
+
+        BINDS.addWhenPressed(joystick2.getBButton(),
+                new SetWinch(winch, SetWinch.POSITION, BSetpoint, false));
+        BINDS.addWhenPressed(joystick2.getBButton(),
+                new SetShooter(shooterWheel, BRPM, false));
+
+        BINDS.addWhenPressed(joystick2.getXButton(),
+                new SetWinch(winch, SetWinch.POSITION, XSetpoint, false));
+        BINDS.addWhenPressed(joystick2.getXButton(),
+                new SetShooter(shooterWheel, XRPM, false));
+
+        BINDS.addWhenPressed(joystick2.getYButton(),
+                new SetWinch(winch, SetWinch.POSITION, YSetpoint, false));
+        BINDS.addWhenPressed(joystick2.getYButton(),
+                new SetShooter(shooterWheel, YRPM, false));
+
+        BINDS.addWhenPressed(joystick2.getStartButton(),
+                new SetShooter(shooterWheel, ShooterRPM, false));
+        BINDS.addWhenPressed(joystick2.getStartButton(),
+                new SetLoader(loader, SetLoader.OUT, false));
+
+        BINDS.addWhenPressed(joystick2.getBackButton(),
+                new SetShooter(shooterWheel, 0, false));
+        BINDS.addWhenPressed(joystick2.getBackButton(),
+                new SetLoader(loader, SetLoader.IN, false));
 
         Logger.log(Logger.Urgency.USERMESSAGE, "Teleop Binds Ready");
     }
@@ -261,16 +352,16 @@ public final class Murdock {
         }
 
         public void teleopInit() {
-            
-            movementSystem.stop();
+
+            // End any autonomous
             movementSystem.disable();
-            
+
             joystick1.enable();
             joystick2.enable();
             alignmentSystem.enable();
             bitchBar.enable();
             compressor.enable();
-            drivetrain.enable();
+            driving.enable();
             gearShifters.enable();
             loader.enable();
             shooterWheel.enable();
@@ -286,8 +377,6 @@ public final class Murdock {
 
         public void teleopPeriodic() {
             BINDS.doBinds();
-            
-            drivetrain.arcadeDrive(joystick1.LeftDistanceFromMiddle(), joystick1.RightX());
         }
     }
 

@@ -34,6 +34,11 @@ public final class AlignmentSystem extends Subsystem {
         // No thread needed
     }
 
+    protected boolean disableSubsystem() {
+        setIn();
+        return true;
+    }
+
     public void setOut() {
         back.set(true);
     }
@@ -52,14 +57,22 @@ public final class AlignmentSystem extends Subsystem {
         backRight.set(true);
     }
     
+    public void switchPosition() {
+        if(isOut()) {
+            setIn();
+        } else {
+            setOut();
+        }
+    }
+
     public boolean isOut() {
         return back.get();
     }
-    
+
     public boolean isLeft() {
         return backLeft.get();
     }
-    
+
     public boolean isRight() {
         return backRight.get();
     }

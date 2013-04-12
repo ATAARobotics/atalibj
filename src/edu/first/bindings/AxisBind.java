@@ -1,6 +1,6 @@
 package edu.first.bindings;
 
-import edu.first.identifiers.SetteableNumber;
+import edu.first.binding.Bindable;
 
 /**
  * Bind that lets you bind an axis to an output. This is the output portion,
@@ -11,7 +11,7 @@ import edu.first.identifiers.SetteableNumber;
  * @see Bindable
  * @author Joel Gallant
  */
-public interface AxisBind extends Bind, SetteableNumber {
+public interface AxisBind extends Bind {
 
     /**
      * Sends the value of the axis to the binded object. This is used to "set"
