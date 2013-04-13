@@ -58,7 +58,7 @@ public final class XboxController extends BindableJoystick {
             Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
             BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10;
     public static final int LEFT_X = 1, LEFT_Y = 2, TRIGGERS = 3, RIGHT_X = 4,
-            RIGHT_Y = 5, DIRECTIONAL_PAD = 6;
+            RIGHT_Y = 5, DIRECTIONAL_PAD = 6, RIGHT_FROM_MIDDLE = 7, LEFT_FROM_MIDDLE = 8;
 
     /**
      * Constructs the object by using composition, using the given joystick
@@ -71,7 +71,17 @@ public final class XboxController extends BindableJoystick {
     }
 
     public double getRawAxis(int port) {
-        double v = super.getRawAxis(port);
+        double v = 0;
+        if (port == RIGHT_FROM_MIDDLE) {
+            v = RightDistanceFromMiddle();
+        } else if (port == LEFT_FROM_MIDDLE) {
+            v = LeftDistanceFromMiddle();
+        } else {
+            v = super.getRawAxis(port);
+        }
+        if (port == LEFT_Y || port == RIGHT_Y || port == TRIGGERS) {
+            v = -v;
+        }
         if (Math.abs(v) > DEADZONE) {
             return super.getRawAxis(port);
         } else {
@@ -172,7 +182,7 @@ public final class XboxController extends BindableJoystick {
     }
 
     public double LeftY() {
-        return -getRawAxis(LEFT_Y);
+        return getRawAxis(LEFT_Y);
     }
 
     public Axis getRightX() {
@@ -188,7 +198,7 @@ public final class XboxController extends BindableJoystick {
     }
 
     public double RightY() {
-        return -getRawAxis(RIGHT_Y);
+        return getRawAxis(RIGHT_Y);
     }
 
     public Axis getTriggers() {
@@ -196,7 +206,7 @@ public final class XboxController extends BindableJoystick {
     }
 
     public double Triggers() {
-        return -getRawAxis(TRIGGERS);
+        return getRawAxis(TRIGGERS);
     }
 
     public Axis getDirectionalPad() {

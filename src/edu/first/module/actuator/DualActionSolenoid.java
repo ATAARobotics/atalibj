@@ -13,6 +13,12 @@ public class DualActionSolenoid extends ForwardingDualActionSolenoid implements 
 
     private boolean enabled;
 
+    /**
+     * Constructs the system with the in and out solenoids to control the bar.
+     *
+     * @param in solenoid to bring bar in
+     * @param out solenoid to bring bar out
+     */
     public DualActionSolenoid(Solenoid in, Solenoid out) {
         super(in, out);
     }

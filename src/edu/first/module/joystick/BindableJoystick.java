@@ -151,7 +151,7 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
     public final Bindable.Button getAxisAsButton(final int port, final double threshold) {
         return new Bindable.Button("Axis " + port + " as button") {
             public boolean isPressed() {
-                if(threshold > 0) {
+                if (threshold > 0) {
                     return getRawAxis(port) > threshold;
                 } else {
                     return getRawAxis(port) < threshold;
@@ -250,7 +250,15 @@ public class BindableJoystick extends Bindable implements Joystick, Module.Disab
     public final void bindAxis(int port, AxisBind axisBind) {
         addAxis(new Axis(port), axisBind);
     }
-    
+
+    /**
+     * Binds the port to a command. Abstraction of
+     * {@code addAxis(new Axis(port), command)}.
+     *
+     * @param port axis port of getRawAxis()
+     * @param axisBind binding to set
+     * @param function function to apply to the value
+     */
     public final void bindAxis(int port, AxisBind axisBind, Function function) {
         addAxis(new Axis(port), axisBind, function);
     }

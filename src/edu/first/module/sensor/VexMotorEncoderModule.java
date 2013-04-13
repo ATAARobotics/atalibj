@@ -4,10 +4,20 @@ import edu.first.identifiers.ReturnableNumber;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.PIDSource;
 
+/**
+ * Vex encoder for Vex motors.
+ *
+ * @author Joel Gallant
+ */
 public class VexMotorEncoderModule extends ForwardingVexMotorEncoder implements Module.DisableableModule {
 
     private boolean enabled;
 
+    /**
+     * Constructs encoder module.
+     *
+     * @param encoder underlying object
+     */
     public VexMotorEncoderModule(VexIntegratedMotorEncoder encoder) {
         super(encoder);
     }
@@ -29,10 +39,20 @@ public class VexMotorEncoderModule extends ForwardingVexMotorEncoder implements 
         return isEnabled() ? super.get() : 0;
     }
 
+    /**
+     * Returns the value if the module is enabled.
+     *
+     * @return raw value of encoder (position)
+     */
     public final double getRaw() {
         return isEnabled() ? super.getRaw() : 0;
     }
 
+    /**
+     * Returns the revolutions if the module is enabled.
+     *
+     * @return revolutions of encoder
+     */
     public double getRevs() {
         return isEnabled() ? super.getRevs() : 0;
     }

@@ -89,8 +89,8 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
      *
      * @param slot The slot of the digital module that the sensor is plugged
      * into.
-     * @param newAddress1 The new address of the first encoder.
-     * @param newAddress2 The new address of the second encoder.
+     * @param newAddress address to set
+     * @param setTerminated if device should be terminated
      * @param gearing Whether the gearing is set to standard high torque or
      * optional high speed.
      */
@@ -129,10 +129,18 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
         m_i2c = null;
     }
 
+    /**
+     * Resets the counter to 0.
+     */
     public final void reset() {
         m_i2c.write(kClearDeviceCounters, (int) 1); // can write any value to the register
     }
 
+    /**
+     * Returns the raw input.
+     *
+     * @return input from encoder
+     */
     public final double getRaw() {
         byte[] buffer = new byte[1];
         m_i2c.read(kRotationRegisterLowMSB, (byte) buffer.length, buffer);
@@ -175,7 +183,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
      * an even address within range of 0x20 to 0x5E, from its initial default of
      * 0x60 by writing to address 0x4D
      *
-     * @param mode The address to set
+     * @param address new address to set
      */
     public final void setAddress(byte address) {
         if (address < kLowestDeviceAddress || address > kHighestDeviceAddress) {

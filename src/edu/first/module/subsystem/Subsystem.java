@@ -5,6 +5,13 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * A subsystem that contains modules and potentially a thread. Is basically
+ * capable of doing anything. All subsystems should be final, since they are the
+ * highest level you should work on.
+ *
+ * @author Joel Gallant
+ */
 public abstract class Subsystem implements Runnable, Module.DisableableModule {
 
     private static final List subsystems = new List();
@@ -34,12 +41,14 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
      * documentation for this class for more details.
      *
      * @param modules modules to enable and disable in this subsystem
-     * @param type the type of subsystem it is
      */
     public Subsystem(Module[] modules) {
         this.modules = modules;
     }
 
+    /**
+     * Stops all subsystems. Calls {@link Subsystem#stop()} on all subsystems.
+     */
     public static void stopAllSubsystems() {
         for (int x = 0; x < subsystems.size(); x++) {
             if (subsystems.get(x) instanceof Timer) {
@@ -48,22 +57,43 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         }
     }
 
+    /**
+     * Returns whether or not the subsystem has been started.
+     *
+     * @return if subsystem was started
+     */
     public boolean isStarted() {
         return started;
     }
 
+    /**
+     * Starts the subsystem. Is abstract to allow subsystems to run at different
+     * rates and ways.
+     */
     public abstract void start();
 
+    /**
+     * Stops the running of the subsystem. Cannot stop run(), but will not run
+     * anymore.
+     */
     public final void stop() {
         timer.cancel();
         started = false;
         timer = new Timer();
     }
 
+    /**
+     * Starts the subsystem to run once.
+     */
     protected void startOnce() {
         startOnce(0);
     }
 
+    /**
+     * Starts the subsystem to run once.
+     *
+     * @param delay time before running
+     */
     protected void startOnce(long delay) {
         if (!started) {
             timer.schedule(task, delay);
@@ -71,10 +101,25 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         }
     }
 
+    /**
+     * Starts the subsystem if it's not started already at a fixed delay between
+     * runs.
+     *
+     * @param fixedDelay delay between runs
+     * @see Timer#scheduleAtFixedRate(java.util.TimerTask, long, long)
+     */
     protected void startAtFixedDelay(long fixedDelay) {
         startAtFixedDelay(0, fixedDelay);
     }
 
+    /**
+     * Starts the subsystem if it's not started already at a fixed delay between
+     * runs.
+     *
+     * @param delay time before starting
+     * @param fixedDelay delay between runs
+     * @see Timer#scheduleAtFixedRate(java.util.TimerTask, long, long)
+     */
     protected void startAtFixedDelay(long delay, long fixedDelay) {
         if (!started) {
             timer.schedule(task, delay, fixedDelay);
@@ -82,10 +127,23 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         }
     }
 
+    /**
+     * Starts the subsystem if it's not started already at a fixed rate.
+     *
+     * @param fixedRate rate to run at
+     * @see Timer#scheduleAtFixedRate(java.util.TimerTask, long, long)
+     */
     protected void startAtFixedRate(long fixedRate) {
         startAtFixedRate(0, fixedRate);
     }
 
+    /**
+     * Starts the subsystem if it's not started already at a fixed rate.
+     *
+     * @param delay time before starting
+     * @param fixedRate rate to run at
+     * @see Timer#scheduleAtFixedRate(java.util.TimerTask, long, long)
+     */
     protected void startAtFixedRate(long delay, long fixedRate) {
         if (!started) {
             timer.scheduleAtFixedRate(task, delay, fixedRate);
@@ -110,7 +168,11 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         return !isEnabled() && subDone;
     }
 
-    // Override to use
+    /**
+     * Override this method to use it. Disables the subsystem.
+     *
+     * @return if not overriden, returns true
+     */
     protected boolean disableSubsystem() {
         return true;
     }
@@ -126,12 +188,16 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
             modules[x].enable();
         }
         boolean subOn = enableSubsystem();
-        
+
         start();
         return isEnabled() && subOn;
     }
 
-    // Override to use
+    /**
+     * Override this method to use it. Enables the subsystem.
+     *
+     * @return if not overriden, returns true
+     */
     protected boolean enableSubsystem() {
         return true;
     }
@@ -150,7 +216,11 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         return subsystemEnabled();
     }
 
-    // Override to use
+    /**
+     * Override this method to use it. Returns whether the subsystem is enabled.
+     *
+     * @return if not overriden, returns true
+     */
     protected boolean subsystemEnabled() {
         return true;
     }

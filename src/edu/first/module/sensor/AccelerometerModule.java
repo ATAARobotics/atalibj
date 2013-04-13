@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.ADXL345_I2C;
  */
 public class AccelerometerModule extends ForwardingAccelerometer implements Module.DisableableModule {
 
+    /**
+     * The default axes to measure with PID.
+     */
     public static final ADXL345_I2C.Axes DEFAULT_AXES = ADXL345_I2C.Axes.kX;
     private boolean enabled;
 
