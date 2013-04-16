@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.Joystick;
  * 2: Left Stick Y Axis
  *     Up: Positive; Down: Negative
  * 3: Triggers
- *     Left: Positive; Right: Negative
+ *     Left: Negative; Right: Positive
  * 4: Right Stick X Axis
  *     Left: Negative; Right: Positive
  * 5: Right Stick Y Axis
@@ -53,7 +53,7 @@ public final class XboxController extends BindableJoystick {
      * The absolute smallest value for the all axises to return. If it is
      * smaller than this value, it will revert to 0.
      */
-    public static final double DEADZONE = 0.2;
+    public static final double DEADZONE = 0.16;
     public static final int A = 1, B = 2, X = 3,
             Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
             BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10;
@@ -71,7 +71,7 @@ public final class XboxController extends BindableJoystick {
     }
 
     public double getRawAxis(int port) {
-        double v = 0;
+        double v;
         if (port == RIGHT_FROM_MIDDLE) {
             v = RightDistanceFromMiddle();
         } else if (port == LEFT_FROM_MIDDLE) {
@@ -83,7 +83,7 @@ public final class XboxController extends BindableJoystick {
             v = -v;
         }
         if (Math.abs(v) > DEADZONE) {
-            return super.getRawAxis(port);
+            return v;
         } else {
             return 0;
         }

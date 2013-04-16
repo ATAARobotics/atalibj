@@ -57,6 +57,7 @@ public final class SmartDashboardSender extends Subsystem {
             SmartDashboard.putBoolean("AlignOut", alignmentSystem.isOut());
             SmartDashboard.putNumber("RPM", shooterWheel.getRPM());
             SmartDashboard.putNumber("ShooterPosition", winch.getPosition());
+            SmartDashboard.putNumber("RealShooterPosition", winch.getSensorPosition());
             SmartDashboard.putNumber("Gear", gearShifters.gear());
             
             if (!DriverstationInfo.getDS().getDigitalIn(Murdock.competitionPort)) {

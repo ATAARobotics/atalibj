@@ -1,10 +1,11 @@
 package edu.ata.subsystems;
 
+import edu.first.identifiers.ReturnableNumber;
 import edu.first.module.Module;
 import edu.first.module.subsystem.Subsystem;
 import edu.first.module.target.BangBangModule;
 
-public final class ShooterWheel extends Subsystem {
+public final class ShooterWheel extends Subsystem implements ReturnableNumber {
 
     private static final double shooterRPMTolerance = 20;
     private final BangBangModule bangBang;
@@ -23,6 +24,10 @@ public final class ShooterWheel extends Subsystem {
         // No thread needed
     }
 
+    public void setCoast(boolean value) {
+        bangBang.setCoast(value);
+    }
+
     public void setRPM(double RPM) {
         bangBang.setSetpoint(RPM);
         bangBang.setDefaultSpeed(defSpeed(RPM));
@@ -31,13 +36,17 @@ public final class ShooterWheel extends Subsystem {
     public double getRPM() {
         return bangBang.getInput();
     }
-    
+
     public double getSetpointRPM() {
         return bangBang.getSetpoint();
     }
 
     public boolean isPastSetpoint() {
         return bangBang.pastSetpoint();
+    }
+
+    public double get() {
+        return getRPM();
     }
 
     private double defSpeed(double RPM) {

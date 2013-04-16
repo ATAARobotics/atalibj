@@ -24,7 +24,7 @@ import edu.ata.subsystems.ShooterWheel;
 import edu.ata.subsystems.SmartDashboardSender;
 import edu.ata.subsystems.Winch;
 import edu.ata.subsystems.WindshieldWiper;
-import edu.first.bindings.SpeedControllerBinding;
+import edu.first.commands.SetNumberCommand;
 import edu.first.module.sensor.VexIntegratedMotorEncoder;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.module.driving.RobotDriveModule;
@@ -34,12 +34,11 @@ import edu.first.module.sensor.GyroModule;
 import edu.first.module.sensor.HallEffectModule;
 import edu.first.module.sensor.PotentiometerModule;
 import edu.first.identifiers.Function;
-import edu.first.module.actuator.DualActionSolenoid;
+import edu.first.module.actuator.DualActionSolenoidModule;
 import edu.first.module.joystick.BindableJoystick;
 import edu.first.module.sensor.VexMotorEncoderModule;
 import edu.first.module.speedcontroller.SpeedControllerModule;
 import edu.first.module.speedcontroller.SpikeRelayModule;
-import edu.first.module.subsystem.Subsystem;
 import edu.first.module.target.BangBangModule;
 import edu.first.robot.Robot;
 import edu.first.robot.RobotAdapter;
@@ -95,7 +94,6 @@ public final class Murdock {
     private DoublePreference XRPM = new DoublePreference("XRPM", defaultRPM);
     private DoublePreference YSetpoint = new DoublePreference("YSetpoint", defaultArm);
     private DoublePreference YRPM = new DoublePreference("YRPM", defaultRPM);
-    private DoublePreference BackSetpoint = new DoublePreference("BackSetpoint", defaultArm);
     // WPILIBJ //
     private final DigitalInput _psi120 = new DigitalInput(PortMapFile.getInstance().getPort("psi120", 5));
     private final DigitalInput _psi60 = new DigitalInput(PortMapFile.getInstance().getPort("psi60", 6));
@@ -140,12 +138,12 @@ public final class Murdock {
     private final SpeedControllerModule winchMotor = new SpeedControllerModule(_winchMotor);
     private final RobotDriveModule drive = new RobotDriveModule(_drive, reverseSpeed, reverseTurn);
     private final SpeedControllerModule windshieldWiperMotor = new SpeedControllerModule(_windshieldWiperMotor);
-    private final DualActionSolenoid _loader = new DualActionSolenoid(_loadIn, _loadOut);
-    private final DualActionSolenoid _bitchBar = new DualActionSolenoid(_bitchBarIn, _bitchBarOut);
-    private final DualActionSolenoid _gearShifters = new DualActionSolenoid(_gearDown, _gearUp);
+    private final DualActionSolenoidModule _loader = new DualActionSolenoidModule(_loadIn, _loadOut);
+    private final DualActionSolenoidModule _bitchBar = new DualActionSolenoidModule(_bitchBarIn, _bitchBarOut);
+    private final DualActionSolenoidModule _gearShifters = new DualActionSolenoidModule(_gearDown, _gearUp);
     private final SolenoidModule backLeft = new SolenoidModule(_backLeft);
     private final SolenoidModule backRight = new SolenoidModule(_backRight);
-    private final BangBangModule bangBang = new BangBangModule(hallEffect, shooter, 0, reverseShooter);
+    private final BangBangModule shooterBangBang = new BangBangModule(hallEffect, shooter, 0, reverseShooter);
     // Subsystems //
     private final AlignmentSystem alignmentSystem = new AlignmentSystem(backLeft, backRight);
     private final BitchBar bitchBar = new BitchBar(_bitchBar);
@@ -153,9 +151,9 @@ public final class Murdock {
     private final Drivetrain drivetrain = new Drivetrain(drive);
     private final Driving driving = new Driving(drivetrain, joystick1, joystick2);
     private final GearShifters gearShifters = new GearShifters(_gearShifters);
-    private final Loader loader = new Loader(_loader);
+    private final Loader loader = new Loader(_loader, shooterBangBang);
     private final MovementSystem movementSystem = new MovementSystem(drive, encoder, gyro);
-    private final ShooterWheel shooterWheel = new ShooterWheel(bangBang);
+    private final ShooterWheel shooterWheel = new ShooterWheel(shooterBangBang);
     private final Winch winch = new Winch(winchMotor, potentiometer);
     private final WindshieldWiper windshieldWiper = new WindshieldWiper(windshieldWiperMotor, windshieldWiperEncoder);
     private final SmartDashboardSender smartDashboardSender =
@@ -183,8 +181,12 @@ public final class Murdock {
         return normalMode;
     }
 
-    private void init() {
+    // Static to appear before final objects made
+    static {
         Logger.log(Logger.Urgency.USERMESSAGE, "Initializing...");
+    }
+
+    private void init() {
         Logger.log(Logger.Urgency.USERMESSAGE, "IO " + competitionPort + " = Competition");
         Logger.log(Logger.Urgency.USERMESSAGE, "IO " + smartDashboardPort + " = SmartDashboard");
         if (DriverstationInfo.FMSattached()) {
@@ -195,6 +197,8 @@ public final class Murdock {
                 + DriverstationInfo.getAllianceLocation());
         Logger.log(Logger.Urgency.USERMESSAGE, "Battery: " + DriverstationInfo.getBatteryVoltage());
         Logger.log(Logger.Urgency.USERMESSAGE, "Good luck Team " + DriverstationInfo.getTeamNumber() + "!");
+
+
         AUTOMODE.create();
         ShooterRPM.create();
         ASetpoint.create();
@@ -205,7 +209,6 @@ public final class Murdock {
         XRPM.create();
         YSetpoint.create();
         YRPM.create();
-        BackSetpoint.create();
     }
 
     private void disabled() {
@@ -215,7 +218,7 @@ public final class Murdock {
             Logger.log(Logger.Urgency.USERMESSAGE, "Saving Preferences");
             Preferences.getInstance().save();
         }
-        
+
         joystick1.disable();
         joystick2.disable();
         alignmentSystem.disable();
@@ -276,9 +279,9 @@ public final class Murdock {
         BINDS.addWhenPressed(joystick1.getRightBumper(),
                 new SetGear(gearShifters, SetGear.SECOND, false));
 
-        BINDS.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, -triggerShotThreashold),
-                new AutoShoot(shooterWheel, loader, false));
         BINDS.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, triggerShotThreashold),
+                new AutoShoot(shooterWheel, loader, false));
+        BINDS.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, -triggerShotThreashold),
                 new SetLoader(loader, SetLoader.FIRE, false));
 
         BINDS.addWhenPressed(joystick1.getAButton(),
@@ -297,15 +300,25 @@ public final class Murdock {
                 new SetBitchBar(bitchBar, SetBitchBar.IN, false));
 
         BINDS.addWhenPressed(joystick1.getBackButton(),
-                new SetWinch(winch, SetWinch.POSITION, BackSetpoint, false));
+                new SetWinch(winch, SetWinch.POSITION, 0, false));
+
+        BINDS.addWhenPressed(joystick1.getStartButton(),
+                new SetWinch(winch, SetWinch.ZERO, potentiometer, false));
 
         BINDS.addAxis(joystick1.getDirectionalPad(),
                 new SetWiperSpeed(windshieldWiper), new Function.ProductFunction(wiperSpeed));
 
+        // JOYSTICK 2 //
+
         BINDS.addWhenPressed(joystick2.getLeftBumper(),
                 new AdjustRPM(shooterWheel, -rpmAdjustment, false));
+        BINDS.addWhenPressed(joystick2.getLeftBumper(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
+
         BINDS.addWhenPressed(joystick2.getRightBumper(),
                 new AdjustRPM(shooterWheel, +rpmAdjustment, false));
+        BINDS.addWhenPressed(joystick2.getRightBumper(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
 
         BINDS.addAxis(joystick2.getTriggers(),
                 new SetWinchSpeed(winch), new Function.SquaredFunction());

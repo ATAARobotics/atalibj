@@ -7,6 +7,7 @@ public final class SetWinch extends ThreadableCommand {
 
     public static final WinchType SPEED = new WinchType(1);
     public static final WinchType POSITION = new WinchType(2);
+    public static final WinchType ZERO = new WinchType(3);
     private final Winch winch;
     private final WinchType type;
     private final ReturnableNumber number;
@@ -29,6 +30,8 @@ public final class SetWinch extends ThreadableCommand {
                     winch.move(number.get());
                 } else if (type.equals(POSITION)) {
                     winch.set(number.get());
+                } else if (type.equals(ZERO)) {
+                    winch.setZero(number.get());
                 }
             }
         };

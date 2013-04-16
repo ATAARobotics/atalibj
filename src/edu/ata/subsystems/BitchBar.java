@@ -1,7 +1,7 @@
 package edu.ata.subsystems;
 
 import edu.first.module.Module;
-import edu.first.module.actuator.DualActionSolenoid;
+import edu.first.module.actuator.DualActionSolenoidModule;
 import edu.first.module.actuator.Solenoid;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.module.subsystem.Subsystem;
@@ -15,7 +15,7 @@ public final class BitchBar extends Subsystem {
         this.solenoid = solenoid;
     }
 
-    public BitchBar(DualActionSolenoid solenoid) {
+    public BitchBar(DualActionSolenoidModule solenoid) {
         super(new Module[]{solenoid});
         this.solenoid = solenoid;
     }

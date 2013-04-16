@@ -4,12 +4,13 @@ import edu.first.identifiers.ReturnableBoolean;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.Solenoid;
 
+
 /**
  * Subsystem to switch between in and out positions.
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class DualActionSolenoid extends ForwardingDualActionSolenoid implements Module.DisableableModule {
+public class DualActionSolenoidModule extends ForwardingDualActionSolenoid implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -19,7 +20,7 @@ public class DualActionSolenoid extends ForwardingDualActionSolenoid implements 
      * @param in solenoid to bring bar in
      * @param out solenoid to bring bar out
      */
-    public DualActionSolenoid(Solenoid in, Solenoid out) {
+    public DualActionSolenoidModule(Solenoid in, Solenoid out) {
         super(in, out);
     }
 
@@ -40,7 +41,6 @@ public class DualActionSolenoid extends ForwardingDualActionSolenoid implements 
         super.set(isEnabled() ? position : IN);
     }
 }
-
 class ForwardingDualActionSolenoid implements edu.first.module.actuator.Solenoid, ReturnableBoolean {
 
     public static boolean IN = false, OUT = true;
