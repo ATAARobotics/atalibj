@@ -159,7 +159,7 @@ public final class Murdock {
     private final SmartDashboardSender smartDashboardSender =
             new SmartDashboardSender(shooterWheel, psi60, psi120, bitchBar, alignmentSystem, winch, gearShifters,
             windshieldWiper, encoder, gyro, transferRate);
-    private final BindableJoystick BINDS = new BindableJoystick(null);
+    private final BindableJoystick BINDS = new BindableJoystick(new Joystick(8));
 
     public static Murdock getInstance() {
         synchronized (Murdock.class) {
@@ -195,9 +195,13 @@ public final class Murdock {
         }
         Logger.log(Logger.Urgency.USERMESSAGE, DriverstationInfo.getAllianceName() + " "
                 + DriverstationInfo.getAllianceLocation());
-        Logger.log(Logger.Urgency.USERMESSAGE, "Battery: " + DriverstationInfo.getBatteryVoltage());
+
+        int ix = (int) (DriverstationInfo.getBatteryVoltage() * 100.0); // scale it 
+        double rounded = ((double) ix) / 100.0;
+        Logger.log(Logger.Urgency.USERMESSAGE, "Battery: " + rounded);
         Logger.log(Logger.Urgency.USERMESSAGE, "Good luck Team " + DriverstationInfo.getTeamNumber() + "!");
 
+        winch.setZero(_potentiometer.getVoltage());
 
         AUTOMODE.create();
         ShooterRPM.create();
@@ -321,27 +325,39 @@ public final class Murdock {
                 new SetNumberCommand(ShooterRPM, shooterWheel));
 
         BINDS.addAxis(joystick2.getTriggers(),
-                new SetWinchSpeed(winch), new Function.SquaredFunction());
+                new SetWinchSpeed(winch), new Function() {
+            public double apply(double start) {
+                return start > 0 ? (start * start) : -(start * start);
+            }
+        });
 
         BINDS.addWhenPressed(joystick2.getAButton(),
                 new SetWinch(winch, SetWinch.POSITION, ASetpoint, false));
         BINDS.addWhenPressed(joystick2.getAButton(),
                 new SetShooter(shooterWheel, ARPM, false));
+        BINDS.addWhenPressed(joystick2.getAButton(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
 
         BINDS.addWhenPressed(joystick2.getBButton(),
                 new SetWinch(winch, SetWinch.POSITION, BSetpoint, false));
         BINDS.addWhenPressed(joystick2.getBButton(),
                 new SetShooter(shooterWheel, BRPM, false));
+        BINDS.addWhenPressed(joystick2.getBButton(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
 
         BINDS.addWhenPressed(joystick2.getXButton(),
                 new SetWinch(winch, SetWinch.POSITION, XSetpoint, false));
         BINDS.addWhenPressed(joystick2.getXButton(),
                 new SetShooter(shooterWheel, XRPM, false));
+        BINDS.addWhenPressed(joystick2.getXButton(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
 
         BINDS.addWhenPressed(joystick2.getYButton(),
                 new SetWinch(winch, SetWinch.POSITION, YSetpoint, false));
         BINDS.addWhenPressed(joystick2.getYButton(),
                 new SetShooter(shooterWheel, YRPM, false));
+        BINDS.addWhenPressed(joystick2.getYButton(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
 
         BINDS.addWhenPressed(joystick2.getStartButton(),
                 new SetShooter(shooterWheel, ShooterRPM, false));

@@ -15,24 +15,27 @@ import edu.wpi.first.wpilibj.PIDSource;
 
 public final class Winch extends Subsystem implements SetteableNumber, PIDOutput, PIDSource {
 
-    private static final double P = 0.17, I = 0, D = 0;
+    private static final double P = 8, I = 0, D = 0;
+    private static final double range = 0.01;
     private final SpeedControllerModule winchMotor;
     private final ReturnableNumber sensor;
     private final PIDModule PID = new PIDModule(new PIDController(P, I, D, this, this));
     private double ZERO;
+    
+    {
+        PID.setTolerance(range);
+    }
 
     public Winch(SpeedControllerModule winchMotor, PotentiometerModule potentiometer) {
         super(new Module[]{winchMotor, potentiometer});
         this.winchMotor = winchMotor;
         this.sensor = potentiometer;
-        zero();
     }
 
     public Winch(SpeedControllerModule winchMotor, AccelerometerModule accelerometer) {
         super(new Module[]{winchMotor, accelerometer});
         this.winchMotor = winchMotor;
         this.sensor = accelerometer;
-        zero();
     }
 
     protected boolean enableSubsystem() {
@@ -57,7 +60,9 @@ public final class Winch extends Subsystem implements SetteableNumber, PIDOutput
 
     public void setZero(double zero) {
         this.ZERO = zero;
-        Logger.log(Logger.Urgency.USERMESSAGE, "Winch zeroed @ " + zero);
+        int ix = (int) (zero * 100.0); // scale it 
+        double rounded = ((double) ix) / 100.0;
+        Logger.log(Logger.Urgency.USERMESSAGE, "Winch zeroed @ " + rounded);
     }
 
     public void set(double value) {
@@ -71,8 +76,10 @@ public final class Winch extends Subsystem implements SetteableNumber, PIDOutput
     }
 
     public void move(double speed) {
-        if (speed != 0) {
+        if (PID.isEnabled() && speed != 0) {
             PID.disable();
+            winchMotor.set(speed);
+        } else if (!PID.isEnabled()) {
             winchMotor.set(speed);
         }
     }
@@ -84,7 +91,7 @@ public final class Winch extends Subsystem implements SetteableNumber, PIDOutput
     public double getPosition() {
         return sensor.get() - ZERO;
     }
-    
+
     public double getSensorPosition() {
         return sensor.get();
     }
@@ -94,6 +101,10 @@ public final class Winch extends Subsystem implements SetteableNumber, PIDOutput
     }
 
     public void pidWrite(double output) {
-        winchMotor.set(output);
+        if (Math.abs(output) > 0.2 && !PID.onTarget()) {
+            winchMotor.set(-output);
+        } else {
+            winchMotor.set(0);
+        }
     }
 }

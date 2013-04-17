@@ -38,7 +38,7 @@ public final class Driving extends Subsystem {
             //      DRIVE_FUNCTION.apply(controller.RightDistanceFromMiddle()));
         } else {
             drivetrain.arcadeDrive(0,
-                    secondController.LeftDistanceFromMiddle() * secondControllerTurnSpeed);
+                    secondController.RightY() * secondControllerTurnSpeed);
         }
     }
 }

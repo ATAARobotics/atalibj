@@ -62,7 +62,7 @@ public final class SmartDashboardSender extends Subsystem {
             
             if (!DriverstationInfo.getDS().getDigitalIn(Murdock.competitionPort)) {
                 // Testing mode info
-                SmartDashboard.putNumber("Pusher", windshieldWiper.getPosition());
+                SmartDashboard.putNumber("WindshieldWiper", windshieldWiper.getPosition());
                 SmartDashboard.putNumber("Distance", encoder.getDistance());
                 SmartDashboard.putNumber("Angle", gyro.getAngle());
                 SmartDashboard.putNumber("NetworkLag", rateCalculator.packetsPerMillisecond());

@@ -46,7 +46,7 @@ public final class ShooterWheel extends Subsystem implements ReturnableNumber {
     }
 
     public double get() {
-        return getRPM();
+        return getSetpointRPM();
     }
 
     private double defSpeed(double RPM) {

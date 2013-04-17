@@ -15,10 +15,10 @@ import java.util.TimerTask;
 public abstract class Subsystem implements Runnable, Module.DisableableModule {
 
     private static final List subsystems = new List();
-    private Timer timer = new Timer();
     private final Subsystem instance = this;
-    private final TimerTask task = new Task();
     private final Module[] modules;
+    private Timer timer = new Timer();
+    private TimerTask task = new Task();
     private boolean started = false;
 
     {
@@ -80,6 +80,7 @@ public abstract class Subsystem implements Runnable, Module.DisableableModule {
         timer.cancel();
         started = false;
         timer = new Timer();
+        task = new Task();
     }
 
     /**

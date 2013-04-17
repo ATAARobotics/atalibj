@@ -178,7 +178,7 @@ public final class XboxController extends BindableJoystick {
     }
 
     public Axis getLeftY() {
-        return getAxis(LEFT_Y, true);
+        return getAxis(LEFT_Y);
     }
 
     public double LeftY() {
@@ -194,7 +194,7 @@ public final class XboxController extends BindableJoystick {
     }
 
     public Axis getRightY() {
-        return getAxis(RIGHT_Y, true);
+        return getAxis(RIGHT_Y);
     }
 
     public double RightY() {
@@ -202,7 +202,7 @@ public final class XboxController extends BindableJoystick {
     }
 
     public Axis getTriggers() {
-        return getAxis(TRIGGERS, true);
+        return getAxis(TRIGGERS);
     }
 
     public double Triggers() {

@@ -56,9 +56,9 @@ public final class AlignmentSystem extends Subsystem {
         backLeft.set(false);
         backRight.set(true);
     }
-    
+
     public void switchPosition() {
-        if(isOut()) {
+        if (isOut()) {
             setIn();
         } else {
             setOut();
@@ -66,7 +66,12 @@ public final class AlignmentSystem extends Subsystem {
     }
 
     public boolean isOut() {
-        return back.get();
+        try {
+            return back.get();
+        } catch (IllegalStateException ex) {
+            // thrown when group is not in sync
+            return false;
+        }
     }
 
     public boolean isLeft() {
