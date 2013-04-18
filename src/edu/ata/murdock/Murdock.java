@@ -147,7 +147,7 @@ public final class Murdock {
     private final Drivetrain drivetrain = new Drivetrain(drive);
     private final Driving driving = new Driving(drivetrain, joystick1, joystick2);
     private final GearShifters gearShifters = new GearShifters(_gearShifters);
-    private final Loader loader = new Loader(_loader, shooterBangBang);
+    private final Loader loader = new Loader(_loader, shooterBangBang, potentiometer);
     private final MovementSystem movementSystem = new MovementSystem(drive, encoder, gyro);
     private final ShooterWheel shooterWheel = new ShooterWheel(shooterBangBang);
     private final Winch winch = new Winch(winchMotor, potentiometer);
