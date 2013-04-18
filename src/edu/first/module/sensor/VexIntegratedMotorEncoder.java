@@ -46,14 +46,6 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
     private static final byte kDefaultAddress = 0x60;
     private byte m_address = kDefaultAddress;
     private static final byte kDeviceStatusRegister = 0x23;
-    private static final byte kManufacturerBaseRegister = 0x08;
-    private static final byte kManufacturerSize = 0x8;
-    private static final byte kSensorTypeBaseRegister = 0x10;  // was 0x10 for color sensor;
-    private static final byte kSensorTypeSize = 0x08;
-    private static final byte kSignedVelocityRegisterMSB = 0x3e;
-    private static final byte kSignedVelocityRegisterLSB = 0x3f;
-    private static final byte kUnSignedVelocityRegisterMSB = 0x44;
-    private static final byte kUnSignedVelocityRegisterLSB = 0x45;
     private static final byte kRotationRegisterLowLSB = 0x41;
     private static final byte kRotationRegisterLowMSB = 0x40;
     private static final byte kRotationRegisterMiddleMSB = 0x42;
@@ -75,14 +67,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
     private static final double kTicksPerRevHighSpeed = 392; // factor with optional high speed gearing
     private double m_TicksPerRev;
     private I2C m_i2c;
-    private int m_Version;
-    private int m_Type;
-    private int m_BoardID;
-    private byte m_DeviceStatus;
     private boolean m_Terminated;
-    private boolean m_Overflow;
-    private boolean m_Diagnostic;
-    private int m_Direction;
 
     /**
      * Constructor.
@@ -95,12 +80,11 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
      * optional high speed.
      */
     public VexIntegratedMotorEncoder(int slot, byte newAddress, String gearing, boolean setTerminated) {
-        Timer myTimer = new Timer();
-        myTimer.start();
         DigitalModule module = DigitalModule.getInstance(slot);
         //m_i2c = module.getI2C(kAddressRegister);
         m_i2c = module.getI2C(kDefaultAddress);
-        System.out.println("device is " + (m_i2c.addressOnly() ? "not " : "") + "present at address 0x" + Integer.toHexString(kDefaultAddress));
+        System.out.println("- Vex encoder info -");
+        System.out.println("Device is " + (m_i2c.addressOnly() ? "not " : "") + "present at address 0x" + Integer.toHexString(kDefaultAddress));
         if (newAddress != kDefaultAddress) { // change address if not using the default address
             Timer.delay(0.5); // put in a delay to see if we can get the second chain device to be connected
             setAddress(newAddress);
@@ -109,7 +93,7 @@ public final class VexIntegratedMotorEncoder extends SensorBase implements ISens
             System.out.println("device is " + (m_i2c.addressOnly() ? "not " : "") + "present at address 0x" + Integer.toHexString(m_address));
         }
 
-        setTicksPerRev(gearing);
+        setTicksPerRev(gearing); // 
 
         // terminate device as required
         if (setTerminated) { // requesting device to be terminated

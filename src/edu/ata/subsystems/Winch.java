@@ -38,10 +38,6 @@ public final class Winch extends Subsystem implements SetteableNumber, PIDOutput
         this.sensor = accelerometer;
     }
 
-    protected boolean enableSubsystem() {
-        return PID.enable();
-    }
-
     protected boolean disableSubsystem() {
         return PID.disable();
     }

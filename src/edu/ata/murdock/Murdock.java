@@ -25,7 +25,6 @@ import edu.ata.subsystems.SmartDashboardSender;
 import edu.ata.subsystems.Winch;
 import edu.ata.subsystems.WindshieldWiper;
 import edu.first.commands.SetNumberCommand;
-import edu.first.module.sensor.VexIntegratedMotorEncoder;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.module.driving.RobotDriveModule;
 import edu.first.module.sensor.DigitalLimitSwitchModule;
@@ -36,7 +35,6 @@ import edu.first.module.sensor.PotentiometerModule;
 import edu.first.identifiers.Function;
 import edu.first.module.actuator.DualActionSolenoidModule;
 import edu.first.module.joystick.BindableJoystick;
-import edu.first.module.sensor.VexMotorEncoderModule;
 import edu.first.module.speedcontroller.SpeedControllerModule;
 import edu.first.module.speedcontroller.SpikeRelayModule;
 import edu.first.module.target.BangBangModule;
@@ -95,33 +93,32 @@ public final class Murdock {
     private DoublePreference YSetpoint = new DoublePreference("YSetpoint", defaultArm);
     private DoublePreference YRPM = new DoublePreference("YRPM", defaultRPM);
     // WPILIBJ //
-    private final DigitalInput _psi120 = new DigitalInput(PortMapFile.getInstance().getPort("psi120", 5));
-    private final DigitalInput _psi60 = new DigitalInput(PortMapFile.getInstance().getPort("psi60", 6));
-    private final AnalogChannel _potentiometer = new AnalogChannel(PortMapFile.getInstance().getPort("Pot", 1));
-    private final DigitalInput _hallEffect = new DigitalInput(PortMapFile.getInstance().getPort("HallEffect", 1));
-    private final Encoder _encoder = new Encoder(PortMapFile.getInstance().getPort("EncoderA", 2),
-            PortMapFile.getInstance().getPort("EncoderB", 3));
-    private final VexIntegratedMotorEncoder _windshieldWiperEncoder = new VexIntegratedMotorEncoder(1, (byte) 0x60, "speed", true);
-    private final Gyro _gyro = new Gyro(PortMapFile.getInstance().getPort("Gyro", 2));
-    private final Relay _compressorRelay = new Relay(PortMapFile.getInstance().getPort("Compressor", 1));
-    private final Joystick _joystick1 = new Joystick(PortMapFile.getInstance().getPort("Joystick1", 1));
-    private final Joystick _joystick2 = new Joystick(PortMapFile.getInstance().getPort("Joystick2", 2));
-    private final Talon _shooter = new Talon(PortMapFile.getInstance().getPort("Shooter", 1));
-    private final Victor _winchMotor = new Victor(PortMapFile.getInstance().getPort("Winch", 2));
-    private final Victor _leftBack = new Victor(PortMapFile.getInstance().getPort("LeftBack", 5));
-    private final Victor _leftFront = new Victor(PortMapFile.getInstance().getPort("LeftFront", 6));
-    private final Victor _rightBack = new Victor(PortMapFile.getInstance().getPort("RightBack", 3));
-    private final Victor _rightFront = new Victor(PortMapFile.getInstance().getPort("RightFront", 4));
-    private final SpeedController _windshieldWiperMotor = new Victor(PortMapFile.getInstance().getPort("WindshiedWiper", 7));
+    private final PortMapFile mapFile = PortMapFile.getInstance();
+    private final DigitalInput _psi120 = new DigitalInput(mapFile.getPort("psi120", 5));
+    private final DigitalInput _psi60 = new DigitalInput(mapFile.getPort("psi60", 6));
+    private final AnalogChannel _potentiometer = new AnalogChannel(mapFile.getPort("Pot", 1));
+    private final DigitalInput _hallEffect = new DigitalInput(mapFile.getPort("HallEffect", 1));
+    private final Encoder _encoder = new Encoder(mapFile.getPort("EncoderA", 2), mapFile.getPort("EncoderB", 3));
+    private final Gyro _gyro = new Gyro(mapFile.getPort("Gyro", 2));
+    private final Relay _compressorRelay = new Relay(mapFile.getPort("Compressor", 1));
+    private final Joystick _joystick1 = new Joystick(mapFile.getPort("Joystick1", 1));
+    private final Joystick _joystick2 = new Joystick(mapFile.getPort("Joystick2", 2));
+    private final Talon _shooter = new Talon(mapFile.getPort("Shooter", 1));
+    private final Victor _winchMotor = new Victor(mapFile.getPort("Winch", 2));
+    private final Victor _leftBack = new Victor(mapFile.getPort("LeftBack", 5));
+    private final Victor _leftFront = new Victor(mapFile.getPort("LeftFront", 6));
+    private final Victor _rightBack = new Victor(mapFile.getPort("RightBack", 3));
+    private final Victor _rightFront = new Victor(mapFile.getPort("RightFront", 4));
+    private final SpeedController _windshieldWiperMotor = new Victor(mapFile.getPort("WindshiedWiper", 7));
     private final RobotDrive _drive = new RobotDrive(_leftFront, _leftBack, _rightFront, _rightBack);
-    private final Solenoid _loadIn = new Solenoid(PortMapFile.getInstance().getPort("LoadIn", 8));
-    private final Solenoid _loadOut = new Solenoid(PortMapFile.getInstance().getPort("LoadOut", 7));
-    private final Solenoid _bitchBarIn = new Solenoid(PortMapFile.getInstance().getPort("BitchBarIn", 5));
-    private final Solenoid _bitchBarOut = new Solenoid(PortMapFile.getInstance().getPort("BitchBarOut", 6));
-    private final Solenoid _gearUp = new Solenoid(PortMapFile.getInstance().getPort("GearUp", 4));
-    private final Solenoid _gearDown = new Solenoid(PortMapFile.getInstance().getPort("GearDown", 3));
-    private final Solenoid _backLeft = new Solenoid(PortMapFile.getInstance().getPort("BackLeft", 2));
-    private final Solenoid _backRight = new Solenoid(PortMapFile.getInstance().getPort("BackRight", 1));
+    private final Solenoid _loadIn = new Solenoid(mapFile.getPort("LoadIn", 8));
+    private final Solenoid _loadOut = new Solenoid(mapFile.getPort("LoadOut", 7));
+    private final Solenoid _bitchBarIn = new Solenoid(mapFile.getPort("BitchBarIn", 5));
+    private final Solenoid _bitchBarOut = new Solenoid(mapFile.getPort("BitchBarOut", 6));
+    private final Solenoid _gearUp = new Solenoid(mapFile.getPort("GearUp", 4));
+    private final Solenoid _gearDown = new Solenoid(mapFile.getPort("GearDown", 3));
+    private final Solenoid _backLeft = new Solenoid(mapFile.getPort("BackLeft", 2));
+    private final Solenoid _backRight = new Solenoid(mapFile.getPort("BackRight", 1));
     // Robot //
     private final TransferRateCalculator transferRate = new TransferRateCalculator();
     private final DigitalLimitSwitchModule psi120 = new DigitalLimitSwitchModule(_psi120);
@@ -129,7 +126,6 @@ public final class Murdock {
     private final PotentiometerModule potentiometer = new PotentiometerModule(_potentiometer);
     private final HallEffectModule hallEffect = new HallEffectModule(_hallEffect);
     private final EncoderModule encoder = new EncoderModule(_encoder, Encoder.PIDSourceParameter.kDistance);
-    private final VexMotorEncoderModule windshieldWiperEncoder = new VexMotorEncoderModule(_windshieldWiperEncoder);
     private final GyroModule gyro = new GyroModule(_gyro);
     private final SpikeRelayModule compressorRelay = new SpikeRelayModule(_compressorRelay);
     private final XboxController joystick1 = new XboxController(_joystick1);
@@ -155,7 +151,7 @@ public final class Murdock {
     private final MovementSystem movementSystem = new MovementSystem(drive, encoder, gyro);
     private final ShooterWheel shooterWheel = new ShooterWheel(shooterBangBang);
     private final Winch winch = new Winch(winchMotor, potentiometer);
-    private final WindshieldWiper windshieldWiper = new WindshieldWiper(windshieldWiperMotor, windshieldWiperEncoder);
+    private final WindshieldWiper windshieldWiper = new WindshieldWiper(windshieldWiperMotor);
     private final SmartDashboardSender smartDashboardSender =
             new SmartDashboardSender(shooterWheel, psi60, psi120, bitchBar, alignmentSystem, winch, gearShifters,
             windshieldWiper, encoder, gyro, transferRate);
@@ -222,6 +218,8 @@ public final class Murdock {
             Logger.log(Logger.Urgency.USERMESSAGE, "Saving Preferences");
             Preferences.getInstance().save();
         }
+        
+        Logger.log(Logger.Urgency.LOG, "Disabling...");
 
         joystick1.disable();
         joystick2.disable();
@@ -426,6 +424,7 @@ public final class Murdock {
         public void disabledInit() {
             disabled();
         }
+        
         private Robot robot = getSelectedRobot();
 
         public void autonomousInit() {

@@ -6,7 +6,6 @@ import edu.first.identifiers.ReturnableNumber;
 public final class SetWiper extends ThreadableCommand {
 
     public static final WiperType SPEED = new WiperType(1);
-    public static final WiperType PLACE = new WiperType(2);
     private final WindshieldWiper windshieldWiper;
     private final WiperType type;
     private final ReturnableNumber number;
@@ -27,8 +26,6 @@ public final class SetWiper extends ThreadableCommand {
             public void run() {
                 if (type.equals(SPEED)) {
                     windshieldWiper.setSpeed(number.get());
-                } else if (type.equals(PLACE)) {
-                    windshieldWiper.setPlacement(number.get());
                 }
             }
         };

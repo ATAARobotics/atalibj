@@ -14,7 +14,6 @@ import edu.ata.commands.SetWinch;
 import edu.ata.commands.SetWiper;
 import edu.ata.commands.TankDrive;
 import edu.ata.commands.TurnToAngle;
-import edu.ata.commands.WipeWindshieldWiper;
 import edu.ata.subsystems.AlignmentSystem;
 import edu.ata.subsystems.BitchBar;
 import edu.ata.subsystems.Compressor;
@@ -149,11 +148,6 @@ public final class GordianAuto {
                 return winch.getPosition();
             }
         },
-        new NumberReturningMethod("wiperPosition") {
-            public double getDouble() {
-                return windshieldWiper.getPosition();
-            }
-        },
         new RunningMethod("arcade") {
             public void run(Variable[] args) {
                 new ArcadeDrive(drivetrain, ((NumberInterface) args[0]).doubleValue(), ((NumberInterface) args[1]).doubleValue(), false).run();
@@ -277,16 +271,6 @@ public final class GordianAuto {
         new RunningMethod("setWiperSpeed") {
             public void run(Variable[] args) {
                 new SetWiper(windshieldWiper, SetWiper.SPEED, ((NumberInterface) args[0]).doubleValue(), false).run();
-            }
-        },
-        new RunningMethod("setWiperPosition") {
-            public void run(Variable[] args) {
-                new SetWiper(windshieldWiper, SetWiper.PLACE, ((NumberInterface) args[0]).doubleValue(), false).run();
-            }
-        },
-        new RunningMethod("wipeWiper") {
-            public void run(Variable[] args) {
-                new WipeWindshieldWiper(windshieldWiper, false).run();
             }
         }};
 
