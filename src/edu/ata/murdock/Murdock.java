@@ -82,6 +82,7 @@ public final class Murdock {
     private final Robot murdock = new MurdockRobot();
     private final RobotMode normalMode = new NormalMode();
     private long lastSave = System.currentTimeMillis();
+    private DoublePreference Zero = new DoublePreference("Zero", 0);
     private StringPreference AUTOMODE = new StringPreference("AutonomousMode", defaultAuto);
     private DoublePreference ShooterRPM = new DoublePreference("ShooterRPM", defaultRPM);
     private DoublePreference ASetpoint = new DoublePreference("ASetpoint", defaultArm);
@@ -197,7 +198,12 @@ public final class Murdock {
         Logger.log(Logger.Urgency.USERMESSAGE, "Battery: " + rounded);
         Logger.log(Logger.Urgency.USERMESSAGE, "Good luck Team " + DriverstationInfo.getTeamNumber() + "!");
 
-        winch.setZero(_potentiometer.getVoltage());
+        Zero.create();
+        // Zero moved
+        if (Math.abs(Zero.get() - _potentiometer.getVoltage()) < 0.5) {
+            Zero.set(_potentiometer.getVoltage());
+        }
+        winch.setZero(Zero.get());
 
         AUTOMODE.create();
         ShooterRPM.create();
@@ -218,7 +224,7 @@ public final class Murdock {
             Logger.log(Logger.Urgency.USERMESSAGE, "Saving Preferences");
             Preferences.getInstance().save();
         }
-        
+
         Logger.log(Logger.Urgency.LOG, "Disabling...");
 
         joystick1.disable();
@@ -306,6 +312,8 @@ public final class Murdock {
 
         BINDS.addWhenPressed(joystick1.getStartButton(),
                 new SetWinch(winch, SetWinch.ZERO, potentiometer, false));
+        BINDS.addWhenPressed(joystick1.getStartButton(), 
+                new SetNumberCommand(Zero, potentiometer));
 
         BINDS.addAxis(joystick1.getDirectionalPad(),
                 new SetWiperSpeed(windshieldWiper), new Function.ProductFunction(wiperSpeed));
@@ -424,7 +432,6 @@ public final class Murdock {
         public void disabledInit() {
             disabled();
         }
-        
         private Robot robot = getSelectedRobot();
 
         public void autonomousInit() {
