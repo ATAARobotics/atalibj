@@ -4,10 +4,6 @@ import edu.first.identifiers.ReturnableBoolean;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.Solenoid;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 /**
  * Subsystem to switch between in and out positions.
  *
@@ -44,10 +40,7 @@ public class DualActionSolenoidModule extends ForwardingDualActionSolenoid imple
         super.set(isEnabled() ? position : IN);
     }
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 class ForwardingDualActionSolenoid implements edu.first.module.actuator.Solenoid, ReturnableBoolean {
 
     public static boolean IN = false, OUT = true;
@@ -73,25 +66,15 @@ class ForwardingDualActionSolenoid implements edu.first.module.actuator.Solenoid
     }
 
     public void set(boolean position) {
-<<<<<<< HEAD
-        this.position = position;
-        this.in.set(!position);
-        this.out.set(position);
-=======
         this.in.set(!position);
         this.out.set(position);
         this.position = position;
->>>>>>> master
     }
 
     public final boolean get() {
         return position;
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> master
     public final boolean isOut() {
         return get() == OUT;
     }

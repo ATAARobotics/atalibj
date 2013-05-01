@@ -23,11 +23,7 @@ public final class Compressor extends Subsystem {
     }
 
     public void run() {
-<<<<<<< HEAD
-        if(PSISwitch.isPushed()) {
-=======
         if(!PSISwitch.isPushed()) {
->>>>>>> master
             relayModule.set(Relay.Value.kForward);
         } else {
             relayModule.set(Relay.Value.kOff);
