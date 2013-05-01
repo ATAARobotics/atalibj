@@ -1,5 +1,6 @@
 package edu.first.module.sensor;
 
+import edu.first.identifiers.ReturnableNumber;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -8,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  *
  * @author Joel Gallant
  */
-interface Gyro extends PIDSource {
+interface Gyro extends PIDSource, ReturnableNumber {
 
     /**
      * Returns the "angle", as it is registered on the gyroscope. There should

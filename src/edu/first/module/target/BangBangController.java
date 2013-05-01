@@ -1,5 +1,6 @@
 package edu.first.module.target;
 
+import edu.first.identifiers.SetteableNumber;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -7,7 +8,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  *
  * @author Joel Gallant
  */
-public interface BangBangController {
+public interface BangBangController extends SetteableNumber {
 
     /**
      * Sets the speed / position that the controller is aiming for.

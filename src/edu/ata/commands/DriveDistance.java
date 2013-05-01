@@ -1,34 +1,27 @@
 package edu.ata.commands;
 
-import edu.first.module.target.MovingModule;
+import edu.ata.subsystems.MovementSystem;
+import edu.first.identifiers.ReturnableNumber;
 
-/**
- * Command to drive to a distance using PID.
- *
- * @author Joel Gallant <joelgallant236@gmail.com>
- */
-public class DriveDistance extends ThreadableCommand {
+public final class DriveDistance extends ThreadableCommand {
 
-    private final MovingModule movingModule;
-    private final double distance;
+    private final MovementSystem movementSystem;
+    private final ReturnableNumber number;
 
-    /**
-     * Constructs the command using the moving module and the setpoint.
-     *
-     * @param movingModule module to move with
-     * @param distance encoder value to go to
-     * @param newThread whether command should be run in a new thread
-     */
-    public DriveDistance(MovingModule movingModule, double distance, boolean newThread) {
+    public DriveDistance(MovementSystem movementSystem, double number, boolean newThread) {
+        this(movementSystem, new ReturnableNumber.Number(number), newThread);
+    }
+
+    public DriveDistance(MovementSystem movementSystem, ReturnableNumber number, boolean newThread) {
         super(newThread);
-        this.movingModule = movingModule;
-        this.distance = distance;
+        this.movementSystem = movementSystem;
+        this.number = number;
     }
 
     public Runnable getRunnable() {
         return new Runnable() {
             public void run() {
-                movingModule.moveForwards(distance);
+                movementSystem.driveToDistance(number.get());
             }
         };
     }

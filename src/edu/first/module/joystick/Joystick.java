@@ -17,7 +17,7 @@ interface Joystick {
      * @param axis number that identifies axis
      * @return value of where the joystick is on the axis
      */
-    public double getAxis(int axis);
+    public double getRawAxis(int axis);
 
     /**
      * Returns the value of the button mapped to the specific
@@ -28,5 +28,5 @@ interface Joystick {
      * @param button button to check
      * @return whether button is pushed
      */
-    public boolean getButton(int button);
+    public boolean getRawButton(int button);
 }

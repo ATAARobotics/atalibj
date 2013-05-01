@@ -1,5 +1,7 @@
 package edu.first.module.target;
 
+import edu.first.identifiers.SetteableNumber;
+
 /**
  * Interface that represents full functionality of a PID controller (see
  * http://www.chiefdelphi.com/forums/showthread.php?threadid=110268). Is mostly
@@ -7,7 +9,7 @@ package edu.first.module.target;
  *
  * @author Joel Gallant
  */
-interface PIDController {
+public interface PIDController extends SetteableNumber {
 
     /**
      * Set the PID Controller gain parameters. Set the proportional, integral,

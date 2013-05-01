@@ -1,61 +1,54 @@
 package edu.ata.subsystems;
 
 import edu.first.module.Module;
+import edu.first.module.actuator.DualActionSolenoidModule;
+import edu.first.module.actuator.Solenoid;
 import edu.first.module.actuator.SolenoidModule;
 import edu.first.module.subsystem.Subsystem;
 
-/**
- * System to between two gears. Is basically a {@link ReversingSolenoids}, but
- * uses {@code shift()} and {@code gear()} to be clear.
- *
- * @author Joel Gallant <joelgallant236@gmail.com>
- */
 public final class GearShifters extends Subsystem {
 
-    private final ReversingSolenoids reversingSolenoids;
+    private final Solenoid solenoid;
 
-    /**
-     * Constructs the shifter with a {@link ReversingSolenoids} object.
-     *
-     * @param gearOne first gear
-     * @param gearTwo second gear
-     */
-    public GearShifters(SolenoidModule gearOne, SolenoidModule gearTwo) {
-        this(new ReversingSolenoids(gearOne, gearTwo));
+    public GearShifters(SolenoidModule second) {
+        super(new Module[]{second});
+        this.solenoid = second;
     }
 
-    private GearShifters(ReversingSolenoids reversingSolenoids) {
-        super(new Module[]{reversingSolenoids});
-        this.reversingSolenoids = reversingSolenoids;
+    public GearShifters(DualActionSolenoidModule solenoid) {
+        super(new Module[]{solenoid});
+        this.solenoid = solenoid;
     }
 
-    /**
-     * Shifts gears.
-     */
-    public void shift() {
-        reversingSolenoids.switchPosition();
+    public void start() {
+        // No thread needed
     }
 
-    /**
-     * Sets the gear to the first gear.
-     */
-    public void setFirstGear() {
-        reversingSolenoids.setIn();
+    public void run() {
+        // No thread needed
     }
 
-    /**
-     * Sets the gear to the second gear.
-     */
-    public void setSecondGear() {
-        reversingSolenoids.setOut();
+    public void switchGears() {
+        solenoid.set(!solenoid.get());
     }
 
-    /**
-     * Returns the gear number currently selected.
-     *
-     * @return 1 or 2
-     */
+    public void firstGear() {
+        solenoid.set(true);
+    }
+
+    public void secondGear() {
+        solenoid.set(false);
+    }
+    
     public int gear() {
-        return reversingSolenoids.isIn() ? 1 : 2;
+        return isFirstGear() ? 1 : 2;
+    }
+
+    public boolean isFirstGear() {
+        return solenoid.get();
+    }
+
+    public boolean isSecondGear() {
+        return !solenoid.get();
     }
 }

@@ -1,5 +1,6 @@
 package edu.first.module.sensor;
 
+import edu.first.identifiers.ReturnableNumber;
 import edu.wpi.first.wpilibj.PIDSource;
 
 /**
@@ -8,7 +9,7 @@ import edu.wpi.first.wpilibj.PIDSource;
  *
  * @author Joel Gallant
  */
-interface Encoder extends PIDSource {
+interface Encoder extends PIDSource, ReturnableNumber {
 
     /**
      * Start the Encoder. Starts counting pulses on the Encoder device.

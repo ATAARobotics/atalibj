@@ -8,7 +8,7 @@ import edu.first.module.Module;
  *
  * @author Team 4334
  */
-public final class SolenoidModule extends ForwardingSolenoid implements Module.DisableableModule {
+public class SolenoidModule extends ForwardingSolenoid implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -57,7 +57,7 @@ public final class SolenoidModule extends ForwardingSolenoid implements Module.D
      *
      * @param on if solenoid should be on
      */
-    public void set(boolean on) {
+    public final void set(boolean on) {
         if (isEnabled()) {
             super.set(on);
         }
@@ -111,7 +111,7 @@ class ForwardingSolenoid implements Solenoid {
      *
      * @return if solenoid is on
      */
-    public boolean get() {
+    public final boolean get() {
         return solenoid.get();
     }
 }

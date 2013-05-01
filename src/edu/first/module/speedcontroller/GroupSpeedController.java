@@ -1,5 +1,6 @@
 package edu.first.module.speedcontroller;
 
+import edu.first.identifiers.SetteableNumber;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
@@ -8,7 +9,7 @@ import edu.wpi.first.wpilibj.SpeedController;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class GroupSpeedController implements SpeedController {
+public class GroupSpeedController implements SpeedController, SetteableNumber {
 
     private final SpeedController[] speedControllers;
 
@@ -33,12 +34,12 @@ public class GroupSpeedController implements SpeedController {
      *
      * @return average speed of controllers
      */
-    public double get() {
+    public final double get() {
         double s = 0;
         for (int x = 0; x < speedControllers.length; x++) {
             s += speedControllers[x].get();
         }
-        return s / speedControllers.length;
+        return s / (double) speedControllers.length;
     }
 
     /**
@@ -48,7 +49,7 @@ public class GroupSpeedController implements SpeedController {
      * @param syncGroup the update group to add this set() to, pending
      * updateSyncGroup() - if 0, update immediately
      */
-    public void set(double speed, byte syncGroup) {
+    public final void set(double speed, byte syncGroup) {
         for (int x = 0; x < speedControllers.length; x++) {
             speedControllers[x].set(speed, syncGroup);
         }
@@ -59,7 +60,7 @@ public class GroupSpeedController implements SpeedController {
      *
      * @param speed the speed to set - value should be between -1.0 and 1.0
      */
-    public void set(double speed) {
+    public final void set(double speed) {
         for (int x = 0; x < speedControllers.length; x++) {
             speedControllers[x].set(speed);
         }
@@ -68,7 +69,7 @@ public class GroupSpeedController implements SpeedController {
     /**
      * Disables all speed controllers.
      */
-    public void disable() {
+    public final void disable() {
         for (int x = 0; x < speedControllers.length; x++) {
             speedControllers[x].disable();
         }
@@ -79,7 +80,7 @@ public class GroupSpeedController implements SpeedController {
      *
      * @param output pid output value
      */
-    public void pidWrite(double output) {
+    public final void pidWrite(double output) {
         for (int x = 0; x < speedControllers.length; x++) {
             speedControllers[x].pidWrite(output);
         }

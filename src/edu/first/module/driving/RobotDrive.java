@@ -1,5 +1,7 @@
 package edu.first.module.driving;
 
+import edu.first.identifiers.SetteableNumber;
+
 /**
  * Outline for objects that drive a robot. Acts as a stable form of
  * {@link edu.wpi.first.wpilibj.RobotDrive}, so that expectations of classes
@@ -7,7 +9,7 @@ package edu.first.module.driving;
  *
  * @author Joel Gallant
  */
-interface RobotDrive {
+interface RobotDrive extends SetteableNumber {
 
     /**
      * Drive the motors at "speed" and "curve".
@@ -58,40 +60,6 @@ interface RobotDrive {
     public void arcadeDrive(double moveValue, double rotateValue);
 
     /**
-     * Sets the forwards/backwards speed. The turn value should stay the same as
-     * set previously.
-     *
-     * @param moveValue the value to use for forwards/backwards
-     */
-    public void setForwardValue(double moveValue);
-
-    /**
-     * Sets the forwards/backwards speed. The turn value should stay the same as
-     * set previously.
-     *
-     * @param moveValue the value to use for forwards/backwards
-     * @param squaredInputs if set, decreases the sensitivity at low speeds
-     */
-    public void setForwardValue(double moveValue, boolean squaredInput);
-
-    /**
-     * Sets the forwards/backwards speed. The forward value should stay the same as
-     * set previously.
-     *
-     * @param rotateValue the value to use for the rotate right/left
-     */
-    public void setRotateValue(double rotateValue);
-
-    /**
-     * Sets the forwards/backwards speed. The forward value should stay the same as
-     * set previously.
-     *
-     * @param rotateValue the value to use for the rotate right/left
-     * @param squaredInputs if set, decreases the sensitivity at low speeds
-     */
-    public void setRotateValue(double rotateValue, boolean squaredInput);
-
-    /**
      * A method for driving with Mecanum wheeled robots.
      *
      * @param x the speed that the robot should drive in the X direction.
@@ -120,22 +88,6 @@ interface RobotDrive {
      * @param rightOutput the speed to send to the right side of the robot
      */
     public void setLeftRightMotorOutputs(double leftOutput, double rightOutput);
-
-    /**
-     * Set the speed of the left side motors. Other motors should remain at the
-     * same speed.
-     *
-     * @param leftOutput the speed to send to the left side of the robot
-     */
-    public void setLeftMotorOutput(double leftOutput);
-
-    /**
-     * Set the speed of the right side motors. Other motors should remain at the
-     * same speed.
-     *
-     * @param rightOutput the speed to send to the right side of the robot
-     */
-    public void setRightMotorOutput(double rightOutput);
 
     /**
      * Configure the scaling factor for using RobotDrive with motor controllers.

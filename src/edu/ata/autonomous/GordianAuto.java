@@ -1,36 +1,40 @@
 package edu.ata.autonomous;
 
 import com.sun.squawk.microedition.io.FileConnection;
-import edu.ata.commands.AlignCommand;
-import edu.ata.commands.AlignShooter;
-import edu.ata.commands.ArcadeDriveCommand;
-import edu.ata.commands.AutoShoot;
-import edu.ata.commands.BangBangCommand;
+import edu.ata.commands.ArcadeDrive;
 import edu.ata.commands.DriveDistance;
-import edu.ata.commands.GearShiftCommand;
-import edu.ata.commands.MoveCommand;
-import edu.ata.commands.ResetEncoderCommand;
-import edu.ata.commands.ShootCommand;
-import edu.ata.commands.TankDriveCommand;
-import edu.ata.commands.TurnToAngle;
+import edu.ata.commands.SetAlignment;
+import edu.ata.commands.SetBitchBar;
+import edu.ata.commands.SetCompressor;
+import edu.ata.commands.SetGear;
+import edu.ata.commands.SetLoader;
+import edu.ata.commands.SetShooter;
+import edu.ata.commands.SetSmartDashboard;
+import edu.ata.commands.SetWinch;
+import edu.ata.commands.SetWiper;
+import edu.ata.commands.TankDrive;
 import edu.ata.subsystems.AlignmentSystem;
+import edu.ata.subsystems.BitchBar;
+import edu.ata.subsystems.Compressor;
+import edu.ata.subsystems.Drivetrain;
 import edu.ata.subsystems.GearShifters;
-import edu.ata.subsystems.Shooter;
-import edu.first.commands.LogCommand;
-import edu.first.commands.PauseCommand;
-import edu.first.module.driving.RobotDriveModule;
-import edu.first.module.sensor.EncoderModule;
-import edu.first.module.sensor.GyroModule;
-import edu.first.module.target.BangBangModule;
-import edu.first.module.target.MovingModule;
+import edu.ata.subsystems.Loader;
+import edu.ata.subsystems.MovementSystem;
+import edu.ata.subsystems.ShooterWheel;
+import edu.ata.subsystems.SmartDashboardSender;
+import edu.ata.subsystems.Winch;
+import edu.ata.subsystems.WindshieldWiper;
 import edu.first.utils.DriverstationInfo;
 import edu.first.utils.Logger;
 import edu.gordian.Gordian;
 import edu.gordian.Variable;
 import edu.gordian.method.BooleanReturningMethod;
+import edu.gordian.method.Method;
 import edu.gordian.method.NumberReturningMethod;
 import edu.gordian.method.RunningMethod;
+import edu.gordian.variable.BooleanInterface;
 import edu.gordian.variable.NumberInterface;
+import edu.wpi.first.wpilibj.Timer;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -46,14 +50,229 @@ public final class GordianAuto {
 
     private static boolean init = false;
     private static Gordian gordian;
-    private static GearShifters gearShifters;
-    private static RobotDriveModule drivetrain;
-    private static Shooter shooter;
-    private static BangBangModule bangBangModule;
     private static AlignmentSystem alignmentSystem;
-    private static MovingModule drivetrainControl;
-    private static EncoderModule encoder;
-    private static GyroModule gyro;
+    private static BitchBar bitchBar;
+    private static Compressor compressor;
+    private static Drivetrain drivetrain;
+    private static GearShifters gearShifters;
+    private static Loader loader;
+    private static MovementSystem movementSystem;
+    private static ShooterWheel shooterWheel;
+    private static SmartDashboardSender smartDashboardSender;
+    private static Winch winch;
+    private static WindshieldWiper windshieldWiper;
+    private static final Method[] METHODS = new Method[]{
+        // Insert all methods, variables, returning methods and initialization code here.
+        new RunningMethod("log") {
+            public void run(Variable[] args) {
+                Logger.log(Logger.Urgency.USERMESSAGE, args[0].getValue().toString());
+            }
+        },
+        new RunningMethod("print") {
+            public void run(Variable[] args) {
+                System.out.println(args[0].getValue());
+            }
+        },
+        new RunningMethod("delay") {
+            public void run(Variable[] args) {
+                Timer.delay(((NumberInterface) args[0]).doubleValue());
+            }
+        },
+        new BooleanReturningMethod("isEnabled") {
+            public boolean getBoolean() {
+                return DriverstationInfo.isEnabled();
+            }
+        },
+        new BooleanReturningMethod("isAutonomous") {
+            public boolean getBoolean() {
+                return DriverstationInfo.getGamePeriod().equals(DriverstationInfo.AUTONOMOUS);
+            }
+        },
+        new BooleanReturningMethod("alignmentOut") {
+            public boolean getBoolean() {
+                return alignmentSystem.isOut();
+            }
+        },
+        new BooleanReturningMethod("alignmentRight") {
+            public boolean getBoolean() {
+                return alignmentSystem.isRight();
+            }
+        },
+        new BooleanReturningMethod("alignmentLeft") {
+            public boolean getBoolean() {
+                return alignmentSystem.isLeft();
+            }
+        },
+        new BooleanReturningMethod("bitchBarOut") {
+            public boolean getBoolean() {
+                return bitchBar.isOut();
+            }
+        },
+        new BooleanReturningMethod("atPressure") {
+            public boolean getBoolean() {
+                return compressor.isAtPressure();
+            }
+        },
+        new NumberReturningMethod("gear") {
+            public double getDouble() {
+                return gearShifters.gear();
+            }
+        },
+        new BooleanReturningMethod("isFirstGear") {
+            public boolean getBoolean() {
+                return gearShifters.isFirstGear();
+            }
+        },
+        new BooleanReturningMethod("isSecondGear") {
+            public boolean getBoolean() {
+                return gearShifters.isSecondGear();
+            }
+        },
+        new BooleanReturningMethod("isLoaderOut") {
+            public boolean getBoolean() {
+                return loader.isOut();
+            }
+        },
+        new NumberReturningMethod("getShooterRPM") {
+            public double getDouble() {
+                return shooterWheel.getRPM();
+            }
+        },
+        new NumberReturningMethod("getShooterSetpointRPM") {
+            public double getDouble() {
+                return shooterWheel.getSetpointRPM();
+            }
+        },
+        new BooleanReturningMethod("shooterPastSetpoint") {
+            public boolean getBoolean() {
+                return shooterWheel.isPastSetpoint();
+            };
+        },
+        new NumberReturningMethod("winchPosition") {
+            public double getDouble() {
+                return winch.getPosition();
+            }
+        },
+        new RunningMethod("arcade") {
+            public void run(Variable[] args) {
+                new ArcadeDrive(drivetrain, ((NumberInterface) args[0]).doubleValue(), ((NumberInterface) args[1]).doubleValue(), false).run();
+            }
+        },
+        new RunningMethod("tank") {
+            public void run(Variable[] args) {
+                new TankDrive(drivetrain, ((NumberInterface) args[0]).doubleValue(), ((NumberInterface) args[1]).doubleValue(), false).run();
+            }
+        },
+        new RunningMethod("alignIn") {
+            public void run(Variable[] args) {
+                new SetAlignment(alignmentSystem, SetAlignment.IN, false).run();
+            }
+        },
+        new RunningMethod("alignOut") {
+            public void run(Variable[] args) {
+                new SetAlignment(alignmentSystem, SetAlignment.OUT, false).run();
+            }
+        },
+        new RunningMethod("alignLeft") {
+            public void run(Variable[] args) {
+                new SetAlignment(alignmentSystem, SetAlignment.LEFT, false).run();
+            }
+        },
+        new RunningMethod("alignRight") {
+            public void run(Variable[] args) {
+                new SetAlignment(alignmentSystem, SetAlignment.RIGHT, false).run();
+            }
+        },
+        new RunningMethod("bitchBarIn") {
+            public void run(Variable[] args) {
+                new SetBitchBar(bitchBar, SetBitchBar.IN, false).run();
+            }
+        },
+        new RunningMethod("bitchBarOut") {
+            public void run(Variable[] args) {
+                new SetBitchBar(bitchBar, SetBitchBar.OUT, false).run();
+            }
+        },
+        new RunningMethod("switchBitchBar") {
+            public void run(Variable[] args) {
+                new SetBitchBar(bitchBar, SetBitchBar.SWITCH, false).run();
+            }
+        },
+        new RunningMethod("compressorOn") {
+            public void run(Variable[] args) {
+                new SetCompressor(compressor, SetCompressor.ON, false).run();
+            }
+        },
+        new RunningMethod("compressorOff") {
+            public void run(Variable[] args) {
+                new SetCompressor(compressor, SetCompressor.OFF, false).run();
+            }
+        },
+        new RunningMethod("switchCompressor") {
+            public void run(Variable[] args) {
+                new SetCompressor(compressor, SetCompressor.SWITCH, false).run();
+            }
+        },
+        new RunningMethod("setFirstGear") {
+            public void run(Variable[] args) {
+                new SetGear(gearShifters, SetGear.FIRST, false).run();
+            }
+        },
+        new RunningMethod("setSecondGear") {
+            public void run(Variable[] args) {
+                new SetGear(gearShifters, SetGear.SECOND, false).run();
+            }
+        },
+        new RunningMethod("switchGear") {
+            public void run(Variable[] args) {
+                new SetGear(gearShifters, SetGear.SWITCH, false).run();
+            }
+        },
+        new RunningMethod("setLoaderIn") {
+            public void run(Variable[] args) {
+                new SetLoader(loader, SetLoader.IN, false).run();
+            }
+        },
+        new RunningMethod("setLoaderOut") {
+            public void run(Variable[] args) {
+                new SetLoader(loader, SetLoader.OUT, false).run();
+            }
+        },
+        new RunningMethod("fireLoader") {
+            public void run(Variable[] args) {
+                new SetLoader(loader, SetLoader.FIRE, false).run();
+            }
+        },
+        new RunningMethod("driveDistance") {
+            public void run(Variable[] args) {
+                new DriveDistance(movementSystem, ((NumberInterface) args[0]).doubleValue(), false).run();
+            }
+        },
+        new RunningMethod("setShooter") {
+            public void run(Variable[] args) {
+                new SetShooter(shooterWheel, ((NumberInterface) args[0]).doubleValue(), false).run();
+            }
+        },
+        new RunningMethod("setDashboard") {
+            public void run(Variable[] args) {
+                new SetSmartDashboard(smartDashboardSender, ((BooleanInterface) args[0]).booleanValue(), false).run();
+            }
+        },
+        new RunningMethod("setWinchSpeed") {
+            public void run(Variable[] args) {
+                new SetWinch(winch, SetWinch.SPEED, ((NumberInterface) args[0]).doubleValue(), false).run();
+            }
+        },
+        new RunningMethod("setWinchPosition") {
+            public void run(Variable[] args) {
+                new SetWinch(winch, SetWinch.POSITION, ((NumberInterface) args[0]).doubleValue(), false).run();
+            }
+        },
+        new RunningMethod("setWiperSpeed") {
+            public void run(Variable[] args) {
+                new SetWiper(windshieldWiper, SetWiper.SPEED, ((NumberInterface) args[0]).doubleValue(), false).run();
+            }
+        }};
 
     private GordianAuto() throws IllegalAccessException {
         throw new IllegalAccessException();
@@ -73,19 +292,24 @@ public final class GordianAuto {
      * @param encoder encoder to get distance of drivetrain
      * @param gyro gyroscope for angle of the drivetrain
      */
-    public static void ensureInit(GearShifters gearShifters, RobotDriveModule drivetrain, Shooter shooter,
-            BangBangModule bangBangModule, AlignmentSystem alignmentSystem, MovingModule drivetrainControl,
-            EncoderModule encoder, GyroModule gyro) {
+    public static void ensureInit(AlignmentSystem alignmentSystem, BitchBar bitchBar,
+            Compressor compressor, Drivetrain drivetrain, GearShifters gearShifters,
+            Loader loader, MovementSystem movementSystem, ShooterWheel shooterWheel,
+            SmartDashboardSender smartDashboardSender, Winch winch,
+            WindshieldWiper windshieldWiper) {
         if (!init) {
-            GordianAuto.gearShifters = gearShifters;
-            GordianAuto.drivetrain = drivetrain;
-            GordianAuto.shooter = shooter;
-            GordianAuto.bangBangModule = bangBangModule;
-            GordianAuto.alignmentSystem = alignmentSystem;
-            GordianAuto.drivetrainControl = drivetrainControl;
-            GordianAuto.encoder = encoder;
-            GordianAuto.gyro = gyro;
             init = true;
+            GordianAuto.alignmentSystem = alignmentSystem;
+            GordianAuto.bitchBar = bitchBar;
+            GordianAuto.compressor = compressor;
+            GordianAuto.drivetrain = drivetrain;
+            GordianAuto.gearShifters = gearShifters;
+            GordianAuto.loader = loader;
+            GordianAuto.movementSystem = movementSystem;
+            GordianAuto.shooterWheel = shooterWheel;
+            GordianAuto.smartDashboardSender = smartDashboardSender;
+            GordianAuto.winch = winch;
+            GordianAuto.windshieldWiper = windshieldWiper;
         }
     }
 
@@ -100,133 +324,11 @@ public final class GordianAuto {
         FileConnection connection = (FileConnection) Connector.open("file:///" + fileName, Connector.READ);
         String script = Logger.getTextFromFile(connection);
         connection.close();
-        gordian = new Gordian(script);
-        init();
-        gordian.run();
-    }
-
-    private static void init() {
-        // Insert all methods, variables, returning methods and initialization code here.
-        gordian.addMethod(new NumberReturningMethod("encoderDistance") {
-            public double getDouble() {
-                return encoder.getDistance();
-            }
-        });
-        gordian.addMethod(new BooleanReturningMethod("isPastSetpoint") {
-            public boolean getBoolean() {
-                return bangBangModule.pastSetpoint();
-            }
-        });
-        gordian.addMethod(new NumberReturningMethod("gyro") {
-            public double getDouble() {
-                return gyro.getAngle();
-            }
-        });
-        gordian.addMethod(new BooleanReturningMethod("isEnabled") {
-            public boolean getBoolean() {
-                return DriverstationInfo.isEnabled();
-            }
-        });
-        gordian.addMethod(new RunningMethod("print") {
-            public void run(Variable[] args) {
-                Logger.log(Logger.Urgency.LOG, args[0].getValue().toString());
-            }
-        });
-        gordian.addMethod(new RunningMethod("wait") {
-            public void run(Variable[] args) {
-                new PauseCommand(((NumberInterface) args[0]).doubleValue()).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("log") {
-            public void run(Variable[] args) {
-                new LogCommand(args[0].getValue().toString()).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("arcade") {
-            public void run(Variable[] args) {
-                new ArcadeDriveCommand(drivetrain, ((NumberInterface) args[0]).doubleValue(),
-                        ((NumberInterface) args[1]).doubleValue(), false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("tank") {
-            public void run(Variable[] args) {
-                new TankDriveCommand(drivetrain, ((NumberInterface) args[0]).doubleValue(),
-                        ((NumberInterface) args[1]).doubleValue(), false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("stop") {
-            public void run(Variable[] args) {
-                new TankDriveCommand(drivetrain, 0, 0, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("shiftGear") {
-            public void run(Variable[] args) {
-                new GearShiftCommand(gearShifters, GearShiftCommand.SHIFT, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("driveToSetpoint") {
-            public void run(Variable[] args) {
-                double setpoint = ((NumberInterface) args[0]).doubleValue();
-                Logger.log(Logger.Urgency.USERMESSAGE, "Driving to " + setpoint);
-                new DriveDistance(drivetrainControl, setpoint, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("gyroTurn") {
-            public void run(Variable[] args) {
-                double setpoint = ((NumberInterface) args[0]).doubleValue();
-                Logger.log(Logger.Urgency.USERMESSAGE, "Turning to " + setpoint);
-                new TurnToAngle(drivetrainControl, setpoint, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("moveTo") {
-            public void run(Variable[] args) {
-                double forwards = ((NumberInterface) args[0]).doubleValue();
-                double right = ((NumberInterface) args[1]).doubleValue();
-                Logger.log(Logger.Urgency.USERMESSAGE, "Moving " + forwards + " and " + right + " to the right");
-                new MoveCommand(drivetrainControl, forwards, right).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("autoShoot") {
-            public void run(Variable[] args) {
-                new AutoShoot(shooter, bangBangModule, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("shoot") {
-            public void run(Variable[] args) {
-                new ShootCommand(shooter, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("alignShooter") {
-            public void run(Variable[] args) {
-                new AlignShooter(shooter, ((NumberInterface) args[0]).doubleValue(), false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("setShooterSpeed") {
-            public void run(Variable[] args) {
-                double speed = ((NumberInterface) args[0]).doubleValue();
-                Logger.log(Logger.Urgency.USERMESSAGE, "Setting shooter to " + speed);
-                new BangBangCommand(bangBangModule, speed, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("stopShooter") {
-            public void run(Variable[] args) {
-                new BangBangCommand(bangBangModule, 0, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("resetDistance") {
-            public void run(Variable[] args) {
-                new ResetEncoderCommand(encoder, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("collapseAlignment") {
-            public void run(Variable[] args) {
-                new AlignCommand(alignmentSystem, AlignCommand.COLLAPSE, false).run();
-            }
-        });
-        gordian.addMethod(new RunningMethod("extendAlignment") {
-            public void run(Variable[] args) {
-                new AlignCommand(alignmentSystem, AlignCommand.EXTEND, false).run();
-            }
-        });
+        if (init) {
+            gordian = new Gordian(script, METHODS);
+            gordian.run();
+        } else {
+            Logger.log(Logger.Urgency.USERMESSAGE, "Caution: Gordian was not initialized. Will not run.");
+        }
     }
 }

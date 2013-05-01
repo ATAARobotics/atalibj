@@ -1,5 +1,6 @@
 package edu.first.module.speedcontroller;
 
+import edu.first.identifiers.SetteableNumber;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -11,7 +12,7 @@ import edu.wpi.first.wpilibj.SpeedController;
  *
  * @author Joel Gallant
  */
-public final class SpeedControllerModule implements Module, SpeedController {
+public class SpeedControllerModule implements Module, SpeedController, SetteableNumber {
 
     private boolean enabled;
     private final SpeedController speedController;
@@ -33,7 +34,7 @@ public final class SpeedControllerModule implements Module, SpeedController {
      *
      * @return whether module was successfully enabled
      */
-    public boolean enable() {
+    public final boolean enable() {
         return (enabled = true);
     }
 
@@ -43,7 +44,7 @@ public final class SpeedControllerModule implements Module, SpeedController {
      *
      * @return if the module is enabled
      */
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return enabled;
     }
 
@@ -51,7 +52,7 @@ public final class SpeedControllerModule implements Module, SpeedController {
      * Stops the module from being able to set the speed to anything but 0. Also
      * stops the motor when called.
      */
-    public void disable() {
+    public final void disable() {
         speedController.set(0);
         enabled = false;
     }
@@ -64,7 +65,7 @@ public final class SpeedControllerModule implements Module, SpeedController {
      * @param syncGroup The update group to add this Set() to, pending
      * UpdateSyncGroup(). If 0, update immediately.
      */
-    public void set(double speed, byte syncGroup) {
+    public final void set(double speed, byte syncGroup) {
         speedController.set(isEnabled() ? speed : 0, syncGroup);
     }
 
@@ -74,7 +75,7 @@ public final class SpeedControllerModule implements Module, SpeedController {
      *
      * @param speed The speed to set. Value should be between -1.0 and +1.0.
      */
-    public void set(double speed) {
+    public final void set(double speed) {
         speedController.set(isEnabled() ? speed : 0);
     }
 
@@ -83,7 +84,7 @@ public final class SpeedControllerModule implements Module, SpeedController {
      *
      * @return the current speed between -1.0 and +1.0.
      */
-    public double get() {
+    public final double get() {
         return speedController.get();
     }
 
@@ -92,7 +93,7 @@ public final class SpeedControllerModule implements Module, SpeedController {
      *
      * @param output speed between -1.0 to +1.0.
      */
-    public void pidWrite(double output) {
+    public final void pidWrite(double output) {
         set(output);
     }
 }

@@ -1,5 +1,7 @@
 package edu.first.utils.preferences;
 
+import edu.first.identifiers.ReturnableNumber;
+import edu.first.identifiers.SetteableNumber;
 import edu.first.utils.Logger;
 
 /**
@@ -7,7 +9,7 @@ import edu.first.utils.Logger;
  *
  * @author Joel Gallant
  */
-public final class DoublePreference extends Preference {
+public final class DoublePreference extends Preference implements SetteableNumber, ReturnableNumber {
 
     private final double defaultValue;
 

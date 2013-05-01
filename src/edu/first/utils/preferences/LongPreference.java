@@ -8,7 +8,7 @@ import edu.first.utils.Logger;
  * @author Joel Gallant
  */
 public final class LongPreference extends Preference {
-    
+
     private final long defaultValue;
 
     /**

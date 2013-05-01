@@ -1,5 +1,7 @@
 package edu.first.bindings;
 
+import edu.first.binding.Bindable;
+
 /**
  * Bind that lets you bind an axis to an output. This is the output portion,
  * where the axis value is sent. A {@link Bindable} will use this object to set

@@ -1,9 +1,9 @@
 package edu.first.module.driving;
 
+import edu.first.identifiers.Function;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
  * Module designed to drive robots. Has all of the benefits of
@@ -92,9 +92,8 @@ public class RobotDriveModule extends ForwardingRobotDrive implements Module.Dis
 class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
 
     private final edu.wpi.first.wpilibj.RobotDrive drive;
-    private final List speedFunctions = new List();
+    private Function function = new Function.DefaultFunction();
     private final boolean reverseSpeed, reverseTurn;
-    private double lastLeft, lastRight, lastForward, lastTurn;
 
     /**
      * Constructs the object by using composition, using the given robot drive
@@ -111,13 +110,23 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
         this.reverseTurn = reverseTurn;
     }
 
+    ForwardingRobotDrive(edu.wpi.first.wpilibj.RobotDrive drive, boolean reverseSpeed, boolean reverseTurn, Function function) {
+        if (drive == null) {
+            throw new NullPointerException();
+        }
+        this.drive = drive;
+        this.reverseSpeed = reverseSpeed;
+        this.reverseTurn = reverseTurn;
+        this.function = function;
+    }
+
     /**
      * Returns the instance of the underlying
      * {@link edu.wpi.first.wpilibj.RobotDrive}.
      *
      * @return composition object under this one
      */
-    protected edu.wpi.first.wpilibj.RobotDrive getDrive() {
+    protected final edu.wpi.first.wpilibj.RobotDrive getDrive() {
         return drive;
     }
 
@@ -134,14 +143,14 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * send to the motors.
      * @param curve the rate of turn, constant for different forward speeds.
      */
-    public void drive(double outputMagnitude, double curve) {
+    public final void drive(double outputMagnitude, double curve) {
         if (reverseSpeed) {
             outputMagnitude = -outputMagnitude;
         }
         if (reverseTurn) {
             curve = -curve;
         }
-        drive.drive(transform(outputMagnitude), curve);
+        drive.drive(function.apply(outputMagnitude), curve);
     }
 
     /**
@@ -153,12 +162,12 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * @param squaredInputs setting this parameter to true decreases the
      * sensitivity at lower speeds
      */
-    public void tankDrive(double leftValue, double rightValue, boolean squaredInputs) {
+    public final void tankDrive(double leftValue, double rightValue, boolean squaredInputs) {
         if (reverseSpeed) {
             leftValue = -leftValue;
             rightValue = -rightValue;
         }
-        drive.tankDrive(transform(leftValue), transform(rightValue), squaredInputs);
+        drive.tankDrive(function.apply(leftValue), function.apply(rightValue), squaredInputs);
     }
 
     /**
@@ -168,7 +177,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * @param leftValue the value of the left stick.
      * @param rightValue the value of the right stick.
      */
-    public void tankDrive(double leftValue, double rightValue) {
+    public final void tankDrive(double leftValue, double rightValue) {
         tankDrive(leftValue, rightValue, false);
     }
 
@@ -180,15 +189,15 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * @param rotateValue the value to use for the rotate right/left
      * @param squaredInputs if set, decreases the sensitivity at low speeds
      */
-    public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
+    public final void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
         if (reverseSpeed) {
             moveValue = -moveValue;
         }
         if (reverseTurn) {
             rotateValue = -rotateValue;
         }
-        lastForward = transform(moveValue);
-        lastTurn = transform(rotateValue);
+
+        moveValue = function.apply(moveValue);
         drive.arcadeDrive(moveValue, rotateValue, squaredInputs);
     }
 
@@ -199,62 +208,8 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * @param moveValue the value to use for forwards/backwards
      * @param rotateValue the value to use for the rotate right/left
      */
-    public void arcadeDrive(double moveValue, double rotateValue) {
+    public final void arcadeDrive(double moveValue, double rotateValue) {
         arcadeDrive(moveValue, rotateValue, false);
-    }
-
-    /**
-     * Sets the forwards/backwards speed. The last used turn value is used for
-     * rotation. ({@link RobotDriveModule#setRotateValue(double)}, {@link RobotDriveModule#setRotateValue(double, boolean)}
-     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
-     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
-     * turn value as "last used".)
-     *
-     * @param moveValue the value to use for forwards/backwards
-     */
-    public void setForwardValue(double moveValue) {
-        arcadeDrive(moveValue, lastTurn);
-    }
-
-    /**
-     * Sets the forwards/backwards speed. The last used turn value is used for
-     * rotation. ({@link RobotDriveModule#setRotateValue(double)}, {@link RobotDriveModule#setRotateValue(double, boolean)}
-     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
-     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
-     * turn value as "last used".)
-     *
-     * @param moveValue the value to use for forwards/backwards
-     * @param squaredInputs if set, decreases the sensitivity at low speeds
-     */
-    public void setForwardValue(double moveValue, boolean squaredInput) {
-        arcadeDrive(moveValue, lastTurn, squaredInput);
-    }
-
-    /**
-     * Sets the forwards/backwards speed. The last used forwards value is used
-     * for rotation. ({@link RobotDriveModule#setForwardValue(double)}, {@link RobotDriveModule#setForwardValue(double, boolean)}
-     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
-     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
-     * forward value as "last used".)
-     *
-     * @param rotateValue the value to use for the rotate right/left
-     */
-    public void setRotateValue(double rotateValue) {
-        arcadeDrive(lastForward, rotateValue);
-    }
-
-    /**
-     * Sets the forwards/backwards speed. The last used forwards value is used
-     * for rotation. ({@link RobotDriveModule#setForwardValue(double)}, {@link RobotDriveModule#setForwardValue(double, boolean)}
-     * , {@link RobotDriveModule#arcadeDrive(double, double)} and
-     * {@link RobotDriveModule#arcadeDrive(double, double, boolean)} all record
-     * forward value as "last used".)
-     *
-     * @param rotateValue the value to use for the rotate right/left
-     * @param squaredInputs if set, decreases the sensitivity at low speeds
-     */
-    public void setRotateValue(double rotateValue, boolean squaredInput) {
-        arcadeDrive(lastForward, rotateValue, squaredInput);
     }
 
     /**
@@ -275,8 +230,8 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * @param gyroAngle the current angle reading from the gyro. Use this to
      * implement field-oriented controls.
      */
-    public void mecanumDrive_Cartesian(double x, double y, double rotation, double gyroAngle) {
-        drive.mecanumDrive_Cartesian(x, transform(y), rotation, gyroAngle);
+    public final void mecanumDrive_Cartesian(double x, double y, double rotation, double gyroAngle) {
+        drive.mecanumDrive_Cartesian(x, function.apply(y), rotation, gyroAngle);
     }
 
     /**
@@ -292,8 +247,8 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * @param rotation the rate of rotation for the robot that is completely
      * independent of the magnitude or direction. [-1.0..1.0]
      */
-    public void mecanumDrive_Polar(double magnitude, double direction, double rotation) {
-        drive.mecanumDrive_Polar(transform(magnitude), direction, rotation);
+    public final void mecanumDrive_Polar(double magnitude, double direction, double rotation) {
+        drive.mecanumDrive_Polar(function.apply(magnitude), direction, rotation);
     }
 
     /**
@@ -302,49 +257,14 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      * @param leftOutput the speed to send to the left side of the robot.
      * @param rightOutput the speed to send to the right side of the robot.
      */
-    public void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
+    public final void setLeftRightMotorOutputs(double leftOutput, double rightOutput) {
         if (reverseSpeed) {
             leftOutput = -leftOutput;
             rightOutput = -rightOutput;
         }
-        lastLeft = transform(leftOutput);
-        lastRight = transform(rightOutput);
+        leftOutput = function.apply(leftOutput);
+        rightOutput = function.apply(rightOutput);
         drive.setLeftRightMotorOutputs(leftOutput, rightOutput);
-    }
-
-    /**
-     * Individually sets the left motors. Will set right side to 0 unless
-     * {@link ForwardingRobotDrive#setRightMotorOutput(double)} or
-     * {@link ForwardingRobotDrive#setLeftRightMotorOutputs(double, double)} is
-     * called, in which case it will set the right speed to the last right input
-     * given.
-     *
-     * @param leftOutput speed to set left side
-     */
-    public void setLeftMotorOutput(double leftOutput) {
-        setLeftRightMotorOutputs(leftOutput, lastRight);
-    }
-
-    /**
-     * Individually sets the right motors. Will set left side to 0 unless
-     * {@link ForwardingRobotDrive#setLeftMotorOutput(double)} or
-     * {@link ForwardingRobotDrive#setLeftRightMotorOutputs(double, double)} is
-     * called, in which case it will set the left speed to the last left input
-     * given.
-     *
-     * @param rightOutput speed to set right side
-     */
-    public void setRightMotorOutput(double rightOutput) {
-        setLeftRightMotorOutputs(lastLeft, rightOutput);
-    }
-
-    /**
-     * Adds a function to be applied to speed in all situations.
-     *
-     * @param function function to apply
-     */
-    public void addFunction(Function function) {
-        speedFunctions.add(function);
     }
 
     /**
@@ -363,7 +283,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      *
      * @param timeout the timeout value in seconds.
      */
-    public void setExpiration(double timeout) {
+    public final void setExpiration(double timeout) {
         drive.setExpiration(timeout);
     }
 
@@ -372,7 +292,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      *
      * @return the timeout value in seconds.
      */
-    public double getExpiration() {
+    public final double getExpiration() {
         return drive.getExpiration();
     }
 
@@ -382,7 +302,7 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      *
      * @return true if motor safety is enforced for this device
      */
-    public boolean isSafetyEnabled() {
+    public final boolean isSafetyEnabled() {
         return drive.isSafetyEnabled();
     }
 
@@ -392,63 +312,34 @@ class ForwardingRobotDrive implements edu.first.module.driving.RobotDrive {
      *
      * @param enabled true if motor safety is enforced for this object
      */
-    public void setSafetyEnabled(boolean enabled) {
+    public final void setSafetyEnabled(boolean enabled) {
         drive.setSafetyEnabled(enabled);
     }
 
     /**
      * Stops all motors that are part of the robot drive.
      */
-    public void stopMotors() {
+    public final void stopMotors() {
         drive.stopMotor();
     }
 
-    /**
-     * Returns a PID object that drives the drivetrain.
-     *
-     * @param minSpeed minimum possible speed
-     * @param maxSpeed maximum possible speed
-     * @return pid output for driving
-     */
-    public PIDOutput pidForward(final double minSpeed, final double maxSpeed) {
+    public final PIDOutput getForwards() {
         return new PIDOutput() {
             public void pidWrite(double output) {
-                if (Math.abs(output) < minSpeed && output != 0) {
-                    output = output < 0 ? -minSpeed : minSpeed;
-                } else if (Math.abs(output) > maxSpeed && output != 0) {
-                    output = output < 0 ? -maxSpeed : maxSpeed;
-                }
-                setForwardValue(output);
+                arcadeDrive(output, 0);
             }
         };
     }
 
-    /**
-     * Returns a PID object that turns the drivetrain.
-     *
-     * @param minSpeed minimum possible turn
-     * @param maxSpeed maximum possible turn
-     * @return pid output for turning
-     */
-    public PIDOutput pidTurn(final double minSpeed, final double maxSpeed) {
+    public final PIDOutput getTurning() {
         return new PIDOutput() {
             public void pidWrite(double output) {
-                if (Math.abs(output) < minSpeed && output != 0) {
-                    output = output < 0 ? -minSpeed : minSpeed;
-                } else if (Math.abs(output) > maxSpeed && output != 0) {
-                    output = output < 0 ? -maxSpeed : maxSpeed;
-                }
-                setRotateValue(output);
+                arcadeDrive(0, output);
             }
         };
     }
 
-    private double transform(double original) {
-        if (original != 0) {
-            for (int x = 0; x < speedFunctions.size(); x++) {
-                original = ((Function) speedFunctions.get(x)).F(original);
-            }
-        }
-        return original;
+    public void set(double value) {
+        arcadeDrive(value, 0);
     }
 }

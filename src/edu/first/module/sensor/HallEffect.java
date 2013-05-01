@@ -1,11 +1,13 @@
 package edu.first.module.sensor;
 
+import edu.first.identifiers.ReturnableNumber;
+
 /**
  * The class for interacting with hall effect.
  * 
  * @author Team 4334
  */
-public interface HallEffect {
+public interface HallEffect extends ReturnableNumber {
 
     /**
      * Returns the current timer value.

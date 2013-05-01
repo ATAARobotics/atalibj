@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
  *
  * @author Team 4334
  */
-public final class DigitalLimitSwitchModule extends ForwardingDigitalLimitSwitch implements Module.DisableableModule {
+public class DigitalLimitSwitchModule extends ForwardingDigitalLimitSwitch implements Module.DisableableModule {
 
     private boolean enabled;
 
@@ -62,7 +62,7 @@ public final class DigitalLimitSwitchModule extends ForwardingDigitalLimitSwitch
      *
      * @return if the switch is sending a signal
      */
-    public boolean isPushed() {
+    public final boolean isPushed() {
         return isEnabled() ? super.isPushed() : false;
     }
 }
@@ -96,7 +96,7 @@ class ForwardingDigitalLimitSwitch implements DigitalLimitSwitch {
      *
      * @return composition object under this one
      */
-    protected DigitalInput getSwitch() {
+    protected final DigitalInput getSwitch() {
         return button;
     }
 
@@ -108,5 +108,9 @@ class ForwardingDigitalLimitSwitch implements DigitalLimitSwitch {
      */
     public boolean isPushed() {
         return button.get();
+    }
+
+    public boolean get() {
+        return isPushed();
     }
 }

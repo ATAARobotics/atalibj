@@ -25,10 +25,10 @@ public final class PortMapFile {
 
     private PortMapFile() {
         long start = System.currentTimeMillis();
-        while(Preferences.getInstance().getKeys().size() < 1) {
+        while (Preferences.getInstance().getKeys().size() < 1) {
             System.out.println("Waiting for preferences...");
             Timer.delay(0.02);
-            if(System.currentTimeMillis() - start > 10000) {
+            if (System.currentTimeMillis() - start > 10000) {
                 Logger.log(Logger.Urgency.USERMESSAGE, "Preferences took too long to initialize -  using default ports!!!");
                 ports = new Port[0];
                 return;
@@ -47,6 +47,8 @@ public final class PortMapFile {
             ex.printStackTrace();
             Logger.log(Logger.Urgency.USERMESSAGE, "PortMap not found");
         }
+
+        Logger.log(Logger.Urgency.LOG, "Done loading port map");
     }
 
     /**
@@ -81,6 +83,7 @@ public final class PortMapFile {
     public int getPort(String name, int def) {
         for (int x = 0; x < ports.length; x++) {
             if (ports[x].name.equals(name)) {
+                Logger.log(Logger.Urgency.LOG, "Port " + name + " found - " + ports[x].port);
                 return ports[x].port;
             }
         }

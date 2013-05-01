@@ -14,35 +14,57 @@ import java.util.TimerTask;
  *
  * @author Joel Gallant
  */
-public final class BangBangModule implements Module.DisableableModule, BangBangController {
+public class BangBangModule implements Module.DisableableModule, BangBangController {
 
     private boolean enabled;
     private boolean coast;
     private boolean reversed = false;
     private double setpoint = 0;
     private double maxSpeed = 1;
-    private double pastSetpoint = 0;
+    private double pastSetpoint;
     private double defaultSpeed;
     private final PIDSource source;
     private final PIDOutput output;
     private Timer timer = new Timer();
     private final TimerTask task = new BangBangTask();
+    private final Object lock = new Object();
 
     private class BangBangTask extends TimerTask {
 
         public void run() {
-            if (enabled) {
-                if (coast) {
-                    output.pidWrite(0);
+            boolean e;
+            boolean c;
+            boolean r;
+            double i;
+            double m;
+            double d;
+            double s;
+            PIDOutput o;
+
+            // Get snapshot of values.
+            synchronized (lock) {
+                e = enabled;
+                c = coast;
+                r = reversed;
+                i = source.pidGet();
+                m = maxSpeed;
+                d = defaultSpeed;
+                s = setpoint;
+                o = output;
+            }
+
+            if (e) {
+                if (c) {
+                    o.pidWrite(0);
                 } else {
-                    if (source.pidGet() >= setpoint) {
-                        if (setpoint == 0) {
-                            output.pidWrite(0);
+                    if (i >= s) {
+                        if (s == 0) {
+                            o.pidWrite(0);
                         } else {
-                            output.pidWrite(defaultSpeed * (reversed ? -1 : 1));
+                            o.pidWrite(d * (r ? -1 : 1));
                         }
                     } else {
-                        output.pidWrite(maxSpeed * (reversed ? -1 : 1));
+                        o.pidWrite(m * (r ? -1 : 1));
                     }
                 }
             }
@@ -82,14 +104,7 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      * @param reverse if output should be reversed
      */
     public BangBangModule(PIDSource source, PIDOutput output, double defaultSpeed, boolean reverse) {
-        if (source == null || output == null) {
-            throw new NullPointerException();
-        }
-        this.source = source;
-        this.output = output;
-        this.defaultSpeed = defaultSpeed;
-        this.reversed = reverse;
-        timer.scheduleAtFixedRate(task, 0L, 20L);
+        this(source, output, defaultSpeed, 0, reverse);
     }
 
     /**
@@ -111,7 +126,7 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
         this.defaultSpeed = defaultSpeed;
         this.pastSetpoint = pastSetpoint;
         this.reversed = reverse;
-        timer.scheduleAtFixedRate(task, 0L, 20L);
+        timer.scheduleAtFixedRate(task, 0L, 10L);
     }
 
     /**
@@ -121,17 +136,19 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @return if module is disabled successfully
      */
-    public synchronized boolean disable() {
-        boolean d = true;
-        if (source instanceof DisableableModule) {
-            d = d && ((DisableableModule) source).disable();
+    public final boolean disable() {
+        synchronized (lock) {
+            boolean d = true;
+            if (source instanceof DisableableModule) {
+                d = d && ((DisableableModule) source).disable();
+            }
+            if (output instanceof DisableableModule) {
+                d = d && ((DisableableModule) output).disable();
+            } else if (output instanceof SpeedControllerModule) {
+                ((SpeedControllerModule) output).disable();
+            }
+            return !(enabled = !d);
         }
-        if (output instanceof DisableableModule) {
-            d = d && ((DisableableModule) output).disable();
-        } else if (output instanceof SpeedControllerModule) {
-            ((SpeedControllerModule) output).disable();
-        }
-        return !(enabled = !d);
     }
 
     /**
@@ -141,15 +158,17 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @return if module is enabled successfully
      */
-    public synchronized boolean enable() {
-        boolean e = true;
-        if (source instanceof Module) {
-            e = e && ((Module) source).enable();
+    public final boolean enable() {
+        synchronized (lock) {
+            boolean e = true;
+            if (source instanceof Module) {
+                e = e && ((Module) source).enable();
+            }
+            if (output instanceof Module) {
+                e = e && ((Module) output).enable();
+            }
+            return (enabled = e);
         }
-        if (output instanceof Module) {
-            e = e && ((Module) output).enable();
-        }
-        return (enabled = e);
     }
 
     /**
@@ -159,8 +178,10 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @return if module is enabled
      */
-    public synchronized boolean isEnabled() {
-        return enabled;
+    public final boolean isEnabled() {
+        synchronized (lock) {
+            return enabled;
+        }
     }
 
     /**
@@ -168,8 +189,10 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @param setpoint position / speed to stop going at
      */
-    public synchronized void setSetpoint(double setpoint) {
-        this.setpoint = setpoint;
+    public final void setSetpoint(double setpoint) {
+        synchronized (lock) {
+            this.setpoint = setpoint;
+        }
     }
 
     /**
@@ -177,8 +200,10 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @return the current setpoint
      */
-    public synchronized double getSetpoint() {
-        return setpoint;
+    public final double getSetpoint() {
+        synchronized (lock) {
+            return setpoint;
+        }
     }
 
     /**
@@ -188,8 +213,10 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @return if input is higher than setpoint
      */
-    public synchronized boolean pastSetpoint() {
-        return source.pidGet() > (setpoint - pastSetpoint);
+    public final boolean pastSetpoint() {
+        synchronized (lock) {
+            return source.pidGet() > (setpoint - pastSetpoint);
+        }
     }
 
     /**
@@ -198,8 +225,10 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @param pastSetpoint how close input should be
      */
-    public synchronized void setPastSetpoint(double pastSetpoint) {
-        this.pastSetpoint = pastSetpoint;
+    public final void setPastSetpoint(double pastSetpoint) {
+        synchronized (lock) {
+            this.pastSetpoint = pastSetpoint;
+        }
     }
 
     /**
@@ -208,7 +237,7 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @return input from given {@link PIDSource}
      */
-    public double getInput() {
+    public final double getInput() {
         return source.pidGet();
     }
 
@@ -219,11 +248,13 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @param maxSpeed maximum speed of output
      */
-    public synchronized void setMaxSpeed(double maxSpeed) {
-        if (this.maxSpeed < 0) {
-            this.maxSpeed = -Math.abs(maxSpeed);
-        } else {
-            this.maxSpeed = Math.abs(maxSpeed);
+    public final void setMaxSpeed(double maxSpeed) {
+        synchronized (lock) {
+            if (this.maxSpeed < 0) {
+                this.maxSpeed = -Math.abs(maxSpeed);
+            } else {
+                this.maxSpeed = Math.abs(maxSpeed);
+            }
         }
     }
 
@@ -234,8 +265,10 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @param defaultSpeed speed to bring near setpoint
      */
-    public synchronized void setDefaultSpeed(double defaultSpeed) {
-        this.defaultSpeed = Math.abs(defaultSpeed);
+    public final void setDefaultSpeed(double defaultSpeed) {
+        synchronized (lock) {
+            this.defaultSpeed = Math.abs(defaultSpeed);
+        }
     }
 
     /**
@@ -246,15 +279,23 @@ public final class BangBangModule implements Module.DisableableModule, BangBangC
      *
      * @param coast if output should be zero
      */
-    public synchronized void setCoast(boolean coast) {
-        this.coast = coast;
+    public final void setCoast(boolean coast) {
+        synchronized (lock) {
+            this.coast = coast;
+        }
     }
 
     /**
      * Reverses the direction of the output. This is useful because bang bang
      * only goes in one direction.
      */
-    public synchronized void reverse() {
-        reversed = !reversed;
+    public final void reverse() {
+        synchronized (lock) {
+            reversed = !reversed;
+        }
+    }
+
+    public final void set(double value) {
+        setSetpoint(value);
     }
 }

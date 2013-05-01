@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.ADXL345_I2C;
  */
 public class AccelerometerModule extends ForwardingAccelerometer implements Module.DisableableModule {
 
+    /**
+     * The default axes to measure with PID.
+     */
+    public static final ADXL345_I2C.Axes DEFAULT_AXES = ADXL345_I2C.Axes.kX;
     private boolean enabled;
 
     /**
@@ -18,10 +22,9 @@ public class AccelerometerModule extends ForwardingAccelerometer implements Modu
      * object to control methods in this class.
      *
      * @param accelerometer sensor to use
-     * @param filterLength how much to filter the signal (1 = none)
      */
-    public AccelerometerModule(ADXL345_I2C accelerometer, int filterLength) {
-        super(accelerometer, filterLength);
+    public AccelerometerModule(ADXL345_I2C accelerometer) {
+        super(accelerometer);
     }
 
     /**
@@ -58,10 +61,10 @@ public class AccelerometerModule extends ForwardingAccelerometer implements Modu
     /**
      * Returns the acceleration in G's. Returns 0 if it is disabled.
      *
-     * @param axes 
+     * @param axes
      * @return acceleration measured by sensor
      */
-    public double getAcceleration(ADXL345_I2C.Axes axes) {
+    public final double getAcceleration(ADXL345_I2C.Axes axes) {
         return isEnabled() ? super.getAcceleration(axes) : 0;
     }
 }
@@ -69,9 +72,6 @@ public class AccelerometerModule extends ForwardingAccelerometer implements Modu
 class ForwardingAccelerometer implements Accelerometer {
 
     private final edu.wpi.first.wpilibj.ADXL345_I2C accelerometer;
-    private final int filterLength;
-    private final double[] sum;
-    private int current = 0;
 
     /**
      * Constructs the object by using composition, using the given accelerometer
@@ -79,10 +79,12 @@ class ForwardingAccelerometer implements Accelerometer {
      *
      * @param button actual underlying object used
      */
-    ForwardingAccelerometer(ADXL345_I2C accelerometer, int filterLength) {
+    ForwardingAccelerometer(ADXL345_I2C accelerometer) {
         this.accelerometer = accelerometer;
-        this.filterLength = filterLength;
-        this.sum = new double[filterLength];
+    }
+
+    protected final ADXL345_I2C getAccelerometer() {
+        return accelerometer;
     }
 
     /**
@@ -91,19 +93,7 @@ class ForwardingAccelerometer implements Accelerometer {
      * @return acceleration measured by sensor
      */
     public double getAcceleration(ADXL345_I2C.Axes axes) {
-        if (current >= sum.length - 1) {
-            current = 0;
-        }
-        sum[++current] = accelerometer.getAcceleration(axes);
-        double s = 0;
-        double l = 0;
-        for (int x = 0; x < sum.length; x++) {
-            if (sum[x] != 0) {
-                s += sum[x];
-                l++;
-            }
-        }
-        return s / l;
+        return accelerometer.getAcceleration(axes);
     }
 
     /**
@@ -112,6 +102,10 @@ class ForwardingAccelerometer implements Accelerometer {
      * @return acceleration
      */
     public double pidGet() {
-        return accelerometer.getAcceleration(ADXL345_I2C.Axes.kX);
+        return get();
+    }
+
+    public double get() {
+        return getAcceleration(AccelerometerModule.DEFAULT_AXES);
     }
 }
