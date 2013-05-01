@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 public final class Loader extends Subsystem {
 
     private static final boolean coastShots = true;
+<<<<<<< HEAD
     private static final long delay = 20L;
     private final DualActionSolenoidModule solenoid;
     private final BangBangModule shooterWheel;
@@ -18,6 +19,11 @@ public final class Loader extends Subsystem {
     private final Object loaderChanges = new Object();
     private boolean fired;
     private boolean in, out;
+=======
+    private final DualActionSolenoidModule solenoid;
+    private final BangBangModule shooterWheel;
+    private final PotentiometerModule potentiometer;
+>>>>>>> master
 
     public Loader(DualActionSolenoidModule solenoid, BangBangModule shooterWheel,
             PotentiometerModule potentiometer) {
@@ -28,6 +34,7 @@ public final class Loader extends Subsystem {
     }
 
     public void start() {
+<<<<<<< HEAD
         startAtFixedDelay(delay);
     }
 
@@ -101,6 +108,42 @@ public final class Loader extends Subsystem {
     public void setOut() {
         out = true;
         update();
+=======
+    }
+
+    public void run() {
+    }
+
+    public void fire() {
+        if (!solenoid.get()) {
+            solenoid.setOut();
+            Timer.delay(0.5);
+        }
+        if (coastShots) {
+            shooterWheel.setCoast(true);
+        }
+
+        Logger.log(Logger.Urgency.USERMESSAGE, "Shooting");
+        Logger.log(Logger.Urgency.LOG, "Pot Before Shot - " + potentiometer.getPosition());
+        Logger.log(Logger.Urgency.LOG, "Speed Before Shot - " + shooterWheel.getInput());
+
+        solenoid.setIn();
+        Timer.delay(0.5);
+        if (coastShots) {
+            shooterWheel.setCoast(false);
+        }
+        solenoid.setOut();
+
+        Logger.log(Logger.Urgency.LOG, "Pot After Shot - " + potentiometer.getPosition());
+    }
+
+    public void setIn() {
+        solenoid.setIn();
+    }
+
+    public void setOut() {
+        solenoid.setOut();
+>>>>>>> master
     }
 
     public boolean isOut() {

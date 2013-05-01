@@ -29,7 +29,12 @@ public final class SmartDashboardSender extends Subsystem {
             DigitalLimitSwitchModule psi120, BitchBar bitchBar, AlignmentSystem alignmentSystem, 
             Winch winch, GearShifters gearShifters, WindshieldWiper windshieldWiper,
             EncoderModule encoder, GyroModule gyro, TransferRateCalculator rateCalculator) {
+<<<<<<< HEAD
         super(new Module[] {shooterWheel, psi60, psi120, bitchBar, alignmentSystem, winch, gearShifters});
+=======
+        super(new Module[] {shooterWheel, psi60, psi120, bitchBar, alignmentSystem, winch, 
+            gearShifters, windshieldWiper, encoder, gyro});
+>>>>>>> master
         this.shooterWheel = shooterWheel;
         this.psi60 = psi60;
         this.psi120 = psi120;

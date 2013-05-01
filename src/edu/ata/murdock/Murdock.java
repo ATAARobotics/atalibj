@@ -6,7 +6,10 @@ import edu.ata.binds.SetWiperSpeed;
 import edu.ata.commands.AdjustRPM;
 import edu.ata.commands.AutoShoot;
 import edu.ata.commands.SetAlignment;
+<<<<<<< HEAD
 import edu.ata.commands.SetBitchBar;
+=======
+>>>>>>> master
 import edu.ata.commands.SetGear;
 import edu.ata.commands.SetLoader;
 import edu.ata.commands.SetShooter;
@@ -149,7 +152,11 @@ public final class Murdock {
     private final Driving driving = new Driving(drivetrain, joystick1, joystick2);
     private final GearShifters gearShifters = new GearShifters(_gearShifters);
     private final Loader loader = new Loader(_loader, shooterBangBang, potentiometer);
+<<<<<<< HEAD
     private final MovementSystem movementSystem = new MovementSystem(drive, encoder, gyro);
+=======
+    private final MovementSystem movementSystem = new MovementSystem(drive, encoder);
+>>>>>>> master
     private final ShooterWheel shooterWheel = new ShooterWheel(shooterBangBang);
     private final Winch winch = new Winch(winchMotor, potentiometer);
     private final WindshieldWiper windshieldWiper = new WindshieldWiper(windshieldWiperMotor);
@@ -200,8 +207,14 @@ public final class Murdock {
 
         Zero.create();
         // Zero moved
+<<<<<<< HEAD
         if (Math.abs(Zero.get() - _potentiometer.getVoltage()) < 0.5) {
             Zero.set(_potentiometer.getVoltage());
+=======
+        if (Math.abs(Zero.get() - _potentiometer.getVoltage()) < 0.2) {
+            Zero.set(_potentiometer.getVoltage());
+            Logger.log(Logger.Urgency.USERMESSAGE, "Winch is using default zero!");
+>>>>>>> master
         }
         winch.setZero(Zero.get());
 
@@ -281,6 +294,7 @@ public final class Murdock {
 
     private void doTeleopBinds() {
         BINDS.removeAllBinds();
+<<<<<<< HEAD
 
         BINDS.addWhenPressed(joystick1.getLeftBumper(),
                 new SetGear(gearShifters, SetGear.FIRST, false));
@@ -374,6 +388,100 @@ public final class Murdock {
                 new SetShooter(shooterWheel, 0, false));
         BINDS.addWhenPressed(joystick2.getBackButton(),
                 new SetLoader(loader, SetLoader.IN, false));
+=======
+>>>>>>> master
+
+        BINDS.addWhenPressed(joystick1.getLeftBumper(),
+                new SetGear(gearShifters, SetGear.FIRST, false));
+        BINDS.addWhenPressed(joystick1.getRightBumper(),
+                new SetGear(gearShifters, SetGear.SECOND, false));
+
+<<<<<<< HEAD
+    public final class NormalMode extends RobotMode {
+=======
+        BINDS.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, triggerShotThreashold),
+                new AutoShoot(shooterWheel, loader, true));
+        BINDS.addWhenPressed(joystick1.getAxisAsButton(XboxController.TRIGGERS, -triggerShotThreashold),
+                new SetLoader(loader, SetLoader.FIRE, true));
+
+        BINDS.addWhenPressed(joystick1.getAButton(),
+                new SetAlignment(alignmentSystem, SetAlignment.SWITCH, false));
+>>>>>>> master
+
+        BINDS.addWhenPressed(joystick1.getBackButton(),
+                new SetWinch(winch, SetWinch.POSITION, 0, false));
+
+<<<<<<< HEAD
+        public void teleopInit() {
+
+            // End any autonomous
+            movementSystem.disable();
+
+=======
+        BINDS.addWhenPressed(joystick1.getStartButton(),
+                new SetWinch(winch, SetWinch.ZERO, potentiometer, false));
+        BINDS.addWhenPressed(joystick1.getStartButton(), 
+                new SetNumberCommand(Zero, potentiometer));
+
+        BINDS.addAxis(joystick1.getDirectionalPad(),
+                new SetWiperSpeed(windshieldWiper), new Function.ProductFunction(wiperSpeed));
+
+        // JOYSTICK 2 //
+
+        BINDS.addWhenPressed(joystick2.getLeftBumper(),
+                new AdjustRPM(shooterWheel, -rpmAdjustment, false));
+        BINDS.addWhenPressed(joystick2.getLeftBumper(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
+
+        BINDS.addWhenPressed(joystick2.getRightBumper(),
+                new AdjustRPM(shooterWheel, +rpmAdjustment, false));
+        BINDS.addWhenPressed(joystick2.getRightBumper(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
+
+        BINDS.addAxis(joystick2.getTriggers(),
+                new SetWinchSpeed(winch), new Function() {
+            public double apply(double start) {
+                return start > 0 ? (start * start) : -(start * start);
+            }
+        });
+
+        BINDS.addWhenPressed(joystick2.getAButton(),
+                new SetWinch(winch, SetWinch.POSITION, ASetpoint, false));
+        BINDS.addWhenPressed(joystick2.getAButton(),
+                new SetShooter(shooterWheel, ARPM, false));
+        BINDS.addWhenPressed(joystick2.getAButton(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
+
+        BINDS.addWhenPressed(joystick2.getBButton(),
+                new SetWinch(winch, SetWinch.POSITION, BSetpoint, false));
+        BINDS.addWhenPressed(joystick2.getBButton(),
+                new SetShooter(shooterWheel, BRPM, false));
+        BINDS.addWhenPressed(joystick2.getBButton(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
+
+        BINDS.addWhenPressed(joystick2.getXButton(),
+                new SetWinch(winch, SetWinch.POSITION, XSetpoint, false));
+        BINDS.addWhenPressed(joystick2.getXButton(),
+                new SetShooter(shooterWheel, XRPM, false));
+        BINDS.addWhenPressed(joystick2.getXButton(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
+
+        BINDS.addWhenPressed(joystick2.getYButton(),
+                new SetWinch(winch, SetWinch.POSITION, YSetpoint, false));
+        BINDS.addWhenPressed(joystick2.getYButton(),
+                new SetShooter(shooterWheel, YRPM, false));
+        BINDS.addWhenPressed(joystick2.getYButton(),
+                new SetNumberCommand(ShooterRPM, shooterWheel));
+
+        BINDS.addWhenPressed(joystick2.getStartButton(),
+                new SetShooter(shooterWheel, ShooterRPM, false));
+        BINDS.addWhenPressed(joystick2.getStartButton(),
+                new SetLoader(loader, SetLoader.OUT, false));
+
+        BINDS.addWhenPressed(joystick2.getBackButton(),
+                new SetShooter(shooterWheel, 0, false));
+        BINDS.addWhenPressed(joystick2.getBackButton(),
+                new SetLoader(loader, SetLoader.IN, false));
 
         Logger.log(Logger.Urgency.USERMESSAGE, "Teleop Binds Ready");
     }
@@ -389,6 +497,7 @@ public final class Murdock {
             // End any autonomous
             movementSystem.disable();
 
+>>>>>>> master
             joystick1.enable();
             joystick2.enable();
             alignmentSystem.enable();

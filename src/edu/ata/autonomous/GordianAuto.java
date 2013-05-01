@@ -13,7 +13,10 @@ import edu.ata.commands.SetSmartDashboard;
 import edu.ata.commands.SetWinch;
 import edu.ata.commands.SetWiper;
 import edu.ata.commands.TankDrive;
+<<<<<<< HEAD
 import edu.ata.commands.TurnToAngle;
+=======
+>>>>>>> master
 import edu.ata.subsystems.AlignmentSystem;
 import edu.ata.subsystems.BitchBar;
 import edu.ata.subsystems.Compressor;
@@ -35,6 +38,7 @@ import edu.gordian.method.NumberReturningMethod;
 import edu.gordian.method.RunningMethod;
 import edu.gordian.variable.BooleanInterface;
 import edu.gordian.variable.NumberInterface;
+import edu.wpi.first.wpilibj.Timer;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -73,6 +77,14 @@ public final class GordianAuto {
                 System.out.println(args[0].getValue());
             }
         },
+<<<<<<< HEAD
+=======
+        new RunningMethod("delay") {
+            public void run(Variable[] args) {
+                Timer.delay(((NumberInterface) args[0]).doubleValue());
+            }
+        },
+>>>>>>> master
         new BooleanReturningMethod("isEnabled") {
             public boolean getBoolean() {
                 return DriverstationInfo.isEnabled();
@@ -111,6 +123,7 @@ public final class GordianAuto {
         new NumberReturningMethod("gear") {
             public double getDouble() {
                 return gearShifters.gear();
+<<<<<<< HEAD
             }
         },
         new BooleanReturningMethod("isFirstGear") {
@@ -133,6 +146,30 @@ public final class GordianAuto {
                 return shooterWheel.getRPM();
             }
         },
+=======
+            }
+        },
+        new BooleanReturningMethod("isFirstGear") {
+            public boolean getBoolean() {
+                return gearShifters.isFirstGear();
+            }
+        },
+        new BooleanReturningMethod("isSecondGear") {
+            public boolean getBoolean() {
+                return gearShifters.isSecondGear();
+            }
+        },
+        new BooleanReturningMethod("isLoaderOut") {
+            public boolean getBoolean() {
+                return loader.isOut();
+            }
+        },
+        new NumberReturningMethod("getShooterRPM") {
+            public double getDouble() {
+                return shooterWheel.getRPM();
+            }
+        },
+>>>>>>> master
         new NumberReturningMethod("getShooterSetpointRPM") {
             public double getDouble() {
                 return shooterWheel.getSetpointRPM();
@@ -141,7 +178,11 @@ public final class GordianAuto {
         new BooleanReturningMethod("shooterPastSetpoint") {
             public boolean getBoolean() {
                 return shooterWheel.isPastSetpoint();
+<<<<<<< HEAD
             }
+=======
+            };
+>>>>>>> master
         },
         new NumberReturningMethod("winchPosition") {
             public double getDouble() {
@@ -161,6 +202,7 @@ public final class GordianAuto {
         new RunningMethod("alignIn") {
             public void run(Variable[] args) {
                 new SetAlignment(alignmentSystem, SetAlignment.IN, false).run();
+<<<<<<< HEAD
             }
         },
         new RunningMethod("alignOut") {
@@ -246,6 +288,88 @@ public final class GordianAuto {
         new RunningMethod("turnAngle") {
             public void run(Variable[] args) {
                 new TurnToAngle(movementSystem, ((NumberInterface) args[0]).doubleValue(), false).run();
+=======
+            }
+        },
+        new RunningMethod("alignOut") {
+            public void run(Variable[] args) {
+                new SetAlignment(alignmentSystem, SetAlignment.OUT, false).run();
+            }
+        },
+        new RunningMethod("alignLeft") {
+            public void run(Variable[] args) {
+                new SetAlignment(alignmentSystem, SetAlignment.LEFT, false).run();
+            }
+        },
+        new RunningMethod("alignRight") {
+            public void run(Variable[] args) {
+                new SetAlignment(alignmentSystem, SetAlignment.RIGHT, false).run();
+            }
+        },
+        new RunningMethod("bitchBarIn") {
+            public void run(Variable[] args) {
+                new SetBitchBar(bitchBar, SetBitchBar.IN, false).run();
+            }
+        },
+        new RunningMethod("bitchBarOut") {
+            public void run(Variable[] args) {
+                new SetBitchBar(bitchBar, SetBitchBar.OUT, false).run();
+            }
+        },
+        new RunningMethod("switchBitchBar") {
+            public void run(Variable[] args) {
+                new SetBitchBar(bitchBar, SetBitchBar.SWITCH, false).run();
+            }
+        },
+        new RunningMethod("compressorOn") {
+            public void run(Variable[] args) {
+                new SetCompressor(compressor, SetCompressor.ON, false).run();
+            }
+        },
+        new RunningMethod("compressorOff") {
+            public void run(Variable[] args) {
+                new SetCompressor(compressor, SetCompressor.OFF, false).run();
+            }
+        },
+        new RunningMethod("switchCompressor") {
+            public void run(Variable[] args) {
+                new SetCompressor(compressor, SetCompressor.SWITCH, false).run();
+            }
+        },
+        new RunningMethod("setFirstGear") {
+            public void run(Variable[] args) {
+                new SetGear(gearShifters, SetGear.FIRST, false).run();
+            }
+        },
+        new RunningMethod("setSecondGear") {
+            public void run(Variable[] args) {
+                new SetGear(gearShifters, SetGear.SECOND, false).run();
+            }
+        },
+        new RunningMethod("switchGear") {
+            public void run(Variable[] args) {
+                new SetGear(gearShifters, SetGear.SWITCH, false).run();
+            }
+        },
+        new RunningMethod("setLoaderIn") {
+            public void run(Variable[] args) {
+                new SetLoader(loader, SetLoader.IN, false).run();
+            }
+        },
+        new RunningMethod("setLoaderOut") {
+            public void run(Variable[] args) {
+                new SetLoader(loader, SetLoader.OUT, false).run();
+            }
+        },
+        new RunningMethod("fireLoader") {
+            public void run(Variable[] args) {
+                new SetLoader(loader, SetLoader.FIRE, false).run();
+            }
+        },
+        new RunningMethod("driveDistance") {
+            public void run(Variable[] args) {
+                new DriveDistance(movementSystem, ((NumberInterface) args[0]).doubleValue(), false).run();
+>>>>>>> master
             }
         },
         new RunningMethod("setShooter") {
