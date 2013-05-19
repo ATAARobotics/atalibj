@@ -47,7 +47,7 @@ public final class MathUtils {
      * @return limited value of same sign
      */
     public static double limit(double val, double limit) {
-        return (java.lang.Math.abs(val) < limit) ? val : (val < 0 ? -limit : limit);
+        return (abs(val) < abs(limit)) ? val : (val < 0 ? -limit : limit);
     }
 
     /**

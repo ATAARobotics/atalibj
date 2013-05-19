@@ -30,7 +30,7 @@ package edu.first.util;
  * Enum-type methods are available through the {@link Enum} instance.
  *
  * @since May 12 13
- * @author joel
+ * @author Joel Gallant
  */
 public class Enum {
 

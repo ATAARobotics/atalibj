@@ -297,4 +297,16 @@ public class Collections {
             throw new IllegalStateException();
         }
     }
+
+    /**
+     * Returns the array as a list with every element in the array in the list.
+     *
+     * @param a array with elements to put in the list
+     * @return list with the elements of the array
+     */
+    public static List asList(Object[] a) {
+        ArrayList list = new ArrayList();
+        addAll(list, a);
+        return list;
+    }
 }
