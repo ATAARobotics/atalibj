@@ -1,4 +1,4 @@
-## ATAlibj
+# ATAlibj
 
 Team 4334's main Java libraries used for FRC code based on the [wpilibj](http://firstforge.wpi.edu/sf/projects/wpilib).
 This repository stores all ATAlibj code and required material.
@@ -23,17 +23,17 @@ Generally speaking, atalibj is easy to understand and the structure is self-epla
 To make changes to your version of atalibj, the repository is a Netbeans library project, making it openable from netbeans by itself. Feel free to make changes, but if they could be useful for other teams, please make a pull request with your changes!
 
 ## Packages
-# edu.first.main
+  edu.first.main
 
-The package with main functions that apply accross the code.
+    The package with main functions that apply accross the code.
 
-# edu.first.robot
+  edu.first.robot
 
-The package with Robot implementations for various uses.
+    The package with Robot implementations for various uses.
 
-# edu.first.util
+  edu.first.util
 
-Utility classes for all kinds of useful functions.
+    Utility classes for all kinds of useful functions.
 
 ## Licensing
 
