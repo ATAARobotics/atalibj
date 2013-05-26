@@ -1,7 +1,8 @@
 package edu.first.commands;
 
 import edu.first.command.Command;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import edu.first.util.list.ArrayList;
+import edu.first.util.Enum;
 
 /**
  * Command that encompasses multiple commands strung together. Runs commands
@@ -25,10 +26,8 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
  */
 public class CommandGroup implements Command {
 
-    private final Type CONCURRENT = new Type(Type.CONCURRENT),
-            SEQUENTIAL = new Type(Type.SEQUENTIAL);
-    private final List types = new List();
-    private final List commands = new List();
+    private final ArrayList types = new ArrayList();
+    private final ArrayList commands = new ArrayList();
 
     /**
      * Protected constructor to prevent instantiating from other classes.
@@ -44,7 +43,7 @@ public class CommandGroup implements Command {
      * @param command command to run by itself
      */
     protected final void addSequential(Command command) {
-        add(SEQUENTIAL, command);
+        add(Type.SEQUENTIAL, command);
     }
 
     /**
@@ -60,10 +59,10 @@ public class CommandGroup implements Command {
      * @param command command to run alongside other concurrent commands
      */
     protected final void addConcurrent(Command command) {
-        add(CONCURRENT, command);
+        add(Type.CONCURRENT, command);
     }
 
-    private void add(Type type, Command command) {
+    private void add(Type.Value type, Command command) {
         if (type == null || command == null) {
             throw new NullPointerException();
         }
@@ -80,14 +79,14 @@ public class CommandGroup implements Command {
      * {@link CommandGroup#addConcurrent(edu.ATA.command.Command) addConcurrent(Command)}.
      */
     public final void run() {
-        List concurrent = new List();
+        ArrayList concurrent = new ArrayList();
         for (int x = 0; x < commands.size(); x++) {
-            if (types.get(x).equals(CONCURRENT)) {
+            if (types.get(x).equals(Type.CONCURRENT)) {
                 concurrent.add(commands.get(x));
             } else {
                 if (!concurrent.isEmpty()) {
                     new ConcurrentCommandGroup(concurrent).run();
-                    concurrent = new List();
+                    concurrent = new ArrayList();
                 }
                 ((Command) commands.get(x)).run();
             }
@@ -97,23 +96,10 @@ public class CommandGroup implements Command {
         }
     }
 
-    private static class Type {
+    private static class Type extends Enum {
 
-        private static int CONCURRENT = 1, SEQUENTIAL = 2;
-        private int type;
-
-        public Type(int type) {
-            this.type = type;
-        }
-
-        public int hashCode() {
-            int hash = 7;
-            hash = 97 * hash + this.type;
-            return hash;
-        }
-
-        public boolean equals(Object obj) {
-            return (obj instanceof Type) ? (((Type) obj).type == type) : false;
-        }
+        private static final Type INSTANCE = new Type();
+        private static final Type.Value CONCURRENT = INSTANCE.generate("CONCURRENT");
+        private static final Type.Value SEQUENTIAL = INSTANCE.generate("SEQUENTIAL");
     }
 }

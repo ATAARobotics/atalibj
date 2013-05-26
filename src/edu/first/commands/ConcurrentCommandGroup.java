@@ -1,8 +1,8 @@
 package edu.first.commands;
 
 import edu.first.command.Command;
+import edu.first.util.list.ArrayList;
 import edu.first.util.log.Logging;
-import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
  * Basic command group that runs multiple commands in parallel. Each command is
@@ -31,12 +31,12 @@ public class ConcurrentCommandGroup implements Command {
 
     /**
      * Constructs the command group using an array of commands to be run at the
-     * same time. There is no limit on how many commands can be run. The list
+     * same time. There is no limit on how many commands can be run. The ArrayList
      * cannot be null, and cannot contain elements that are not commands.
      *
      * @param commands commands to run concurrently
      */
-    public ConcurrentCommandGroup(List commands) {
+    public ConcurrentCommandGroup(ArrayList commands) {
         if (commands == null) {
             throw new NullPointerException();
         }

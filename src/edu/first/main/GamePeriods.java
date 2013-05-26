@@ -5,16 +5,12 @@
  */
 package edu.first.main;
 
-import edu.first.robot.IterativeRobotAdapter;
 import edu.first.robot.RobotMode;
 import edu.first.robot.RobotModeSelector;
-import edu.first.robot.RobotModeSendableChooser;
 import edu.first.robot.SafeRobotMode;
 import edu.first.robot.SimpleRobotAdapter;
-import edu.first.util.TextFiles;
 import edu.first.util.log.Logging;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is called by the VM automatically for every game mode. It is meant
