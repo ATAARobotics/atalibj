@@ -8,7 +8,7 @@ atalibj is ultimately seeking to be a complete replacement for WPILibJ with more
 
 ## Using atalibj ##
 
-Using the library is simple, you'll simply need to create a project in your favorite IDE and add the atalibj source to the project's source. For most setups, this means copying our src folder into the src folder in your project. You can find documentation for the project [here](http://summer-of-first.github.io/atalibj/doc/). Good luck and happy coding!
+Using the library is simple, you'll simply need to create a project in your favorite IDE and add the atalibj source to the project's source. For most setups, this means copying our src folder into the src folder in your project. You can find documentation for the project [here](http://summer-of-first.github.io/atalibj/doc/). However, the most up-to-date documentation will always be best gotten by generating them yourself! Good luck and happy coding!
 
 ## Contributing ##
 
