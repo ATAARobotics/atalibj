@@ -5,6 +5,10 @@
 *.war
 *.ear
 
+# Netbeans Files #
+build/*
+nbproject/*
+
 *.pydevproject
 .project
 .metadata
