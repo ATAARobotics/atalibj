@@ -8,6 +8,8 @@
 # Netbeans Files #
 build/*
 nbproject/*
+build.properties
+build.xml
 
 *.pydevproject
 .project
