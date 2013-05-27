@@ -1,72 +1,85 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Atalibj by Summer-of-FIRST</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>atalibj by Summer-of-FIRST</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Atalibj</h1>
-        <p>ATA's abstract wpilibj libraries</p>
+    <div id="container">
+      <div class="inner">
 
-        <p class="view"><a href="https://github.com/Summer-of-FIRST/atalibj">View the Project on GitHub <small>Summer-of-FIRST/atalibj</small></a></p>
+        <header>
+          <h1>atalibj</h1>
+          <h2>A predictable Java library for the FIRST robotics competition.</h2>
+        </header>
 
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/Summer-of-FIRST/atalibj/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/Summer-of-FIRST/atalibj/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/Summer-of-FIRST/atalibj" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-        <ul>
-          <li><a href="https://github.com/Summer-of-FIRST/atalibj/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/Summer-of-FIRST/atalibj/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/Summer-of-FIRST/atalibj">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h2>ATAlibj</h2>
+        <hr>
 
-<p>Team 4334's main Java libraries used for FRC code based on the <a href="http://firstforge.wpi.edu/sf/projects/wpilib">wpilibj</a>.
-This repository stores all ATAlibj code and required material.</p>
+        <section id="main_content">
+          <h1>atalibj</h1>
 
-<h2>Using ATAlibj</h2>
+<p>ATALibJ (or atalibj) is a library based on <a href="http://firstforge.wpi.edu/sf/projects/wpilib">WPILibJ</a> for developing robots for the <a href="http://www.usfirst.org/">FIRST Robotics Competition (FRC)</a>. It's two main areas of focus are simplicity and predictability which, together, will help FRC programmers write better code faster by improving ease-of-use.</p>
 
-<p>To use ATAlibj as a library for your FRC Java project in Netbeans or Eclipse, go through these steps:</p>
+<h2>Purpose</h2>
 
-<blockquote>
-<ol>
-<li>
-<p>Download the latest version using the "ZIP" button on the github page, or checkout using</p>
+<p>atalibj is ultimately seeking to be a complete replacement for WPILibJ with more uniformity and predictability from the API side. We're looking to provide users with the ability to easily make minor changes between different input and output devices as well as to increase productivity in writing code. Through uniformity, we hope to ensure that the user can spend more time writing code and less time questioning which method to call. We would also like to help make development easier and as such intend on including an improved version of <a href="https://github.com/Team4334/gordian">gordian</a>.</p>
 
-<p>git clone <a href="https://github.com/Team4334/atalibj.git">https://github.com/Team4334/atalibj.git</a></p>
+<h2>Using atalibj</h2>
+
+<p>Using the library is simple, you'll simply need to create a project in your favorite IDE and add the atalibj source to the project's source. For most setups, this means copying our src folder into the src folder in your project. You can find documentation for the project <a href="http://summer-of-first.github.io/atalibj/doc/">here</a>. However, the most up-to-date documentation will always be best gotten by generating them yourself! Good luck and happy coding!</p>
+
+<h2>Contributing</h2>
+
+<p>Before contributing to atalibj, please make sure that you've read the purpose carefully and understand the purpose of the project! With that in mind, all you need to do is fork the library and commit away. Once you've finished making your changes, go ahead and send us a pull request. Please note that the final decision on pull requests will ultimately be made by <a href="https://github.com/joelg236">Joel Gallant</a> and that his decision is law.</p>
+
+<h2>Basic Roadmap</h2>
+
+<p>This is a list of some future changes we'd like to add as of right now:</p>
+
+<ul>
+<li>Redesign the logging system. -- possibly an SLF4J-type design</li>
+<li>Add a system to make thread behavior more predictable. -- think <a href="https://github.com/joelg236/robot-code13/blob/master/src/edu/ata/commands/ThreadableCommand.java">Commands</a> or <a href="https://github.com/aaronweiss74/Ultimate-Ascent/blob/new/src/org/usfirst/frc1923/event/Event.java">Events</a>
 </li>
-<li><p>Copy all contents in the "/src" folder into the "Project/src" folder of your Netbeans / Eclipse project.</p></li>
-<li><p>Reference any of the classes in atalibj to verify thatyou can access them.</p></li>
-</ol>
-</blockquote>
+<li>Improved version of <a href="https://github.com/Team4334/gordian">gordian</a>.</li>
+<li>Wrap more sensors and the like within the given interfaces to increase predictability.</li>
+<li>Develop plugins for major IDEs (NetBeans, Eclipse, IntelliJ) to expand IDE and library support.</li>
+</ul><h2>Licensing</h2>
 
-<h2>Documentation</h2>
+<p>All license information is contained separately in LICENSE.md for easy access.</p>
+        </section>
 
-<p>Generally speaking, atalibj is easy to understand and the structure is self-eplanatory. The javadocs included give information about the classes and their uses. They are available <a href="http://summer-of-first.github.io/atalibj/doc/index.html">here</a></p>
+        <footer>
+          atalibj is maintained by <a href="https://github.com/Summer-of-FIRST">Summer-of-FIRST</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
 
-<h2>Editing</h2>
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-41231572-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
 
-<p>To make changes to your version of atalibj, the repository is a Netbeans library project, making it openable from netbeans by itself. Feel free to make changes, but if they could be useful for other teams, please try and contact us to commit your changes!</p>
-
-<h2>Licensing</h2>
-
-<p>See /license.txt for licensing information.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/Summer-of-FIRST">Summer-of-FIRST</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
