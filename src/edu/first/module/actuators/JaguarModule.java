@@ -1,18 +1,26 @@
 package edu.first.module.actuators;
 
 import edu.first.module.Module;
+import edu.wpi.first.wpilibj.Jaguar;
 
-public class Jaguar extends Module.StartardModule implements SpeedController {
+/**
+ * The general purpose class that manipulates Jaguar speed controllers made by
+ * Texas Instruments. Should work for all models.
+ *
+ * @since May 28 13
+ * @author Joel Gallant
+ */
+public class JaguarModule extends Module.StartardModule implements SpeedController {
 
-    private final edu.wpi.first.wpilibj.Jaguar jaguar;
+    private final Jaguar jaguar;
 
     /**
      * Constructs the module with the jaguar object underneath this class to
      * call methods from.
      *
-     * @param jaguar  the composing instance which perform the functions
+     * @param jaguar the composing instance which perform the functions
      */
-    public Jaguar(edu.wpi.first.wpilibj.Jaguar jaguar) {
+    public JaguarModule(Jaguar jaguar) {
         this.jaguar = jaguar;
     }
 
@@ -21,8 +29,8 @@ public class Jaguar extends Module.StartardModule implements SpeedController {
      *
      * @param channel port on sidecar
      */
-    public Jaguar(int channel) {
-        this(new edu.wpi.first.wpilibj.Jaguar(channel));
+    public JaguarModule(int channel) {
+        this(new Jaguar(channel));
     }
 
     /**
@@ -32,8 +40,8 @@ public class Jaguar extends Module.StartardModule implements SpeedController {
      * @param channel port on sidecar
      * @param slot slow in cRIO (1 = default)
      */
-    public Jaguar(int channel, int slot) {
-        this(new edu.wpi.first.wpilibj.Jaguar(slot, channel));
+    public JaguarModule(int channel, int slot) {
+        this(new Jaguar(slot, channel));
     }
 
     /**
@@ -99,5 +107,33 @@ public class Jaguar extends Module.StartardModule implements SpeedController {
      */
     public void update() {
         jaguar.Feed();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setRate(double rate) {
+        setSpeed(rate);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void set(double value) {
+        setSpeed(value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public double getRate() {
+        return getSpeed();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public double get() {
+        return getSpeed();
     }
 }

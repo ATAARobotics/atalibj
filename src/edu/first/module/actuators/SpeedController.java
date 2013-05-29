@@ -1,5 +1,8 @@
 package edu.first.module.actuators;
 
+import edu.first.identifiers.RateActuator;
+import edu.first.identifiers.RateSensor;
+
 /**
  * General interface that signifies that the class controls the speed of a motor
  * / servo. This interface is meant to replace
@@ -13,7 +16,7 @@ package edu.first.module.actuators;
  * @since May 28 13
  * @author Joel Gallant
  */
-public interface SpeedController {
+public interface SpeedController extends RateActuator, RateSensor {
 
     /**
      * Sets the speed between {@code -1} and {@code +1}. {@code +1} should be
@@ -63,4 +66,102 @@ public interface SpeedController {
      * update that controller so that the speed can continue.
      */
     public void update();
+
+    /**
+     * Sets the speed to {@code value}.
+     *
+     * @throws IllegalStateException when module is not enabled
+     * @see #setSpeed(double)
+     */
+    public void setRate(double rate);
+
+    /**
+     * Sets the speed to {@code value}.
+     *
+     * @throws IllegalStateException when module is not enabled
+     * @see #setSpeed(double)
+     */
+    public void set(double value);
+
+    /**
+     * Returns the speed of the controller.
+     *
+     * @return speed of controller
+     * @see #getSpeed()
+     */
+    public double getRate();
+
+    /**
+     * Returns the speed of the controller.
+     *
+     * @return speed of controller
+     * @see #getSpeed()
+     */
+    public double get();
+
+    /**
+     * A WPILibJ compatible class for usage in WPI classes that require a
+     * {@link edu.wpi.first.wpilibj.SpeedController}.
+     */
+    public static final class CompatibleSpeedController implements edu.wpi.first.wpilibj.SpeedController {
+
+        private final SpeedController controller;
+
+        /**
+         * Constructs the controller with the atalibj controller underneath it.
+         *
+         * @param controller speed controller to use
+         */
+        public CompatibleSpeedController(SpeedController controller) {
+            this.controller = controller;
+        }
+
+        /**
+         * Returns the speed of the speed controller.
+         *
+         * @return speed
+         * @see SpeedController#getSpeed()
+         */
+        public double get() {
+            return controller.getSpeed();
+        }
+
+        /**
+         * Sets the speed of the speed controller.
+         *
+         * @param speed new speed
+         * @param syncGroup is not used
+         * @see SpeedController#setSpeed(double)
+         */
+        public void set(double speed, byte syncGroup) {
+            controller.setSpeed(speed);
+        }
+
+        /**
+         * Sets the speed of the speed controller.
+         *
+         * @param speed new speed
+         * @see SpeedController#setSpeed(double)
+         */
+        public void set(double speed) {
+            controller.setSpeed(speed);
+        }
+
+        /**
+         * Stops the speed controller.
+         */
+        public void disable() {
+            controller.setSpeed(0);
+        }
+
+        /**
+         * Sets the speed of the speed controller.
+         *
+         * @param output new speed
+         * @see SpeedController#setSpeed(double)
+         */
+        public void pidWrite(double output) {
+            controller.setSpeed(output);
+        }
+    }
 }
