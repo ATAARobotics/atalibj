@@ -16,7 +16,7 @@ public class GyroscopeModule extends Module.StartardModule implements Gyroscope 
     private final Gyro gyro;
 
     /**
-     * Constructs the module with the gyro object to underneath this class to
+     * Constructs the module with the gyro object underneath this class to
      * call methods from.
      *
      * @param gyro the composing instance which will return values
@@ -76,6 +76,8 @@ public class GyroscopeModule extends Module.StartardModule implements Gyroscope 
 
     /**
      * Resets the cumulative angle to zero.
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void reset() {
         ensureEnabled();
