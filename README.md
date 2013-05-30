@@ -14,15 +14,14 @@ Using the library is simple, you'll simply need to create a project in your favo
 
 Before contributing to atalibj, please make sure that you've read the purpose carefully and understand the purpose of the project! With that in mind, all you need to do is fork the library and commit away. Once you've finished making your changes, go ahead and send us a pull request. Please note that the final decision on pull requests will ultimately be made by [Joel Gallant](https://github.com/joelg236) and that his decision is law.
 
-## Basic Roadmap ##
+## Project Goals ##
 
-This is a list of some future changes we'd like to add as of right now:
-
-* Redesign the logging system. -- possibly an SLF4J-type design
-* Add a system to make thread behavior more predictable. -- think [Commands](https://github.com/joelg236/robot-code13/blob/master/src/edu/ata/commands/ThreadableCommand.java) or [Events](https://github.com/aaronweiss74/Ultimate-Ascent/blob/new/src/org/usfirst/frc1923/event/Event.java)
-* Improved version of [gordian](https://github.com/Team4334/gordian).
-* Wrap more sensors and the like within the given interfaces to increase predictability.
-* Develop plugins for major IDEs (NetBeans, Eclipse, IntelliJ) to expand IDE and library support.
+* Provide features that make it more useful than wpilibj
+* Enhance the programmer's experience to make good code fast, efficiently and without a large learning curve
+* Provide a stable, secure and safe base to base other programs on
+* Perform well enough for any project
+* Be high enough caliber of an API that it is useful for every FRC team
+* Ultimately, to replace wpilibj as the library most used by Java FRC programs
 
 ## Licensing ##
 
