@@ -11,6 +11,9 @@ nbproject/*
 build.properties
 build.xml
 
+# Doc files #
+doc/*
+
 *.pydevproject
 .project
 .metadata
