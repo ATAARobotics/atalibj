@@ -7,10 +7,12 @@ package edu.first.main;
 
 import edu.first.robot.RobotMode;
 import edu.first.robot.RobotModeSelector;
+import edu.first.robot.RobotModeSendableChooser;
 import edu.first.robot.SafeRobotMode;
 import edu.first.robot.SimpleRobotAdapter;
 import edu.first.util.log.Logging;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SmartDashboard;
 
 /**
  * This class is called by the VM automatically for every game mode. It is meant
@@ -51,8 +53,7 @@ public final class GamePeriods extends IterativeRobot {
      * {@code updateMode()})
      */
     private static final RobotMode[] modes = {};
-    // To give user options, send this to SmartDashboard (putData())
-    private static final RobotModeSelector selector = null;
+    private static final RobotModeSendableChooser selector = new RobotModeSendableChooser(modes);
     // Stored to "end" the game mode after it is finished
     private static GameMode previousGameMode = null;
     // The current game mode - should not be edited by anything but updateMode()!
@@ -65,6 +66,7 @@ public final class GamePeriods extends IterativeRobot {
      * @return robot mode based on SmartDashboard
      */
     private RobotMode updateMode() {
+        SmartDashboard.putData(selector);
         RobotMode m;
         if (selector == null || (m = selector.getRobotMode()) == null) {
             Logging.logToConsole("Warning - robot mode was not selected! Defaulting to dummy instance");
