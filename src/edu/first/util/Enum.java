@@ -97,6 +97,20 @@ public class Enum {
     public final Value[] getValues() {
         return values;
     }
+    
+    /**
+     * Returns whether the value is inside of the enum.
+     * 
+     * @return if value is contained
+     */
+    public final boolean contains(Value val) {
+        for (int x = 0; x < size; x++) {
+            if (values[x].equals(val)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * The representation of values inside of an enum. All instances of
