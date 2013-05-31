@@ -12,7 +12,7 @@ import edu.first.robot.SafeRobotMode;
 import edu.first.robot.SimpleRobotAdapter;
 import edu.first.util.log.Logging;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is called by the VM automatically for every game mode. It is meant
