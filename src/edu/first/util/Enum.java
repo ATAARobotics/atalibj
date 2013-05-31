@@ -118,6 +118,15 @@ public class Enum {
             parent = Enum.this.getClass();
             v = ++size;
         }
+        
+        /**
+         * Returns the {@link Enum} parent that this value is bounded to.
+         * 
+         * @return the enum this value is in
+         */
+        public Enum getParent() {
+            return Enum.this;
+        }
 
         /**
          * {@inheritDoc}
