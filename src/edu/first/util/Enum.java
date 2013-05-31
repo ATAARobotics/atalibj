@@ -51,7 +51,7 @@ public class Enum {
      * field
      * @return unique value bound to this class
      */
-    protected Value generate(String name) {
+    protected final Value generate(String name) {
         Value v = new Value(name);
 
         Value[] buf = values;
@@ -67,7 +67,7 @@ public class Enum {
      *
      * @return amount of values in enum
      */
-    public int getSize() {
+    public final int size() {
         return size;
     }
 
@@ -78,7 +78,7 @@ public class Enum {
      * @param name the name of the value in the enum
      * @return value representation of name
      */
-    public Value valueOf(String name) {
+    public final Value valueOf(String name) {
         for (int x = 0; x < size; x++) {
             if (values[x].name.equals(name)) {
                 return values[x];
@@ -94,7 +94,7 @@ public class Enum {
      *
      * @return array of the values in the enum
      */
-    public Value[] getValues() {
+    public final Value[] getValues() {
         return values;
     }
 
