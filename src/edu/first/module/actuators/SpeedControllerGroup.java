@@ -1,0 +1,169 @@
+package edu.first.module.actuators;
+
+import edu.first.util.Iterator;
+import edu.first.util.list.ArrayList;
+
+/**
+ * A group for managing a set of {@code SpeedController}s as one single
+ *
+ * @author Aaron Weiss
+ * @since May 30 13
+ */
+public class SpeedControllerGroup implements SpeedController {
+	private final ArrayList controllers;
+
+	/**
+	 * Creates a new, empty {@code SpeedControllerGroup}.
+	 */
+	public SpeedControllerGroup() {
+		controllers = new ArrayList();
+	}
+
+	/**
+	 * Creates a new {@code SpeedControllerGroup} with a single starting {@code controller}.
+	 *
+	 * @param controller the speed controller to start with
+	 */
+	public SpeedControllerGroup(SpeedController controller) {
+		this();
+		add(controller);
+	}
+
+	/**
+	 * Creates a new {@code SpeedControllerGroup} starting with an array of {@code controllers}.
+	 *
+	 * @param controllers the speed controllers to start with
+	 */
+	public SpeedControllerGroup(SpeedController[] controllers) {
+		this();
+		add(controllers);
+	}
+
+	/**
+	 * Adds a {@code SpeedController} to the {@code SpeedControllerGroup}.
+	 *
+	 * @param controller the speed controller to add
+	 */
+	public void add(SpeedController controller) {
+		controllers.add(controller);
+	}
+
+	/**
+	 * Adds an array of {@code SpeedController}s to the {@code SpeedControllerGroup}.
+	 *
+	 * @param controllers the speed controller to add
+	 */
+	public void add(SpeedController[] controllers) {
+		for (int i = 0; i < controllers.length; i++) {
+			this.controllers.add(controllers[i]);
+		}
+	}
+
+	/**
+	 * Removes the {@code SpeedController} at the desired index.
+	 *
+	 * @param index the index to remove
+	 */
+	public void remove(int index) {
+		controllers.remove(index);
+	}
+
+	/**
+	 * Removes the desired {@code SpeedController} from the group.
+	 *
+	 * @param controller the speed controller to remove
+	 */
+	public void remove(SpeedController controller) {
+		controllers.remove(controller);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSpeed(double speed) {
+		final Iterator iter = controllers.iterator();
+		while (iter.hasNext()) {
+			((SpeedController) iter.next()).setSpeed(speed);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setRawSpeed(int speed) {
+		final Iterator iter = controllers.iterator();
+		while (iter.hasNext()) {
+			((SpeedController) iter.next()).setRawSpeed(speed);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public double getSpeed() {
+		if (controllers.size() > 0)
+			return ((SpeedController) controllers.get(0)).getSpeed();
+		else
+			return 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getRawSpeed() {
+		if (controllers.size() > 0)
+			return ((SpeedController) controllers.get(0)).getRawSpeed();
+		else
+			return 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void update() {
+		final Iterator iter = controllers.iterator();
+		while (iter.hasNext()) {
+			((SpeedController) iter.next()).update();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setRate(double rate) {
+		final Iterator iter = controllers.iterator();
+		while (iter.hasNext()) {
+			((SpeedController) iter.next()).setRate(rate);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void set(double value) {
+		final Iterator iter = controllers.iterator();
+		while (iter.hasNext()) {
+			((SpeedController) iter.next()).set(value);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public double getRate() {
+		if (controllers.size() > 0)
+			return ((SpeedController) controllers.get(0)).getRate();
+		else
+			return 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public double get() {
+		if (controllers.size() > 0)
+			return ((SpeedController) controllers.get(0)).get();
+		else
+			return 0;
+	}
+}
