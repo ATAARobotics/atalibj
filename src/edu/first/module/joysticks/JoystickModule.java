@@ -156,6 +156,21 @@ public class JoystickModule extends Module.StartardModule implements Joystick {
     }
 
     /**
+     * Inverts the input from the button when called from
+     * {@link #getRawAxisValue(int)} and {@link #getRawAxis(int)}. All input
+     * from the port will be equal to {@code -input}.
+     *
+     * @param port the axis to invert
+     */
+    public final void invertAxis(int port) {
+        changeAxis(port, new Function() {
+            public double F(double in) {
+                return -in;
+            }
+        });
+    }
+
+    /**
      * Changes the axis to a different input when called from
      * {@link #getRawAxisValue(int)} and {@link #getRawAxis(int)}. All input on
      * that port will be from the axis given.
