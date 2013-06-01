@@ -54,7 +54,7 @@ public abstract class Controller extends Module.StartardModule implements Runnab
     /**
      * Starts the loop of the controller.
      */
-    public void enableModule() {
+    protected void enableModule() {
         if (loopType.equals(LoopType.FIXED_DELAY)) {
             (loopController = new Timer()).schedule(task(), 0, loopTime);
         } else if (loopType.equals(LoopType.FIXED_RATE)) {
@@ -66,7 +66,7 @@ public abstract class Controller extends Module.StartardModule implements Runnab
      * Stops the loop of the controller. If it is in the middle of an execution,
      * that execution will complete before the controller turns off.
      */
-    public void disableModule() {
+    protected void disableModule() {
         if (loopController != null) {
             loopController.cancel();
         }

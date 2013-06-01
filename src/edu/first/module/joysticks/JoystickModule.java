@@ -63,13 +63,13 @@ public class JoystickModule extends Module.StartardModule implements Joystick {
     /**
      * {@inheritDoc}
      */
-    public void enableModule() {
+    protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
-    public void disableModule() {
+    protected void disableModule() {
     }
 
     /**
