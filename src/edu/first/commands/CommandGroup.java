@@ -62,7 +62,7 @@ public class CommandGroup implements Command {
         add(Type.CONCURRENT, command);
     }
 
-    private void add(Type.Value type, Command command) {
+    private void add(Type type, Command command) {
         if (type == null || command == null) {
             throw new NullPointerException();
         }
@@ -98,8 +98,11 @@ public class CommandGroup implements Command {
 
     private static class Type extends Enum {
 
-        private static final Type INSTANCE = new Type();
-        private static final Type.Value CONCURRENT = INSTANCE.generate("CONCURRENT");
-        private static final Type.Value SEQUENTIAL = INSTANCE.generate("SEQUENTIAL");
+        private static final Type CONCURRENT = new Type("CONCURRENT");
+        private static final Type SEQUENTIAL = new Type("SEQUENTIAL");
+
+        private Type(String name) {
+            super(name);
+        }
     }
 }

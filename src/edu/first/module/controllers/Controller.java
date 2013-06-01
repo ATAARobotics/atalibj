@@ -24,7 +24,7 @@ import java.util.TimerTask;
 public abstract class Controller extends Module.StartardModule implements Runnable {
 
     private final int loopTime;
-    private final LoopType.Value loopType;
+    private final LoopType loopType;
     private Timer loopController;
 
     /**
@@ -34,7 +34,7 @@ public abstract class Controller extends Module.StartardModule implements Runnab
      * @param loopTime time in seconds each loop should run
      * @param loopType kind of execution of the loop
      */
-    public Controller(double loopTime, Enum.Value loopType) {
+    public Controller(double loopTime, LoopType loopType) {
         this.loopTime = (int) MathUtils.round(loopTime * 1000.0);
         this.loopType = loopType;
     }
@@ -47,7 +47,7 @@ public abstract class Controller extends Module.StartardModule implements Runnab
      * will happen
      * @param loopType kind of execution of the loop
      */
-    public Controller(int loopTimeHertz, Enum.Value loopType) {
+    public Controller(int loopTimeHertz, LoopType loopType) {
         this(1.0 / (double) loopTimeHertz, loopType);
     }
 
@@ -92,7 +92,6 @@ public abstract class Controller extends Module.StartardModule implements Runnab
      */
     public static final class LoopType extends Enum {
 
-        private static final LoopType INSTANCE = new LoopType();
         /**
          * A fixed-rate execution tries to ensure your {@code run()} method is
          * called at the rate given at all times. It will dynamically adjust to
@@ -100,12 +99,16 @@ public abstract class Controller extends Module.StartardModule implements Runnab
          * {@link Timer#scheduleAtFixedRate(java.util.TimerTask, long, long)}
          * for more info.
          */
-        public static final LoopType.Value FIXED_DELAY = INSTANCE.generate("FIXED_DELAY");
+        public static final LoopType FIXED_DELAY = new LoopType("FIXED_DELAY");
         /**
          * A fixed-delay execution waits the specified time after every
          * execution of {@code run()}. There is no compensation when threads get
          * slow.
          */
-        public static final LoopType.Value FIXED_RATE = INSTANCE.generate("FIXED_RATE");
+        public static final LoopType FIXED_RATE = new LoopType("FIXED_RATE");
+
+        private LoopType(String name) {
+            super(name);
+        }
     }
 }

@@ -1,188 +1,160 @@
 package edu.first.util;
 
+import edu.first.util.list.ArrayList;
+import edu.first.util.list.List;
+import java.util.Hashtable;
+
 /**
  * The base class for enums. This class is not meant to be instantiated.
  *
  * The correct way to implement this class goes as follows:
  * <pre>
- * public final class Colours extends Enum {
- *     public static final Colours INSTANCE = new Colours();
- *     public static final Value YELLOW = INSTANCE.generate("YELLOW");
- *     public static final Value ORANGE = INSTANCE.generate("ORANGE");
- *     public static final Value BLUE = INSTANCE.generate("BLUE");
- *     public static final Value RED = INSTANCE.generate("RED");
+ * public final class Colour extends Enum {
+ *
+ *     public static final Colour RED = new Colour("RED");
+ *     public static final Colour BLUE = new Colour("BLUE");
+ *     public static final Colour YELLOW = new Colour("YELLOW");
+ *     public static final Colour ORANGE = new Colour("ORANGE");
+ *
+ *     private Colour(String name) {
+ *         super(name);
+ *     }
  * }
- * </pre> 
- * 
+ * </pre>
+ *
+ * or, if you do not need names for {@link #toString()}:
+ * <pre>
+ * public final class Colour extends Enum {
+ *
+ *     public static final Colour RED = new Colour();
+ *     public static final Colour BLUE = new Colour();
+ *     public static final Colour YELLOW = new Colour();
+ *     public static final Colour ORANGE = new Colour();
+ *
+ *     private Colour() {
+ *         super();
+ *     }
+ * }
+ * </pre>
+ *
  * In every official enum, use this pattern:
  * <ul>
  * <li> Extend {@link Enum}
  * <li> Make class final
- * <li> Create <b>one</b> static final instance of the class, allow public
- * access to it
+ * <li> Create a private constructor using {@link #Enum(java.lang.String)} or
+ * {@link #Enum()} as a super call.
  * <li> For every value in the enum, declare it as
- * <p> {@code public static final Value NAME = INSTANCE_FIELD.generate("NAME");}
+ * <p> {@code public static final EnumName NAME = new EnumName("NAME");}
+ * <p> or
+ * <p> {@code public static final EnumName NAME = new EnumName();}
+ * <p> if you do not need named fields.
  * </ul>
  *
- * All enum values are bound to their "creator" {@code Enum}. The only way to
- * create a value is {@link Enum#generate(java.lang.String)}.
- *
- * Enum-type methods are available through the {@link Enum} instance.
+ * Enums are type-safe (will only match other enum values of the same type),
+ * instance-safe (cannot be instantiated anywhere but in the enum) and
+ * compare-safe ({@code ==} and {@link #equals(Object o)} should both only
+ * return true if they are the same).
  *
  * @since May 12 13
  * @author Joel Gallant
  */
 public class Enum {
 
-    // Official array of enum values - is not thread safe, generating while accessing is bad
-    private Value[] values = new Value[0];
-    private int size = 0;
+    // holds all instances - this had better be safe!
+    private static final Hashtable instances = new Hashtable();
+    // counts elements and prevents them from having the same "equals"
+    private static int preventEquals;
+    // makes sure enum is never equal to anything except itself
+    private final int equals = ++preventEquals;
+    // optional name
+    private final String name;
 
     /**
-     * Constructs the enum instance.
+     * Creates the element without a name. {@link #toString()} will return the
+     * standard string for objects.
      */
     protected Enum() {
+        this(null);
     }
 
     /**
-     * Generates an enum value that is bound to this class.
+     * Creates the element with a name. {@link #toString()} will return the
+     * name. Names should be the exact same as the fields they are declared as.
      *
-     * @param name the identifier of the value - usually the same as declared
-     * field
-     * @return unique value bound to this class
+     * @param name identifier of the element
      */
-    protected final Value generate(String name) {
-        Value v = new Value(name);
+    protected Enum(String name) {
+        this.name = name;
+    }
 
-        Value[] buf = values;
-        values = new Value[size];
-        System.arraycopy(buf, 0, values, 0, size - 1);
-        values[size - 1] = v;
-
-        return v;
+    {
+        if (!instances.containsKey(getClass())) {
+            instances.put(getClass(), new ArrayList());
+        }
+        // inserts the instance into elements
+        ((List) instances.get(getClass())).add(this);
     }
 
     /**
-     * Returns the amount of values inside of the enum.
+     * Returns every element inside of the enum that this element is in.
      *
-     * @return amount of values in enum
+     * @return all values in the same enum
      */
-    public final int size() {
-        return size;
+    public final List getValues() {
+        return (List) instances.get(getClass());
     }
 
     /**
-     * Returns the {@link Value} inside of the enum with the same name as given.
-     * If no values match the name, this returns null.
+     * Returns the element with the specified name inside of the enum that this
+     * element is in. Returns null if no such element exists.
      *
-     * @param name the name of the value in the enum
-     * @return value representation of name
+     * @param name identifier for element
+     * @return value with specified name
      */
-    public final Value valueOf(String name) {
-        for (int x = 0; x < size; x++) {
-            if (values[x].name.equals(name)) {
-                return values[x];
+    public final Enum valueOf(String name) {
+        Iterator i = getValues().iterator();
+        while (i.hasNext()) {
+            Enum val = (Enum) i.next();
+            if (val.name.equals(name)) {
+                return val;
             }
         }
         return null;
     }
 
     /**
-     * Returns the values that are part of the enum. This array can be broken if
-     * this method is called at the same time as
-     * {@link Enum#generate(java.lang.String)}.
+     * Returns whether the object is the same element as this one. This is
+     * slightly safer than performing {@code o1 == o2}, but less efficient.
      *
-     * @return array of the values in the enum
+     * @param obj object to compare
+     * @return if they are the same element in the same enum
      */
-    public final Value[] getValues() {
-        return values;
-    }
-    
-    /**
-     * Returns whether the value is inside of the enum.
-     * 
-     * @return if value is contained
-     */
-    public final boolean contains(Value val) {
-        for (int x = 0; x < size; x++) {
-            if (values[x].equals(val)) {
-                return true;
-            }
+    public final boolean equals(Object obj) {
+        if (getClass().isInstance(obj)) {
+            return equals == ((Enum) obj).equals;
+        } else {
+            return false;
         }
-        return false;
     }
 
     /**
-     * The representation of values inside of an enum. All instances of
-     * {@code Value} are created in {@link Enum#generate(java.lang.String)}.
-     * Every instance of {@code Value} will not be equal to any other instance.
-     *
-     * @since May 12 13
-     * @author Joel Gallant
+     * {@inheritDoc}
      */
-    public final class Value {
+    public final int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + this.equals;
+        return hash;
+    }
 
-        private final String name;
-        private final Class parent;
-        private final int v;
-
-        private Value(String name) {
-            this.name = name;
-            // Uses enum instance for parent
-            parent = Enum.this.getClass();
-            v = ++size;
-        }
-        
-        /**
-         * Returns the {@link Enum} parent that this value is bounded to.
-         * 
-         * @return the enum this value is in
-         */
-        public Enum getParent() {
-            return Enum.this;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public int hashCode() {
-            int hash = 5;
-            hash = 47 * hash + (this.parent != null ? this.parent.hashCode() : 0);
-            hash = 47 * hash + this.v;
-            return hash;
-        }
-
-        /**
-         * Returns whether or not the value is the same instance.
-         *
-         * @param obj the reference object with which to compare
-         * @return true if this object is the same as the obj argument; false
-         * otherwise.
-         */
-        public boolean equals(Object obj) {
-            if (obj instanceof Value) {
-                return parent.equals(((Value) obj).parent) && v == ((Value) obj).v;
-            } else {
-                return false;
-            }
-        }
-
-        /**
-         * Returns the name of the value.
-         *
-         * @return identifier given in {@code generate(name)}
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Returns the name of the value.
-         *
-         * @return identifier given in {@code generate(name)}
-         */
-        public String toString() {
-            return name;
-        }
+    /**
+     * If this element has a name, returns the name. If not, returns
+     * {@link Object#toString()}.
+     *
+     * @return string representation of element
+     * @see #Enum(java.lang.String)
+     * @see Object#toString()
+     */
+    public final String toString() {
+        return name == null ? super.toString() : name;
     }
 }
