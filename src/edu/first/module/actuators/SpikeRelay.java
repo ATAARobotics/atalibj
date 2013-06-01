@@ -30,7 +30,7 @@ public interface SpikeRelay {
     /**
      * Enum with the three different kinds of directions.
      */
-    public static class Direction extends Enum {
+    public static final class Direction extends Enum {
 
         /**
          * Forwards direction of the relay. Sets + to 12V and - to 0V.
