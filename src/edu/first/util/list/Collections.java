@@ -6,7 +6,6 @@ package edu.first.util.list;
 
 import com.sun.squawk.util.Arrays;
 import com.sun.squawk.util.Comparer;
-import edu.first.util.Iterator;
 
 /**
  * Utilities for {@link Collection}. Manipulates the collections using various

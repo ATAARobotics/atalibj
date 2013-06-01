@@ -2,7 +2,7 @@
  * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
  * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-package edu.first.util;
+package edu.first.util.list;
 
 import edu.first.util.list.ArrayList;
 import java.util.Enumeration;
