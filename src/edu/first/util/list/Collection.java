@@ -1,7 +1,5 @@
 package edu.first.util.list;
 
-import edu.first.util.Iterable;
-
 /**
  * A collection represents a group of objects, known as its <i>elements</i>.
  * Some collections allow duplicate elements and others do not. Some are ordered

@@ -1,7 +1,5 @@
 package edu.first.util.list;
 
-import edu.first.util.Iterator;
-
 /**
  * An {@link ArrayList} that guarantees elements will be of the type given in
  * the constructor. All elements added are checked to make sure they are of the

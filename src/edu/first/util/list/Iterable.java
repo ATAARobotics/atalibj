@@ -2,7 +2,7 @@
  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.
  * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-package edu.first.util;
+package edu.first.util.list;
 
 /**
  * Implementing this interface allows an object to be the target of the

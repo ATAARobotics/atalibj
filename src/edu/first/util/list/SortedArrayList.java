@@ -1,7 +1,6 @@
 package edu.first.util.list;
 
 import com.sun.squawk.util.Comparer;
-import edu.first.util.Iterator;
 
 /**
  * A {@link List} that is automatically sorted. It will always sort based on

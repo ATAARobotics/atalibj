@@ -1,6 +1,5 @@
 package edu.first.util.list;
 
-import edu.first.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -170,7 +169,7 @@ public final class ArrayList implements List {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws NullPointerException when {@code element} is {@code null}
      * @throws IndexOutOfBoundsException when {@code index < 0 && index >= size}
      */
@@ -180,7 +179,7 @@ public final class ArrayList implements List {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws NullPointerException when {@code element} is {@code null}
      */
     public void add(int index, Object element) {
@@ -235,7 +234,7 @@ public final class ArrayList implements List {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Elements are in the order that they are in this list.
      */
     public Iterator iterator() {
@@ -272,9 +271,9 @@ public final class ArrayList implements List {
             if (o == null) {
                 throw new NullPointerException();
             }
-            Object[] b = elements;
-            elements = new Object[b.length + 1];
-            System.arraycopy(b, 0, elements, 0, b.length);
+            Object[] b = new Object[elements.length + 1];
+            System.arraycopy(elements, 0, b, 0, elements.length);
+            elements = b;
 
             elements[elements.length - 1] = o;
         }
@@ -287,11 +286,11 @@ public final class ArrayList implements List {
                 throw new NullPointerException();
             }
 
-            Object[] b = elements;
-            elements = new Object[b.length + 1];
-            System.arraycopy(b, 0, elements, 0, i);
-            System.arraycopy(b, i, elements, i + 1, b.length - i);
-
+            Object[] b = new Object[elements.length + 1];
+            System.arraycopy(elements, 0, b, 0, i);
+            System.arraycopy(elements, i, b, i + 1, elements.length - i);
+            elements = b;
+            
             elements[i] = o;
         }
 
@@ -336,11 +335,11 @@ public final class ArrayList implements List {
             for (; x < elements.length; x++) {
                 if (elements[x] == null) {
 
-                    Object[] b = elements;
-                    elements = new Object[b.length - 1];
-                    System.arraycopy(b, 0, elements, 0, x);
-                    System.arraycopy(b, x + 1, elements, x, b.length - x - 1);
-
+                    Object[] b = new Object[elements.length - 1];
+                    System.arraycopy(elements, 0, b, 0, x);
+                    System.arraycopy(elements, x + 1, b, x, elements.length - x - 1);
+                    elements = b;
+                    
                     shrink(x + 1);
                     return;
                 }
