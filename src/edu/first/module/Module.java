@@ -143,14 +143,14 @@ public interface Module {
          * The module's functions should work after this method is called,
          * provided this method did not throw an error.
          */
-        public abstract void enableModule();
+        protected abstract void enableModule();
 
         /**
          * Performs the necessary actions to ensure the module cannot be used.
          * The module's functions should not work after this method is called,
          * provided this method did not throw an error.
          */
-        public abstract void disableModule();
+        protected abstract void disableModule();
 
         /**
          * {@inheritDoc}
