@@ -38,7 +38,7 @@ public class VictorModule extends Module.StartardModule implements SpeedControll
      * the sidecar is in.
      *
      * @param channel port on sidecar
-     * @param slot slow in cRIO (1 = default)
+     * @param slot slot in cRIO (1 = default)
      */
     public VictorModule(int channel, int slot) {
         this(new Victor(slot, channel));
@@ -47,7 +47,7 @@ public class VictorModule extends Module.StartardModule implements SpeedControll
     /**
      * {@inheritDoc}
      */
-    public void enableModule() {
+    protected void enableModule() {
     }
 
     /**
@@ -55,7 +55,7 @@ public class VictorModule extends Module.StartardModule implements SpeedControll
      *
      * <p> Stops the victor from moving.
      */
-    public void disableModule() {
+    protected void disableModule() {
         victor.disable();
     }
 

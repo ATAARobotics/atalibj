@@ -38,7 +38,7 @@ public class TalonModule extends Module.StartardModule implements SpeedControlle
      * the sidecar is in.
      *
      * @param channel port on sidecar
-     * @param slot slow in cRIO (1 = default)
+     * @param slot slot in cRIO (1 = default)
      */
     public TalonModule(int channel, int slot) {
         this(new Talon(slot, channel));
@@ -47,7 +47,7 @@ public class TalonModule extends Module.StartardModule implements SpeedControlle
     /**
      * {@inheritDoc}
      */
-    public void enableModule() {
+    protected void enableModule() {
     }
 
     /**
@@ -55,7 +55,7 @@ public class TalonModule extends Module.StartardModule implements SpeedControlle
      *
      * <p> Stops the talon from moving.
      */
-    public void disableModule() {
+    protected void disableModule() {
         talon.disable();
     }
 

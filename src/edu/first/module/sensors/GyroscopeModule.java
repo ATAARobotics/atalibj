@@ -39,7 +39,7 @@ public class GyroscopeModule extends Module.StartardModule implements Gyroscope 
      * the sidecar is in.
      *
      * @param channel port on sidecar
-     * @param slot slow in cRIO (1 = default)
+     * @param slot slot in cRIO (1 = default)
      */
     public GyroscopeModule(int channel, int slot) {
         this(new AnalogChannel(slot, channel));
@@ -64,14 +64,14 @@ public class GyroscopeModule extends Module.StartardModule implements Gyroscope 
     /**
      * Resets the gyro to zero.
      */
-    public void enableModule() {
+    protected void enableModule() {
         gyro.reset();
     }
 
     /*
      * Does not do anything.
      */
-    public void disableModule() {
+    protected void disableModule() {
     }
 
     /**

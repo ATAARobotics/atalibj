@@ -39,7 +39,7 @@ public class SpikeRelayModule extends Module.StartardModule implements SpikeRela
      * that it's in.
      *
      * @param channel the channel on the digital sidecar
-     * @param slot slow in cRIO (1 = default)
+     * @param slot slot in cRIO (1 = default)
      */
     public SpikeRelayModule(int channel, int slot) {
         this(new Relay(slot, channel));
@@ -48,7 +48,7 @@ public class SpikeRelayModule extends Module.StartardModule implements SpikeRela
     /**
      * {@inheritDoc}
      */
-    public void enableModule() {
+    protected void enableModule() {
     }
 
     /**
@@ -56,7 +56,7 @@ public class SpikeRelayModule extends Module.StartardModule implements SpikeRela
      *
      * <p> Turns the spike relay off.
      */
-    public void disableModule() {
+    protected void disableModule() {
         set(Direction.OFF);
     }
 
