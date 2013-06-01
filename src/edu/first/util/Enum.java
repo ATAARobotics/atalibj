@@ -1,5 +1,6 @@
 package edu.first.util;
 
+import edu.first.util.list.Iterator;
 import edu.first.util.list.ArrayList;
 import edu.first.util.list.List;
 import java.util.Hashtable;
