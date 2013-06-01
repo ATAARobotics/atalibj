@@ -2,6 +2,7 @@ package edu.first.module.joysticks;
 
 import edu.first.identifiers.Function;
 import edu.first.module.Module;
+import edu.first.util.MathUtils;
 
 /**
  * A joystick that the user controls functions with. Attaches through the
@@ -114,6 +115,25 @@ public class JoystickModule extends Module.StartardModule implements Joystick {
      */
     public final boolean getRawButtonValue(int port) {
         return getRawButton(port).getPosition();
+    }
+
+    /**
+     * Adds a deadband to the port which will prevent values smaller than
+     * {@code deadband} from being output (instead it is set to 0).
+     *
+     * @param port the axis
+     * @param deadband value that input should be bigger than
+     */
+    public final void addDeadband(int port, final double deadband) {
+        changeAxis(port, new Function() {
+            public double F(double in) {
+                if (MathUtils.abs(in) < deadband) {
+                    return 0;
+                } else {
+                    return in;
+                }
+            }
+        });
     }
 
     /**
