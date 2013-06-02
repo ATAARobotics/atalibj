@@ -166,10 +166,10 @@ public interface Module {
          * {@inheritDoc}
          */
         public final void disable() {
+            disableModule();
             synchronized (lock) {
                 enabled = false;
             }
-            disableModule();
         }
 
         /**
