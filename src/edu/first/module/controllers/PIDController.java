@@ -2,6 +2,8 @@ package edu.first.module.controllers;
 
 import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;
+import edu.first.identifiers.PositionalActuator;
+import edu.first.identifiers.PositionalSensor;
 
 /**
  * Controller that uses the PID algorithm to handle input and output. This class
@@ -22,7 +24,7 @@ import edu.first.identifiers.Output;
  * @since June 02 13
  * @author Joel Gallant
  */
-public class PIDController extends Controller implements Input, Output {
+public class PIDController extends Controller implements PositionalSensor, PositionalActuator {
 
     private static final double defaultLoopTime = 0.02;
     private final Input input;
@@ -31,6 +33,8 @@ public class PIDController extends Controller implements Input, Output {
     private double minimumInput = Double.MIN_VALUE, maximumInput = Double.MAX_VALUE;
     private double minimumOutput = -1, maximumOutput = +1;
     // Controller variables
+    // uses lock so user can't lock controller accidentally using "this"
+    private final Object lock = new Object();
     private double setpoint = 0;
     private double totalError = 0;
     private double prevError = 0;
@@ -57,6 +61,11 @@ public class PIDController extends Controller implements Input, Output {
      */
     public PIDController(Input input, Output output, double loopTime) {
         super(loopTime, LoopType.FIXED_RATE);
+        if(input == null) {
+            throw new NullPointerException("Null input given");
+        } else if (output == null) {
+            throw new NullPointerException("Null output given");
+        }
         this.input = input;
         this.output = output;
     }
@@ -72,6 +81,11 @@ public class PIDController extends Controller implements Input, Output {
      */
     public PIDController(Input input, Output output, int loopTimeHertz) {
         super(loopTimeHertz, LoopType.FIXED_RATE);
+        if(input == null) {
+            throw new NullPointerException("Null input given");
+        } else if (output == null) {
+            throw new NullPointerException("Null output given");
+        }
         this.input = input;
         this.output = output;
     }
@@ -83,7 +97,7 @@ public class PIDController extends Controller implements Input, Output {
      * @param setpoint desired point that the input should reach
      */
     public final void setSetpoint(double setpoint) {
-        synchronized (this) {
+        synchronized (lock) {
             if (setpoint < minimumInput) {
                 this.setpoint = minimumInput;
             } else if (setpoint > maximumInput) {
@@ -101,7 +115,7 @@ public class PIDController extends Controller implements Input, Output {
      * @see PIDController for PID algorithm
      */
     public final void setP(double P) {
-        synchronized (this) {
+        synchronized (lock) {
             this.P = P;
         }
     }
@@ -113,7 +127,7 @@ public class PIDController extends Controller implements Input, Output {
      * @see PIDController for PID algorithm
      */
     public final void setI(double I) {
-        synchronized (this) {
+        synchronized (lock) {
             this.I = I;
         }
     }
@@ -125,7 +139,7 @@ public class PIDController extends Controller implements Input, Output {
      * @see PIDController for PID algorithm
      */
     public final void setD(double D) {
-        synchronized (this) {
+        synchronized (lock) {
             this.D = D;
         }
     }
@@ -140,7 +154,7 @@ public class PIDController extends Controller implements Input, Output {
      * @see PIDController for PID algorithm
      */
     public final void setPID(double P, double I, double D) {
-        synchronized (this) {
+        synchronized (lock) {
             this.P = P;
             this.I = I;
             this.D = D;
@@ -154,7 +168,7 @@ public class PIDController extends Controller implements Input, Output {
      * @see PIDController for PID algorithm
      */
     public final double getP() {
-        synchronized (this) {
+        synchronized (lock) {
             return P;
         }
     }
@@ -166,7 +180,7 @@ public class PIDController extends Controller implements Input, Output {
      * @see PIDController for PID algorithm
      */
     public final double getI() {
-        synchronized (this) {
+        synchronized (lock) {
             return I;
         }
     }
@@ -178,7 +192,7 @@ public class PIDController extends Controller implements Input, Output {
      * @see PIDController for PID algorithm
      */
     public final double getD() {
-        synchronized (this) {
+        synchronized (lock) {
             return D;
         }
     }
@@ -193,7 +207,7 @@ public class PIDController extends Controller implements Input, Output {
         if (minimumInput > maximumInput) {
             throw new IllegalArgumentException(minimumInput + " is larger than " + maximumInput);
         }
-        synchronized (this) {
+        synchronized (lock) {
             this.minimumInput = minimumInput;
             this.maximumInput = maximumInput;
         }
@@ -210,7 +224,7 @@ public class PIDController extends Controller implements Input, Output {
         if (minimumOutput > maximumOutput) {
             throw new IllegalArgumentException(minimumOutput + " is larger than " + maximumOutput);
         }
-        synchronized (this) {
+        synchronized (lock) {
             this.minimumOutput = minimumOutput;
             this.maximumOutput = maximumOutput;
         }
@@ -222,7 +236,7 @@ public class PIDController extends Controller implements Input, Output {
      * @return last result of PID algorithm
      */
     public final double getPrevResult() {
-        synchronized (this) {
+        synchronized (lock) {
             return prevResult;
         }
     }
@@ -236,7 +250,7 @@ public class PIDController extends Controller implements Input, Output {
         double in = input.get();
         double result;
 
-        synchronized (this) {
+        synchronized (lock) {
 
             if (in < minimumInput) {
                 in = minimumInput;
@@ -295,5 +309,26 @@ public class PIDController extends Controller implements Input, Output {
      */
     public final void set(double value) {
         setSetpoint(value);
+    }
+
+    /**
+     * Returns the last computed output value.
+     *
+     * @return last result of PID algorithm
+     * @see #getPrevResult()
+     */
+    public final double getPosition() {
+        return getPrevResult();
+    }
+
+    /**
+     * Sets the setpoint (or goal) or the controller. The PID algorithm should
+     * attempt to bring input as close as possible to this goal.
+     *
+     * @param value desired point that the input should reach
+     * @see #setSetpoint(double)
+     */
+    public final void setPosition(double position) {
+        setSetpoint(position);
     }
 }

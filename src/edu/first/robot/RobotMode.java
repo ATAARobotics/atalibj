@@ -1,5 +1,6 @@
 package edu.first.robot;
 
+import edu.first.main.Constants;
 import edu.first.main.GamePeriods;
 
 /**
@@ -41,7 +42,7 @@ import edu.first.main.GamePeriods;
  * @see SimpleRobot
  * @author Joel Gallant
  */
-public interface RobotMode {
+public interface RobotMode extends Constants {
 
     /**
      * Initializes the robot. This means that after this method is run,

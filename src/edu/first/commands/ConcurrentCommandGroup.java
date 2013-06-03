@@ -1,12 +1,11 @@
 package edu.first.commands;
 
 import edu.first.command.Command;
-import edu.first.util.list.ArrayList;
+import edu.first.util.list.List;
 import edu.first.util.log.Logging;
 
 /**
- * Basic command group that runs multiple commands in parallel. Each command is
- * run inside of a different thread.
+ * Basic command group that runs multiple commands in parallel.
  *
  * @since May 26 13
  * @author Joel Gallant
@@ -36,7 +35,7 @@ public class ConcurrentCommandGroup implements Command {
      *
      * @param commands commands to run concurrently
      */
-    public ConcurrentCommandGroup(ArrayList commands) {
+    public ConcurrentCommandGroup(List commands) {
         if (commands == null) {
             throw new NullPointerException();
         }

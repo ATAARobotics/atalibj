@@ -57,8 +57,6 @@ public class XboxController extends BindingJoystick {
      */
     public static final int LEFT_X = 1, LEFT_Y = 2, TRIGGERS = 3, RIGHT_X = 4,
             RIGHT_Y = 5, DIRECTIONAL_PAD = 6, RIGHT_FROM_MIDDLE = 7, LEFT_FROM_MIDDLE = 8;
-    private final Axis rightFromMiddle = new FromMiddle(getRightY(), getRightX()),
-            leftFromMiddle = new FromMiddle(getLeftY(), getLeftX());
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
@@ -70,8 +68,8 @@ public class XboxController extends BindingJoystick {
         super(joystick);
 
         increaseAxisCapacity(2);
-        setAxis(RIGHT_FROM_MIDDLE, rightFromMiddle);
-        setAxis(LEFT_FROM_MIDDLE, leftFromMiddle);
+        setAxis(RIGHT_FROM_MIDDLE, new FromMiddle(getRightY(), getRightX()));
+        setAxis(LEFT_FROM_MIDDLE, new FromMiddle(getLeftY(), getLeftX()));
         invertAxis(LEFT_Y);
         invertAxis(RIGHT_Y);
         invertAxis(TRIGGERS);
@@ -266,6 +264,8 @@ public class XboxController extends BindingJoystick {
     /**
      * Returns the distance that the right stick is relative to the absolute
      * centre.
+     *
+     * <p> Up: Positive; Down: Negative
      *
      * @return right distance from middle
      */
@@ -511,6 +511,7 @@ public class XboxController extends BindingJoystick {
         return getRawButton(RIGHT_STICK);
     }
 
+    // Uses A^2 + B^2 = C^2 to solve distance from the middle of the joystick
     private static final class FromMiddle implements Axis {
 
         private final Axis X;

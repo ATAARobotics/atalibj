@@ -9,7 +9,7 @@ package edu.first.command;
 public final class Commands {
 
     /**
-     * Runs the command. Provides no functionality past that.
+     * Runs the command.
      *
      * @param command command to run
      */
@@ -27,6 +27,24 @@ public final class Commands {
         new Thread(command).start();
     }
 
+    /**
+     * Runs the command in a different (new) thread. Waits until the thread is
+     * completed running.
+     *
+     * <p> If the thread is interrupted while running, this method will finish.
+     *
+     * @param command command to run
+     */
+    public static void runInNewThreadAndWait(Command command) {
+        Thread t = new Thread(command);
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException ex) {
+        }
+    }
+
+    // cannot be subclassed or instantiated
     private Commands() throws IllegalAccessException {
         throw new IllegalAccessException();
     }

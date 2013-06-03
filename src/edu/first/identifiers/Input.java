@@ -8,9 +8,9 @@ package edu.first.identifiers;
  * makes it possible to quickly change between things like different kinds of
  * sensors.
  *
- * <p> <b> If the only function you are using from an object is {@code get()}, use
- * this interface to reference it. </b> Otherwise just be as general in type as
- * possible.
+ * <p> <b> If the only function you are using from an object is {@code get()},
+ * use this interface to reference it. </b> Otherwise just be as general in type
+ * as possible.
  *
  * @since May 22 13
  * @author Joel Gallant
@@ -20,7 +20,7 @@ public interface Input {
     /**
      * Returns the value of the input. This should always be the "current"
      * value, in whatever context it is in.
-     * 
+     *
      * @return current input
      * @throws IllegalStateException when input cannot be reached
      */
