@@ -1,0 +1,361 @@
+package edu.first.module.controllers;
+
+import edu.first.identifiers.Input;
+import edu.first.identifiers.Output;
+import edu.first.identifiers.RateActuator;
+import edu.first.identifiers.RateSensor;
+import edu.first.util.MathUtils;
+
+/**
+ * Controller that uses an on-off strategy to achieve a desired input.
+ *
+ * <ul>
+ * <li> Simpler and more robust than PID (for this application); requires no
+ * tuning; provides fastest spin-up and recovery time
+ * <li> Works with Victor (and Talon) motor controller. Jag should be
+ * avoided for this application
+ * <li> Motor Controller should be jumpered for coast mode (not brake mode)
+ * <li> A wheel speed sensor is required. You can use any device which provides
+ * a usable speed signal
+ * <li> This method requires that the wheel has sufficient moment of inertia
+ * (many shooter wheels do)
+ * </ul>
+ *
+ * <p> Speed Sensor and Decoding
+ * <ul>
+ * <li> Use an encoder or a one-per-rev home-brew optical or magnetic sensor.
+ * <li> If using an encoder, connect only one channel of the encoder to the
+ * Digital Sidecar. Configure FPGA to read one channel only (no quadrature)
+ * <li> Configure the FPGA to read rising edges only
+ * <li> Let the FPGA compute the period in hardware with its 153KHz polling rate
+ * and 1MHz clock.
+ * <li> Do a quick calculation to determine how many samples you should
+ * configure the FPGA to use for its sample ring buffer, or experiment to find
+ * the value which gives the best tradeoff between noise and phase lag (whatever
+ * gives you fast and stable operation at your setpoints).
+ * </ul>
+ *
+ * <b>Note:</b>
+ * The Jag overcurrent protection may activate on initial startup due to high
+ * command at low rpm. This can be worked around by adding a little additional
+ * code and doing some tuning, but for this application it's more convenient and
+ * less fuss to use a motor controller that doesn't have this limitation. If you
+ * plan to use a Jag, use {@link #setSpeedUp(boolean)}.
+ *
+ * <p> For more information, see:
+ * <p>
+ * <a href="http://en.wikipedia.org/wiki/Bang%E2%80%93bang_control">Bang-Bang
+ * Control</a>
+ * <p>
+ * <a href="http://www.chiefdelphi.com/media/papers/2663">Shooter Wheel Speed
+ * Control</a>
+ *
+ * @since June 02 13
+ * @author Joel Gallant
+ */
+public class BangBangController extends Controller implements RateSensor, RateActuator {
+
+    private static final double defaultLoopTime = 0.02;
+    private final Input input;
+    private final Output output;
+    // Controller variables
+    private boolean coast;
+    private boolean speedUp;
+    private boolean reversed = false;
+    private double setpoint = 0;
+    private double maxOutput = 1;
+    private double spinupInput = 0;
+    private double spinupOutput = 1;
+    private double prevResult;
+    private double prevInput;
+
+    /**
+     * Constructs the controller using its input and output. Uses the default
+     * loop time.
+     *
+     * @param input object to receive input from
+     * @param output object to send output to
+     */
+    public BangBangController(Input input, Output output) {
+        this(input, output, defaultLoopTime);
+    }
+
+    /**
+     * Constructs the controller using its input and output. Loops at a fixed
+     * delay at {@code loopTime}.
+     *
+     * @param input object to receive input from
+     * @param output object to send output to
+     * @param loopTime time in seconds each loop should run
+     */
+    public BangBangController(Input input, Output output, double loopTime) {
+        super(loopTime, LoopType.FIXED_RATE);
+        this.input = input;
+        this.output = output;
+    }
+
+    /**
+     * Constructs the controller using its input and output. Loops at a fixed
+     * delay at {@code loopTime}.
+     *
+     * @param input object to receive input from
+     * @param output object to send output to
+     * @param loopTimeHertz the hertz value that represents how fast execution
+     * will happen
+     */
+    public BangBangController(Input input, Output output, int loopTimeHertz) {
+        super(loopTimeHertz, LoopType.FIXED_RATE);
+        this.input = input;
+        this.output = output;
+    }
+
+    /**
+     * Sets the desired input that is to be achieved through this controller.
+     *
+     * @param setpoint desired point that the input should reach
+     */
+    public final void setSetpoint(double setpoint) {
+        synchronized (this) {
+            this.setpoint = setpoint;
+        }
+    }
+
+    /**
+     * Sets whether the controller should turn off the motor. As long as the
+     * speed controller is on "coast" mode, sending {@code true} to this method
+     * will coast the motor. Turning coast off will return to the normal state
+     * of the controller.
+     *
+     * @param coast if motor should coast
+     */
+    public final void setCoast(boolean coast) {
+        synchronized (this) {
+            this.coast = coast;
+        }
+    }
+
+    /**
+     * Sets whether the controller should be in "speed up" mode. Speed up mode
+     * means that the controller will set the output to
+     * {@link #getSpinupOutput()} while the input is lower than
+     * {@link #getSpinupInput()}.
+     *
+     * <p> This is usually only useful if there is overcurrent protection on the
+     * controller that will not allow it to go at fast speeds quickly.
+     *
+     * @param speedUp if controller should be in "speed up" mode
+     */
+    public final void setSpeedUp(boolean speedUp) {
+        synchronized (this) {
+            this.speedUp = speedUp;
+        }
+    }
+
+    /**
+     * If the controller is in "speed up" mode, sets the maximum input that
+     * {@link #getSpinupOutput()} will be needed for output. While the input is
+     * lower than {@code spinupInput}, the controller will set the output to
+     * {@link #getSpinupOutput()}.
+     *
+     * @param spinupInput maximum input to use {@link #getSpinupOutput()} for
+     */
+    public final void setSpinupInput(double spinupInput) {
+        synchronized (this) {
+            this.spinupInput = spinupInput;
+        }
+    }
+
+    /**
+     * If the controller is in "speed up" mode, sets the output to use whenever
+     * the input is below {@link #getSpinupInput()}. While the input is lower
+     * than {@link #getSpinupInput()}, the controller will set the output to
+     * {@code spinupOutput}.
+     *
+     * @param spinupOutput output for when input is lower than
+     * {@link #getSpinupInput()}
+     */
+    public final void setSpinupOutput(double spinupOutput) {
+        synchronized (this) {
+            this.spinupOutput = spinupOutput;
+        }
+    }
+
+    /**
+     * Sets whether the output should be reversed. If output is reversed, it
+     * will be negative values.
+     *
+     * @param reversed if controller should reverse output
+     */
+    public final void setReversed(boolean reversed) {
+        synchronized (this) {
+            this.reversed = reversed;
+        }
+    }
+
+    /**
+     * Sets the absolute maximum output of the controller.
+     *
+     * <p> If you want to reverse output, use {@link #setReversed(boolean)}.
+     *
+     * @param maxOutput maximum output to send
+     */
+    public final void setMaxOutput(double maxOutput) {
+        synchronized (this) {
+            this.maxOutput = MathUtils.abs(maxOutput);
+        }
+    }
+
+    /**
+     * Returns whether the controller is in "speed up" mode. Speed up mode means
+     * that the controller will set the output to {@link #getSpinupOutput()}
+     * while the input is lower than {@link #getSpinupInput()}.
+     *
+     * @return if controller is in "speed up" mode
+     */
+    public final boolean isSpeedUp() {
+        synchronized (this) {
+            return speedUp;
+        }
+    }
+
+    /**
+     * Returns the maximum input that {@link #getSpinupOutput()} will be needed
+     * for output. While the input is lower than this, the controller will set
+     * the output to {@link #getSpinupOutput()}.
+     *
+     * <p> <i> This value will only have effect in
+     * {@link #isSpeedUp() "speed up" mode}. </i>
+     *
+     * @return maximum input that will be considered "spinning up"
+     */
+    public final double getSpinupInput() {
+        synchronized (this) {
+            return spinupInput;
+        }
+    }
+
+    /**
+     * Returns the output to use whenever the input is below
+     * {@link #getSpinupInput()}. While the input is lower than
+     * {@link #getSpinupInput()}, the controller will set the output to this.
+     *
+     * <p> <i> This value will only have effect in
+     * {@link #isSpeedUp() "speed up" mode}. </i>
+     *
+     * @return output to use when controller is "spinning up"
+     */
+    public final double getSpinupOutput() {
+        synchronized (this) {
+            return spinupOutput;
+        }
+    }
+
+    /**
+     * Returns the absolute maximum output of the controller. Output should
+     * never be higher than this number.
+     *
+     * @return highest possible output
+     */
+    public final double getMaxOutput() {
+        synchronized (this) {
+            return maxOutput;
+        }
+    }
+
+    /**
+     * Returns the previous output sent from the controller.
+     *
+     * @return last set output
+     */
+    public final double getPrevResult() {
+        synchronized (this) {
+            return prevResult;
+        }
+    }
+
+    /**
+     * Returns the previous input from the controller.
+     *
+     * @return last input received
+     */
+    public final double getPrevInput() {
+        synchronized (this) {
+            return prevInput;
+        }
+    }
+
+    /**
+     * Runs the bang-bang algorithm.
+     */
+    public final void run() {
+        double in = input.get();
+        double result;
+
+        synchronized (this) {
+
+            if (coast) {
+                result = 0;
+            } else if (speedUp) {
+                if (in >= setpoint) {
+                    result = 0;
+                } else if (in >= spinupInput) {
+                    result = maxOutput * (reversed ? -1 : 1);
+                } else {
+                    result = spinupOutput * (reversed ? -1 : 1);
+                }
+            } else {
+                if (in >= setpoint) {
+                    result = 0;
+                } else {
+                    result = maxOutput * (reversed ? -1 : 1);
+                }
+            }
+
+            prevInput = in;
+            prevResult = result;
+
+        }
+
+        output.set(result);
+    }
+
+    /**
+     * Returns the previous input from the controller.
+     *
+     * @return last input received
+     * @see #getPrevInput()
+     */
+    public final double get() {
+        return getPrevInput();
+    }
+
+    /**
+     * Sets the desired input that is to be achieved through this controller.
+     *
+     * @param setpoint desired point that the input should reach
+     * @see #setSetpoint(double)
+     */
+    public final void set(double value) {
+        setSetpoint(value);
+    }
+
+    /**
+     * Returns the previous input from the controller.
+     *
+     * @return last input received
+     * @see #getPrevInput()
+     */
+    public final double getRate() {
+        return getPrevInput();
+    }
+
+    /**
+     * Sets the desired input that is to be achieved through this controller.
+     *
+     * @param setpoint desired point that the input should reach
+     * @see #setSetpoint(double)
+     */
+    public final void setRate(double rate) {
+        setSetpoint(rate);
+    }
+}
