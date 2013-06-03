@@ -22,6 +22,9 @@ public class GyroscopeModule extends Module.StartardModule implements Gyroscope 
      * @param gyro the composing instance which will return values
      */
     public GyroscopeModule(Gyro gyro) {
+        if(gyro == null) {
+            throw new NullPointerException("Null gyro given");
+        }
         this.gyro = gyro;
     }
 

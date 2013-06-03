@@ -59,6 +59,8 @@ public class BangBangController extends Controller implements RateSensor, RateAc
     private final Input input;
     private final Output output;
     // Controller variables
+    // uses lock so user can't lock controller accidentally using "this"
+    private final Object lock = new Object();
     private boolean coast;
     private boolean speedUp;
     private boolean reversed = false;
@@ -90,6 +92,11 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      */
     public BangBangController(Input input, Output output, double loopTime) {
         super(loopTime, LoopType.FIXED_RATE);
+        if(input == null) {
+            throw new NullPointerException("Null input given");
+        } else if (output == null) {
+            throw new NullPointerException("Null output given");
+        }
         this.input = input;
         this.output = output;
     }
@@ -105,6 +112,11 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      */
     public BangBangController(Input input, Output output, int loopTimeHertz) {
         super(loopTimeHertz, LoopType.FIXED_RATE);
+        if(input == null) {
+            throw new NullPointerException("Null input given");
+        } else if (output == null) {
+            throw new NullPointerException("Null output given");
+        }
         this.input = input;
         this.output = output;
     }
@@ -115,7 +127,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param setpoint desired point that the input should reach
      */
     public final void setSetpoint(double setpoint) {
-        synchronized (this) {
+        synchronized (lock) {
             this.setpoint = setpoint;
         }
     }
@@ -129,7 +141,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param coast if motor should coast
      */
     public final void setCoast(boolean coast) {
-        synchronized (this) {
+        synchronized (lock) {
             this.coast = coast;
         }
     }
@@ -146,7 +158,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param speedUp if controller should be in "speed up" mode
      */
     public final void setSpeedUp(boolean speedUp) {
-        synchronized (this) {
+        synchronized (lock) {
             this.speedUp = speedUp;
         }
     }
@@ -160,7 +172,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param spinupInput maximum input to use {@link #getSpinupOutput()} for
      */
     public final void setSpinupInput(double spinupInput) {
-        synchronized (this) {
+        synchronized (lock) {
             this.spinupInput = spinupInput;
         }
     }
@@ -175,7 +187,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * {@link #getSpinupInput()}
      */
     public final void setSpinupOutput(double spinupOutput) {
-        synchronized (this) {
+        synchronized (lock) {
             this.spinupOutput = spinupOutput;
         }
     }
@@ -187,7 +199,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param reversed if controller should reverse output
      */
     public final void setReversed(boolean reversed) {
-        synchronized (this) {
+        synchronized (lock) {
             this.reversed = reversed;
         }
     }
@@ -200,7 +212,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param maxOutput maximum output to send
      */
     public final void setMaxOutput(double maxOutput) {
-        synchronized (this) {
+        synchronized (lock) {
             this.maxOutput = MathUtils.abs(maxOutput);
         }
     }
@@ -213,7 +225,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return if controller is in "speed up" mode
      */
     public final boolean isSpeedUp() {
-        synchronized (this) {
+        synchronized (lock) {
             return speedUp;
         }
     }
@@ -229,7 +241,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return maximum input that will be considered "spinning up"
      */
     public final double getSpinupInput() {
-        synchronized (this) {
+        synchronized (lock) {
             return spinupInput;
         }
     }
@@ -245,7 +257,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return output to use when controller is "spinning up"
      */
     public final double getSpinupOutput() {
-        synchronized (this) {
+        synchronized (lock) {
             return spinupOutput;
         }
     }
@@ -257,7 +269,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return highest possible output
      */
     public final double getMaxOutput() {
-        synchronized (this) {
+        synchronized (lock) {
             return maxOutput;
         }
     }
@@ -268,7 +280,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return last set output
      */
     public final double getPrevResult() {
-        synchronized (this) {
+        synchronized (lock) {
             return prevResult;
         }
     }
@@ -279,7 +291,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return last input received
      */
     public final double getPrevInput() {
-        synchronized (this) {
+        synchronized (lock) {
             return prevInput;
         }
     }
@@ -291,7 +303,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
         double in = input.get();
         double result;
 
-        synchronized (this) {
+        synchronized (lock) {
 
             if (coast) {
                 result = 0;

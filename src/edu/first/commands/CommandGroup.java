@@ -1,8 +1,10 @@
 package edu.first.commands;
 
 import edu.first.command.Command;
+import edu.first.command.Commands;
 import edu.first.util.list.ArrayList;
 import edu.first.util.Enum;
+import edu.first.util.list.List;
 
 /**
  * Command that encompasses multiple commands strung together. Runs commands
@@ -14,20 +16,45 @@ import edu.first.util.Enum;
  * before the next command.
  *
  * <p> Concurrent commands are run at the same time as all concurrent commands
- * around it.
+ * around it. A sequential command between concurrent commands will be prevent
+ * those concurrent commands from being run together.
  *
  * <p> To add sequential command, use
  * {@link CommandGroup#addSequential(edu.ATA.command.Command)}, and to add
  * concurrent commands, use
  * {@link CommandGroup#addConcurrent(edu.ATA.command.Command)}.
  *
+ * <p> Command Groups look like this:
+ * <pre>
+ * public final class ExampleCommand extends CommandGroup {
+ *     public ExampleCommand() {
+ *         addSequential(new F());
+ *         addSequential(new F1());
+ *         addConcurrent(new F2());
+ *         addConcurrent(new F3());
+ *         addConcurrent(new F4());
+ *         addSequential(new F5());
+ *         addConcurrent(new F6());
+ *     }
+ * }
+ * </pre>
+ *
+ * In this example, this execution will go as follows:
+ * <pre>
+ * F
+ * F1
+ * F2 + F3 + F4
+ * F5
+ * F6
+ * </pre>
+ *
  * @since May 26 13
  * @author Joel Gallant
  */
 public class CommandGroup implements Command {
 
-    private final ArrayList types = new ArrayList();
-    private final ArrayList commands = new ArrayList();
+    private final List types = new ArrayList();
+    private final List commands = new ArrayList();
 
     /**
      * Protected constructor to prevent instantiating from other classes.
@@ -79,20 +106,20 @@ public class CommandGroup implements Command {
      * {@link CommandGroup#addConcurrent(edu.ATA.command.Command) addConcurrent(Command)}.
      */
     public final void run() {
-        ArrayList concurrent = new ArrayList();
+        List concurrent = new ArrayList();
         for (int x = 0; x < commands.size(); x++) {
             if (types.get(x).equals(Type.CONCURRENT)) {
                 concurrent.add(commands.get(x));
             } else {
                 if (!concurrent.isEmpty()) {
-                    new ConcurrentCommandGroup(concurrent).run();
+                    Commands.run(new ConcurrentCommandGroup(concurrent));
                     concurrent = new ArrayList();
                 }
-                ((Command) commands.get(x)).run();
+                Commands.run((Command) commands.get(x));
             }
         }
         if (!concurrent.isEmpty()) {
-            new ConcurrentCommandGroup(concurrent).run();
+            Commands.run(new ConcurrentCommandGroup(concurrent));
         }
     }
 

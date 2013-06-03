@@ -21,6 +21,9 @@ public class JaguarModule extends Module.StartardModule implements SpeedControll
      * @param jaguar the composing instance which perform the functions
      */
     public JaguarModule(Jaguar jaguar) {
+        if(jaguar == null) {
+            throw new NullPointerException("Null jaguar given");
+        }
         this.jaguar = jaguar;
     }
 

@@ -21,6 +21,9 @@ public class VictorModule extends Module.StartardModule implements SpeedControll
      * @param victor the composing instance which perform the functions
      */
     public VictorModule(Victor victor) {
+        if (victor == null) {
+            throw new NullPointerException("Null victor given");
+        }
         this.victor = victor;
     }
 

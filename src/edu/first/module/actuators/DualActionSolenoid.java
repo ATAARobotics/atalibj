@@ -22,6 +22,9 @@ public class DualActionSolenoid extends Module.StartardModule {
      */
     public DualActionSolenoid(edu.wpi.first.wpilibj.Solenoid left,
             edu.wpi.first.wpilibj.Solenoid right) {
+        if (left == null || right == null) {
+            throw new NullPointerException("Null solenoid given");
+        }
         this.left = left;
         this.right = right;
     }
