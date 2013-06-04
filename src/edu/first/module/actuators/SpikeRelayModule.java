@@ -67,7 +67,6 @@ public class SpikeRelayModule extends Module.StartardModule implements SpikeRela
      * {@inheritDoc}
      */
     public void init() {
-        set(Direction.OFF);
     }
 
     /**
@@ -75,7 +74,7 @@ public class SpikeRelayModule extends Module.StartardModule implements SpikeRela
      *
      * @throws IllegalStateException when module is not enabled
      */
-    public void set(Direction d) {
+    public final void set(Direction d) {
         ensureEnabled();
         relay.set(convertValue(d));
     }

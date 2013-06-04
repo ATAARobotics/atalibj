@@ -70,7 +70,6 @@ public interface SpeedController extends RateActuator, RateSensor {
     /**
      * Sets the speed to {@code value}.
      *
-     * @throws IllegalStateException when module is not enabled
      * @see #setSpeed(double)
      */
     public void setRate(double rate);
@@ -78,7 +77,6 @@ public interface SpeedController extends RateActuator, RateSensor {
     /**
      * Sets the speed to {@code value}.
      *
-     * @throws IllegalStateException when module is not enabled
      * @see #setSpeed(double)
      */
     public void set(double value);

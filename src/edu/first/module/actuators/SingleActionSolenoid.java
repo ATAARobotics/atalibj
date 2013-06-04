@@ -56,7 +56,7 @@ public class SingleActionSolenoid extends Module.StartardModule implements Solen
      * <p> Turns off the solenoid.
      */
     protected void disableModule() {
-        setPosition(false);
+        solenoid.set(false);
     }
 
     /**

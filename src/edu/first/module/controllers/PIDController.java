@@ -4,6 +4,7 @@ import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;
 import edu.first.identifiers.PositionalActuator;
 import edu.first.identifiers.PositionalSensor;
+import edu.first.util.MathUtils;
 
 /**
  * Controller that uses the PID algorithm to handle input and output. This class
@@ -39,6 +40,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
     private double totalError = 0;
     private double prevError = 0;
     private double prevResult = 0;
+    private double tolerance = 0;
 
     /**
      * Constructs the controller using its input and output. Uses the default
@@ -61,7 +63,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      */
     public PIDController(Input input, Output output, double loopTime) {
         super(loopTime, LoopType.FIXED_RATE);
-        if(input == null) {
+        if (input == null) {
             throw new NullPointerException("Null input given");
         } else if (output == null) {
             throw new NullPointerException("Null output given");
@@ -81,7 +83,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      */
     public PIDController(Input input, Output output, int loopTimeHertz) {
         super(loopTimeHertz, LoopType.FIXED_RATE);
-        if(input == null) {
+        if (input == null) {
             throw new NullPointerException("Null input given");
         } else if (output == null) {
             throw new NullPointerException("Null output given");
@@ -231,6 +233,16 @@ public class PIDController extends Controller implements PositionalSensor, Posit
     }
 
     /**
+     * Sets the tolerance of {@link #onTarget()}. If the error is less than the
+     * tolerance, {@code onTarget()} returns true.
+     *
+     * @param tolerance how far off input can be to be considered "on target"
+     */
+    public final void setTolerance(double tolerance) {
+        this.tolerance = tolerance;
+    }
+
+    /**
      * Returns the last computed output value.
      *
      * @return last result of PID algorithm
@@ -239,6 +251,48 @@ public class PIDController extends Controller implements PositionalSensor, Posit
         synchronized (lock) {
             return prevResult;
         }
+    }
+
+    /**
+     * Returns the currently set setpoint that the controller is aimed towards.
+     *
+     * @return current goal
+     */
+    public final double getSetpoint() {
+        synchronized (lock) {
+            return setpoint;
+        }
+    }
+
+    /**
+     * Returns the difference between the last computed setpoint and the input.
+     *
+     * @return how far off input is from setpoint
+     */
+    public final double getError() {
+        synchronized (lock) {
+            return prevError;
+        }
+    }
+
+    /**
+     * Returns the currently set tolerance for {@link #onTarget()}. If the error
+     * is less than the tolerance, {@code onTarget()} returns true.
+     *
+     * @return how far off input can be to be considered "on target"
+     */
+    public final double getTolerance() {
+        return tolerance;
+    }
+
+    /**
+     * Returns whether the {@link #getError() error} is below the current
+     * {@link #getTolerance() tolerance}.
+     *
+     * @return if controller is close enough to target
+     */
+    public final boolean onTarget() {
+        return MathUtils.abs(getError()) < tolerance;
     }
 
     /**
