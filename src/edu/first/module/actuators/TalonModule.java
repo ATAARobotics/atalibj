@@ -15,13 +15,13 @@ public class TalonModule extends Module.StartardModule implements SpeedControlle
     private final Talon talon;
 
     /**
-     * Constructs the module with the talon object underneath this class to
-     * call methods from.
+     * Constructs the module with the talon object underneath this class to call
+     * methods from.
      *
      * @param talon the composing instance which perform the functions
      */
     public TalonModule(Talon talon) {
-        if(talon == null) {
+        if (talon == null) {
             throw new NullPointerException("Null talon given");
         }
         this.talon = talon;
@@ -90,15 +90,21 @@ public class TalonModule extends Module.StartardModule implements SpeedControlle
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double getSpeed() {
+        ensureEnabled();
         return talon.getSpeed();
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public int getRawSpeed() {
+        ensureEnabled();
         return talon.getRaw();
     }
 
@@ -114,29 +120,41 @@ public class TalonModule extends Module.StartardModule implements SpeedControlle
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void setRate(double rate) {
-        setSpeed(rate);
+        ensureEnabled();
+        talon.set(rate);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void set(double value) {
-        setSpeed(value);
+        ensureEnabled();
+        talon.set(value);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double getRate() {
-        return getSpeed();
+        ensureEnabled();
+        return talon.getSpeed();
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double get() {
-        return getSpeed();
+        ensureEnabled();
+        return talon.getSpeed();
     }
 }

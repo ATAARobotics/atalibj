@@ -21,7 +21,7 @@ public class JaguarModule extends Module.StartardModule implements SpeedControll
      * @param jaguar the composing instance which perform the functions
      */
     public JaguarModule(Jaguar jaguar) {
-        if(jaguar == null) {
+        if (jaguar == null) {
             throw new NullPointerException("Null jaguar given");
         }
         this.jaguar = jaguar;
@@ -90,13 +90,18 @@ public class JaguarModule extends Module.StartardModule implements SpeedControll
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double getSpeed() {
+        ensureEnabled();
         return jaguar.getSpeed();
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public int getRawSpeed() {
         return jaguar.getRaw();
@@ -114,29 +119,41 @@ public class JaguarModule extends Module.StartardModule implements SpeedControll
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void setRate(double rate) {
-        setSpeed(rate);
+        ensureEnabled();
+        jaguar.set(rate);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void set(double value) {
-        setSpeed(value);
+        ensureEnabled();
+        jaguar.set(value);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double getRate() {
-        return getSpeed();
+        ensureEnabled();
+        return jaguar.getSpeed();
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double get() {
-        return getSpeed();
+        ensureEnabled();
+        return jaguar.getSpeed();
     }
 }

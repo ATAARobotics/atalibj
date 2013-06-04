@@ -90,15 +90,21 @@ public class VictorModule extends Module.StartardModule implements SpeedControll
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double getSpeed() {
+        ensureEnabled();
         return victor.getSpeed();
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public int getRawSpeed() {
+        ensureEnabled();
         return victor.getRaw();
     }
 
@@ -114,29 +120,41 @@ public class VictorModule extends Module.StartardModule implements SpeedControll
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void setRate(double rate) {
-        setSpeed(rate);
+        ensureEnabled();
+        victor.set(rate);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void set(double value) {
-        setSpeed(value);
+        ensureEnabled();
+        victor.set(value);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double getRate() {
-        return getSpeed();
+        ensureEnabled();
+        return victor.getSpeed();
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double get() {
-        return getSpeed();
+        ensureEnabled();
+        return victor.getSpeed();
     }
 }

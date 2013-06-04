@@ -79,7 +79,7 @@ public class DualActionSolenoid extends Module.StartardModule {
      *
      * @throws IllegalStateException when module is not enabled
      */
-    public void set(Direction direction) {
+    public final void set(Direction direction) {
         ensureEnabled();
         if (direction == Direction.LEFT) {
             left.set(true);
@@ -100,7 +100,7 @@ public class DualActionSolenoid extends Module.StartardModule {
      *
      * @return current direction of solenoid
      */
-    public Direction get() {
+    public final Direction get() {
         if (left.get() && !right.get()) {
             return Direction.LEFT;
         } else if (right.get() && !left.get()) {
@@ -114,7 +114,7 @@ public class DualActionSolenoid extends Module.StartardModule {
      * Reverses the direction of the solenoid. This means LEFT -> RIGHT or RIGHT
      * -> LEFT.
      */
-    public void reverse() {
+    public final void reverse() {
         if (get() == Direction.LEFT) {
             set(Direction.RIGHT);
         } else if (get() == Direction.RIGHT) {
@@ -125,7 +125,7 @@ public class DualActionSolenoid extends Module.StartardModule {
     /**
      * Turns both ends of the solenoid off.
      */
-    public void turnOff() {
+    public final void turnOff() {
         set(Direction.OFF);
     }
 

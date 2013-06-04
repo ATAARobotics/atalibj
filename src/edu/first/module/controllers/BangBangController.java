@@ -12,8 +12,8 @@ import edu.first.util.MathUtils;
  * <ul>
  * <li> Simpler and more robust than PID (for this application); requires no
  * tuning; provides fastest spin-up and recovery time
- * <li> Works with Victor (and Talon) motor controller. Jag should be
- * avoided for this application
+ * <li> Works with Victor (and Talon) motor controller. Jag should be avoided
+ * for this application
  * <li> Motor Controller should be jumpered for coast mode (not brake mode)
  * <li> A wheel speed sensor is required. You can use any device which provides
  * a usable speed signal
@@ -68,6 +68,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
     private double maxOutput = 1;
     private double spinupInput = 0;
     private double spinupOutput = 1;
+    private double tolerance = 0;
     private double prevResult;
     private double prevInput;
 
@@ -92,7 +93,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      */
     public BangBangController(Input input, Output output, double loopTime) {
         super(loopTime, LoopType.FIXED_RATE);
-        if(input == null) {
+        if (input == null) {
             throw new NullPointerException("Null input given");
         } else if (output == null) {
             throw new NullPointerException("Null output given");
@@ -112,7 +113,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      */
     public BangBangController(Input input, Output output, int loopTimeHertz) {
         super(loopTimeHertz, LoopType.FIXED_RATE);
-        if(input == null) {
+        if (input == null) {
             throw new NullPointerException("Null input given");
         } else if (output == null) {
             throw new NullPointerException("Null output given");
@@ -218,6 +219,16 @@ public class BangBangController extends Controller implements RateSensor, RateAc
     }
 
     /**
+     * Sets the tolerance of {@link #onTarget()}. If the error is less than the
+     * tolerance, {@code onTarget()} returns true.
+     *
+     * @param tolerance how far off input can be to be considered "on target"
+     */
+    public final void setTolerance(double tolerance) {
+        this.tolerance = tolerance;
+    }
+
+    /**
      * Returns whether the controller is in "speed up" mode. Speed up mode means
      * that the controller will set the output to {@link #getSpinupOutput()}
      * while the input is lower than {@link #getSpinupInput()}.
@@ -275,6 +286,29 @@ public class BangBangController extends Controller implements RateSensor, RateAc
     }
 
     /**
+     * Returns the currently set setpoint that the controller is aimed towards.
+     *
+     * @return current goal
+     */
+    public final double getSetpoint() {
+        synchronized (lock) {
+            return setpoint;
+        }
+    }
+
+    /**
+     * Returns the current difference between the setpoint and the previous
+     * input.
+     *
+     * @return how far off input is from setpoint
+     */
+    public final double getError() {
+        synchronized (lock) {
+            return setpoint - prevInput;
+        }
+    }
+
+    /**
      * Returns the previous output sent from the controller.
      *
      * @return last set output
@@ -294,6 +328,26 @@ public class BangBangController extends Controller implements RateSensor, RateAc
         synchronized (lock) {
             return prevInput;
         }
+    }
+
+    /**
+     * Returns the currently set tolerance for {@link #onTarget()}. If the error
+     * is less than the tolerance, {@code onTarget()} returns true.
+     *
+     * @return how far off input can be to be considered "on target"
+     */
+    public final double getTolerance() {
+        return tolerance;
+    }
+
+    /**
+     * Returns whether the {@link #getError() error} is below the current
+     * {@link #getTolerance() tolerance}.
+     *
+     * @return if controller is close enough to target
+     */
+    public final boolean onTarget() {
+        return MathUtils.abs(getError()) < tolerance;
     }
 
     /**
