@@ -39,6 +39,15 @@ public class SafeCompressorModule extends CompressorModule {
 	}
 
 	/**
+	 * Determines whether or not the compressor is currently at its limit.
+	 *
+	 * @return if the compressor is at its limit or not
+	 */
+	public boolean isAtLimit() {
+		return safety.get();
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * Compression is not guaranteed when state is on as the safety may prevent it.
 	 */
@@ -54,7 +63,7 @@ public class SafeCompressorModule extends CompressorModule {
 	 */
 	public void set(State s) {
 		ensureEnabled();
-		if (!safety.get()) {
+		if (!isAtLimit()) {
 			super.set(s);
 		} else {
 			super.set(State.OFF);
