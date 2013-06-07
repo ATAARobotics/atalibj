@@ -25,7 +25,7 @@ import java.io.IOException;
  */
 public final class Properties {
 
-    private final String fileName;
+    private final File file;
     // These are lazily intialized
     private String propertiesContent;
     private Property[] properties;
@@ -39,10 +39,10 @@ public final class Properties {
      * argument in {@link TextFiles#getTextFromFile(java.lang.String)}. That
      * definition is subject to change outside of this class' control.
      *
-     * @param fileName name of the file with properties in it
+     * @param file file to get data from
      */
-    public Properties(String fileName) {
-        this.fileName = fileName;
+    public Properties(File file) {
+        this.file = file;
     }
 
     /**
@@ -55,7 +55,7 @@ public final class Properties {
     public String getFileContents() throws IOException {
         // lazy intialization so construction isn't intense
         if (propertiesContent == null) {
-            propertiesContent = TextFiles.getTextFromFile(fileName);
+            propertiesContent = TextFiles.getTextFromFile(file);
         }
         return propertiesContent;
     }
