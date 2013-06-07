@@ -86,7 +86,7 @@ public class SpikeRelayModule extends Module.StartardModule implements SpikeRela
         return convertDirection(relay.get());
     }
 
-    private Direction convertDirection(Relay.Value v) {
+    private static Direction convertDirection(Relay.Value v) {
         if (v == Relay.Value.kForward) {
             return Direction.FORWARDS;
         } else if (v == Relay.Value.kReverse) {
@@ -96,7 +96,7 @@ public class SpikeRelayModule extends Module.StartardModule implements SpikeRela
         }
     }
 
-    private Relay.Value convertValue(Direction d) {
+    private static Relay.Value convertValue(Direction d) {
         if (d == Direction.FORWARDS) {
             return Relay.Value.kForward;
         } else if (d == Direction.BACKWARDS) {

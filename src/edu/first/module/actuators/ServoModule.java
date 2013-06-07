@@ -63,6 +63,8 @@ public class ServoModule extends Module.StartardModule implements Servo {
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void setPosition(double position) {
         ensureEnabled();
@@ -71,6 +73,8 @@ public class ServoModule extends Module.StartardModule implements Servo {
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public void set(double position) {
         ensureEnabled();
@@ -79,6 +83,8 @@ public class ServoModule extends Module.StartardModule implements Servo {
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double getPosition() {
         ensureEnabled();
@@ -87,6 +93,8 @@ public class ServoModule extends Module.StartardModule implements Servo {
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double get() {
         ensureEnabled();
