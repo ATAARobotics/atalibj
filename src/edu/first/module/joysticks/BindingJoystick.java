@@ -22,7 +22,7 @@ public class BindingJoystick extends JoystickModule {
      *
      * @param joystick the composing instance to get input from
      */
-    public BindingJoystick(edu.wpi.first.wpilibj.Joystick joystick) {
+    protected BindingJoystick(edu.wpi.first.wpilibj.Joystick joystick) {
         super(joystick);
     }
 

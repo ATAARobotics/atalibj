@@ -24,7 +24,7 @@ public class EncoderModule extends Module.StartardModule implements Encoder {
      * @param inputType which kind of input to accept
      * @param reverseDirection if input should be reversed
      */
-    public EncoderModule(edu.wpi.first.wpilibj.Encoder encoder, InputType inputType, boolean reverseDirection) {
+    protected EncoderModule(edu.wpi.first.wpilibj.Encoder encoder, InputType inputType, boolean reverseDirection) {
         if (encoder == null) {
             throw new NullPointerException("Null encoder given");
         }
@@ -40,7 +40,7 @@ public class EncoderModule extends Module.StartardModule implements Encoder {
      * @param encoder underlying object to get input from
      * @param inputType which kind of input to accept
      */
-    public EncoderModule(edu.wpi.first.wpilibj.Encoder encoder, InputType inputType) {
+    protected EncoderModule(edu.wpi.first.wpilibj.Encoder encoder, InputType inputType) {
         this(encoder, inputType, false);
     }
 
@@ -50,7 +50,7 @@ public class EncoderModule extends Module.StartardModule implements Encoder {
      *
      * @param encoder underlying object to get input from
      */
-    public EncoderModule(edu.wpi.first.wpilibj.Encoder encoder) {
+    protected EncoderModule(edu.wpi.first.wpilibj.Encoder encoder) {
         this(encoder, DEFAULT_INPUT_TYPE);
     }
 

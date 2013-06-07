@@ -18,7 +18,7 @@ public class SingleActionSolenoid extends Module.StartardModule implements Solen
      *
      * @param solenoid the composing instance which perform the functions
      */
-    public SingleActionSolenoid(edu.wpi.first.wpilibj.Solenoid solenoid) {
+    protected SingleActionSolenoid(edu.wpi.first.wpilibj.Solenoid solenoid) {
         if(solenoid == null) {
             throw new NullPointerException("Null solenoid given");
         }

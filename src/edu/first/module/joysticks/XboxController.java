@@ -64,7 +64,7 @@ public class XboxController extends BindingJoystick {
      *
      * @param joystick the composing instance to get input from
      */
-    public XboxController(Joystick joystick) {
+    protected XboxController(Joystick joystick) {
         super(joystick);
 
         increaseAxisCapacity(2);
@@ -84,7 +84,7 @@ public class XboxController extends BindingJoystick {
      * @param stickDeadband threshold of minimum input for stick axises
      * @see #addDeadband(int, double)
      */
-    public XboxController(Joystick joystick, double stickDeadband) {
+    protected XboxController(Joystick joystick, double stickDeadband) {
         this(joystick);
 
         addDeadband(LEFT_X, stickDeadband);

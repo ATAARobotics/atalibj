@@ -20,7 +20,7 @@ public class TalonModule extends Module.StartardModule implements SpeedControlle
      *
      * @param talon the composing instance which perform the functions
      */
-    public TalonModule(Talon talon) {
+    protected TalonModule(Talon talon) {
         if (talon == null) {
             throw new NullPointerException("Null talon given");
         }

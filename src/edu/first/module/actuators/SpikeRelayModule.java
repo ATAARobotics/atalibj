@@ -21,7 +21,7 @@ public class SpikeRelayModule extends Module.StartardModule implements SpikeRela
      *
      * @param relay the composing instance which perform the functions
      */
-    public SpikeRelayModule(Relay relay) {
+    protected SpikeRelayModule(Relay relay) {
         if(relay == null) {
             throw new NullPointerException("Null relay given");
         }

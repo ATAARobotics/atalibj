@@ -20,7 +20,7 @@ public class ServoModule extends Module.StartardModule implements Servo {
      *
      * @param servo the composing instance which perform the functions
      */
-    public ServoModule(edu.wpi.first.wpilibj.Servo servo) {
+    protected ServoModule(edu.wpi.first.wpilibj.Servo servo) {
         this.servo = servo;
     }
 

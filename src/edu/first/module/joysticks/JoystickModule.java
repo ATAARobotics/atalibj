@@ -47,7 +47,7 @@ public class JoystickModule extends Module.StartardModule implements Joystick {
      *
      * @param joystick the composing instance to get input from
      */
-    public JoystickModule(edu.wpi.first.wpilibj.Joystick joystick) {
+    protected JoystickModule(edu.wpi.first.wpilibj.Joystick joystick) {
         if(joystick == null) {
             throw new NullPointerException("Null joystick given");
         }
