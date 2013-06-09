@@ -79,6 +79,7 @@ public class ADXL345_Accelerometer extends Module.StartardModule implements Acce
      * {@link #setAxis(edu.first.module.sensors.ADXL345_Accelerometer.Axis)}. If
      * no axis has been set, defaults to {@link Axis#X}.
      *
+     * @throws IllegalStateException when module is not enabled
      * @return current acceleration of selected axis
      */
     public double getAcceleration() {
@@ -89,6 +90,7 @@ public class ADXL345_Accelerometer extends Module.StartardModule implements Acce
     /**
      * Returns the acceleration of the given axis.
      *
+     * @throws IllegalStateException when module is not enabled
      * @param axis which axis to read
      * @return acceleration measured on axis
      */
@@ -100,6 +102,7 @@ public class ADXL345_Accelerometer extends Module.StartardModule implements Acce
     /**
      * Returns the acceleration of the given axis.
      *
+     * @throws IllegalStateException when module is not enabled
      * @param axis which axis to read
      * @return acceleration measured on axis
      * @see #getAcceleration()

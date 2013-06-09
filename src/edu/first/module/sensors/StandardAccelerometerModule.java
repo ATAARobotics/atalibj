@@ -82,6 +82,8 @@ public class StandardAccelerometerModule extends Module.StartardModule implement
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double getAcceleration() {
         ensureEnabled();
@@ -90,6 +92,8 @@ public class StandardAccelerometerModule extends Module.StartardModule implement
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IllegalStateException when module is not enabled
      */
     public double get() {
         ensureEnabled();
