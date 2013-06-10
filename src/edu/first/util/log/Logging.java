@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 public final class Logging implements Constants {
 
     private static final DriverStationLCD LCD = DriverStationLCD.getInstance();
-    private static final String[] buf = new String[DASHBOARD_LOG_LINES];
-    private static final DashboardSender[] senders = new DashboardSender[DASHBOARD_LOG_LINES];
+    private static final String[] buf = new String[6];
+    private static final DashboardSender[] senders = new DashboardSender[6];
 
     public static void logToConsole(String msg) {
         System.out.println(msg);
@@ -24,7 +24,6 @@ public final class Logging implements Constants {
             if (!msg.equals(buf[x])) {
                 sendDashboard(x, msg);
                 updated = true;
-                // Update buffer
                 buf[x] = msg;
             }
         }

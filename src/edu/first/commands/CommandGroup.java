@@ -1,10 +1,11 @@
 package edu.first.commands;
 
 import edu.first.command.Command;
-import edu.first.command.Commands;
 import edu.first.util.list.ArrayList;
 import edu.first.util.Enum;
+import edu.first.util.list.Iterator;
 import edu.first.util.list.List;
+import edu.first.util.list.SafeArrayList;
 
 /**
  * Command that encompasses multiple commands strung together. Runs commands
@@ -53,7 +54,6 @@ import edu.first.util.list.List;
  */
 public class CommandGroup implements Command {
 
-    private final List types = new ArrayList();
     private final List commands = new ArrayList();
 
     /**
@@ -70,7 +70,10 @@ public class CommandGroup implements Command {
      * @param command command to run by itself
      */
     protected final void addSequential(Command command) {
-        add(Type.SEQUENTIAL, command);
+        if (command == null) {
+            throw new NullPointerException();
+        }
+        commands.add(command);
     }
 
     /**
@@ -80,21 +83,20 @@ public class CommandGroup implements Command {
      * around it.
      *
      * <p> <i> The connotation of "commands around it" is commands the are added
-     * before and after this command, that are concurrently added using
+     * before and after this command, that are added using
      * {@link CommandGroup#addConcurrent(edu.ATA.command.Command)}.</i>
      *
      * @param command command to run alongside other concurrent commands
      */
     protected final void addConcurrent(Command command) {
-        add(Type.CONCURRENT, command);
-    }
-
-    private void add(Type type, Command command) {
-        if (type == null || command == null) {
+        if (command == null) {
             throw new NullPointerException();
         }
-        types.add(type);
-        commands.add(command);
+        if (commands.get(commands.size() - 1) instanceof ConcurrentBuffer) {
+            ((ConcurrentBuffer) commands.get(commands.size() - 1)).add(command);
+        } else {
+            commands.add(new ConcurrentBuffer().add(command));
+        }
     }
 
     /**
@@ -106,30 +108,24 @@ public class CommandGroup implements Command {
      * {@link CommandGroup#addConcurrent(edu.ATA.command.Command) addConcurrent(Command)}.
      */
     public final void run() {
-        List concurrent = new ArrayList();
-        for (int x = 0; x < commands.size(); x++) {
-            if (types.get(x).equals(Type.CONCURRENT)) {
-                concurrent.add(commands.get(x));
-            } else {
-                if (!concurrent.isEmpty()) {
-                    Commands.run(new ConcurrentCommandGroup(concurrent));
-                    concurrent = new ArrayList();
-                }
-                Commands.run((Command) commands.get(x));
-            }
-        }
-        if (!concurrent.isEmpty()) {
-            Commands.run(new ConcurrentCommandGroup(concurrent));
+        Iterator i = commands.iterator();
+        while (i.hasNext()) {
+            Command c = (Command) i.next();
+            c.run();
         }
     }
 
-    private static class Type extends Enum {
+    private static final class ConcurrentBuffer implements Command {
 
-        private static final Type CONCURRENT = new Type("CONCURRENT");
-        private static final Type SEQUENTIAL = new Type("SEQUENTIAL");
+        List commands = new SafeArrayList(Command.class);
 
-        private Type(String name) {
-            super(name);
+        ConcurrentBuffer add(Command c) {
+            commands.add(c);
+            return this;
+        }
+
+        public void run() {
+            new ConcurrentCommandGroup(commands).run();
         }
     }
 }

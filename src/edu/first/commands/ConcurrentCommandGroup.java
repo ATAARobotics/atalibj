@@ -5,12 +5,13 @@ import edu.first.util.list.List;
 import edu.first.util.log.Logging;
 
 /**
- * Basic command group that runs multiple commands in parallel.
+ * Basic command group that runs multiple commands in parallel. Every command
+ * inside of this group is started at the same time.
  *
  * @since May 26 13
  * @author Joel Gallant
  */
-public class ConcurrentCommandGroup implements Command {
+public final class ConcurrentCommandGroup implements Command {
 
     private final Command[] commands;
 
@@ -25,13 +26,14 @@ public class ConcurrentCommandGroup implements Command {
         if (commands == null) {
             throw new NullPointerException();
         }
-        this.commands = commands;
+        this.commands = (Command[]) commands.clone();
     }
 
     /**
      * Constructs the command group using an array of commands to be run at the
-     * same time. There is no limit on how many commands can be run. The ArrayList
-     * cannot be null, and cannot contain elements that are not commands.
+     * same time. There is no limit on how many commands can be run. The
+     * ArrayList cannot be null, and cannot contain elements that are not
+     * commands.
      *
      * @param commands commands to run concurrently
      */

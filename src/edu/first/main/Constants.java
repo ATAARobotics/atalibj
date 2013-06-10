@@ -41,10 +41,4 @@ package edu.first.main;
  * @author Joel Gallant
  */
 public interface Constants {
-
-    /**
-     * How many lines the DriverStation Dashboard is capable of displaying. Used
-     * to determine the buffer size for lines.
-     */
-    int DASHBOARD_LOG_LINES = 6;
 }

@@ -194,7 +194,7 @@ public final class GamePeriods extends IterativeRobot {
      */
     private static abstract class GameMode {
 
-        static GameMode DISABLED = new GameMode() {
+        static final GameMode DISABLED = new GameMode() {
             void end() {
                 robotMode.endDisabled();
             }
