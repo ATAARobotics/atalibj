@@ -1,10 +1,5 @@
 package edu.first.util;
 
-import edu.first.util.list.Iterator;
-import edu.first.util.list.ArrayList;
-import edu.first.util.list.List;
-import java.util.Hashtable;
-
 /**
  * The base class for enums. This class is not meant to be instantiated.
  *
@@ -61,10 +56,8 @@ import java.util.Hashtable;
  */
 public class Enum {
 
-    // holds all instances - this had better be safe!
-    private static final Hashtable instances = new Hashtable();
     // counts elements and prevents them from having the same "equals"
-    private static int preventEquals;
+    private static volatile int preventEquals;
     // makes sure enum is never equal to anything except itself
     private final int equals = ++preventEquals;
     // optional name
@@ -86,41 +79,6 @@ public class Enum {
      */
     protected Enum(String name) {
         this.name = name;
-    }
-
-    {
-        if (!instances.containsKey(getClass())) {
-            instances.put(getClass(), new ArrayList());
-        }
-        // inserts the instance into elements
-        ((List) instances.get(getClass())).add(this);
-    }
-
-    /**
-     * Returns every element inside of the enum that this element is in.
-     *
-     * @return all values in the same enum
-     */
-    public final List getValues() {
-        return (List) instances.get(getClass());
-    }
-
-    /**
-     * Returns the element with the specified name inside of the enum that this
-     * element is in. Returns null if no such element exists.
-     *
-     * @param name identifier for element
-     * @return value with specified name
-     */
-    public final Enum valueOf(String name) {
-        Iterator i = getValues().iterator();
-        while (i.hasNext()) {
-            Enum val = (Enum) i.next();
-            if (val.name.equals(name)) {
-                return val;
-            }
-        }
-        return null;
     }
 
     /**

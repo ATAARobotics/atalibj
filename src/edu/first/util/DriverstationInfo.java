@@ -19,20 +19,6 @@ public final class DriverstationInfo {
 
     private static final DriverStation DS = DriverStation.getInstance();
     private static final DriverStationEnhancedIO IO = DS.getEnhancedIO();
-    /**
-     * Disabled mode. Used in {@link DriverstationInfo#getGamePeriod()}.
-     */
-    public static final String DISABLED = "disabled",
-            /**
-             * Teleoperated mode. Used in
-             * {@link DriverstationInfo#getGamePeriod()}.
-             */
-            TELEOP = "teleop",
-            /**
-             * Autonomous mode. Used in
-             * {@link DriverstationInfo#getGamePeriod()}.
-             */
-            AUTONOMOUS = "autonomous";
 
     // cannot be subclassed or instantiated
     private DriverstationInfo() throws IllegalAccessException {
@@ -128,15 +114,15 @@ public final class DriverstationInfo {
     }
 
     /**
-     * Gets a string value of which game mode robot should be in.
+     * Returns the game mode that the robot is in.
      *
-     * @return {@link DriverstationInfo#TELEOP},
-     * {@link DriverstationInfo#AUTONOMOUS} or
-     * {@link DriverstationInfo#DISABLED}.
+     * @return which game mode it is
      */
-    public static String getGamePeriod() {
-        return DS.isEnabled() ? (DS.isOperatorControl() ? TELEOP
-                : (DS.isAutonomous() ? AUTONOMOUS : DISABLED)) : DISABLED;
+    public static GameMode getGamePeriod() {
+        return DS.isEnabled()
+                ? (DS.isOperatorControl() ? GameMode.TELEOPERATED
+                : (DS.isAutonomous() ? GameMode.AUTONOMOUS : GameMode.DISABLED))
+                : GameMode.DISABLED;
     }
 
     /**
@@ -149,7 +135,8 @@ public final class DriverstationInfo {
     }
 
     /**
-     * Returns whether or not the DriverStation is currently in teleoperated mode.
+     * Returns whether or not the DriverStation is currently in teleoperated
+     * mode.
      *
      * @return if teleoperated
      */
@@ -185,5 +172,28 @@ public final class DriverstationInfo {
      */
     public static String getAllianceName() {
         return DS.getAlliance().name;
+    }
+
+    /**
+     * Enum that represents the different game modes a robot can be in.
+     */
+    public static final class GameMode extends Enum {
+
+        /**
+         * Autonomous mode.
+         */
+        public static final GameMode AUTONOMOUS = new GameMode("AUTONOMOUS");
+        /**
+         * Teleoperated mode.
+         */
+        public static final GameMode TELEOPERATED = new GameMode("TELEOPERATED");
+        /**
+         * No mode enabled.
+         */
+        public static final GameMode DISABLED = new GameMode("DISABLED");
+
+        private GameMode(String name) {
+            super(name);
+        }
     }
 }

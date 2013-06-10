@@ -9,7 +9,7 @@ import edu.first.util.list.ArrayList;
  * @since May 14 13
  * @author Joel Gallant
  */
-public class Strings {
+public final class Strings {
 
     // cannot be subclassed or instantiated
     private Strings() throws IllegalAccessException {

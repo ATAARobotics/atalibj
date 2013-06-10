@@ -42,6 +42,12 @@ public final class File {
         return Strings.replace(fullPath, "file//", "");
     }
 
+    /**
+     * Returns the full path of the file that can be used by IO.
+     *
+     * @see #getFullPath()
+     * @return complete path of the file
+     */
     public String toString() {
         return getFullPath();
     }
