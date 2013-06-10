@@ -6,6 +6,7 @@ package edu.first.util.list;
 
 import edu.first.util.list.ArrayList;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 
 /**
  * An object that implements the Iterator interface generates a series of
@@ -43,5 +44,5 @@ public interface Iterator {
      * @return the next element in the iteration
      * @throws NoSuchElementException if the iteration has no more elements
      */
-    Object next();
+    Object next() throws NoSuchElementException;
 }

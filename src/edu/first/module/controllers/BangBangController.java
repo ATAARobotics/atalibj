@@ -395,7 +395,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
         }
 
         output.set(result);
-        
+
         synchronized (lock) {
             prevInput = in;
             prevResult = result;
@@ -415,7 +415,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
     /**
      * Sets the desired input that is to be achieved through this controller.
      *
-     * @param setpoint desired point that the input should reach
+     * @param value desired point that the input should reach
      * @see #setSetpoint(double)
      */
     public final void set(double value) {
@@ -435,7 +435,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
     /**
      * Sets the desired input that is to be achieved through this controller.
      *
-     * @param setpoint desired point that the input should reach
+     * @param rate desired point that the input should reach
      * @see #setSetpoint(double)
      */
     public final void setRate(double rate) {

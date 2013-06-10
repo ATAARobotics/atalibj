@@ -6,6 +6,7 @@ package edu.first.util.list;
 
 import com.sun.squawk.util.Arrays;
 import com.sun.squawk.util.Comparer;
+import java.util.NoSuchElementException;
 
 /**
  * Utilities for {@link Collection}. Manipulates the collections using various
@@ -65,6 +66,7 @@ public class Collections {
      * place.
      *
      * @param list the list to be sorted.
+     * @param c way to sort the list
      * @throws ClassCastException if the list contains elements that are not
      * <i>mutually comparable</i> (for example, strings and integers).
      * @throws IllegalStateException if the specified list's list-iterator does
@@ -76,9 +78,8 @@ public class Collections {
     public static void sort(List list, Comparer c) {
         Object[] a = list.toArray();
         Arrays.sort(a, c);
-        for (int j = 0; j < a.length; j++) {
-            list.set(j, a[j]);
-        }
+        list.clear();
+        addAll(list, a);
     }
 
     /**
@@ -96,7 +97,6 @@ public class Collections {
      *
      * @param c the collection into which {@code elements} are to be inserted
      * @param elements the elements to insert into {@code c}
-     * @return if the collection changed as a result of the call
      * @see Collection#addAll(Collection)
      */
     public static void addAll(Collection c, Object[] elements) {
@@ -114,6 +114,7 @@ public class Collections {
      * @param c the collection in which to determine the frequency of {@code o}
      * @param o the object whose frequency is to be determined
      * @throws NullPointerException if {@code c} is null
+     * @return how often object appears in the collection
      */
     public static int frequency(Collection c, Object o) {
         int result = 0;
@@ -258,7 +259,7 @@ public class Collections {
                     return i.hasNext();
                 }
 
-                public Object next() {
+                public Object next() throws NoSuchElementException {
                     return i.next();
                 }
 

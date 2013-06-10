@@ -35,7 +35,6 @@ public final class TextFiles {
      *
      * @param file file to get text from
      * @return contents of that file
-     * @throws IOException when file does not exist
      * @throws NullPointerException when file name is null
      */
     public static String getTextFromFile(File file) {

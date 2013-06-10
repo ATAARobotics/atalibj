@@ -174,6 +174,9 @@ public abstract class SimpleRobot implements RobotMode {
 
     /**
      * Returns the {@code RobotMode}'s name.
+     *
+     * @see #getName()
+     * @return easily understandable phrase to refer to the mode as
      */
     public String toString() {
         return getName();

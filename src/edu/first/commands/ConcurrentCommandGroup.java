@@ -2,7 +2,7 @@ package edu.first.commands;
 
 import edu.first.command.Command;
 import edu.first.util.list.List;
-import edu.first.util.log.Logging;
+import edu.first.util.log.Logger;
 
 /**
  * Basic command group that runs multiple commands in parallel. Every command
@@ -63,7 +63,7 @@ public final class ConcurrentCommandGroup implements Command {
                 threads[x].join();
             }
         } catch (InterruptedException ex) {
-            Logging.logToConsole("CommandGroup interrupted");
+            Logger.getLogger(getClass()).warn("CommandGroup interrupted");
             ex.printStackTrace();
         }
     }

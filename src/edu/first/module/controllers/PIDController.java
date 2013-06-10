@@ -403,7 +403,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * Sets the setpoint (or goal) or the controller. The PID algorithm should
      * attempt to bring input as close as possible to this goal.
      *
-     * @param value desired point that the input should reach
+     * @param position desired point that the input should reach
      * @see #setSetpoint(double)
      */
     public final void setPosition(double position) {

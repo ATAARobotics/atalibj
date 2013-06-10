@@ -10,7 +10,7 @@ import edu.first.robot.RobotModeSelector;
 import edu.first.robot.RobotModeSendableChooser;
 import edu.first.robot.SafeRobotMode;
 import edu.first.robot.SimpleRobotAdapter;
-import edu.first.util.log.Logging;
+import edu.first.util.log.Logger;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -69,13 +69,14 @@ public final class GamePeriods extends IterativeRobot {
         SmartDashboard.putData(selector);
         RobotMode m;
         if (selector == null || (m = selector.getRobotMode()) == null) {
-            Logging.logToConsole("Warning - robot mode was not selected! Defaulting to dummy instance");
+            Logger.getLogger(getClass())
+                    .warn("Warning - robot mode was not selected! Defaulting to dummy instance");
             // DOES NOTHING!!!
             m = new SimpleRobotAdapter("Dummy");
         }
         RobotMode mode = new SafeRobotMode(m);
         if (!mode.equals(robotMode)) {
-            Logging.logToConsole("Robot mode set to " + mode.getName());
+            Logger.getLogger(getClass()).info("Robot mode set to " + mode.getName());
         }
         return robotMode = mode;
     }

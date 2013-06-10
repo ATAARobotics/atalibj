@@ -78,6 +78,8 @@ public class Subsystem implements Module {
      * should return whether the module's functions are "ready" to work.
      *
      * <p> <i> Override this method to use it. No super call is necessary. </i>
+     * 
+     * @return if subsystem is enabled
      */
     public boolean isSubsystemEnabled() {
         return true;

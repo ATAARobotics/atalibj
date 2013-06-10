@@ -191,6 +191,9 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * Returns whether the underlying {@code RobotMode} is equal to that of
      * another safe robot mode.
+     * 
+     * @param obj object to compare
+     * @return if mode is equivalent
      */
     public boolean equals(Object obj) {
         if (obj instanceof SafeRobotMode) {

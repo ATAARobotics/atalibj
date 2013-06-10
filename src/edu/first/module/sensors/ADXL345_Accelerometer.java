@@ -20,7 +20,7 @@ public class ADXL345_Accelerometer extends Module.StartardModule implements Acce
      * Constructs the module using the accelerometer object to call functions
      * from.
      *
-     * @param servo the composing instance which perform the functions
+     * @param accelerometer the composing instance which perform the functions
      */
     protected ADXL345_Accelerometer(ADXL345_I2C accelerometer) {
         this.accelerometer = accelerometer;
@@ -103,7 +103,6 @@ public class ADXL345_Accelerometer extends Module.StartardModule implements Acce
      * Returns the acceleration of the given axis.
      *
      * @throws IllegalStateException when module is not enabled
-     * @param axis which axis to read
      * @return acceleration measured on axis
      * @see #getAcceleration()
      */

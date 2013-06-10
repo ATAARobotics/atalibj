@@ -77,6 +77,7 @@ public class DualActionSolenoid extends Module.StartardModule {
     /**
      * Sets the direction of the solenoid.
      *
+     * @param direction which direction to set the solenoid
      * @throws IllegalStateException when module is not enabled
      */
     public final void set(Direction direction) {

@@ -1,5 +1,7 @@
 package edu.first.util.list;
 
+import java.util.NoSuchElementException;
+
 /**
  * A non-type-safe non-thread-safe re-sizable array that automatically adjusts
  * to growth and decline of elements. Holds references to a list of objects and
@@ -352,7 +354,10 @@ public final class ArrayList implements List {
                 return index < e.length;
             }
 
-            public Object next() {
+            public Object next() throws NoSuchElementException {
+                if (index >= e.length) {
+                    throw new NoSuchElementException("Element " + index + " does not exist");
+                }
                 return e[index++];
             }
         };
