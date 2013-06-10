@@ -2,6 +2,7 @@ package edu.first.module.joysticks;
 
 import edu.first.identifiers.Output;
 import edu.first.util.list.Iterator;
+import edu.first.util.list.List;
 import edu.first.util.list.SafeArrayList;
 
 /**
@@ -14,7 +15,7 @@ import edu.first.util.list.SafeArrayList;
  */
 public class BindingJoystick extends JoystickModule {
 
-    private final SafeArrayList binds = new SafeArrayList(Bind.class);
+    private final List binds = new SafeArrayList(Bind.class);
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}

@@ -23,16 +23,16 @@ import edu.first.util.MathUtils;
  *
  * <p> Speed Sensor and Decoding
  * <ul>
- * <li> Use an encoder or a one-per-rev home-brew optical or magnetic sensor.
+ * <li> Use an encoder or a one-per-rev home-brew optical or magnetic sensor
  * <li> If using an encoder, connect only one channel of the encoder to the
  * Digital Sidecar. Configure FPGA to read one channel only (no quadrature)
  * <li> Configure the FPGA to read rising edges only
  * <li> Let the FPGA compute the period in hardware with its 153KHz polling rate
- * and 1MHz clock.
+ * and 1MHz clock
  * <li> Do a quick calculation to determine how many samples you should
  * configure the FPGA to use for its sample ring buffer, or experiment to find
  * the value which gives the best tradeoff between noise and phase lag (whatever
- * gives you fast and stable operation at your setpoints).
+ * gives you fast and stable operation at your setpoints)
  * </ul>
  *
  * <b>Note:</b>
@@ -357,32 +357,49 @@ public class BangBangController extends Controller implements RateSensor, RateAc
         double in = input.get();
         double result;
 
+        boolean sCoast;
+        boolean sSpeedUp;
+        boolean sReversed;
+        double sSetpoint;
+        double sSpinupInput;
+        double sSpinupOutput;
+        double sMaxOutput;
+
+        // Snapshot values to reduce time spent in synchronized blocks
         synchronized (lock) {
+            sCoast = this.coast;
+            sSpeedUp = this.speedUp;
+            sReversed = this.reversed;
+            sSetpoint = this.setpoint;
+            sSpinupInput = this.spinupInput;
+            sSpinupOutput = this.spinupOutput;
+            sMaxOutput = this.maxOutput;
+        }
 
-            if (coast) {
+        if (sCoast) {
+            result = 0;
+        } else if (sSpeedUp) {
+            if (in >= sSetpoint) {
                 result = 0;
-            } else if (speedUp) {
-                if (in >= setpoint) {
-                    result = 0;
-                } else if (in >= spinupInput) {
-                    result = maxOutput * (reversed ? -1 : 1);
-                } else {
-                    result = spinupOutput * (reversed ? -1 : 1);
-                }
+            } else if (in >= sSpinupInput) {
+                result = sReversed ? -sMaxOutput : sMaxOutput;
             } else {
-                if (in >= setpoint) {
-                    result = 0;
-                } else {
-                    result = maxOutput * (reversed ? -1 : 1);
-                }
+                result = sReversed ? -sSpinupOutput : sSpinupOutput;
             }
-
-            prevInput = in;
-            prevResult = result;
-
+        } else {
+            if (in >= sSetpoint) {
+                result = 0;
+            } else {
+                result = sReversed ? -sMaxOutput : sMaxOutput;
+            }
         }
 
         output.set(result);
+        
+        synchronized (lock) {
+            prevInput = in;
+            prevResult = result;
+        }
     }
 
     /**

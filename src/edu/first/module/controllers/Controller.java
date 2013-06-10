@@ -1,6 +1,5 @@
 package edu.first.module.controllers;
 
-import edu.first.identifiers.Input;
 import edu.first.module.Module;
 import edu.first.util.Enum;
 import edu.first.util.MathUtils;

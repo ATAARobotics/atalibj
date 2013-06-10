@@ -48,7 +48,7 @@ public class JoystickModule extends Module.StartardModule implements Joystick {
      * @param joystick the composing instance to get input from
      */
     protected JoystickModule(edu.wpi.first.wpilibj.Joystick joystick) {
-        if(joystick == null) {
+        if (joystick == null) {
             throw new NullPointerException("Null joystick given");
         }
         this.joystick = joystick;
@@ -124,6 +124,7 @@ public class JoystickModule extends Module.StartardModule implements Joystick {
      * Adds a deadband to the port which will prevent values smaller than
      * {@code deadband} from being output (instead it is set to 0).
      *
+     * @throws IndexOutOfBoundsException when port is not available
      * @param port the axis
      * @param deadband value that input should be bigger than
      */

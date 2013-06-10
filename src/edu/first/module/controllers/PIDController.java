@@ -303,45 +303,69 @@ public class PIDController extends Controller implements PositionalSensor, Posit
     public final void run() {
         double in = input.get();
         double result;
+        double prevErr;
 
+        double sMinInput;
+        double sMaxInput;
+        double sSetpoint;
+        double sP;
+        double sI;
+        double sD;
+        double sTotalError;
+        double sMaxOutput;
+        double sMinOutput;
+
+        // Snapshot values to reduce time spent in synchronized blocks
         synchronized (lock) {
+            sMinInput = this.minimumInput;
+            sMaxInput = this.maximumInput;
+            sSetpoint = this.setpoint;
+            sP = this.P;
+            sI = this.I;
+            sD = this.D;
+            sTotalError = this.totalError;
+            sMaxOutput = this.maximumOutput;
+            sMinOutput = this.minimumOutput;
+            prevErr = this.prevError;
+        }
 
-            if (in < minimumInput) {
-                in = minimumInput;
-            } else if (in > maximumInput) {
-                in = maximumInput;
-            }
+        if (in < sMinInput) {
+            in = sMinInput;
+        } else if (in > sMaxInput) {
+            in = sMaxInput;
+        }
 
-            double error = setpoint - in;
+        double error = sSetpoint - in;
 
-            if (I != 0) {
-                double potentialIGain = (totalError + error) * I;
-                if (potentialIGain < maximumOutput) {
-                    if (potentialIGain > minimumOutput) {
-                        totalError += error;
-                    } else {
-                        totalError = minimumOutput / I;
-                    }
+        if (sI != 0) {
+            double potentialIGain = (sTotalError + error) * sI;
+            if (potentialIGain < sMaxOutput) {
+                if (potentialIGain > sMinOutput) {
+                    sTotalError += error;
                 } else {
-                    totalError = maximumOutput / I;
+                    sTotalError = sMinOutput / sI;
                 }
+            } else {
+                sTotalError = sMaxOutput / sI;
             }
+        }
 
-            result = (P * error)
-                    + (I * totalError)
-                    + (D * (error - prevError));
-            prevError = error;
+        result = (sP * error)
+                + (sI * sTotalError)
+                + (sD * (error - prevErr));
 
-            if (result > maximumOutput) {
-                result = maximumOutput;
-            } else if (result < minimumOutput) {
-                result = minimumOutput;
-            }
-
-            prevResult = result;
+        if (result > sMaxOutput) {
+            result = sMaxOutput;
+        } else if (result < sMinOutput) {
+            result = sMinOutput;
         }
 
         output.set(result);
+
+        synchronized (lock) {
+            prevError = error;
+            prevResult = result;
+        }
     }
 
     /**
