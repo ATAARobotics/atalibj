@@ -46,11 +46,12 @@ public class SpeedControllerGroup implements SpeedController {
      *
      * @param controller the speed controller to add
      */
-    public final void add(SpeedController controller) {
+    public final SpeedControllerGroup add(SpeedController controller) {
         if (controller == null) {
             throw new NullPointerException("Null controller given");
         }
         controllers.add(controller);
+        return this;
     }
 
     /**
@@ -59,10 +60,11 @@ public class SpeedControllerGroup implements SpeedController {
      *
      * @param controllers the speed controller to add
      */
-    public final void addAll(SpeedController[] controllers) {
+    public final SpeedControllerGroup addAll(SpeedController[] controllers) {
         for (int x = 0; x < controllers.length; x++) {
             add(controllers[x]);
         }
+        return this;
     }
 
     /**
