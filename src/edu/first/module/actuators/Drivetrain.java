@@ -28,6 +28,7 @@ public class Drivetrain extends Module.StartardModule implements MotorSafety {
     private final MotorSafetyHelper safetyHelper = new MotorSafetyHelper(this);
     private final SpeedController left, right;
     private boolean reversed = false;
+    private boolean reversedTurn = false;
     private double maxSpeed = 1;
 
     /**
@@ -95,12 +96,49 @@ public class Drivetrain extends Module.StartardModule implements MotorSafety {
     }
 
     /**
-     * Sets whether all motor output should bee reversed.
+     * Returns the absolute maximum speed in either direction that the motors
+     * can run at. [-1 to +1]
+     *
+     * @return maximum speed possible
+     */
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    /**
+     * Sets whether all motor output should be reversed.
      *
      * @param reversed if motors should go in opposite direction
      */
     public void setReversed(boolean reversed) {
         this.reversed = reversed;
+    }
+
+    /**
+     * Returns whether all motor output should be reversed.
+     *
+     * @return if motors should go in opposite direction
+     */
+    public boolean isReversed() {
+        return reversed;
+    }
+
+    /**
+     * Sets whether all turning should be reversed.
+     *
+     * @param reversedTurn if turning should be opposite
+     */
+    public void setReversedTurn(boolean reversedTurn) {
+        this.reversedTurn = reversedTurn;
+    }
+
+    /**
+     * Returns whether all turning should be reversed.
+     *
+     * @return if turning should be opposite
+     */
+    public boolean isReversedTurn() {
+        return reversedTurn;
     }
 
     /**
@@ -142,6 +180,10 @@ public class Drivetrain extends Module.StartardModule implements MotorSafety {
     public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
         double leftMotorSpeed;
         double rightMotorSpeed;
+
+        if (reversedTurn) {
+            rotateValue = -rotateValue;
+        }
 
         moveValue = MathUtils.limit(moveValue, 1);
         rotateValue = MathUtils.limit(rotateValue, 1);
@@ -234,6 +276,10 @@ public class Drivetrain extends Module.StartardModule implements MotorSafety {
      */
     public void drive(double outputMagnitude, double curve) {
         double leftOutput, rightOutput;
+
+        if (reversedTurn) {
+            curve = -curve;
+        }
 
         if (curve < 0) {
             double value = MathUtils.log(-curve);
