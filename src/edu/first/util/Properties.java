@@ -119,6 +119,30 @@ public final class Properties {
     }
 
     /**
+     * Converts the {@link #getValue(java.lang.String)} value to an integer.
+     *
+     * @param key string used to declare the property
+     * @return value given to the key in the file
+     * @throws NumberFormatException when value is not an int
+     * @throws NullPointerException when key does not exist
+     */
+    public int toInt(String key) {
+        return Integer.parseInt(getValue(key));
+    }
+
+    /**
+     * Converts the {@link #getValue(java.lang.String)} value to a double.
+     *
+     * @param key string used to declare the property
+     * @return value given to the key in the file
+     * @throws NumberFormatException when value is not a double
+     * @throws NullPointerException when key does not exist
+     */
+    public double toDouble(String key) {
+        return Double.parseDouble(getValue(key));
+    }
+
+    /**
      * Returns the actual value designated in the file under the key.
      *
      * @param key string used to declare the property
@@ -128,6 +152,36 @@ public final class Properties {
     public String getValue(String key, String backup) {
         Property p;
         return (p = getProperty(key)) == null ? backup : p.value;
+    }
+
+    /**
+     * Converts the {@link #getValue(java.lang.String)} value to an integer.
+     *
+     * @param key string used to declare the property
+     * @param backup value used if it did not exist in the file
+     * @return value given to the key in the file
+     */
+    public int toInt(String key, int backup) {
+        try {
+            return toInt(key);
+        } catch (Exception ex) {
+            return backup;
+        }
+    }
+
+    /**
+     * Converts the {@link #getValue(java.lang.String)} value to a double.
+     *
+     * @param key string used to declare the property
+     * @param backup value used if it did not exist in the file
+     * @return value given to the key in the file
+     */
+    public double toDouble(String key, double backup) {
+        try {
+            return toDouble(key);
+        } catch (Exception ex) {
+            return backup;
+        }
     }
 
     /**
