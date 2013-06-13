@@ -1,6 +1,7 @@
 package edu.first.util;
 
 import com.sun.squawk.util.StringTokenizer;
+import edu.first.util.log.Logger;
 import java.io.IOException;
 
 /**
@@ -150,8 +151,13 @@ public final class Properties {
      * @return value given to the key in the file
      */
     public String getValue(String key, String backup) {
-        Property p;
-        return (p = getProperty(key)) == null ? backup : p.value;
+        Property p = getProperty(key);
+        if (p != null) {
+            return p.value;
+        } else {
+            Logger.getLogger(getClass()).debug(key + " property not found - using " + backup);
+            return backup;
+        }
     }
 
     /**
@@ -165,6 +171,7 @@ public final class Properties {
         try {
             return toInt(key);
         } catch (Exception ex) {
+            Logger.getLogger(getClass()).debug(key + " property not found - using " + backup);
             return backup;
         }
     }
@@ -180,6 +187,7 @@ public final class Properties {
         try {
             return toDouble(key);
         } catch (Exception ex) {
+            Logger.getLogger(getClass()).debug(key + " property not found - using " + backup);
             return backup;
         }
     }
