@@ -50,12 +50,14 @@ public class OneChannelCounter extends Module.StartardModule implements RateSens
      * {@inheritDoc}
      */
     protected void enableModule() {
+        counter.start();
     }
 
     /**
      * {@inheritDoc}
      */
     protected void disableModule() {
+        counter.stop();
     }
 
     /**
