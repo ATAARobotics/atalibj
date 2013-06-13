@@ -9,7 +9,7 @@ import edu.first.util.Enum;
  * @since June 01 13
  * @author Joel Gallant
  */
-public class DualActionSolenoid extends Module.StartardModule {
+public class DualActionSolenoid extends Module.StandardModule {
 
     private final edu.wpi.first.wpilibj.Solenoid left;
     private final edu.wpi.first.wpilibj.Solenoid right;

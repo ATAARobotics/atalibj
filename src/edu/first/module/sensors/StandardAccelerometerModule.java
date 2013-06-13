@@ -9,7 +9,7 @@ import edu.first.module.Module;
  * @since June 07 13
  * @author Joel Gallant
  */
-public class StandardAccelerometerModule extends Module.StartardModule implements Accelerometer {
+public class StandardAccelerometerModule extends Module.StandardModule implements Accelerometer {
 
     private final edu.wpi.first.wpilibj.Accelerometer accelerometer;
 

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Gyro;
  * @since May 22 13
  * @author Joel Gallant
  */
-public class GyroscopeModule extends Module.StartardModule implements Gyroscope {
+public class GyroscopeModule extends Module.StandardModule implements Gyroscope {
 
     private final Gyro gyro;
 

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Counter;
  * @since June 10 13
  * @author Joel Gallant
  */
-public class OneChannelCounter extends Module.StartardModule implements RateSensor, PositionalSensor {
+public class OneChannelCounter extends Module.StandardModule implements RateSensor, PositionalSensor {
 
     private final Counter counter;
 

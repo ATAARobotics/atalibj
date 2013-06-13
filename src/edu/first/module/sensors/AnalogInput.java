@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.AnalogChannel;
  * @since June 10 13
  * @author Joel Gallant
  */
-public class AnalogInput extends Module.StartardModule implements Input {
+public class AnalogInput extends Module.StandardModule implements Input {
 
     private final AnalogChannel input;
 

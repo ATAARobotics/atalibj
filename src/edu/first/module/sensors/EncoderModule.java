@@ -10,7 +10,7 @@ import edu.first.util.Enum;
  * @since June 03 13
  * @author Joel Gallant
  */
-public class EncoderModule extends Module.StartardModule implements Encoder {
+public class EncoderModule extends Module.StandardModule implements Encoder {
 
     private static final InputType DEFAULT_INPUT_TYPE = InputType.DISTANCE;
     private final edu.wpi.first.wpilibj.Encoder encoder;

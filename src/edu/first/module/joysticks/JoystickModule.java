@@ -13,7 +13,7 @@ import edu.first.util.MathUtils;
  * @since June 01 13
  * @author Joel Gallant
  */
-public class JoystickModule extends Module.StartardModule implements Joystick {
+public class JoystickModule extends Module.StandardModule implements Joystick {
 
     private final edu.wpi.first.wpilibj.Joystick joystick;
     // stores axises for quick access and not having to instantize everytime
@@ -99,6 +99,19 @@ public class JoystickModule extends Module.StartardModule implements Joystick {
      */
     public final double getRawAxisValue(int port) {
         return getRawAxis(port).get();
+    }
+
+    /**
+     * Returns a button that is triggered by moving an axis past a threshold.
+     * The threshold only works in the direction that it is in (negative - axis
+     * must be less; positive - axis must be more).
+     *
+     * @param port the axis to read
+     * @param threshold point at which axis is considered "on"
+     * @return a button controlled by an axis
+     */
+    public final Button getRawAxisAsButton(int port, double threshold) {
+        return new RawAxisButton(port, threshold);
     }
 
     /**
@@ -282,6 +295,25 @@ public class JoystickModule extends Module.StartardModule implements Joystick {
         public boolean getPosition() {
             ensureEnabled();
             return joystick.getRawButton(port);
+        }
+    }
+
+    private class RawAxisButton implements Button {
+
+        private final int port;
+        private final double threshold;
+
+        public RawAxisButton(int port, double threshold) {
+            this.port = port;
+            this.threshold = threshold;
+        }
+
+        public boolean getPosition() {
+            if (threshold >= 0) {
+                return getRawAxisValue(port) > threshold;
+            } else {
+                return getRawAxisValue(port) < threshold;
+            }
         }
     }
 }

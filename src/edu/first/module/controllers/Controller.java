@@ -21,7 +21,7 @@ import java.util.TimerTask;
  * @since May 30 2013
  * @author Joel Gallant
  */
-public abstract class Controller extends Module.StartardModule implements Runnable {
+public abstract class Controller extends Module.StandardModule implements Runnable {
 
     private final int loopTime;
     private final LoopType loopType;

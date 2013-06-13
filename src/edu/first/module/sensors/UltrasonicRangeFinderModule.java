@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Ultrasonic;
  * @since June 08 13
  * @author Joel Gallant
  */
-public class UltrasonicRangeFinderModule extends Module.StartardModule implements RangeFinder {
+public class UltrasonicRangeFinderModule extends Module.StandardModule implements RangeFinder {
 
     private final Ultrasonic ultrasonic;
 

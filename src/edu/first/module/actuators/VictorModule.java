@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Victor;
  * @since May 28 13
  * @author Joel Gallant
  */
-public class VictorModule extends Module.StartardModule implements SpeedController {
+public class VictorModule extends Module.StandardModule implements SpeedController {
 
     private final Victor victor;
 

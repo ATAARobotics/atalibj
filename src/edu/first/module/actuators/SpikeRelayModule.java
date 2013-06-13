@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Relay;
  * @since June 01 13
  * @author Joel Gallant
  */
-public class SpikeRelayModule extends Module.StartardModule implements SpikeRelay {
+public class SpikeRelayModule extends Module.StandardModule implements SpikeRelay {
 
     private final Relay relay;
 

@@ -8,7 +8,7 @@ import edu.first.module.Module;
  * @since June 01 13
  * @author Joel Gallant
  */
-public class SingleActionSolenoid extends Module.StartardModule implements Solenoid {
+public class SingleActionSolenoid extends Module.StandardModule implements Solenoid {
 
     private final edu.wpi.first.wpilibj.Solenoid solenoid;
 

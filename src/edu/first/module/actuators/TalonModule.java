@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Talon;
  * @since May 28 13
  * @author Joel Gallant
  */
-public class TalonModule extends Module.StartardModule implements SpeedController {
+public class TalonModule extends Module.StandardModule implements SpeedController {
 
     private final Talon talon;
 

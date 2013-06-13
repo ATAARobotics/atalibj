@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.ADXL345_I2C;
  * @since June 07 13
  * @author Joel Gallant
  */
-public class ADXL345_Accelerometer extends Module.StartardModule implements Accelerometer {
+public class ADXL345_Accelerometer extends Module.StandardModule implements Accelerometer {
 
     private final ADXL345_I2C accelerometer;
     private Axis axis = Axis.X;

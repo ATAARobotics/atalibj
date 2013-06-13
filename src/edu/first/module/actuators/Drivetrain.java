@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.MotorSafetyHelper;
  * @since June 10 13
  * @author Joel Gallant
  */
-public class Drivetrain extends Module.StartardModule implements MotorSafety {
+public class Drivetrain extends Module.StandardModule implements MotorSafety {
 
     private final Output driveStraight = new Output() {
         public void set(double value) {

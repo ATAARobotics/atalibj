@@ -54,6 +54,23 @@ public class PIDController extends Controller implements PositionalSensor, Posit
     }
 
     /**
+     * Constructs the controller using its input and output. Uses the default
+     * loop time.
+     *
+     * @param input object to receive input from
+     * @param output object to send output to
+     * @param P proportional coefficient
+     * @param I integral coefficient
+     * @param D derivative coefficient
+     */
+    public PIDController(Input input, Output output, double P, double I, double D) {
+        this(input, output);
+        this.P = P;
+        this.I = I;
+        this.D = D;
+    }
+
+    /**
      * Constructs the controller using its input and output. Loops at a fixed
      * delay at {@code loopTime}.
      *
@@ -78,6 +95,24 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @param input object to receive input from
      * @param output object to send output to
+     * @param loopTime time in seconds each loop should run
+     * @param P proportional coefficient
+     * @param I integral coefficient
+     * @param D derivative coefficient
+     */
+    public PIDController(Input input, Output output, double loopTime, double P, double I, double D) {
+        this(input, output, loopTime);
+        this.P = P;
+        this.I = I;
+        this.D = D;
+    }
+
+    /**
+     * Constructs the controller using its input and output. Loops at a fixed
+     * delay at {@code loopTime}.
+     *
+     * @param input object to receive input from
+     * @param output object to send output to
      * @param loopTimeHertz the hertz value that represents how fast execution
      * will happen
      */
@@ -90,6 +125,25 @@ public class PIDController extends Controller implements PositionalSensor, Posit
         }
         this.input = input;
         this.output = output;
+    }
+
+    /**
+     * Constructs the controller using its input and output. Loops at a fixed
+     * delay at {@code loopTime}.
+     *
+     * @param input object to receive input from
+     * @param output object to send output to
+     * @param loopTimeHertz the hertz value that represents how fast execution
+     * will happen
+     * @param P proportional coefficient
+     * @param I integral coefficient
+     * @param D derivative coefficient
+     */
+    public PIDController(Input input, Output output, int loopTimeHertz, double P, double I, double D) {
+        this(input, output, loopTimeHertz);
+        this.P = P;
+        this.I = I;
+        this.D = D;
     }
 
     /**

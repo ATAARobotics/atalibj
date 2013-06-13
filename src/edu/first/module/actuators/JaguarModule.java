@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Jaguar;
  * @since May 28 13
  * @author Joel Gallant
  */
-public class JaguarModule extends Module.StartardModule implements SpeedController {
+public class JaguarModule extends Module.StandardModule implements SpeedController {
 
     private final Jaguar jaguar;
 

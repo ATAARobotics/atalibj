@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.PWM;
  * @since June 06 13
  * @author Joel Gallant
  */
-public class ServoModule extends Module.StartardModule implements Servo {
+public class ServoModule extends Module.StandardModule implements Servo {
 
     private final edu.wpi.first.wpilibj.Servo servo;
 

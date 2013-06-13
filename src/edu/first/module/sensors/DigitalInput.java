@@ -9,7 +9,7 @@ import edu.first.module.Module;
  * @since June 10 13
  * @author Joel Gallant
  */
-public class DigitalInput extends Module.StartardModule implements Position {
+public class DigitalInput extends Module.StandardModule implements Position {
 
     private final edu.wpi.first.wpilibj.DigitalInput input;
 

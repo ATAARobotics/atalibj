@@ -132,7 +132,7 @@ public interface Module {
      * @since May 22 13
      * @author Joel Gallant
      */
-    public static abstract class StartardModule implements Module {
+    public static abstract class StandardModule implements Module {
 
         // uses lock and not "this" in case module uses "this" lock
         private final Object lock = new Object();
