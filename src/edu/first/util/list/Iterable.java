@@ -9,6 +9,7 @@ package edu.first.util.list;
  * "foreach" statement.
  *
  * @since May 12 13
+ * @author Joshua Bloch
  */
 public interface Iterable {
 

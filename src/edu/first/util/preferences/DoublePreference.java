@@ -49,7 +49,6 @@ public final class DoublePreference extends Preference implements Input, Output 
     /**
      * If the preference does not exist ({@link Preference#exists()}), creates
      * it with the default value.
-     *
      */
     public void create() {
         if (!exists()) {

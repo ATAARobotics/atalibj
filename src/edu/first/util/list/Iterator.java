@@ -4,7 +4,6 @@
  */
 package edu.first.util.list;
 
-import edu.first.util.list.ArrayList;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
