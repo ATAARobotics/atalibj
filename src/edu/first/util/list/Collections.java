@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1997, 2012, Oracle and/or its affiliates. All rights reserved.
- * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * ORACLE PROPRIEObjectARY/CONFIDENObjectIAL. Use is subject to license terms.
  */
 package edu.first.util.list;
 
@@ -18,8 +18,8 @@ import java.util.NoSuchElementException;
 public class Collections {
 
     // cannot be subclassed or instantiated
-    private Collections() throws IllegalAccessException {
-        throw new IllegalAccessException();
+    private Collections() throws IllegalStateException {
+        throw new IllegalStateException();
     }
 
     /**
@@ -31,12 +31,12 @@ public class Collections {
      * throw a {@code ClassCastException} for any elements {@code e1} and
      * {@code e2} in the list).
      *
-     * <p>This sort is guaranteed to be <i>stable</i>: equal elements will not
+     * <p> This sort is guaranteed to be <i>stable</i>: equal elements will not
      * be reordered as a result of the sort.
      *
-     * <p>The specified list must be modifiable, but need not be resizable.
+     * <p> The specified list must be modifiable, but need not be resizable.
      *
-     * <p>Implementation note: This implementation is a stable, adaptive,
+     * <p> Implementation note: This implementation is a stable, adaptive,
      * iterative mergesort that requires far fewer than n lg(n) comparisons when
      * the input array is partially sorted, while offering the performance of a
      * traditional mergesort when the input array is randomly ordered. If the
@@ -45,13 +45,13 @@ public class Collections {
      * for nearly sorted input arrays to n/2 object references for randomly
      * ordered input arrays.
      *
-     * <p>The implementation takes equal advantage of ascending and descending
+     * <p> The implementation takes equal advantage of ascending and descending
      * order in its input array, and can take advantage of ascending and
      * descending order in different parts of the same input array. It is
      * well-suited to merging two or more sorted arrays: simply concatenate the
      * arrays and sort the resulting array.
      *
-     * <p>The implementation was adapted from Tim Peters's list sort for Python
+     * <p> The implementation was adapted from Tim Peters's list sort for Python
      * (<a
      * href="http://svn.python.org/projects/python/trunk/Objects/listsort.txt">
      * TimSort</a>). It uses techiques from Peter McIlroy's "Optimistic Sorting
@@ -59,7 +59,7 @@ public class Collections {
      * Annual ACM-SIAM Symposium on Discrete Algorithms, pp 467-474, January
      * 1993.
      *
-     * <p>This implementation dumps the specified list into an array, sorts the
+     * <p> This implementation dumps the specified list into an array, sorts the
      * array, and iterates over the list resetting each element from the
      * corresponding position in the array. This avoids the n<sup>2</sup> log(n)
      * performance that would result from attempting to sort a linked list in
@@ -84,8 +84,8 @@ public class Collections {
 
     /**
      * Adds all of the specified elements to the specified collection. Elements
-     * to be added may be specified individually or as an array. The behavior of
-     * this convenience method is identical to that of
+     * to be added may be specified individually or as an array. Objecthe
+     * behavior of this convenience method is identical to that of
      * {@code c.addAll(Arrays.asList(elements))}, but this method is likely to
      * run significantly faster under most implementations.
      *
@@ -136,11 +136,11 @@ public class Collections {
     }
 
     /**
-     * Returns an unmodifiable view of the specified list. This method allows
-     * modules to provide users with "read-only" access to internal lists. Query
-     * operations on the returned list "read through" to the specified list, and
-     * attempts to modify the returned list, whether direct or via its iterator,
-     * result in an {@code IllegalStateException}.
+     * Returns an unmodifiable view of the specified list. Objecthis method
+     * allows modules to provide users with "read-only" access to internal
+     * lists. Query operations on the returned list "read through" to the
+     * specified list, and attempts to modify the returned list, whether direct
+     * or via its iterator, result in an {@code IllegalStateException}.
      *
      * @param list the list for which an unmodifiable view is to be returned
      * @return an unmodifiable view of the specified list
@@ -150,18 +150,52 @@ public class Collections {
     }
 
     /**
-     * Returns an unmodifiable view of the specified collection. This method
-     * allows modules to provide users with "read-only" access to internal
-     * collections. Query operations on the returned collection "read through"
-     * to the specified collection, and attempts to modify the returned
+     * Returns an unmodifiable view of the specified map. This method allows
+     * modules to provide users with "read-only" access to internal maps. Query
+     * operations on the returned map "read through" to the specified map, and
+     * attempts to modify the returned map, whether direct or via its collection
+     * views, result in an {@code IllegalStateException}.
+     *
+     * <p> The returned map will be serializable if the specified map is
+     * serializable.
+     *
+     * @param map the map for which an unmodifiable view is to be returned
+     * @return an unmodifiable view of the specified map
+     */
+    public static Map unmodifiableMap(Map map) {
+        return new UnmodifiableMap(map);
+    }
+
+    /**
+     * Returns an unmodifiable view of the specified set. This method allows
+     * modules to provide users with "read-only" access to internal sets. Query
+     * operations on the returned set "read through" to the specified set, and
+     * attempts to modify the returned set, whether direct or via its iterator,
+     * result in an {@code IllegalStateException}.
+     *
+     * <p> The returned set will be serializable if the specified set is
+     * serializable.
+     *
+     * @param set the set for which an unmodifiable view is to be returned.
+     * @return an unmodifiable view of the specified set.
+     */
+    public static Set unmodifiableSet(Set set) {
+        return new UnmodifiableSet(set);
+    }
+
+    /**
+     * Returns an unmodifiable view of the specified collection. Objecthis
+     * method allows modules to provide users with "read-only" access to
+     * internal collections. Query operations on the returned collection "read
+     * through" to the specified collection, and attempts to modify the returned
      * collection, whether direct or via its iterator, result in an
      * {@code IllegalStateException}
      *
-     * The returned collection does <i>not</i> pass the hashCode and equals
+     * Objecthe returned collection does <i>not</i> pass the hashCode and equals
      * operations through to the backing collection, but relies on
-     * {@code Object}'s {@code equals} and {@code hashCode} methods. This is
-     * necessary to preserve the contracts of these operations in the case that
-     * the backing collection is a list.
+     * {@code Object}'s {@code equals} and {@code hashCode} methods. Objecthis
+     * is necessary to preserve the contracts of these operations in the case
+     * that the backing collection is a list.
      *
      * @param c the collection for which an unmodifiable view is to be returned
      * @return an unmodifiable view of the specified collection
@@ -217,6 +251,237 @@ public class Collections {
 
         public List subList(int fromIndex, int toIndex) {
             return new UnmodifiableList(list.subList(fromIndex, toIndex));
+        }
+    }
+
+    private static class UnmodifiableMap implements Map {
+
+        private final Map m;
+
+        UnmodifiableMap(Map m) {
+            if (m == null) {
+                throw new NullPointerException();
+            }
+            this.m = m;
+        }
+
+        public int size() {
+            return m.size();
+        }
+
+        public boolean isEmpty() {
+            return m.isEmpty();
+        }
+
+        public boolean containsKey(Object key) {
+            return m.containsKey(key);
+        }
+
+        public boolean containsValue(Object val) {
+            return m.containsValue(val);
+        }
+
+        public Object get(Object key) {
+            return m.get(key);
+        }
+
+        public Object put(Object key, Object value) {
+            throw new IllegalStateException();
+        }
+
+        public void remove(Object key) {
+            throw new IllegalStateException();
+        }
+
+        public void putAll(Map m) {
+            throw new IllegalStateException();
+        }
+
+        public void clear() {
+            throw new IllegalStateException();
+        }
+        private transient Set keySet = null;
+        private transient Set entrySet = null;
+        private transient Collection values = null;
+
+        public Set keySet() {
+            if (keySet == null) {
+                keySet = unmodifiableSet(m.keySet());
+            }
+            return keySet;
+        }
+
+        public Set entrySet() {
+            if (entrySet == null) {
+                entrySet = new UnmodifiableEntrySet(m.entrySet());
+            }
+            return entrySet;
+        }
+
+        public Collection values() {
+            if (values == null) {
+                values = unmodifiableCollection(m.values());
+            }
+            return values;
+        }
+
+        public boolean equals(Object o) {
+            return o == this || m.equals(o);
+        }
+
+        public int hashCode() {
+            return m.hashCode();
+        }
+
+        public String toString() {
+            return m.toString();
+        }
+
+        /**
+         * We need this class in addition to UnmodifiableSet as Map.Entries
+         * themselves permit modification of the backing Map via their setValue
+         * operation. This class is subtle: there are many possible attacks that
+         * must be thwarted.
+         *
+         * @serial include
+         */
+        static class UnmodifiableEntrySet extends UnmodifiableSet {
+
+            UnmodifiableEntrySet(Set s) {
+                super(s);
+            }
+
+            public Iterator iterator() {
+                return new Iterator() {
+                    private final Iterator i = c.iterator();
+
+                    public boolean hasNext() {
+                        return i.hasNext();
+                    }
+
+                    public Object next() {
+                        return new UnmodifiableEntry((Entry) i.next());
+                    }
+
+                    public void remove() {
+                        throw new IllegalStateException();
+                    }
+                };
+            }
+
+            public Object[] toArray() {
+                Object[] a = c.toArray();
+                for (int i = 0; i < a.length; i++) {
+                    a[i] = new UnmodifiableEntry((Map.Entry) a[i]);
+                }
+                return a;
+            }
+
+            /**
+             * This method is overridden to protect the backing set against an
+             * object with a nefarious equals function that senses that the
+             * equality-candidate is Map.Entry and calls its setValue method.
+             */
+            public boolean contains(Object o) {
+                if (!(o instanceof Map.Entry)) {
+                    return false;
+                }
+                return c.contains(
+                        new UnmodifiableEntry((Map.Entry) o));
+            }
+
+            /**
+             * The next two methods are overridden to protect against an
+             * unscrupulous List whose contains(Object o) method senses when o
+             * is a Map.Entry, and calls o.setValue.
+             */
+            public boolean containsAll(Collection coll) {
+                Iterator i = coll.iterator();
+                while (i.hasNext()) {
+                    if (!contains(i.next())) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            public boolean equals(Object o) {
+                if (o == this) {
+                    return true;
+                }
+
+                if (!(o instanceof Set)) {
+                    return false;
+                }
+                Set s = (Set) o;
+                if (s.size() != c.size()) {
+                    return false;
+                }
+                return containsAll(s); // Invokes safe containsAll() above
+            }
+
+            /**
+             * This "wrapper class" serves two purposes: it prevents the client
+             * from modifying the backing Map, by short-circuiting the setValue
+             * method, and it protects the backing Map against an ill-behaved
+             * Map.Entry that attempts to modify another Map Entry when asked to
+             * perform an equality check.
+             */
+            private static class UnmodifiableEntry implements Map.Entry {
+
+                private Map.Entry e;
+
+                UnmodifiableEntry(Map.Entry e) {
+                    this.e = e;
+                }
+
+                public Object getKey() {
+                    return e.getKey();
+                }
+
+                public Object getValue() {
+                    return e.getValue();
+                }
+
+                public Object setValue(Object value) {
+                    throw new IllegalStateException();
+                }
+
+                public int hashCode() {
+                    return e.hashCode();
+                }
+
+                public boolean equals(Object o) {
+                    if (this == o) {
+                        return true;
+                    }
+                    if (!(o instanceof Map.Entry)) {
+                        return false;
+                    }
+                    Map.Entry t = (Map.Entry) o;
+                    return eq(e.getKey(), t.getKey())
+                            && eq(e.getValue(), t.getValue());
+                }
+
+                public String toString() {
+                    return e.toString();
+                }
+            }
+        }
+    }
+
+    private static class UnmodifiableSet extends UnmodifiableCollection implements Set {
+
+        private UnmodifiableSet(Set s) {
+            super(s);
+        }
+
+        public boolean equals(Object o) {
+            return o == this || c.equals(o);
+        }
+
+        public int hashCode() {
+            return c.hashCode();
         }
     }
 
@@ -308,5 +573,578 @@ public class Collections {
         ArrayList list = new ArrayList();
         addAll(list, a);
         return list;
+    }
+
+    /**
+     * Returns an optimized empty list that is built to be empty.
+     *
+     * @return list taking minimum space
+     */
+    public static List emptyList() {
+        return new ArrayList(0);
+    }
+
+    /**
+     * Returns a synchronized (thread-safe) list backed by the specified list.
+     *
+     * <p> It is imperative that the user manually synchronize on the returned
+     * list when iterating over it:
+     * <pre>
+     *  List list = Collections.synchronizedList(new ArrayList());
+     *      ...
+     *  synchronized (list) {
+     *      Iterator i = list.iterator(); // Must be in synchronized block
+     *      while (i.hasNext())
+     *          foo(i.next());
+     *  }
+     * </pre>
+     *
+     * Failure to follow this advice may result in non-deterministic behavior.
+     *
+     * @param list the list to be "wrapped" in a synchronized list
+     * @return a synchronized view of the specified list
+     */
+    public static List synchronizedList(List list) {
+        return new SynchronizedList(list);
+    }
+
+    /**
+     * Returns a synchronized (thread-safe) list backed by the specified list.
+     *
+     * <p> It is imperative that the user manually synchronize on the returned
+     * list when iterating over it:
+     * <pre>
+     *  List list = Collections.synchronizedList(new ArrayList(), lock);
+     *      ...
+     *  synchronized (lock) {
+     *      Iterator i = list.iterator(); // Must be in synchronized block
+     *      while (i.hasNext())
+     *          foo(i.next());
+     *  }
+     * </pre>
+     *
+     * Failure to follow this advice may result in non-deterministic behavior.
+     *
+     * @param list the list to be "wrapped" in a synchronized list
+     * @param lock the object to synchronize all operations on
+     * @return a synchronized view of the specified list
+     */
+    public static List synchronizedList(List list, Object lock) {
+        return new SynchronizedList(list, lock);
+    }
+
+    /**
+     * Returns a synchronized (thread-safe) map backed by the specified map. In
+     * order to guarantee serial access, it is critical that
+     * <strong>all</strong> access to the backing map is accomplished through
+     * the returned map.<p>
+     *
+     * It is imperative that the user manually synchronize on the returned map
+     * when iterating over any of its collection views:
+     * <pre>
+     *  Map m = Collections.synchronizedMap(new HashMap());
+     *      ...
+     *  Set s = m.keySet();  // Needn't be in synchronized block
+     *      ...
+     *  synchronized (m) {  // Synchronizing on m, not s!
+     *      Iterator i = s.iterator(); // Must be in synchronized block
+     *      while (i.hasNext())
+     *          foo(i.next());
+     *  }
+     * </pre> Failure to follow this advice may result in non-deterministic
+     * behavior.
+     *
+     * <p>The returned map will be serializable if the specified map is
+     * serializable.
+     *
+     * @param map the map to be "wrapped" in a synchronized map
+     * @return a synchronized view of the specified map
+     */
+    public static Map synchronizedMap(Map map) {
+        return new SynchronizedMap(map);
+    }
+
+    /**
+     * Returns a synchronized (thread-safe) map backed by the specified map. In
+     * order to guarantee serial access, it is critical that
+     * <strong>all</strong> access to the backing map is accomplished through
+     * the returned map.<p>
+     *
+     * It is imperative that the user manually synchronize on the returned map
+     * when iterating over any of its collection views:
+     * <pre>
+     *  Map m = Collections.synchronizedMap(new HashMap(), lock);
+     *      ...
+     *  Set s = m.keySet();  // Needn't be in synchronized block
+     *      ...
+     *  synchronized (lock) {  // Synchronizing on m, not s!
+     *      Iterator i = s.iterator(); // Must be in synchronized block
+     *      while (i.hasNext())
+     *          foo(i.next());
+     *  }
+     * </pre> Failure to follow this advice may result in non-deterministic
+     * behavior.
+     *
+     * <p>The returned map will be serializable if the specified map is
+     * serializable.
+     *
+     * @param map the map to be "wrapped" in a synchronized map
+     * @param lock the object to synchronize all operations on
+     * @return a synchronized view of the specified map
+     */
+    public static Map synchronizedMap(Map map, Object lock) {
+        return new SynchronizedMap(map, lock);
+    }
+
+    /**
+     * Returns a synchronized (thread-safe) set backed by the specified set. In
+     * order to guarantee serial access, it is critical that
+     * <strong>all</strong> access to the backing set is accomplished through
+     * the returned set.<p>
+     *
+     * It is imperative that the user manually synchronize on the returned set
+     * when iterating over it:
+     * <pre>
+     *  Set s = Collections.synchronizedSet(new HashSet());
+     *      ...
+     *  synchronized (s) {
+     *      Iterator i = s.iterator(); // Must be in the synchronized block
+     *      while (i.hasNext())
+     *          foo(i.next());
+     *  }
+     * </pre> Failure to follow this advice may result in non-deterministic
+     * behavior.
+     *
+     * <p>The returned set will be serializable if the specified set is
+     * serializable.
+     *
+     * @param set the set to be "wrapped" in a synchronized set
+     * @return a synchronized view of the specified set
+     */
+    public static Set synchronizedSet(Set set) {
+        return new SynchronizedSet(set);
+    }
+
+    /**
+     * Returns a synchronized (thread-safe) set backed by the specified set. In
+     * order to guarantee serial access, it is critical that
+     * <strong>all</strong> access to the backing set is accomplished through
+     * the returned set.<p>
+     *
+     * It is imperative that the user manually synchronize on the returned set
+     * when iterating over it:
+     * <pre>
+     *  Set s = Collections.synchronizedSet(new HashSet(), lock);
+     *      ...
+     *  synchronized (lock) {
+     *      Iterator i = s.iterator(); // Must be in the synchronized block
+     *      while (i.hasNext())
+     *          foo(i.next());
+     *  }
+     * </pre> Failure to follow this advice may result in non-deterministic
+     * behavior.
+     *
+     * <p>The returned set will be serializable if the specified set is
+     * serializable.
+     *
+     * @param set the set to be "wrapped" in a synchronized set
+     * @param lock the object to synchronize all operations on
+     * @return a synchronized view of the specified set
+     */
+    public static Set synchronizedSet(Set set, Object lock) {
+        return new SynchronizedSet(set, lock);
+    }
+
+    /**
+     * Returns a synchronized (thread-safe) collection backed by the specified
+     * collection.
+     *
+     * <p> It is imperative that the user manually synchronize on the returned
+     * collection when iterating over it:
+     * <pre>
+     *  Collection c = Collections.synchronizedCollection(myCollection);
+     *     ...
+     *  synchronized (c) {
+     *      Iterator i = c.iterator(); // Must be in the synchronized block
+     *      while (i.hasNext())
+     *         foo(i.next());
+     *  }
+     * </pre> Failure to follow this advice may result in non-deterministic
+     * behavior.
+     *
+     * <p>The returned collection does <i>not</i> pass the {@code hashCode} and
+     * {@code equals} operations through to the backing collection, but relies
+     * on {@code Object}'s equals and hashCode methods. This is necessary to
+     * preserve the contracts of these operations in the case that the backing
+     * collection is a set or a list.
+     *
+     * @param collection the collection to be "wrapped" in a synchronized
+     * collection
+     * @return a synchronized view of the specified collection
+     */
+    public static Collection synchronizedCollection(Collection collection) {
+        return new SynchronizedCollection(collection);
+    }
+
+    /**
+     * Returns a synchronized (thread-safe) collection backed by the specified
+     * collection.
+     *
+     * <p> It is imperative that the user manually synchronize on the returned
+     * collection when iterating over it:
+     * <pre>
+     *  Collection c = Collections.synchronizedCollection(myCollection, lock);
+     *     ...
+     *  synchronized (lock) {
+     *      Iterator i = c.iterator(); // Must be in the synchronized block
+     *      while (i.hasNext())
+     *         foo(i.next());
+     *  }
+     * </pre> Failure to follow this advice may result in non-deterministic
+     * behavior.
+     *
+     * <p> The returned collection does <i>not</i> pass the {@code hashCode} and
+     * {@code equals} operations through to the backing collection, but relies
+     * on {@code Object}'s equals and hashCode methods. This is necessary to
+     * preserve the contracts of these operations in the case that the backing
+     * collection is a set or a list.
+     *
+     * @param collection the collection to be "wrapped" in a synchronized
+     * collection
+     * @param lock the object to synchronize all operations on
+     * @return a synchronized view of the specified collection
+     */
+    public static Collection synchronizedCollection(Collection collection, Object lock) {
+        return new SynchronizedCollection(collection, lock);
+    }
+
+    private static class SynchronizedCollection implements Collection {
+
+        final Collection c;  // Backing Collection
+        final Object lock;     // Object on which to synchronize
+
+        SynchronizedCollection(Collection c) {
+            if (c == null) {
+                throw new NullPointerException();
+            }
+            this.c = c;
+            lock = this;
+        }
+
+        SynchronizedCollection(Collection c, Object lock) {
+            this.c = c;
+            this.lock = lock;
+        }
+
+        public int size() {
+            synchronized (lock) {
+                return c.size();
+            }
+        }
+
+        public boolean isEmpty() {
+            synchronized (lock) {
+                return c.isEmpty();
+            }
+        }
+
+        public boolean contains(Object o) {
+            synchronized (lock) {
+                return c.contains(o);
+            }
+        }
+
+        public Object[] toArray() {
+            synchronized (lock) {
+                return c.toArray();
+            }
+        }
+
+        public Iterator iterator() {
+            return c.iterator(); // Must be manually synched by user!
+        }
+
+        public void add(Object e) {
+            synchronized (lock) {
+                c.add(e);
+            }
+        }
+
+        public void remove(Object o) {
+            synchronized (lock) {
+                c.remove(o);
+            }
+        }
+
+        public boolean containsAll(Collection coll) {
+            synchronized (lock) {
+                return c.containsAll(coll);
+            }
+        }
+
+        public void addAll(Collection coll) {
+            synchronized (lock) {
+                c.addAll(coll);
+            }
+        }
+
+        public void removeAll(Collection coll) {
+            synchronized (lock) {
+                c.removeAll(coll);
+            }
+        }
+
+        public void retainAll(Collection coll) {
+            synchronized (lock) {
+                c.retainAll(coll);
+            }
+        }
+
+        public void clear() {
+            synchronized (lock) {
+                c.clear();
+            }
+        }
+
+        public String toString() {
+            synchronized (lock) {
+                return c.toString();
+            }
+        }
+    }
+
+    private static class SynchronizedMap implements Map {
+
+        private final Map m;     // Backing Map
+        final Object lock;        // Object on which to synchronize
+
+        private SynchronizedMap(Map m) {
+            if (m == null) {
+                throw new NullPointerException();
+            }
+            this.m = m;
+            this.lock = this;
+        }
+
+        private SynchronizedMap(Map m, Object lock) {
+            this.m = m;
+            this.lock = lock;
+        }
+
+        public int size() {
+            synchronized (lock) {
+                return m.size();
+            }
+        }
+
+        public boolean isEmpty() {
+            synchronized (lock) {
+                return m.isEmpty();
+            }
+        }
+
+        public boolean containsKey(Object key) {
+            synchronized (lock) {
+                return m.containsKey(key);
+            }
+        }
+
+        public boolean containsValue(Object value) {
+            synchronized (lock) {
+                return m.containsValue(value);
+            }
+        }
+
+        public Object get(Object key) {
+            synchronized (lock) {
+                return m.get(key);
+            }
+        }
+
+        public Object put(Object key, Object value) {
+            synchronized (lock) {
+                return m.put(key, value);
+            }
+        }
+
+        public void remove(Object key) {
+            synchronized (lock) {
+                m.remove(key);
+            }
+        }
+
+        public void putAll(Map map) {
+            synchronized (lock) {
+                m.putAll(map);
+            }
+        }
+
+        public void clear() {
+            synchronized (lock) {
+                m.clear();
+            }
+        }
+        private transient Set keySet = null;
+        private transient Set entrySet = null;
+        private transient Collection values = null;
+
+        public Set keySet() {
+            synchronized (lock) {
+                if (keySet == null) {
+                    keySet = new SynchronizedSet(m.keySet(), lock);
+                }
+                return keySet;
+            }
+        }
+
+        public Set entrySet() {
+            synchronized (lock) {
+                if (entrySet == null) {
+                    entrySet = new SynchronizedSet(m.entrySet(), lock);
+                }
+                return entrySet;
+            }
+        }
+
+        public Collection values() {
+            synchronized (lock) {
+                if (values == null) {
+                    values = new SynchronizedCollection(m.values(), lock);
+                }
+                return values;
+            }
+        }
+
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            synchronized (lock) {
+                return m.equals(o);
+            }
+        }
+
+        public int hashCode() {
+            synchronized (lock) {
+                return m.hashCode();
+            }
+        }
+
+        public String toString() {
+            synchronized (lock) {
+                return m.toString();
+            }
+        }
+    }
+
+    private static class SynchronizedSet extends SynchronizedCollection implements Set {
+
+        private SynchronizedSet(Set s) {
+            super(s);
+        }
+
+        private SynchronizedSet(Set s, Object lock) {
+            super(s, lock);
+        }
+
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            synchronized (lock) {
+                return c.equals(o);
+            }
+        }
+
+        public int hashCode() {
+            synchronized (lock) {
+                return c.hashCode();
+            }
+        }
+    }
+
+    private static class SynchronizedList extends SynchronizedCollection implements List {
+
+        private final List list;
+
+        private SynchronizedList(List list) {
+            super(list);
+            this.list = list;
+        }
+
+        private SynchronizedList(List list, Object lock) {
+            super(list, lock);
+            this.list = list;
+        }
+
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            synchronized (lock) {
+                return list.equals(o);
+            }
+        }
+
+        public int hashCode() {
+            synchronized (lock) {
+                return list.hashCode();
+            }
+        }
+
+        public Object get(int index) {
+            synchronized (lock) {
+                return list.get(index);
+            }
+        }
+
+        public Object set(int index, Object element) {
+            synchronized (lock) {
+                return list.set(index, element);
+            }
+        }
+
+        public void add(int index, Object element) {
+            synchronized (lock) {
+                list.add(index, element);
+            }
+        }
+
+        public Object remove(int index) {
+            synchronized (lock) {
+                return list.remove(index);
+            }
+        }
+
+        public int indexOf(Object o) {
+            synchronized (lock) {
+                return list.indexOf(o);
+            }
+        }
+
+        public int lastIndexOf(Object o) {
+            synchronized (lock) {
+                return list.lastIndexOf(o);
+            }
+        }
+
+        public void addAll(int index, Collection c) {
+            synchronized (lock) {
+                list.addAll(index, c);
+            }
+        }
+
+        public List subList(int fromIndex, int toIndex) {
+            synchronized (lock) {
+                return new SynchronizedList(list.subList(fromIndex, toIndex), lock);
+            }
+        }
+    }
+
+    /**
+     * Returns true if the specified arguments are equal, or both null.
+     */
+    private static boolean eq(Object o1, Object o2) {
+        return o1 == null ? o2 == null : o1.equals(o2);
     }
 }

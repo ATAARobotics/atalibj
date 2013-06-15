@@ -45,6 +45,7 @@ public final class SortedArrayList implements List {
     public SortedArrayList(Collection c, Comparer comparer) {
         this.list = new ArrayList(c);
         this.comparer = comparer;
+        sort();
     }
 
     /**

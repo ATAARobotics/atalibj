@@ -26,10 +26,8 @@ import java.io.IOException;
  */
 public final class Properties {
 
-    private final File file;
-    // These are lazily intialized
-    private String propertiesContent;
-    private Property[] properties;
+    private final String propertiesContent;
+    private final Property[] properties;
 
     /**
      * Constructs the object that will read the properties file. No processing
@@ -43,7 +41,15 @@ public final class Properties {
      * @param file file to get data from
      */
     public Properties(File file) {
-        this.file = file;
+        propertiesContent = TextFiles.getTextFromFile(file);
+        
+        StringTokenizer tokenizer = new StringTokenizer(propertiesContent, "\n\r=");
+        Property[] p = new Property[tokenizer.countTokens() / 2];
+        for (int x = 0; x < p.length; x++) {
+            p[x] = new Property(tokenizer.nextToken(), tokenizer.nextToken());
+        }
+        // Buffer the array so less chance of accessing it mid-construction
+        properties = p;
     }
 
     /**
@@ -54,10 +60,6 @@ public final class Properties {
      * @throws IOException when reading from the file throws an exception
      */
     public String getFileContents() throws IOException {
-        // lazy intialization so construction isn't intense
-        if (propertiesContent == null) {
-            propertiesContent = TextFiles.getTextFromFile(file);
-        }
         return propertiesContent;
     }
 
@@ -79,15 +81,6 @@ public final class Properties {
      * @throws IOException when reading from the file throws an exception
      */
     public Property[] getProperties() throws IOException {
-        if (properties == null) {
-            StringTokenizer tokenizer = new StringTokenizer(getFileContents(), "\n\r=");
-            Property[] p = new Property[tokenizer.countTokens() / 2];
-            for (int x = 0; x < p.length; x++) {
-                p[x] = new Property(tokenizer.nextToken(), tokenizer.nextToken());
-            }
-            // Buffer the array so less chance of accessing it mid-construction
-            properties = p;
-        }
         return properties;
     }
 

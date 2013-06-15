@@ -2,7 +2,6 @@ package edu.first.commands;
 
 import edu.first.command.Command;
 import edu.first.util.list.ArrayList;
-import edu.first.util.Enum;
 import edu.first.util.list.Iterator;
 import edu.first.util.list.List;
 import edu.first.util.list.SafeArrayList;

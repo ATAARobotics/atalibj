@@ -154,6 +154,8 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
         safetyHelper.feed();
         this.left.setSpeed(MathUtils.limit(reversed ? -left : left, maxSpeed));
         this.right.setSpeed(MathUtils.limit(reversed ? -right : right, maxSpeed));
+        this.left.update();
+        this.right.update();
     }
 
     /**

@@ -199,15 +199,18 @@ public final class GamePeriods extends IterativeRobot {
             void end() {
                 robotMode.endDisabled();
             }
-        }, AUTONOMOUS = new GameMode() {
+        };
+        static final GameMode AUTONOMOUS = new GameMode() {
             void end() {
                 robotMode.endAutonomous();
             }
-        }, TELEOPERATED = new GameMode() {
+        };
+        static final GameMode TELEOPERATED = new GameMode() {
             void end() {
                 robotMode.endTeleoperated();
             }
-        }, TEST = new GameMode() {
+        };
+        static final GameMode TEST = new GameMode() {
             void end() {
                 robotMode.endTest();
             }
