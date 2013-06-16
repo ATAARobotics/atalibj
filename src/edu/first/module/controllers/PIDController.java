@@ -152,7 +152,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @param setpoint desired point that the input should reach
      */
-    public final void setSetpoint(double setpoint) {
+    public void setSetpoint(double setpoint) {
         synchronized (lock) {
             if (setpoint < minimumInput) {
                 this.setpoint = minimumInput;
@@ -170,7 +170,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param P proportional coefficient
      * @see PIDController for PID algorithm
      */
-    public final void setP(double P) {
+    public void setP(double P) {
         synchronized (lock) {
             this.P = P;
         }
@@ -182,7 +182,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param I integral coefficient
      * @see PIDController for PID algorithm
      */
-    public final void setI(double I) {
+    public void setI(double I) {
         synchronized (lock) {
             this.I = I;
         }
@@ -194,7 +194,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param D derivative coefficient
      * @see PIDController for PID algorithm
      */
-    public final void setD(double D) {
+    public void setD(double D) {
         synchronized (lock) {
             this.D = D;
         }
@@ -209,7 +209,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param D derivative coefficient
      * @see PIDController for PID algorithm
      */
-    public final void setPID(double P, double I, double D) {
+    public void setPID(double P, double I, double D) {
         synchronized (lock) {
             this.P = P;
             this.I = I;
@@ -223,7 +223,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @return P proportional coefficient
      * @see PIDController for PID algorithm
      */
-    public final double getP() {
+    public double getP() {
         synchronized (lock) {
             return P;
         }
@@ -235,7 +235,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @return I integral coefficient
      * @see PIDController for PID algorithm
      */
-    public final double getI() {
+    public double getI() {
         synchronized (lock) {
             return I;
         }
@@ -247,7 +247,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @return D derivative coefficient
      * @see PIDController for PID algorithm
      */
-    public final double getD() {
+    public double getD() {
         synchronized (lock) {
             return D;
         }
@@ -259,7 +259,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param minimumInput lowest possible input
      * @param maximumInput highest possible input
      */
-    public final void setInputRange(double minimumInput, double maximumInput) {
+    public void setInputRange(double minimumInput, double maximumInput) {
         if (minimumInput > maximumInput) {
             throw new IllegalArgumentException(minimumInput + " is larger than " + maximumInput);
         }
@@ -276,7 +276,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param minimumOutput lowest possible output
      * @param maximumOutput highest possible output
      */
-    public final void setOutputRange(double minimumOutput, double maximumOutput) {
+    public void setOutputRange(double minimumOutput, double maximumOutput) {
         if (minimumOutput > maximumOutput) {
             throw new IllegalArgumentException(minimumOutput + " is larger than " + maximumOutput);
         }
@@ -292,7 +292,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @param tolerance how far off input can be to be considered "on target"
      */
-    public final void setTolerance(double tolerance) {
+    public void setTolerance(double tolerance) {
         this.tolerance = tolerance;
     }
 
@@ -301,7 +301,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @return last result of PID algorithm
      */
-    public final double getPrevResult() {
+    public double getPrevResult() {
         synchronized (lock) {
             return prevResult;
         }
@@ -312,7 +312,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @return current goal
      */
-    public final double getSetpoint() {
+    public double getSetpoint() {
         synchronized (lock) {
             return setpoint;
         }
@@ -323,7 +323,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @return how far off input is from setpoint
      */
-    public final double getError() {
+    public double getError() {
         synchronized (lock) {
             return prevError;
         }
@@ -335,7 +335,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @return how far off input can be to be considered "on target"
      */
-    public final double getTolerance() {
+    public double getTolerance() {
         return tolerance;
     }
 
@@ -345,7 +345,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @return if controller is close enough to target
      */
-    public final boolean onTarget() {
+    public boolean onTarget() {
         return MathUtils.abs(getError()) < tolerance;
     }
 
@@ -428,7 +428,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @return last result of PID algorithm
      * @see #getPrevResult()
      */
-    public final double get() {
+    public double get() {
         return getPrevResult();
     }
 
@@ -439,7 +439,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param value desired point that the input should reach
      * @see #setSetpoint(double)
      */
-    public final void set(double value) {
+    public void set(double value) {
         setSetpoint(value);
     }
 
@@ -449,7 +449,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @return last result of PID algorithm
      * @see #getPrevResult()
      */
-    public final double getPosition() {
+    public double getPosition() {
         return getPrevResult();
     }
 
@@ -460,7 +460,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param position desired point that the input should reach
      * @see #setSetpoint(double)
      */
-    public final void setPosition(double position) {
+    public void setPosition(double position) {
         setSetpoint(position);
     }
 }

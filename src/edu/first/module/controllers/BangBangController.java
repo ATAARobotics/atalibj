@@ -127,7 +127,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @param setpoint desired point that the input should reach
      */
-    public final void setSetpoint(double setpoint) {
+    public void setSetpoint(double setpoint) {
         synchronized (lock) {
             this.setpoint = setpoint;
         }
@@ -141,7 +141,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @param coast if motor should coast
      */
-    public final void setCoast(boolean coast) {
+    public void setCoast(boolean coast) {
         synchronized (lock) {
             this.coast = coast;
         }
@@ -158,7 +158,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @param speedUp if controller should be in "speed up" mode
      */
-    public final void setSpeedUp(boolean speedUp) {
+    public void setSpeedUp(boolean speedUp) {
         synchronized (lock) {
             this.speedUp = speedUp;
         }
@@ -172,7 +172,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @param spinupInput maximum input to use {@link #getSpinupOutput()} for
      */
-    public final void setSpinupInput(double spinupInput) {
+    public void setSpinupInput(double spinupInput) {
         synchronized (lock) {
             this.spinupInput = spinupInput;
         }
@@ -187,7 +187,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param spinupOutput output for when input is lower than
      * {@link #getSpinupInput()}
      */
-    public final void setSpinupOutput(double spinupOutput) {
+    public void setSpinupOutput(double spinupOutput) {
         synchronized (lock) {
             this.spinupOutput = spinupOutput;
         }
@@ -199,7 +199,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @param reversed if controller should reverse output
      */
-    public final void setReversed(boolean reversed) {
+    public void setReversed(boolean reversed) {
         synchronized (lock) {
             this.reversed = reversed;
         }
@@ -212,7 +212,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @param maxOutput maximum output to send
      */
-    public final void setMaxOutput(double maxOutput) {
+    public void setMaxOutput(double maxOutput) {
         synchronized (lock) {
             this.maxOutput = MathUtils.abs(maxOutput);
         }
@@ -224,7 +224,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @param tolerance how far off input can be to be considered "on target"
      */
-    public final void setTolerance(double tolerance) {
+    public void setTolerance(double tolerance) {
         this.tolerance = tolerance;
     }
 
@@ -235,7 +235,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return if controller is in "speed up" mode
      */
-    public final boolean isSpeedUp() {
+    public boolean isSpeedUp() {
         synchronized (lock) {
             return speedUp;
         }
@@ -251,7 +251,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return maximum input that will be considered "spinning up"
      */
-    public final double getSpinupInput() {
+    public double getSpinupInput() {
         synchronized (lock) {
             return spinupInput;
         }
@@ -267,7 +267,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return output to use when controller is "spinning up"
      */
-    public final double getSpinupOutput() {
+    public double getSpinupOutput() {
         synchronized (lock) {
             return spinupOutput;
         }
@@ -279,7 +279,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return highest possible output
      */
-    public final double getMaxOutput() {
+    public double getMaxOutput() {
         synchronized (lock) {
             return maxOutput;
         }
@@ -290,7 +290,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return current goal
      */
-    public final double getSetpoint() {
+    public double getSetpoint() {
         synchronized (lock) {
             return setpoint;
         }
@@ -302,7 +302,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return how far off input is from setpoint
      */
-    public final double getError() {
+    public double getError() {
         synchronized (lock) {
             return setpoint - prevInput;
         }
@@ -313,7 +313,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return last set output
      */
-    public final double getPrevResult() {
+    public double getPrevResult() {
         synchronized (lock) {
             return prevResult;
         }
@@ -324,7 +324,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return last input received
      */
-    public final double getPrevInput() {
+    public double getPrevInput() {
         synchronized (lock) {
             return prevInput;
         }
@@ -336,7 +336,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return how far off input can be to be considered "on target"
      */
-    public final double getTolerance() {
+    public double getTolerance() {
         return tolerance;
     }
 
@@ -346,7 +346,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      *
      * @return if controller is close enough to target
      */
-    public final boolean onTarget() {
+    public boolean onTarget() {
         return MathUtils.abs(getError()) < tolerance;
     }
 
@@ -408,7 +408,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return last input received
      * @see #getPrevInput()
      */
-    public final double get() {
+    public double get() {
         return getPrevInput();
     }
 
@@ -418,7 +418,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param value desired point that the input should reach
      * @see #setSetpoint(double)
      */
-    public final void set(double value) {
+    public void set(double value) {
         setSetpoint(value);
     }
 
@@ -428,7 +428,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return last input received
      * @see #getPrevInput()
      */
-    public final double getRate() {
+    public double getRate() {
         return getPrevInput();
     }
 
@@ -438,7 +438,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param rate desired point that the input should reach
      * @see #setSetpoint(double)
      */
-    public final void setRate(double rate) {
+    public void setRate(double rate) {
         setSetpoint(rate);
     }
 }
