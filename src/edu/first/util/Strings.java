@@ -45,6 +45,9 @@ public final class Strings {
         if (split == null) {
             throw new NullPointerException();
         }
+        if (string.indexOf(split) < 0) {
+            return new String[]{string};
+        }
         ArrayList node = new ArrayList();
         int index = string.indexOf(split);
         while (index >= 0) {
@@ -151,6 +154,9 @@ public final class Strings {
         }
         if (replace == null || replacement == null) {
             throw new NullPointerException();
+        }
+        if (string.indexOf(replace) < 0) {
+            return string;
         }
         return string.substring(0, string.indexOf(replace)) + replacement
                 + string.substring(string.indexOf(replace) + replace.length(), string.length());
