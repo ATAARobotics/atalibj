@@ -1,191 +1,178 @@
 package edu.first.module.actuators;
 
-import edu.first.util.list.Iterator;
-import edu.first.util.list.ArrayList;
+import edu.first.lang.OutOfSyncException;
 
 /**
- * A group for managing a set of {@code SpeedController Speed Controllers} as
- * one single
+ * A group of speed controllers. Performs actions on all controllers.
  *
- * @since May 30 13
- * @author Aaron Weiss
+ * @since June 15 13
  * @author Joel Gallant
  */
 public class SpeedControllerGroup implements SpeedController {
 
-    private final ArrayList controllers = new ArrayList();
+    private final SpeedController[] group;
 
     /**
-     * Creates a new, empty {@code SpeedControllerGroup}.
-     */
-    public SpeedControllerGroup() {
-    }
-
-    /**
-     * Creates a new {@code SpeedControllerGroup} with a single starting
-     * {@code controller}.
+     * Constructs the group using an array of all the elements to use.
      *
-     * @param controller the speed controller to start with
+     * @throws NullPointerException when array is null
+     * @param group all elements to apply things to
      */
-    public SpeedControllerGroup(SpeedController controller) {
-        add(controller);
-    }
-
-    /**
-     * Creates a new {@code SpeedControllerGroup} starting with an array of
-     * {@code controllers}.
-     *
-     * @param controllers the speed controllers to start with
-     */
-    public SpeedControllerGroup(SpeedController[] controllers) {
-        addAll(controllers);
-    }
-
-    /**
-     * Adds a {@code SpeedController} to the {@code SpeedControllerGroup}.
-     *
-     * @param controller the speed controller to add
-     */
-    public final SpeedControllerGroup add(SpeedController controller) {
-        if (controller == null) {
-            throw new NullPointerException("Null controller given");
+    public SpeedControllerGroup(SpeedController[] group) {
+        if (group == null) {
+            throw new NullPointerException("Group provided was null");
         }
-        controllers.add(controller);
-        return this;
+        this.group = group;
     }
 
     /**
-     * Adds an array of {@code SpeedController Speed Controllers} to the
-     * {@code SpeedControllerGroup}.
+     * Sets the speed of all the speed controllers.
      *
-     * @param controllers the speed controller to add
-     */
-    public final SpeedControllerGroup addAll(SpeedController[] controllers) {
-        for (int x = 0; x < controllers.length; x++) {
-            add(controllers[x]);
-        }
-        return this;
-    }
-
-    /**
-     * Removes the {@code SpeedController} at the desired index.
-     *
-     * @param index the index to remove
-     */
-    public final void remove(int index) {
-        controllers.remove(index);
-    }
-
-    /**
-     * Removes the desired {@code SpeedController} from the group.
-     *
-     * @param controller the speed controller to remove
-     */
-    public final void remove(SpeedController controller) {
-        controllers.remove(controller);
-    }
-
-    /**
-     * Returns the amount of speed controllers that are being used in this
-     * group.
-     *
-     * @return how many controllers are a part of the group
-     */
-    public final int controllers() {
-        return controllers.size();
-    }
-
-    /**
-     * {@inheritDoc}
+     * @param speed speed to set
+     * @see SpeedController#setSpeed(double)
      */
     public void setSpeed(double speed) {
-        final Iterator iter = controllers.iterator();
-        while (iter.hasNext()) {
-            ((SpeedController) iter.next()).setSpeed(speed);
+        for (int x = 0; x < group.length; x++) {
+            group[x].setSpeed(speed);
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the raw speed of all the speed controllers.
+     *
+     * @param speed speed to set
+     * @see SpeedController#setRawSpeed(int)
      */
     public void setRawSpeed(int speed) {
-        final Iterator iter = controllers.iterator();
-        while (iter.hasNext()) {
-            ((SpeedController) iter.next()).setRawSpeed(speed);
+        for (int x = 0; x < group.length; x++) {
+            group[x].setRawSpeed(speed);
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the speed of <i>every</i> controller. They must be in the same
+     * state.
+     *
+     * @throws OutOfSyncException when all controllers are not in the same state
+     * @return speed of all the controllers
+     * @see SpeedController#getSpeed()
      */
     public double getSpeed() {
-        if (controllers.size() > 0) {
-            return ((SpeedController) controllers.get(0)).getSpeed();
-        } else {
-            return 0;
+        double speed = 0;
+        for (int x = 0; x < group.length; x++) {
+            if (x == 0) {
+                speed = group[x].getSpeed();
+            } else {
+                double b = group[x].getSpeed();
+                if (b != speed) {
+                    throw new OutOfSyncException("Group was out of sync (" + b + " != " + speed + ")");
+                }
+            }
         }
+        return speed;
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the raw speed of <i>every</i> controller. They must be in the
+     * same state.
+     *
+     * @throws OutOfSyncException when all controllers are not in the same state
+     * @return speed of all the controllers
+     * @see SpeedController#getRawSpeed()
      */
     public int getRawSpeed() {
-        if (controllers.size() > 0) {
-            return ((SpeedController) controllers.get(0)).getRawSpeed();
-        } else {
-            return 0;
+        int speed = 0;
+        for (int x = 0; x < group.length; x++) {
+            if (x == 0) {
+                speed = group[x].getRawSpeed();
+            } else {
+                int b = group[x].getRawSpeed();
+                if (b != speed) {
+                    throw new OutOfSyncException("Group was out of sync (" + b + " != " + speed + ")");
+                }
+            }
         }
+        return speed;
     }
 
     /**
-     * {@inheritDoc}
+     * Updates every controller.
+     *
+     * @see SpeedController#update()
      */
     public void update() {
-        final Iterator iter = controllers.iterator();
-        while (iter.hasNext()) {
-            ((SpeedController) iter.next()).update();
+        for (int x = 0; x < group.length; x++) {
+            group[x].update();
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the rate of every controller.
+     *
+     * @param rate rate to set
+     * @see SpeedController#setRate(double)
      */
     public void setRate(double rate) {
-        final Iterator iter = controllers.iterator();
-        while (iter.hasNext()) {
-            ((SpeedController) iter.next()).setRate(rate);
+        for (int x = 0; x < group.length; x++) {
+            group[x].setRate(rate);
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Sets every controller.
+     *
+     * @param value speed to set
+     * @see SpeedController#set(double)
      */
     public void set(double value) {
-        final Iterator iter = controllers.iterator();
-        while (iter.hasNext()) {
-            ((SpeedController) iter.next()).set(value);
+        for (int x = 0; x < group.length; x++) {
+            group[x].set(value);
         }
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the rate of <i>every</i> controller. They must be in the same
+     * state.
+     *
+     * @throws OutOfSyncException when all controllers are not in the same state
+     * @return current rate of all controllers
+     * @see SpeedController#getRate()
      */
     public double getRate() {
-        if (controllers.size() > 0) {
-            return ((SpeedController) controllers.get(0)).getRate();
-        } else {
-            return 0;
+        double rate = 0;
+        for (int x = 0; x < group.length; x++) {
+            if (x == 0) {
+                rate = group[x].getRate();
+            } else {
+                double b = group[x].getRate();
+                if (b != rate) {
+                    throw new OutOfSyncException("Group was out of sync (" + b + " != " + rate + ")");
+                }
+            }
         }
+        return rate;
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the state of <i>every</i> controller. They must be in the same
+     * state.
+     *
+     * @throws OutOfSyncException when all controllers are not in the same state
+     * @return state of all controllers
+     * @see SpeedController#get()
      */
     public double get() {
-        if (controllers.size() > 0) {
-            return ((SpeedController) controllers.get(0)).get();
-        } else {
-            return 0;
+        double speed = 0;
+        for (int x = 0; x < group.length; x++) {
+            if (x == 0) {
+                speed = group[x].get();
+            } else {
+                double b = group[x].get();
+                if (b != speed) {
+                    throw new OutOfSyncException("Group was out of sync (" + b + " != " + speed + ")");
+                }
+            }
         }
+        return speed;
     }
 }

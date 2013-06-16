@@ -1,7 +1,7 @@
 package edu.first.commands.common;
 
 import edu.first.command.Command;
-import edu.first.module.actuators.DualActionSolenoid;
+import edu.first.module.actuators.DualActionSolenoidModule;
 
 /**
  * Sets the state of a dual action solenoid.
@@ -13,8 +13,8 @@ import edu.first.module.actuators.DualActionSolenoid;
  */
 public final class SetDualActionSolenoid implements Command {
 
-    private final DualActionSolenoid solenoid;
-    private final DualActionSolenoid.Direction direction;
+    private final DualActionSolenoidModule solenoid;
+    private final DualActionSolenoidModule.Direction direction;
 
     /**
      * Constructs the command using the solenoid to use and which direction to
@@ -23,7 +23,7 @@ public final class SetDualActionSolenoid implements Command {
      * @param solenoid solenoid to change the state of
      * @param direction direction to set the solenoid
      */
-    public SetDualActionSolenoid(DualActionSolenoid solenoid, DualActionSolenoid.Direction direction) {
+    public SetDualActionSolenoid(DualActionSolenoidModule solenoid, DualActionSolenoidModule.Direction direction) {
         this.solenoid = solenoid;
         this.direction = direction;
     }

@@ -53,8 +53,8 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      */
     public Drivetrain(SpeedController leftFront, SpeedController leftBack,
             SpeedController rightFront, SpeedController rightBack) {
-        this.left = new SpeedControllerGroup().add(leftFront).add(leftBack);
-        this.right = new SpeedControllerGroup().add(rightFront).add(rightBack);
+        this.left = new SpeedControllerGroup(new SpeedController[]{leftFront, leftBack});
+        this.right = new SpeedControllerGroup(new SpeedController[]{rightFront, rightBack});
         setupMotorSafety();
     }
 

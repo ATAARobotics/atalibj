@@ -38,10 +38,14 @@ public class Subsystem implements Module {
      * in the subsystem. These modules are initialized, enabled and disabled
      * along with this subsystem.
      *
+     * @throws NullPointerException when array is null
      * @param modules array of all the modules to be initialized, enabled and
      * disabled with this subsystem
      */
     public Subsystem(Module[] modules) {
+        if(modules == null) {
+            throw new NullPointerException("Null array given");
+        }
         this.modules = modules;
     }
 

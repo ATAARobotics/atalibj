@@ -8,7 +8,7 @@ import edu.first.module.Module;
  * @since June 01 13
  * @author Joel Gallant
  */
-public class SingleActionSolenoid extends Module.StandardModule implements Solenoid {
+public class SolenoidModule extends Module.StandardModule implements Solenoid {
 
     private final edu.wpi.first.wpilibj.Solenoid solenoid;
 
@@ -18,7 +18,7 @@ public class SingleActionSolenoid extends Module.StandardModule implements Solen
      *
      * @param solenoid the composing instance which perform the functions
      */
-    protected SingleActionSolenoid(edu.wpi.first.wpilibj.Solenoid solenoid) {
+    protected SolenoidModule(edu.wpi.first.wpilibj.Solenoid solenoid) {
         if(solenoid == null) {
             throw new NullPointerException("Null solenoid given");
         }
@@ -30,7 +30,7 @@ public class SingleActionSolenoid extends Module.StandardModule implements Solen
      *
      * @param channel channel on solenoid sidecar
      */
-    public SingleActionSolenoid(int channel) {
+    public SolenoidModule(int channel) {
         this(new edu.wpi.first.wpilibj.Solenoid(channel));
     }
 
@@ -40,7 +40,7 @@ public class SingleActionSolenoid extends Module.StandardModule implements Solen
      * @param channel channel on solenoid sidecar
      * @param slot slot in cRIO (1 = default)
      */
-    public SingleActionSolenoid(int channel, int slot) {
+    public SolenoidModule(int channel, int slot) {
         this(new edu.wpi.first.wpilibj.Solenoid(slot, channel));
     }
 
