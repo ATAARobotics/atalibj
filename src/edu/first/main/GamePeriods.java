@@ -62,7 +62,6 @@ public final class GamePeriods extends IterativeRobot {
      */
     public void disabledInit() {
         finishAndNewMode(GameMode.DISABLED);
-        // Updates the mode when robot is disabled - should NOT be changing mode mid-match
         robotMode.initDisabled();
     }
 
