@@ -41,8 +41,9 @@ public final class Properties {
      * @param file file to get data from
      */
     public Properties(File file) {
-        propertiesContent = TextFiles.getTextFromFile(file);
-        
+        String f = TextFiles.getTextFromFile(file);
+        propertiesContent = (f == null ? "" : f);
+
         StringTokenizer tokenizer = new StringTokenizer(propertiesContent, "\n\r=");
         Property[] p = new Property[tokenizer.countTokens() / 2];
         for (int x = 0; x < p.length; x++) {
