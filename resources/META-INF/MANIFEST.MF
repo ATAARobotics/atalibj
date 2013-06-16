@@ -1,4 +1,4 @@
-MIDlet-Name: atalibj9
+MIDlet-Name: atalibj
 MIDlet-Version: 1.0.0
 MIDlet-Vendor: FIRST
 MIDlet-1: GamePeriods, , edu.first.main.GamePeriods

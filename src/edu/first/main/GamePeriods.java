@@ -5,14 +5,10 @@
  */
 package edu.first.main;
 
+import edu.first.robot.IterativeRobotAdapter;
 import edu.first.robot.RobotMode;
 import edu.first.robot.RobotModeSelector;
-import edu.first.robot.RobotModeSendableChooser;
-import edu.first.robot.SafeRobotMode;
-import edu.first.robot.SimpleRobotAdapter;
-import edu.first.util.log.Logger;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is called by the VM automatically for every game mode. It is meant
@@ -42,44 +38,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public final class GamePeriods extends IterativeRobot {
 
-    /**
-     * The default functionality of this class uses this array of
-     * {@code RobotMode} to select which mode to use. The first element in this
-     * array is considered the "default" mode, and when none others are
-     * selected, this one is.
-     *
-     * <b> Warning : The code will result in an error unless this array contains
-     * at least 1 element </b> (provided that the programmer has not edited
-     * {@code updateMode()})
-     */
-    private static final RobotMode[] modes = {};
-    private static final RobotModeSendableChooser selector = new RobotModeSendableChooser(modes);
     // Stored to "end" the game mode after it is finished
     private static GameMode previousGameMode = null;
-    // The current game mode - should not be edited by anything but updateMode()!
-    private static RobotMode robotMode;
-
-    /**
-     * Refreshes the robot mode based on the selection of SmartDashboard and
-     * returns it. If there are no modes to select, this will return null.
-     *
-     * @return robot mode based on SmartDashboard
-     */
-    private RobotMode updateMode() {
-        SmartDashboard.putData(selector);
-        RobotMode m;
-        if (selector == null || (m = selector.getRobotMode()) == null) {
-            Logger.getLogger(getClass())
-                    .warn("Warning - robot mode was not selected! Defaulting to dummy instance");
-            // DOES NOTHING!!!
-            m = new SimpleRobotAdapter("Dummy");
-        }
-        RobotMode mode = new SafeRobotMode(m);
-        if (!mode.equals(robotMode)) {
-            Logger.getLogger(getClass()).info("Robot mode set to " + mode.getName());
-        }
-        return robotMode = mode;
-    }
+    // The current game mode - change to yours
+    private static RobotMode robotMode = new IterativeRobotAdapter("Null");
 
     /**
      * Initializes the robot. Is run once at the start of the robot's execution
@@ -87,7 +49,7 @@ public final class GamePeriods extends IterativeRobot {
      * context it happens to be in.
      */
     public void robotInit() {
-        updateMode().init();
+        robotMode.init();
     }
 
     /**
@@ -101,7 +63,7 @@ public final class GamePeriods extends IterativeRobot {
     public void disabledInit() {
         finishAndNewMode(GameMode.DISABLED);
         // Updates the mode when robot is disabled - should NOT be changing mode mid-match
-        updateMode().initDisabled();
+        robotMode.initDisabled();
     }
 
     /**

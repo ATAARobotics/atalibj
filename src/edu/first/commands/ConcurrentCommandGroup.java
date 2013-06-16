@@ -26,7 +26,7 @@ public final class ConcurrentCommandGroup implements Command {
         if (commands == null) {
             throw new NullPointerException();
         }
-        this.commands = (Command[]) commands.clone();
+        this.commands = commands;
     }
 
     /**
