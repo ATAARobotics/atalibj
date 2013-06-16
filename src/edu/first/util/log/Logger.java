@@ -51,6 +51,21 @@ public final class Logger {
     }
 
     /**
+     * Returns the current logger for the class of the given object. Typically,
+     * you can use it like this:
+     * <pre>
+     * getLogger(this);
+     * </pre> It will deduce the class of the {@code this} object.
+     *
+     * @param o object whose class is the origin
+     * @return an instance of {@code Logger} that can send messages from the
+     * origin
+     */
+    public static Logger getLogger(Object o) {
+        return getLogger(o.getClass());
+    }
+
+    /**
      * Adds the {@code log} to every logger, regardless of origin.
      *
      * @param log the output to send messages to
@@ -236,7 +251,7 @@ public final class Logger {
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * Inserts the message at the very end of the file.
          */
         public void send(String msg) {
