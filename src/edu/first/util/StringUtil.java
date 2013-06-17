@@ -9,9 +9,9 @@ import edu.first.util.list.ArrayList;
  * @since May 14 13
  * @author Joel Gallant
  */
-public final class Strings {
+public class StringUtil {
 
-    // cannot be subclassed or instantiated
+    // cannot be instantiated
     private Strings() throws IllegalAccessException {
         throw new IllegalAccessException();
     }
