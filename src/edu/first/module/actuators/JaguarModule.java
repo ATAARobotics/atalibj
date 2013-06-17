@@ -18,6 +18,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      * Constructs the module with the jaguar object underneath this class to
      * call methods from.
      *
+     * @throws NullPointerException when jaguar is null
      * @param jaguar the composing instance which perform the functions
      */
     protected JaguarModule(Jaguar jaguar) {

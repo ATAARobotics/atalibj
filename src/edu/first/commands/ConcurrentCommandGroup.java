@@ -20,11 +20,12 @@ public final class ConcurrentCommandGroup implements Command {
      * same time. There is no limit on how many commands can be run. The array
      * cannot be null.
      *
+     * @throws NullPointerException when array is null
      * @param commands commands to run concurrently
      */
     public ConcurrentCommandGroup(Command[] commands) {
         if (commands == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("Array is null");
         }
         this.commands = commands;
     }
@@ -35,11 +36,12 @@ public final class ConcurrentCommandGroup implements Command {
      * ArrayList cannot be null, and cannot contain elements that are not
      * commands.
      *
+     * @throws NullPointerException when array is null
      * @param commands commands to run concurrently
      */
     public ConcurrentCommandGroup(List commands) {
         if (commands == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("Array is null");
         }
         this.commands = new Command[commands.size()];
         for (int x = 0; x < commands.size(); x++) {

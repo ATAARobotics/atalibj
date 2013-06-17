@@ -45,6 +45,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
      * object that this joystick gets input from.
      *
+     * @throws NullPointerException when joystick is null
      * @param joystick the composing instance to get input from
      */
     protected JoystickModule(edu.wpi.first.wpilibj.Joystick joystick) {

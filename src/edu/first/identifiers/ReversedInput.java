@@ -13,6 +13,7 @@ public class ReversedInput implements Input {
     /**
      * Constructs the object using the actual input to get.
      *
+     * @throws NullPointerException when input is null
      * @param input the input to return the reverse of
      */
     public ReversedInput(Input input) {

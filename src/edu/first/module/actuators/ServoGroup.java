@@ -20,7 +20,7 @@ public class ServoGroup implements Servo {
      */
     public ServoGroup(Servo[] group) {
         if(group == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("Null group given");
         }
         this.group = group;
     }

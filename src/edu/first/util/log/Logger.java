@@ -83,6 +83,7 @@ public final class Logger {
      * This method rotates through every line, and displays the message on the
      * line after the previous message.
      *
+     * @throws NullPointerException when message is null
      * @param msg message to display
      */
     public static void displayLCDMessage(String msg) {

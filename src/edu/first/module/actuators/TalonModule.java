@@ -18,6 +18,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      * Constructs the module with the talon object underneath this class to call
      * methods from.
      *
+     * @throws NullPointerException when talon is null
      * @param talon the composing instance which perform the functions
      */
     protected TalonModule(Talon talon) {

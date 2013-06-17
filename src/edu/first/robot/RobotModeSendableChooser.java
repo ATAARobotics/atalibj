@@ -18,6 +18,7 @@ public final class RobotModeSendableChooser extends SendableChooser implements R
      * at least one mode. All the modes are displayed when this object is sent
      * to the {@code SmartDashboard}. They are identified by their names.
      *
+     * @throws IllegalArgumentException when array is empty
      * @param modes array of the options for robot modes
      */
     public RobotModeSendableChooser(RobotMode[] modes) {

@@ -18,6 +18,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      * Constructs the module with the victor object underneath this class to
      * call methods from.
      *
+     * @throws NullPointerException when victor is null
      * @param victor the composing instance which perform the functions
      */
     protected VictorModule(Victor victor) {

@@ -20,6 +20,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * Constructs the encoder using the {@link edu.wpi.first.wpilibj.Encoder}
      * object, the input type and whether it should reverse the output.
      *
+     * @throws NullPointerException when encoder is null
      * @param encoder underlying object to get input from
      * @param inputType which kind of input to accept
      * @param reverseDirection if input should be reversed

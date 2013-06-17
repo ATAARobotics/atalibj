@@ -19,6 +19,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      * Constructs the module with the gyro object underneath this class to
      * call methods from.
      *
+     * @throws NullPointerException when gyro is null
      * @param gyro the composing instance which will return values
      */
     protected GyroscopeModule(Gyro gyro) {

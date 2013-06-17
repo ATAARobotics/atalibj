@@ -74,6 +74,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * Constructs the controller using its input and output. Loops at a fixed
      * delay at {@code loopTime}.
      *
+     * @throws NullPointerException when input or output are null
      * @param input object to receive input from
      * @param output object to send output to
      * @param loopTime time in seconds each loop should run
@@ -111,6 +112,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * Constructs the controller using its input and output. Loops at a fixed
      * delay at {@code loopTime}.
      *
+     * @throws NullPointerException when input or output are null
      * @param input object to receive input from
      * @param output object to send output to
      * @param loopTimeHertz the hertz value that represents how fast execution
@@ -256,6 +258,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
     /**
      * Sets the range of values that are acceptable for input and setpoints.
      *
+     * @throws IllegalArgumentException when min > max
      * @param minimumInput lowest possible input
      * @param maximumInput highest possible input
      */
@@ -273,6 +276,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * Sets the range of values that are acceptable for output. By default,
      * these values are -1 and +1.
      *
+     * @throws IllegalArgumentException when min > max
      * @param minimumOutput lowest possible output
      * @param maximumOutput highest possible output
      */

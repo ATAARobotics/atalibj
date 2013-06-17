@@ -19,6 +19,7 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
      * Constructs the relay with the {@link Relay} object that this relay
      * controls.
      *
+     * @throws NullPointerException when relay is null
      * @param relay the composing instance which perform the functions
      */
     protected SpikeRelayModule(Relay relay) {

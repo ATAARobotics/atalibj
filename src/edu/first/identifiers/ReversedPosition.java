@@ -13,6 +13,7 @@ public class ReversedPosition implements Position {
     /**
      * Constructs the object using the actual position to get.
      *
+     * @throws NullPointerException when position is null
      * @param position the input to return the reverse of
      */
     public ReversedPosition(Position position) {

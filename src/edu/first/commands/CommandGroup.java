@@ -66,11 +66,12 @@ public class CommandGroup implements Command {
      * commands are run after the command before it, and are done before the
      * next command.
      *
+     * @throws NullPointerException when command is null
      * @param command command to run by itself
      */
     protected final void addSequential(Command command) {
         if (command == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("Null command given");
         }
         commands.add(command);
     }
@@ -85,11 +86,12 @@ public class CommandGroup implements Command {
      * before and after this command, that are added using
      * {@link CommandGroup#addConcurrent(edu.ATA.command.Command)}.</i>
      *
+     * @throws NullPointerException when command is null
      * @param command command to run alongside other concurrent commands
      */
     protected final void addConcurrent(Command command) {
         if (command == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("Null command given");
         }
         if (commands.get(commands.size() - 1) instanceof ConcurrentBuffer) {
             ((ConcurrentBuffer) commands.get(commands.size() - 1)).add(command);

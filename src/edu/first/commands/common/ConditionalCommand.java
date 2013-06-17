@@ -18,12 +18,15 @@ public class ConditionalCommand implements Command {
      * Constructs the command using the condition ({@code run}) that will
      * determine if {@code command} will run.
      *
+     * @throws NullPointerException when position or command are null
      * @param run position to check to see if command should run
      * @param command command to run if position is true
      */
     public ConditionalCommand(Position run, Command command) {
-        if (run == null || command == null) {
-            throw new NullPointerException();
+        if (run == null) {
+            throw new NullPointerException("Null position given");
+        } else if (command == null) {
+            throw new NullPointerException("Null command given");
         }
         this.run = run;
         this.command = command;

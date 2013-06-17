@@ -87,6 +87,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * Constructs the controller using its input and output. Loops at a fixed
      * delay at {@code loopTime}.
      *
+     * @throws NullPointerException when input or output are null
      * @param input object to receive input from
      * @param output object to send output to
      * @param loopTime time in seconds each loop should run
@@ -106,6 +107,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * Constructs the controller using its input and output. Loops at a fixed
      * delay at {@code loopTime}.
      *
+     * @throws NullPointerException when input or output are null
      * @param input object to receive input from
      * @param output object to send output to
      * @param loopTimeHertz the hertz value that represents how fast execution

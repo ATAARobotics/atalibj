@@ -16,6 +16,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
     /**
      * Constructs the dual action solenoid using its two sides.
      *
+     * @throws NullPointerException when left or right solenoids are null
      * @param left left side of he solenoid
      * @param right right side of the solenoid
      */
