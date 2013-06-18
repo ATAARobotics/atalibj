@@ -528,7 +528,7 @@ public class Collections {
 
     private static class SynchronizedList extends SynchronizedCollection implements List {
 
-        private final List list;
+        final List list;
 
         private SynchronizedList(List list) {
             super(list);
