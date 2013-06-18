@@ -41,7 +41,12 @@ public final class GamePeriods extends IterativeRobot {
     // Stored to "end" the game mode after it is finished
     private static GameMode previousGameMode = null;
     // The current game mode - change to yours
-    private static RobotMode robotMode = new IterativeRobotAdapter("Null");
+    private static RobotMode robotMode;
+
+    public GamePeriods() {
+        // Init robot mode here so that static initializing doesn't interfere with wpi code
+        robotMode = new IterativeRobotAdapter("Null");
+    }
 
     /**
      * Initializes the robot. Is run once at the start of the robot's execution
