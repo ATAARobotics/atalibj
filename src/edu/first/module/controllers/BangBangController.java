@@ -411,7 +411,9 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @see #getPrevInput()
      */
     public double get() {
-        return getPrevInput();
+        synchronized (lock) {
+            return prevInput;
+        }
     }
 
     /**
@@ -421,7 +423,9 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @see #setSetpoint(double)
      */
     public void set(double value) {
-        setSetpoint(value);
+        synchronized (lock) {
+            this.setpoint = value;
+        }
     }
 
     /**
@@ -431,7 +435,9 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @see #getPrevInput()
      */
     public double getRate() {
-        return getPrevInput();
+        synchronized (lock) {
+            return prevInput;
+        }
     }
 
     /**
@@ -441,6 +447,8 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @see #setSetpoint(double)
      */
     public void setRate(double rate) {
-        setSetpoint(rate);
+        synchronized (lock) {
+            this.setpoint = rate;
+        }
     }
 }

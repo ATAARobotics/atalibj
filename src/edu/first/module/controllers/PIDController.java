@@ -433,7 +433,9 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @see #getPrevResult()
      */
     public double get() {
-        return getPrevResult();
+        synchronized (lock) {
+            return prevResult;
+        }
     }
 
     /**
@@ -444,7 +446,15 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @see #setSetpoint(double)
      */
     public void set(double value) {
-        setSetpoint(value);
+        synchronized (lock) {
+            if (setpoint < minimumInput) {
+                this.setpoint = minimumInput;
+            } else if (setpoint > maximumInput) {
+                this.setpoint = maximumInput;
+            } else {
+                this.setpoint = value;
+            }
+        }
     }
 
     /**
@@ -454,7 +464,9 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @see #getPrevResult()
      */
     public double getPosition() {
-        return getPrevResult();
+        synchronized (lock) {
+            return prevResult;
+        }
     }
 
     /**
@@ -465,6 +477,14 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @see #setSetpoint(double)
      */
     public void setPosition(double position) {
-        setSetpoint(position);
+        synchronized (lock) {
+            if (setpoint < minimumInput) {
+                this.setpoint = minimumInput;
+            } else if (setpoint > maximumInput) {
+                this.setpoint = maximumInput;
+            } else {
+                this.setpoint = position;
+            }
+        }
     }
 }
