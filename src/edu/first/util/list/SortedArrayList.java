@@ -1,10 +1,10 @@
 package edu.first.util.list;
 
-import com.sun.squawk.util.Comparer;
+import edu.first.lang.Comparator;
 
 /**
  * A {@link List} that is automatically sorted. It will always sort based on
- * {@link Comparer#compare(java.lang.Object, java.lang.Object)}.
+ * {@link Comparator#compare(java.lang.Object, java.lang.Object)}.
  *
  * @since May 18 13
  * @author Joel Gallant
@@ -12,39 +12,39 @@ import com.sun.squawk.util.Comparer;
 public final class SortedArrayList implements List {
 
     private final List list;
-    private final Comparer comparer;
+    private final Comparator comparable;
 
     /**
-     * Constructs the list using a {@link Comparer} that will be used to sort
+     * Constructs the list using a {@link Comparator} that will be used to sort
      * this list. There is no type-safety to guarantee that this list will only
      * contain one type of object, so {@code c} should account for all types
      * that are intended to be used by this list, but also account for others.
      * If you will guarantee type safety, throw an error in
-     * {@link Comparer#compare(java.lang.Object, java.lang.Object)} to notify
+     * {@link Comparator#compare(java.lang.Object, java.lang.Object)} to notify
      * when type safety has been broken.
      *
-     * @param c comparer to use in sorting
+     * @param c comparable to use in sorting
      */
-    public SortedArrayList(Comparer c) {
+    public SortedArrayList(Comparator c) {
         this.list = new ArrayList();
-        this.comparer = c;
+        this.comparable = c;
     }
 
     /**
-     * Constructs the list using a {@link Comparer} that will be used to sort
+     * Constructs the list using a {@link Comparator} that will be used to sort
      * this list. There is no type-safety to guarantee that this list will only
      * contain one type of object, so {@code c} should account for all types
      * that are intended to be used by this list, but also account for others.
      * If you will guarantee type safety, throw an error in
-     * {@link Comparer#compare(java.lang.Object, java.lang.Object)} to notify
+     * {@link Comparator#compare(java.lang.Object, java.lang.Object)} to notify
      * when type safety has been broken.
      *
      * @param c object with a group of elements to add off the start
-     * @param comparer comparer to use in sorting
+     * @param comparable comparable to use in sorting
      */
-    public SortedArrayList(Collection c, Comparer comparer) {
+    public SortedArrayList(Collection c, Comparator comparable) {
         this.list = new ArrayList(c);
-        this.comparer = comparer;
+        this.comparable = comparable;
         sort();
     }
 
@@ -241,6 +241,6 @@ public final class SortedArrayList implements List {
     }
 
     private void sort() {
-        Collections.sort(list, comparer);
+        Collections.sort(list, comparable);
     }
 }
