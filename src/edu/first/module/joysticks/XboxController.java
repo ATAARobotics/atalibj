@@ -73,6 +73,8 @@ public class XboxController extends BindingJoystick {
         invertAxis(LEFT_Y);
         invertAxis(RIGHT_Y);
         invertAxis(TRIGGERS);
+        invertAxis(LEFT_FROM_MIDDLE);
+        invertAxis(RIGHT_FROM_MIDDLE);
     }
 
     /**
@@ -89,8 +91,10 @@ public class XboxController extends BindingJoystick {
 
         addDeadband(LEFT_X, stickDeadband);
         addDeadband(LEFT_Y, stickDeadband);
+        addDeadband(LEFT_FROM_MIDDLE, stickDeadband);
         addDeadband(RIGHT_X, stickDeadband);
         addDeadband(RIGHT_Y, stickDeadband);
+        addDeadband(RIGHT_FROM_MIDDLE, stickDeadband);
     }
 
     /**
