@@ -55,7 +55,7 @@ public class Subsystem implements Module {
      *
      * <p> <i> Override this method to use it. No super call is necessary. </i>
      */
-    public void initSubsystem() {
+    protected void initSubsystem() {
     }
 
     /**
