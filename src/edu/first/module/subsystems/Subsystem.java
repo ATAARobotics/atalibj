@@ -64,7 +64,7 @@ public class Subsystem implements Module {
      *
      * <p> <i> Override this method to use it. No super call is necessary. </i>
      */
-    public void enableSubsystem() {
+    protected void enableSubsystem() {
     }
 
     /**
@@ -74,7 +74,7 @@ public class Subsystem implements Module {
      *
      * <p> <i> Override this method to use it. No super call is necessary. </i>
      */
-    public void disableSubsystem() {
+    protected void disableSubsystem() {
     }
 
     /**
@@ -85,7 +85,7 @@ public class Subsystem implements Module {
      * 
      * @return if subsystem is enabled
      */
-    public boolean isSubsystemEnabled() {
+    protected boolean isSubsystemEnabled() {
         return true;
     }
 
