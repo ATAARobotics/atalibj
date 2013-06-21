@@ -1,5 +1,6 @@
 package edu.first.util.list;
 
+import edu.first.util.Arrays;
 import java.util.NoSuchElementException;
 
 /**
@@ -47,7 +48,7 @@ public final class ArrayList implements List {
     public ArrayList(Collection collection) {
         this.elementData = collection.toArray();
         if (elementData.getClass() != Object[].class) {
-            elementData = copyOf(elementData, size);
+            elementData = Arrays.copyOf(elementData, size);
         }
     }
 
@@ -225,7 +226,7 @@ public final class ArrayList implements List {
         for (int i = 0; i < r.length; i++) {
             if (!it.hasNext()) // fewer elements than expected
             {
-                return copyOf(r, i);
+                return Arrays.copyOf(r, i);
             }
             r[i] = it.next();
         }
@@ -347,7 +348,7 @@ public final class ArrayList implements List {
      */
     public Iterator iterator() {
         return new Iterator() {
-            final Object[] e = copyOf(elementData, size);
+            final Object[] e = Arrays.copyOf(elementData, size);
             int index = 0;
 
             public boolean hasNext() {
@@ -445,7 +446,7 @@ public final class ArrayList implements List {
     }
 
     private void growTo(int min) {
-        elementData = copyOf(elementData, min);
+        elementData = Arrays.copyOf(elementData, min);
     }
 
     private void fastRemove(int index) {
@@ -455,11 +456,5 @@ public final class ArrayList implements List {
                     numMoved);
         }
         elementData[--size] = null; // Let gc do its work
-    }
-
-    private Object[] copyOf(Object[] o, int size) {
-        Object[] c = new Object[size];
-        System.arraycopy(o, 0, c, 0, Math.min(o.length, size));
-        return c;
     }
 }
