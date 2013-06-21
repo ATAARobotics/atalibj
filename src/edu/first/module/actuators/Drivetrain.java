@@ -76,7 +76,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      */
     protected void disableModule() {
         safetyHelper.setSafetyEnabled(false);
-        stopMotor();
+        set(0, 0);
     }
 
     /**

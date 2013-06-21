@@ -447,9 +447,9 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      */
     public void set(double value) {
         synchronized (lock) {
-            if (setpoint < minimumInput) {
+            if (value < minimumInput) {
                 this.setpoint = minimumInput;
-            } else if (setpoint > maximumInput) {
+            } else if (value > maximumInput) {
                 this.setpoint = maximumInput;
             } else {
                 this.setpoint = value;
@@ -478,9 +478,9 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      */
     public void setPosition(double position) {
         synchronized (lock) {
-            if (setpoint < minimumInput) {
+            if (position < minimumInput) {
                 this.setpoint = minimumInput;
-            } else if (setpoint > maximumInput) {
+            } else if (position > maximumInput) {
                 this.setpoint = maximumInput;
             } else {
                 this.setpoint = position;

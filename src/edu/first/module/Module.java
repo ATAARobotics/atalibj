@@ -156,9 +156,11 @@ public interface Module {
          * {@inheritDoc}
          */
         public final void enable() {
-            enableModule();
-            synchronized (lock) {
-                enabled = true;
+            if (!isEnabled()) {
+                enableModule();
+                synchronized (lock) {
+                    enabled = true;
+                }
             }
         }
 
@@ -166,9 +168,11 @@ public interface Module {
          * {@inheritDoc}
          */
         public final void disable() {
-            disableModule();
-            synchronized (lock) {
-                enabled = false;
+            if (isEnabled()) {
+                disableModule();
+                synchronized (lock) {
+                    enabled = false;
+                }
             }
         }
 

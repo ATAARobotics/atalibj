@@ -141,7 +141,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * <p> Resets and stops the encoder's count.
      */
     protected void disableModule() {
-        reset();
+        encoder.reset();
         encoder.stop();
     }
 
