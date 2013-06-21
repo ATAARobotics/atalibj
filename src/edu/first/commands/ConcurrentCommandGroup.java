@@ -65,8 +65,7 @@ public final class ConcurrentCommandGroup implements Command {
                 threads[x].join();
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger(getClass()).warn("CommandGroup interrupted");
-            ex.printStackTrace();
+            Logger.getLogger(getClass()).error("Command Group interrupted", ex);
         }
     }
 }

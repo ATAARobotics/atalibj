@@ -2,6 +2,7 @@ package edu.first.util;
 
 import com.sun.squawk.io.BufferedWriter;
 import com.sun.squawk.microedition.io.FileConnection;
+import edu.first.util.log.Logger;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public final class TextFiles {
                 buf.append(new String(buffer));
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(TextFiles.class).error("File could not be read", ex);
             // This is almost always a problem with files and not IO problems
             // User should not have to deal with it
             return null;
@@ -71,7 +72,7 @@ public final class TextFiles {
                     fileCon.close();
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.getLogger(TextFiles.class).error("File could not be closed", ex);
             }
         }
 
@@ -101,7 +102,7 @@ public final class TextFiles {
             writer.flush();
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(TextFiles.class).error("File could not be written", ex);
         } finally {
             try {
                 if (writer != null) {
@@ -114,7 +115,7 @@ public final class TextFiles {
                     fileCon.close();
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.getLogger(TextFiles.class).error("File could not be closed", ex);
             }
         }
     }
