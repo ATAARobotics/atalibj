@@ -86,7 +86,7 @@ public class Collections {
      * Adds all of the specified elements to the specified collection. Elements
      * to be added may be specified individually or as an array. Objecthe
      * behavior of this convenience method is identical to that of
-     * {@code c.addAll(Arrays.asList(elements))}, but this method is likely to
+     * {@code c.addAll(Collections.asList(elements))}, but this method is likely to
      * run significantly faster under most implementations.
      *
      * <p> When elements are specified individually, this method provides a
@@ -305,7 +305,7 @@ public class Collections {
      * @return list with the elements of the array
      */
     public static List asList(Object[] a) {
-        ArrayList list = new ArrayList();
+        ArrayList list = new ArrayList(a.length * 2);
         addAll(list, a);
         return list;
     }
