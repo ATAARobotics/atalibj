@@ -4,7 +4,6 @@ import edu.first.command.Command;
 import edu.first.util.list.ArrayList;
 import edu.first.util.list.Iterator;
 import edu.first.util.list.List;
-import edu.first.util.list.SafeArrayList;
 
 /**
  * Command that encompasses multiple commands strung together. Runs commands
@@ -93,11 +92,10 @@ public class CommandGroup implements Command {
         if (command == null) {
             throw new NullPointerException("Null command given");
         }
-        if (commands.get(commands.size() - 1) instanceof ConcurrentBuffer) {
-            ((ConcurrentBuffer) commands.get(commands.size() - 1)).add(command);
-        } else {
-            commands.add(new ConcurrentBuffer().add(command));
+        if (!(commands.get(commands.size() - 1) instanceof ConcurrentCommandGroup)) {
+            commands.add(new ConcurrentCommandGroup());
         }
+        ((ConcurrentCommandGroup) commands.get(commands.size() - 1)).add(command);
     }
 
     /**
@@ -113,20 +111,6 @@ public class CommandGroup implements Command {
         while (i.hasNext()) {
             Command c = (Command) i.next();
             c.run();
-        }
-    }
-
-    private static final class ConcurrentBuffer implements Command {
-
-        List commands = new SafeArrayList(Command.class);
-
-        ConcurrentBuffer add(Command c) {
-            commands.add(c);
-            return this;
-        }
-
-        public void run() {
-            new ConcurrentCommandGroup(commands).run();
         }
     }
 }
