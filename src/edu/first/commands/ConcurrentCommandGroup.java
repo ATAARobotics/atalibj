@@ -1,6 +1,7 @@
 package edu.first.commands;
 
 import edu.first.command.Command;
+import edu.first.util.list.ArrayList;
 import edu.first.util.list.List;
 import edu.first.util.log.Logger;
 
@@ -13,23 +14,16 @@ import edu.first.util.log.Logger;
  */
 public final class ConcurrentCommandGroup implements Command {
 
-    private final Command[] commands;
+    private final List commands;
 
     /**
      * Constructs the command group using an array of commands to be run at the
-     * same time. There is no limit on how many commands can be run. The array
-     * cannot be null.
-     *
-     * @throws NullPointerException when array is null
-     * @param commands commands to run concurrently
+     * same time. There is no limit on how many commands can be run.
      */
-    public ConcurrentCommandGroup(Command[] commands) {
-        if (commands == null) {
-            throw new NullPointerException("Array is null");
-        }
-        this.commands = commands;
+    public ConcurrentCommandGroup() {
+    	this.commands = new ArrayList();
     }
-
+    
     /**
      * Constructs the command group using an array of commands to be run at the
      * same time. There is no limit on how many commands can be run. The
@@ -43,10 +37,20 @@ public final class ConcurrentCommandGroup implements Command {
         if (commands == null) {
             throw new NullPointerException("Array is null");
         }
-        this.commands = new Command[commands.size()];
-        for (int x = 0; x < commands.size(); x++) {
-            this.commands[x] = (Command) commands.get(x);
+        this.commands = commands;
+    }
+    
+    /**
+     * Adds a command to the command group. The command cannot be null.
+     * 
+     * @throws NullPointerException when the command is null
+     * @param command the command to add to the group
+     */
+    public void add(Command command) {
+        if (command == null) {
+            throw new NullPointerException("Null command given");
         }
+        commands.add(command);
     }
 
     /**
@@ -54,9 +58,9 @@ public final class ConcurrentCommandGroup implements Command {
      */
     public void run() {
         try {
-            Thread[] threads = new Thread[commands.length];
-            for (int x = 0; x < commands.length; x++) {
-                threads[x] = new Thread(commands[x]);
+            Thread[] threads = new Thread[commands.size()];
+            for (int x = 0; x < commands.size(); x++) {
+                threads[x] = new Thread((Command) commands.get(x));
             }
             for (int x = 0; x < threads.length; x++) {
                 threads[x].start();
