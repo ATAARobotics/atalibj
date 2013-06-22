@@ -1,5 +1,7 @@
 package edu.first.command;
 
+import edu.first.util.log.Logger;
+
 /**
  * Static utility class used to add functionality to commands.
  *
@@ -41,6 +43,7 @@ public final class Commands {
         try {
             t.join();
         } catch (InterruptedException ex) {
+        	Logger.getLogger(Commands.class).error("Waiting for new thread interrupted", ex);
         }
     }
 
