@@ -43,7 +43,7 @@ public final class Commands {
         try {
             t.join();
         } catch (InterruptedException ex) {
-        	Logger.getLogger(Commands.class).error("Waiting for new thread interrupted", ex);
+            Logger.getLogger(Commands.class).error("Waiting for new thread interrupted", ex);
         }
     }
 
