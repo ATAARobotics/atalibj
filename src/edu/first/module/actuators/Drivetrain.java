@@ -1,5 +1,6 @@
 package edu.first.module.actuators;
 
+import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.util.MathUtils;
@@ -141,6 +142,24 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
         return reversedTurn;
     }
 
+    /**
+     * Returns the currently set left speed.
+     *
+     * @return speed of left motors
+     */
+    public double getLeftSpeed() {
+        return left.getSpeed();
+    }
+
+    /**
+     * Returns the currently set right speed.
+     *
+     * @return speed of right motors
+     */
+    public double getRightSpeed() {
+        return right.getSpeed();
+    }
+    
     /**
      * Sets the left and right side speeds without any math. Usually
      * {@link #tankDrive(double, double)} is preferred to this method.
