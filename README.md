@@ -8,7 +8,7 @@ atalibj is ultimately seeking to be a complete replacement for WPILibJ with more
 
 ## Using atalibj ##
 
-[How to install ATALibJ](https://github.com/Summer-of-FIRST/atalibj/wiki/ATALibJ#installing-atalibj)
+[How to install ATALibJ](https://github.com/Summer-of-FIRST/atalibj/wiki/Home#installing-atalibj)
 
 ## Contributing ##
 
