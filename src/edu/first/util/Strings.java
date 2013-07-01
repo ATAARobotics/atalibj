@@ -346,6 +346,62 @@ public final class Strings {
     }
 
     /**
+     * Returns whether {@code string} contains an instance of {@code contains}
+     * that isn't {@code isnt}.
+     *
+     * @param string string to test
+     * @param contains element it could contain
+     * @param isnt element that index cannot be of
+     * @return if string contains an instance of {@code contains} that isn't
+     * {@code isnt}
+     */
+    public static boolean containsThatIsnt(String string, String contains, String isnt) {
+        return indexThatIsnt(string, contains, isnt) >= 0;
+    }
+
+    /**
+     * Returns whether {@code string} contains an instance of {@code contains}
+     * that isn't {@code isnt}.
+     *
+     * @param string string to test
+     * @param contains element it could contain
+     * @param isnt element that index cannot be of
+     * @return if string contains an instance of {@code contains} that isn't
+     * {@code isnt}
+     */
+    public static boolean containsThatIsnt(String string, char contains, String isnt) {
+        return containsThatIsnt(string, String.valueOf(contains), isnt);
+    }
+
+    /**
+     * Returns whether {@code string} contains an instance of {@code contains}
+     * that isn't {@code isnt}.
+     *
+     * @param string string to test
+     * @param contains element it could contain
+     * @param isnt element that index cannot be of
+     * @return if string contains an instance of {@code contains} that isn't
+     * {@code isnt}
+     */
+    public static boolean containsThatIsnt(String string, String contains, char isnt) {
+        return containsThatIsnt(string, contains, String.valueOf(isnt));
+    }
+
+    /**
+     * Returns whether {@code string} contains an instance of {@code contains}
+     * that isn't {@code isnt}.
+     *
+     * @param string string to test
+     * @param contains element it could contain
+     * @param isnt element that index cannot be of
+     * @return if string contains an instance of {@code contains} that isn't
+     * {@code isnt}
+     */
+    public static boolean containsThatIsnt(String string, char contains, char isnt) {
+        return containsThatIsnt(string, String.valueOf(contains), String.valueOf(isnt));
+    }
+
+    /**
      * Replaces the selected section with the replacement.
      *
      * <p>
