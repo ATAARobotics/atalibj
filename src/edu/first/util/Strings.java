@@ -27,6 +27,107 @@ public final class Strings {
     }
 
     /**
+     * Uses {@link #isBeside(java.lang.String, int, int, java.lang.String)} to
+     * test if the first instance of {@code is} is beside {@code beside}.
+     *
+     * <p> Basically equivalent to calling
+     * <pre>
+     * isBeside(string, string.indexOf(is), is.length(), beside)
+     * </pre>
+     *
+     * @param string original string to check in
+     * @param is string to check beside
+     * @param beside string that could be beside {@code is}
+     * @return if {@code beside} is directly beside the first instance of
+     * {@code is}
+     */
+    public static boolean isFirstInstanceBeside(String string, String is, String beside) {
+        return isBeside(string, string.indexOf(is), is.length(), beside);
+    }
+
+    /**
+     * Uses {@link #isBeside(java.lang.String, int, int, java.lang.String)} to
+     * test if the first instance of {@code is} is beside {@code beside}.
+     *
+     * <p> Basically equivalent to calling
+     * <pre>
+     * isBeside(string, string.indexOf(is), 1, beside)
+     * </pre>
+     *
+     * @param string original string to check in
+     * @param is string to check beside
+     * @param beside string that could be beside {@code is}
+     * @return if {@code beside} is directly beside the first instance of
+     * {@code is}
+     */
+    public static boolean isFirstInstanceBeside(String string, char is, String beside) {
+        return isBeside(string, string.indexOf(is), 1, beside);
+    }
+
+    /**
+     * Returns whether the element at {@code c} index in {@code string} with
+     * {@code length} length is directly beside {@code beside}.
+     *
+     * @param string original string to check in
+     * @param c index of the element to check beside
+     * @param length the length of {@code c}
+     * @param beside string that could be beside {@code c}
+     * @return if {@code beside} is directly beside {@code c}, in the context of
+     * {@code c}'s length
+     */
+    public static boolean isBeside(String string, int c, int length, String beside) {
+        if (c < 0 || c + length >= string.length()) {
+            return false;
+        }
+        int startFront = c - beside.length();
+        int endback = c + length + beside.length();
+        boolean f = true, b = true;
+        if (startFront < 0 || startFront >= string.length()) {
+            f = false;
+        }
+        if (endback < 0 || endback >= string.length()) {
+            b = false;
+        }
+
+        return f || b ? ((f ? (string.substring(startFront, c).equals(beside)) : false)
+                || (b ? string.substring(c + length, endback).equals(beside) : false)) : false;
+    }
+
+    /**
+     * Returns whether any instances of {@code c} are directly beside
+     * {@code beside} in {@code string}.
+     *
+     * @param string original string to check in
+     * @param c character to check beside
+     * @param beside string that could be beside {@code c}
+     * @return if {@code beside} is directly beside any instances of {@code c}
+     */
+    public static boolean isBeside(String string, char c, String beside) {
+        return isBeside(string, String.valueOf(c), beside);
+    }
+
+    /**
+     * Returns whether <b>any</b> of the instances of {@code is} are directly
+     * beside {@code beside}. Use
+     * {@link #isBeside(java.lang.String, int, int, java.lang.String)} to check
+     * a specific instance of the string.
+     *
+     * @param string original string to check in
+     * @param is string to check beside
+     * @param beside string that could be beside {@code is}
+     * @return if {@code beside} is directly beside any instances of {@code is}
+     */
+    public static boolean isBeside(String string, String is, String beside) {
+        String[] s = split(string, beside);
+        for (int x = 0; x < s.length; x++) {
+            if (s[x].startsWith(is) || s[x].endsWith(is)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Splits the string into separate parts that happen in between the split.
      * <p>
      * Ex. {@code spilt("Hello world, my name is Tim.", ",")}
