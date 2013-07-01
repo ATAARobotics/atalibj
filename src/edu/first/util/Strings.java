@@ -38,11 +38,11 @@ public final class Strings {
     public static int indexThatIsnt(String string, String s, String i) {
         int index;
         int spare = 0;
-        while ((index = string.indexOf(s)) > 0 && index == string.indexOf(i)) {
+        while ((index = string.indexOf(s)) >= 0 && index == string.indexOf(i)) {
             string = string.substring(index + i.length());
             spare += index + i.length();
         }
-        return index + spare;
+        return index < 0 ? -1 : index + spare;
     }
 
     /**
