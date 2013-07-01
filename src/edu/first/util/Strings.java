@@ -51,6 +51,25 @@ public final class Strings {
      *
      * <p> Basically equivalent to calling
      * <pre>
+     * isBeside(string, string.indexOf(is), is.length(), beside)
+     * </pre>
+     *
+     * @param string original string to check in
+     * @param is string to check beside
+     * @param beside character that could be beside {@code is}
+     * @return if {@code beside} is directly beside the first instance of
+     * {@code is}
+     */
+    public static boolean isFirstInstanceBeside(String string, String is, char beside) {
+        return isFirstInstanceBeside(string, is, String.valueOf(beside));
+    }
+
+    /**
+     * Uses {@link #isBeside(java.lang.String, int, int, java.lang.String)} to
+     * test if the first instance of {@code is} is beside {@code beside}.
+     *
+     * <p> Basically equivalent to calling
+     * <pre>
      * isBeside(string, string.indexOf(is), 1, beside)
      * </pre>
      *
@@ -62,6 +81,25 @@ public final class Strings {
      */
     public static boolean isFirstInstanceBeside(String string, char is, String beside) {
         return isBeside(string, string.indexOf(is), 1, beside);
+    }
+
+    /**
+     * Uses {@link #isBeside(java.lang.String, int, int, java.lang.String)} to
+     * test if the first instance of {@code is} is beside {@code beside}.
+     *
+     * <p> Basically equivalent to calling
+     * <pre>
+     * isBeside(string, string.indexOf(is), 1, beside)
+     * </pre>
+     *
+     * @param string original string to check in
+     * @param is string to check beside
+     * @param beside character that could be beside {@code is}
+     * @return if {@code beside} is directly beside the first instance of
+     * {@code is}
+     */
+    public static boolean isFirstInstanceBeside(String string, char is, char beside) {
+        return isFirstInstanceBeside(string, is, String.valueOf(beside));
     }
 
     /**
@@ -94,19 +132,6 @@ public final class Strings {
     }
 
     /**
-     * Returns whether any instances of {@code c} are directly beside
-     * {@code beside} in {@code string}.
-     *
-     * @param string original string to check in
-     * @param c character to check beside
-     * @param beside string that could be beside {@code c}
-     * @return if {@code beside} is directly beside any instances of {@code c}
-     */
-    public static boolean isBeside(String string, char c, String beside) {
-        return isBeside(string, String.valueOf(c), beside);
-    }
-
-    /**
      * Returns whether <b>any</b> of the instances of {@code is} are directly
      * beside {@code beside}. Use
      * {@link #isBeside(java.lang.String, int, int, java.lang.String)} to check
@@ -125,6 +150,32 @@ public final class Strings {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns whether any instances of {@code c} are directly beside
+     * {@code beside} in {@code string}.
+     *
+     * @param string original string to check in
+     * @param c character to check beside
+     * @param beside string that could be beside {@code c}
+     * @return if {@code beside} is directly beside any instances of {@code c}
+     */
+    public static boolean isBeside(String string, char c, String beside) {
+        return isBeside(string, String.valueOf(c), beside);
+    }
+
+    /**
+     * Returns whether any instances of {@code c} are directly beside
+     * {@code beside} in {@code string}.
+     *
+     * @param string original string to check in
+     * @param c character to check beside
+     * @param beside character that could be beside {@code c}
+     * @return if {@code beside} is directly beside any instances of {@code c}
+     */
+    public static boolean isBeside(String string, char c, char beside) {
+        return isBeside(string, c, String.valueOf(beside));
     }
 
     /**
