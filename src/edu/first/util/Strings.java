@@ -27,6 +27,64 @@ public final class Strings {
     }
 
     /**
+     * Returns the index of {@code s} that is not {@code i}. If no {@code s}
+     * exists that is not an {@code i}, this returns -1.
+     *
+     * @param string string to test
+     * @param s element to find index of
+     * @param i element that {@code s} should not have the same index as
+     * @return index of {@code s} that isn't the same index as {@code i}
+     */
+    public static int indexThatIsnt(String string, String s, String i) {
+        int index;
+        int spare = 0;
+        while ((index = string.indexOf(s)) > 0 && index == string.indexOf(i)) {
+            string = string.substring(index + i.length());
+            spare += index + i.length();
+        }
+        return index + spare;
+    }
+
+    /**
+     * Returns the index of {@code s} that is not {@code i}. If no {@code s}
+     * exists that is not an {@code i}, this returns -1.
+     *
+     * @param string string to test
+     * @param s element to find index of
+     * @param i element that {@code s} should not have the same index as
+     * @return index of {@code s} that isn't the same index as {@code i}
+     */
+    public static int indexThatIsnt(String string, char s, String i) {
+        return indexThatIsnt(string, String.valueOf(s), i);
+    }
+
+    /**
+     * Returns the index of {@code s} that is not {@code i}. If no {@code s}
+     * exists that is not an {@code i}, this returns -1.
+     *
+     * @param string string to test
+     * @param s element to find index of
+     * @param i element that {@code s} should not have the same index as
+     * @return index of {@code s} that isn't the same index as {@code i}
+     */
+    public static int indexThatIsnt(String string, String s, char i) {
+        return indexThatIsnt(string, s, String.valueOf(i));
+    }
+
+    /**
+     * Returns the index of {@code s} that is not {@code i}. If no {@code s}
+     * exists that is not an {@code i}, this returns -1.
+     *
+     * @param string string to test
+     * @param s element to find index of
+     * @param i element that {@code s} should not have the same index as
+     * @return index of {@code s} that isn't the same index as {@code i}
+     */
+    public static int indexThatIsnt(String string, char s, char i) {
+        return indexThatIsnt(string, String.valueOf(s), String.valueOf(i));
+    }
+
+    /**
      * Uses {@link #isBeside(java.lang.String, int, int, java.lang.String)} to
      * test if the first instance of {@code is} is beside {@code beside}.
      *
