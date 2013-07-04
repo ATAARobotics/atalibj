@@ -402,6 +402,73 @@ public final class Strings {
     }
 
     /**
+     * Returns the string before {@code regex} in {@code string}.
+     *
+     * @param string original string
+     * @param regex element to split before
+     * @return string before {@code regex}
+     */
+    public static String before(String string, String regex) {
+        return before(string, string.indexOf(regex));
+    }
+
+    /**
+     * Returns the string before {@code regex} in {@code string}.
+     *
+     * @param string original string
+     * @param regex element to split before
+     * @return string before {@code regex}
+     */
+    public static String before(String string, char regex) {
+        return before(string, string.indexOf(regex));
+    }
+
+    /**
+     * Returns the string before {@code index} in {@code string}.
+     *
+     * @param string original string
+     * @param index index to split at
+     * @return string before {@code index}
+     */
+    public static String before(String string, int index) {
+        return string.substring(0, index);
+    }
+
+    /**
+     * Returns the string after {@code regex} in {@code string}.
+     *
+     * @param string original string
+     * @param regex element to split after
+     * @return string after {@code regex}
+     */
+    public static String after(String string, String regex) {
+        return after(string, string.indexOf(regex), regex.length());
+    }
+
+    /**
+     * Returns the string after {@code regex} in {@code string}.
+     *
+     * @param string original string
+     * @param regex element to split after
+     * @return string after {@code regex}
+     */
+    public static String after(String string, char regex) {
+        return after(string, string.indexOf(regex), 1);
+    }
+
+    /**
+     * Returns the string after {@code index} in {@code string}.
+     *
+     * @param string original string
+     * @param index index to split at
+     * @param length length after index to ignore
+     * @return string after {@code index}
+     */
+    public static String after(String string, int index, int length) {
+        return string.substring(index + length);
+    }
+
+    /**
      * Replaces the selected section with the replacement.
      *
      * <p>
