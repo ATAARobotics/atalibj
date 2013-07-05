@@ -255,6 +255,9 @@ public final class Strings {
         if (split == null) {
             throw new NullPointerException();
         }
+        if (isEmpty(string)) {
+            return new String[0];
+        }
         if (string.indexOf(split) < 0) {
             return new String[]{string};
         }
