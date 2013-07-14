@@ -1,4 +1,4 @@
-package edu.first.util;
+package edu.gordian;
 
 import edu.first.util.list.ArrayList;
 
@@ -24,6 +24,22 @@ public final class Strings {
      */
     public static boolean isEmpty(String string) {
         return string.length() == 0;
+    }
+
+    /**
+     * Returns the index of the last instance of {@code s} in {@code string}.
+     *
+     * @param string string to test
+     * @param s element to find index of
+     * @return last index of {@code s}
+     */
+    public static int lastIndexOf(String string, String s) {
+        for (int x = string.length() - s.length(); x >= 0; x--) {
+            if (string.substring(x, x + s.length()).equals(s)) {
+                return x;
+            }
+        }
+        return -1;
     }
 
     /**
