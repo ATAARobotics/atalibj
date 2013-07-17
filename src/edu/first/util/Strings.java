@@ -1,6 +1,7 @@
-package edu.gordian;
+package edu.first.util;
 
 import edu.first.util.list.ArrayList;
+import edu.first.util.list.List;
 
 /**
  * A set of utility methods to manipulate and test strings. Contains many of the
@@ -40,6 +41,70 @@ public final class Strings {
             }
         }
         return -1;
+    }
+
+    /**
+     * Returns an array of all the indexes of {@code s} in {@code string}.
+     *
+     * @param string string to test
+     * @param s element to find the indexes of
+     * @return array with every index of {@code s}
+     */
+    public static int[] allIndexesOf(final String string, String s) {
+        if (string == null) {
+            throw new NullPointerException("String given was null");
+        }
+        if (s == null) {
+            throw new NullPointerException("Element given was null");
+        }
+        if (!contains(string, s) || isEmpty(string) || isEmpty(s)) {
+            return new int[0];
+        }
+        List l = new ArrayList();
+        String r = string;
+        while (contains(r, s)) {
+            l.add(Integer.valueOf((string.length() - r.length()) + r.indexOf(s)));
+            r = r.substring(r.indexOf(s) + s.length());
+        }
+
+        int[] i = new int[l.size()];
+        for (int x = 0; x < i.length; x++) {
+            i[x] = ((Integer) l.get(x)).intValue();
+        }
+        return i;
+    }
+
+    /**
+     * Returns an array of all the indexes of {@code s} in {@code string}.
+     *
+     * @param string string to test
+     * @param s element to find the indexes of
+     * @return array with every index of {@code s}
+     */
+    public static int[] allIndexesOf(String string, char s) {
+        return allIndexesOf(string, String.valueOf(s));
+    }
+
+    /**
+     * Returns how many times {@code s} appears in {@code string}.
+     *
+     * @param string string to test
+     * @param s element to find the indexes of
+     * @return amount of {@code s} in {@code string}
+     */
+    public static int indexesOf(String string, String s) {
+        return allIndexesOf(string, s).length;
+    }
+
+    /**
+     * Returns how many times {@code s} appears in {@code string}.
+     *
+     * @param string string to test
+     * @param s element to find the indexes of
+     * @return amount of {@code s} in {@code string}
+     */
+    public static int indexesOf(String string, char s) {
+        return allIndexesOf(string, s).length;
     }
 
     /**
