@@ -5,7 +5,7 @@
 package edu.first.util.list;
 
 import com.sun.squawk.util.Arrays;
-import com.sun.squawk.util.Comparer;
+import edu.first.lang.Comparator;
 import java.util.NoSuchElementException;
 
 /**
@@ -24,8 +24,8 @@ public class Collections {
 
     /**
      * Sorts the specified list into ascending order, according to the
-     * {@linkplain Comparer natural ordering} of its elements. All elements in
-     * the list must implement the {@link Comparer} interface. Furthermore,
+     * {@linkplain Comparator natural ordering} of its elements. All elements in
+     * the list must implement the {@link Comparator} interface. Furthermore,
      * all elements in the list must be
      * <i>mutually comparable</i> (that is, {@code e1.compareTo(e2)} must not
      * throw a {@code ClassCastException} for any elements {@code e1} and
@@ -73,9 +73,9 @@ public class Collections {
      * not support the {@code set} operation.
      * @throws IllegalArgumentException (optional) if the implementation detects
      * that the natural ordering of the list elements is found to violate the
-     * {@link Comparer} contract
+     * {@link Comparator} contract
      */
-    public static void sort(List list, Comparer c) {
+    public static void sort(List list, Comparator c) {
         Object[] a = list.toArray();
         Arrays.sort(a, c);
         list.clear();

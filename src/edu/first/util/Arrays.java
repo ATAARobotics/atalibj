@@ -1,6 +1,6 @@
 package edu.first.util;
 
-import com.sun.squawk.util.Comparer;
+import edu.first.lang.Comparator;
 import edu.first.util.list.Collections;
 import edu.first.util.list.List;
 
@@ -194,7 +194,7 @@ public final class Arrays {
      * @param a the array to be sorted
      * @param c the comparator to determine the order of the array
      */
-    public static void sort(Object[] a, Comparer c) {
+    public static void sort(Object[] a, Comparator c) {
         com.sun.squawk.util.Arrays.sort(a, c);
     }
 
@@ -206,7 +206,7 @@ public final class Arrays {
      * @param toIndex the index of the last element, exclusive, to be sorted
      * @param c the comparator to determine the order of the array
      */
-    public static void sort(Object[] a, int fromIndex, int toIndex, Comparer c) {
+    public static void sort(Object[] a, int fromIndex, int toIndex, Comparator c) {
         com.sun.squawk.util.Arrays.sort(a, fromIndex, toIndex, c);
     }
 
@@ -375,7 +375,7 @@ public final class Arrays {
      * specified key. Note that this guarantees that the return value will be 0
      * if and only if the key is found
      */
-    public static int binarySearch(Object[] a, Object key, Comparer c) {
+    public static int binarySearch(Object[] a, Object key, Comparator c) {
         return com.sun.squawk.util.Arrays.binarySearch(a, key, c);
     }
 
