@@ -1,48 +1,56 @@
 package edu.first.commands;
 
 import edu.first.command.Command;
-import edu.first.utils.Logger;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import edu.first.util.list.ArrayList;
+import edu.first.util.list.List;
+import edu.first.util.log.Logger;
 
 /**
- * Basic command group that runs multiple commands in parallel. Each command is
- * run inside of a different thread.
+ * Basic command group that runs multiple commands in parallel. Every command
+ * inside of this group is started at the same time.
  *
+ * @since May 26 13
  * @author Joel Gallant
  */
-public class ConcurrentCommandGroup implements Command {
+public final class ConcurrentCommandGroup implements Command {
 
-    private final Command[] commands;
+    private final List commands;
 
     /**
      * Constructs the command group using an array of commands to be run at the
-     * same time. There is no limit on how many commands can be run. The array
-     * cannot be null.
-     *
-     * @param commands commands to run concurrently
+     * same time. There is no limit on how many commands can be run.
      */
-    public ConcurrentCommandGroup(Command[] commands) {
-        if (commands == null) {
-            throw new NullPointerException();
-        }
-        this.commands = commands;
+    public ConcurrentCommandGroup() {
+    	this.commands = new ArrayList();
     }
-
+    
     /**
      * Constructs the command group using an array of commands to be run at the
-     * same time. There is no limit on how many commands can be run. The list
-     * cannot be null, and cannot contain elements that are not commands.
+     * same time. There is no limit on how many commands can be run. The
+     * ArrayList cannot be null, and cannot contain elements that are not
+     * commands.
      *
+     * @throws NullPointerException when array is null
      * @param commands commands to run concurrently
      */
     public ConcurrentCommandGroup(List commands) {
         if (commands == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("Array is null");
         }
-        this.commands = new Command[commands.size()];
-        for (int x = 0; x < commands.size(); x++) {
-            this.commands[x] = (Command) commands.get(x);
+        this.commands = commands;
+    }
+    
+    /**
+     * Adds a command to the command group. The command cannot be null.
+     * 
+     * @throws NullPointerException when the command is null
+     * @param command the command to add to the group
+     */
+    public void add(Command command) {
+        if (command == null) {
+            throw new NullPointerException("Null command given");
         }
+        commands.add(command);
     }
 
     /**
@@ -50,9 +58,9 @@ public class ConcurrentCommandGroup implements Command {
      */
     public void run() {
         try {
-            Thread[] threads = new Thread[commands.length];
-            for (int x = 0; x < commands.length; x++) {
-                threads[x] = new Thread(commands[x]);
+            Thread[] threads = new Thread[commands.size()];
+            for (int x = 0; x < commands.size(); x++) {
+                threads[x] = new Thread((Command) commands.get(x));
             }
             for (int x = 0; x < threads.length; x++) {
                 threads[x].start();
@@ -61,8 +69,7 @@ public class ConcurrentCommandGroup implements Command {
                 threads[x].join();
             }
         } catch (InterruptedException ex) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "CommandGroup interrupted");
-            ex.printStackTrace();
+            Logger.getLogger(getClass()).error("Command Group interrupted", ex);
         }
     }
 }

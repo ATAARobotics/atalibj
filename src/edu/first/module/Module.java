@@ -1,127 +1,216 @@
 package edu.first.module;
 
-import edu.first.module.target.PIDModule;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import edu.first.module.subsystems.Subsystem;
 
 /**
- * Very basic framework for all "things". This interface makes things easy for
- * programmers to ensure that their code works modularly and functionally.
- * Understandably, it can be difficult to create a class without making it
- * dependant on other features in other classes. It can also be difficult to
- * ensure that for certain periods only some things should function (sensors,
- * motors, etc.). This interface is specifically designed to create a simple,
- * easy-to-understand way of creating classes that are easy to deal with, have a
- * standard way of being used, and are as expandable and extendable as possible.
+ * A module is the standard for everything that performs some kind of function
+ * on the robot. There are three general types of modules:
  *
- * <p> Specifically, this interface creates a very basic standard for enabling
- * things. Instead of using 100 different methods for different things to make
- * them usable (see {@link Encoder}, {@link PIDController}, etc.), a simple
- * {@code enable()} method is enforced on modules. Obviously if a class has no
- * need to be enabled, this method would have no effect, but it is far more
- * useful to have a standard than risk time-consuming API documentation reading.
+ * <ul>
+ * <li> Actuators and Sensors - the base parts of a robot
+ * <li> Virtual control - virtual processes that actuate the first group (ex.
+ * PID, bang-bang, TBH)
+ * <li> {@link Subsystem Subsystems} - groups of modules that perform more
+ * useful functions than the actuators and sensors
+ * </ul>
  *
- * <p> Most things that interact with the "real world" should be modules. This
- * means motors, drive trains, sensors, arms, shooters, and anything else that
- * can potentially move or interact. <i> This, however, does not exclude virtual
- * components from being modules.</i> For example, {@link PIDModule} is a
- * virtual component, but is a module for a good reason. Anything virtual thing
- * that could be regarded as an entity by itself is a good candidate for being a
- * module. State machines are another good example.
+ * This interface creates some basic standards that are upheld across the entire
+ * library. It lets classes do whatever they need to, while upholding a general
+ * contract of how to behave. Specifically, it allows modules to be enabled and
+ * disabled at will. When the user needs the functionality of a module, they can
+ * enable it. When they do not need its function, they can disable it.
  *
- * <p> The module class also contains two implementations within itself that add
- * slightly more functionality. The first one is {@link DisableableModule},
- * which is exactly as its name suggests. It adds a disable method, making
- * another standard for things that can be "turned off". The second
- * implementation is {@link TrackedModule}. This makes the module something that
- * is added to {@link Module#MODULES} when it is constructed. Part of the
- * initial design of this interface (Module was originally a class that was
- * basically equivalent to {@link TrackedModule}), tracked modules make it easy
- * for instances to be tracked by checking mechanisms outside of the module to
- * understand why errors may be occurring. This feature has been changed from
- * mandatory to optional for two specific reasons: <b>1.</b> It is significantly
- * easier to program modules that extend their real underlying counterparts
- * <b>2.</b> Tracking module instances lends itself to unwanted safety hazards
- * from unknown code - it should be opt-in to lend your module object to
- * {@link Module#MODULES}. You don't want people messing with instances of your
- * module.
+ * The general contract for all modules is as follows:
+ * <ul>
+ * <li> Modules contain methods specific to their purpose, but do not expose
+ * their composed instances for security reasons
+ * <li> Modules are "ready" to work when {@link #init()} has been called, and
+ * its functions will work after {@link #enable()} is called.
+ * <li> "Settings" of a module, AKA its internal state, are changeable even when
+ * disabled.
+ * <li> Between calling {@link #enable()} and
+ * {@link #disable()}, {@link #isEnabled()} will return true. Only
+ * {@code enable()} and {@code disable()} can effect the output of
+ * {@code isEnabled()}.
+ * <li> If a function is called while the module is disabled, the function
+ * should throw a {@link IllegalStateException}.
+ * <li> Calling any of the methods more than once in a row will not behave
+ * differently because of it.
+ * <li> The state of {@link #isEnabled()} should be thread-safe and <i>only</i>
+ * return {@code true} when it is completely enabled.
+ * </ul>
  *
+ * <p> {@link Module.StartardModule} is a useful default implementation of
+ * {@code Module} that fulfills most of the {@code Module} contract.
+ *
+ * @see StartardModule
+ * @since May 22 13
  * @author Joel Gallant
  */
 public interface Module {
 
     /**
-     * A globally available list of all {@link TrackedModule} modules. This
-     * object is not thread-safe, and uses an unsynchronized list. Extreme
-     * precaution should be taken when using this object.
+     * Performs the necessary actions to ensure the module is "ready" to be
+     * used. Whatever is not done in the constructor should be performed here.
      */
-    List MODULES = new List();
+    public void init();
 
     /**
-     * "Enables" the module. This has very loose standards, and could mean many
-     * different things. In general, unless a module has been enabled, it's main
-     * / basic functions should not work correctly. For a speed controller, this
-     * might mean it does not send a signal until it's been enabled.
+     * Performs the necessary actions to ensure the module is operational. The
+     * module's functions should work after this method is called, provided this
+     * method did not throw an error.
      *
-     * @return returns whether it successfully enabled and is ready to work
+     * <p> The contract for this method is that {@link #isEnabled()} should
+     * return {@code true} after this is called until {@link #disable()} is
+     * called. The official {@code enabled} state of a module is only
+     * technically correct by using {@link #isEnabled()} and the completion of
+     * this method does not by definition mean that the module is enabled. By
+     * contract though, completion of this method without error should mean that
+     * it is enabled.
      */
-    boolean enable();
+    public void enable();
 
     /**
-     * Returns whether or not the module is ready to work. In most situations,
-     * this means that {@link Module#enable()} has been called, but there is no
-     * requirement for that to be the case. In fact, it is usually safer to test
-     * something else to make sure it has been properly enabled.
+     * Performs the necessary actions to ensure the module cannot be used. The
+     * module's functions should not work after this method is called, provided
+     * this method did not throw an error.
      *
-     * @return whether the module is ready to work properly
+     * <p> The contract for this method is that {@link #isEnabled()} should
+     * return {@code falsee} after this is called until {@link #enable()} is
+     * called. The official {@code enabled} state of a module is only
+     * technically correct by using {@link #isEnabled()} and the completion of
+     * this method does not by definition mean that the module is disabled. By
+     * contract though, completion of this method without error should mean that
+     * it is disabled.
      */
-    boolean isEnabled();
+    public void disable();
 
     /**
-     * A module implementation that lets it be disabled. There is a more strict
-     * standard for a {@link DisableableModule}, as disabling should always make
-     * {@link DisableableModule#isEnabled()} return false until it is enabled.
-     * It should also render the class to function in just as limited of a
-     * capacity as it did before being enabled.
+     * Returns the {@code enabled} state of the module, indicating whether its
+     * functions should work. This method should be thread-safe and only return
+     * {@code true} if the module is <i>fully</i> enabled.
      *
-     * <p>Disabling an already disabled module should do nothing.
+     * <p> When modules are not enabled, their functions (apart from "settings",
+     * outlined in this {@link Module class} documentation) will throw an
+     * {@link IllegalStateException}.
+     *
+     * @return if module is currently fully functional
      */
-    public static interface DisableableModule extends Module {
+    public boolean isEnabled();
+
+    /**
+     * A default implementation of {@link Module} that provides a simpler
+     * interface for building modules on.
+     *
+     * <p> It fulfills theses elements of the {@link Module} contract:
+     * <ul>
+     * <li> Between calling {@link #enable()} and
+     * {@link #disable()}, {@link #isEnabled()} will return true. Only
+     * {@code enable()} and {@code disable()} can effect the output of
+     * {@code isEnabled()}.
+     * <li> If a function is called while the module is disabled, the function
+     * should throw a {@link IllegalStateException}. (see
+     * {@link #ensureEnabled()})
+     * <li> The state of {@link #isEnabled()} should be thread-safe and
+     * <i>only</i>
+     * return {@code true} when it is completely enabled.
+     * </ul>
+     *
+     * <p> Parts that are not guaranteed by this class:
+     * <ul>
+     * <li> Modules contain methods specific to their purpose, but do not expose
+     * their composed instances for security reasons
+     * <li> Modules are "ready" to work when {@link #init()} has been called,
+     * and its functions will work after {@link #enable()} is called.
+     * <li> "Settings" of a module, AKA its internal state, are changeable even
+     * when disabled.
+     * <li> Calling any of the methods more than once in a row will not behave
+     * differently because of it. (see {@link #enableModule()} and
+     * {@link #disableModule()})
+     * </ul>
+     *
+     * @since May 22 13
+     * @author Joel Gallant
+     */
+    public static abstract class StandardModule implements Module {
+
+        // uses lock and not "this" in case module uses "this" lock
+        private final Object lock = new Object();
+        private boolean enabled;
 
         /**
-         * "Disables" the module in a way that it returns to the level of
-         * functionality before having been enabled. Usually this makes the
-         * module unusable for all intents and purposes.
-         *
-         * @return whether the module successfully disabled
+         * Performs the necessary actions to ensure the module is operational.
+         * The module's functions should work after this method is called,
+         * provided this method did not throw an error.
          */
-        boolean disable();
-    }
+        protected abstract void enableModule();
 
-    /**
-     * This makes the module something that is added to {@link Module#MODULES}
-     * when it is constructed. Part of the initial design of this interface
-     * (Module was originally a class that was basically equivalent to
-     * {@link TrackedModule}), tracked modules make it easy for instances to be
-     * tracked by checking mechanisms outside of the module to understand why
-     * errors may be occurring. This feature has been changed from mandatory to
-     * optional for two specific reasons: <b>1.</b> It is significantly easier
-     * to program modules that extend their real underlying counterparts
-     * <b>2.</b> Tracking module instances lends itself to unwanted safety
-     * hazards from unknown code - it should be opt-in to lend your module
-     * object to {@link Module#MODULES}. You don't want people messing with
-     * instances of your module.
-     *
-     * <p> For this reason, use this class sparingly, and understand what
-     * extending this class means.
-     * 
-     * @deprecated is not very safe to use
-     */
-    public static abstract class TrackedModule implements Module {
+        /**
+         * Performs the necessary actions to ensure the module cannot be used.
+         * The module's functions should not work after this method is called,
+         * provided this method did not throw an error.
+         */
+        protected abstract void disableModule();
 
-        {
-            MODULES.add(this);
+        /**
+         * {@inheritDoc}
+         */
+        public final void enable() {
+            if (!isEnabled()) {
+                enableModule();
+                synchronized (lock) {
+                    enabled = true;
+                }
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public final void disable() {
+            if (isEnabled()) {
+                disableModule();
+                synchronized (lock) {
+                    enabled = false;
+                }
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public final boolean isEnabled() {
+            synchronized (lock) {
+                return enabled;
+            }
+        }
+
+        /**
+         * When this method is called and the module is not
+         * {@link #isEnabled() enabled}, it will throw an
+         * {@link IllegalStateException}.
+         *
+         * <p> Use this method at the start of <b>all</b> functions of the
+         * method that require the module to be enabled.
+         *
+         * @see Module for more information on contract of throwing an
+         * IllegalStateException
+         * @throws IllegalStateException when module is not enabled
+         */
+        public final void ensureEnabled() {
+            if (!isEnabled()) {
+                throw new IllegalStateException(getClass().getName() + " was not enabled.");
+            }
+        }
+
+        /**
+         * Returns the name of the class, according to {@link #getClass()} and
+         * {@link Class#getName()}.
+         *
+         * @return name of module's class
+         */
+        public String toString() {
+            return getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1);
         }
     }
 }

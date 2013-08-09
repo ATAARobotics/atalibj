@@ -1,20 +1,31 @@
 package edu.first.identifiers;
 
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import edu.first.util.list.ArrayList;
+import edu.first.util.list.Iterator;
+import edu.first.util.list.List;
 
 /**
- * A function that can be applied to a double.
+ * General interface for classes that perform some kind of change to a number.
  *
+ * @since June 01 13
  * @author Joel Gallant
  */
 public interface Function {
+
+    /**
+     * Transforms the number to a different number.
+     *
+     * @param in input number
+     * @return output number
+     */
+    public double F(double in);
 
     /**
      * A placement function that returns the value given.
      */
     public static final class DefaultFunction implements Function {
 
-        public double apply(double start) {
+        public double F(double start) {
             return start;
         }
     }
@@ -24,7 +35,7 @@ public interface Function {
      */
     public static final class ProductFunction implements Function {
 
-        private final double coefficient;
+        private final Input coefficient;
 
         /**
          * Constructs the function using the coefficient.
@@ -32,11 +43,20 @@ public interface Function {
          * @param coefficient number to multiply by
          */
         public ProductFunction(double coefficient) {
+            this.coefficient = new StaticInput(coefficient);
+        }
+
+        /**
+         * Constructs the function using the coefficient.
+         *
+         * @param coefficient number to multiply by
+         */
+        public ProductFunction(Input coefficient) {
             this.coefficient = coefficient;
         }
 
-        public double apply(double start) {
-            return start * coefficient;
+        public double F(double start) {
+            return start * coefficient.get();
         }
     }
 
@@ -45,7 +65,7 @@ public interface Function {
      */
     public static final class QuotientFunction implements Function {
 
-        private final double divisor;
+        private final Input divisor;
 
         /**
          * Constructs the function using the divisor.
@@ -53,11 +73,20 @@ public interface Function {
          * @param divisor number to divide by
          */
         public QuotientFunction(double divisor) {
+            this.divisor = new StaticInput(divisor);
+        }
+
+        /**
+         * Constructs the function using the divisor.
+         *
+         * @param divisor number to divide by
+         */
+        public QuotientFunction(Input divisor) {
             this.divisor = divisor;
         }
 
-        public double apply(double start) {
-            return start / divisor;
+        public double F(double start) {
+            return start / divisor.get();
         }
     }
 
@@ -66,7 +95,7 @@ public interface Function {
      */
     public static final class SumFunction implements Function {
 
-        private final double add;
+        private final Input add;
 
         /**
          * Constructs the function using a number to add.
@@ -74,11 +103,15 @@ public interface Function {
          * @param add number to add
          */
         public SumFunction(double add) {
+            this.add = new StaticInput(add);
+        }
+
+        public SumFunction(Input add) {
             this.add = add;
         }
 
-        public double apply(double start) {
-            return start + add;
+        public double F(double start) {
+            return start + add.get();
         }
     }
 
@@ -87,7 +120,7 @@ public interface Function {
      */
     public static final class DifferenceFunction implements Function {
 
-        private final double subtract;
+        private final Input subtract;
 
         /**
          * Constructs the function using a number to subtract.
@@ -95,11 +128,20 @@ public interface Function {
          * @param subtract number to subtract
          */
         public DifferenceFunction(double subtract) {
+            this.subtract = new StaticInput(subtract);
+        }
+
+        /**
+         * Constructs the function using a number to subtract.
+         *
+         * @param subtract number to subtract
+         */
+        public DifferenceFunction(Input subtract) {
             this.subtract = subtract;
         }
 
-        public double apply(double start) {
-            return start - subtract;
+        public double F(double start) {
+            return start - subtract.get();
         }
     }
 
@@ -108,7 +150,7 @@ public interface Function {
      */
     public static final class OppositeFunction implements Function {
 
-        public double apply(double start) {
+        public double F(double start) {
             return -start;
         }
     }
@@ -118,7 +160,7 @@ public interface Function {
      */
     public static final class InverseFunction implements Function {
 
-        public double apply(double start) {
+        public double F(double start) {
             return 1 / start;
         }
     }
@@ -128,7 +170,7 @@ public interface Function {
      */
     public static final class SquaredFunction implements Function {
 
-        public double apply(double start) {
+        public double F(double start) {
             return start * start;
         }
     }
@@ -149,9 +191,9 @@ public interface Function {
             this.functions = functions;
         }
 
-        public double apply(double start) {
+        public double F(double start) {
             for (int x = 0; x < functions.length; x++) {
-                start = functions[x].apply(start);
+                start = functions[x].F(start);
             }
             return start;
         }
@@ -162,7 +204,7 @@ public interface Function {
      */
     public static final class DynamicFunction implements Function {
 
-        private final List functions = new List();
+        private final List functions = new ArrayList();
 
         /**
          * Constructs the function with no functions within it.
@@ -188,19 +230,12 @@ public interface Function {
             functions.remove(function);
         }
 
-        public double apply(double start) {
-            for (int x = 0; x < functions.size(); x++) {
-                start = ((Function) functions.get(x)).apply(start);
+        public double F(double start) {
+            Iterator i = functions.iterator();
+            while (i.hasNext()) {
+                start = ((Function) i.next()).F(start);
             }
             return start;
         }
     }
-
-    /**
-     * Applies the function to the number.
-     *
-     * @param start original value
-     * @return transformed value
-     */
-    double apply(double start);
 }

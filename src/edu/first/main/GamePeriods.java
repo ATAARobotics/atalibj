@@ -5,178 +5,187 @@
  */
 package edu.first.main;
 
-import edu.ata.murdock.Murdock;
-import edu.first.robot.Robot;
-import edu.first.utils.Logger;
+import edu.first.robot.IterativeRobotAdapter;
+import edu.first.robot.RobotMode;
+import edu.first.robot.RobotModeSelector;
+import edu.first.robot.SafeRobotMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
- * This class is the 'main' class of the robot code. This is where everything is
- * started by the the wpilibj. To set a default function of your code, set the
- * {@link GamePeriods#robot} object inside of this class, or use
- * {@link GamePeriods#setRobot(edu.first.main.Robot)}.
+ * This class is called by the VM automatically for every game mode. It is meant
+ * to start all necessary functions, and is the gateway from the Java VM into
+ * your code. {@code GamePeriods} is final because the functionality it provides
+ * is through {@link RobotMode Robot Modes}. Although the implementation and
+ * specifics about how {@link RobotMode} is used is up to the programmer, the
+ * usage of {@link RobotMode} is necessary. This does not detract from
+ * {@code GamePeriods}'s usefulness because it contains all of the methods of
+ * {@code GamePeriods} and more.
  *
- * <p> <b> The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory. (<i>/resources/META-INF/MANIFEST.MF</i> under "MIDlet-1")</b>
+ * {@code GamePeriods} works by using a {@link RobotModeSelector} to select from
+ * {@link GamePeriods#modes}. This allows the programmer to use one mode or
+ * multiple modes. The mode is selectable on the SmartDashboard under the key
+ * "Robot Mode". To change this functionality, edit this class so that
+ * {@link GamePeriods#updateMode()} returns the mode you want to run.
  *
+ * <b> If you change the name of this class or the package after creating this
+ * project, you must also update the manifest file in the resource directory.
+ * (<i>/resources/META-INF/MANIFEST.MF</i> under "MIDlet-1")</b>
+ *
+ * This class is not thread safe and should <b>never</b> be manually
+ * constructed, but by mandate (VM) its constructor needs to be public.
+ *
+ * @since May 07 13
  * @author Joel Gallant
  */
 public final class GamePeriods extends IterativeRobot {
 
-    private static Robot robot;
+    // Stored to "end" the game mode after it is finished
+    private static GameMode previousGameMode = null;
+    // The current game mode - change to yours
+    private static RobotMode robotMode;
 
-    {
-        setRobot(Murdock.getInstance().getRobot());
+    public GamePeriods() {
+        // Init robot mode here so that static initializing doesn't interfere with wpi code
+        robotMode = new SafeRobotMode(new IterativeRobotAdapter("Null"));
     }
 
     /**
-     * Sets the robot to run by all instances of {@link GamePeriods}. All of the
-     * methods in {@link IterativeRobot} are included in {@link Robot}, and
-     * {@link GamePeriods} will run those methods. Assuming this class is used
-     * for FRC purposes (wpilibj), this method can be considered the only useful
-     * method in {@link GamePeriods}. To change the functionality of the robot
-     * completely in a moments notice, this method can be used. It is
-     * thread-safe to use this method, so any part of the code can be used to
-     * change the robot. To have a "Default" robot, edit this class and
-     * instantiate {@link GamePeriods#robot} as the default robot.
-     *
-     * <p> If the robot does not have a default, or this method is not called,
-     * running the robot will result in a {@link NullPointerException}.
-     *
-     * @param robot robot object for game period methods
-     */
-    public static void setRobot(final Robot robot) {
-        synchronized (GamePeriods.class) {
-            GamePeriods.robot = robot;
-        }
-    }
-
-    /**
-     * Run once when robot starts. Anything thrown inside of
-     * {@link Robot#robotInit()} are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Initializes the robot. Is run once at the start of the robot's execution
+     * cycle, but never again. Effectively should "start the robot", in whatever
+     * context it happens to be in.
      */
     public void robotInit() {
-        try {
-            robot.robotInit();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
-        }
+        robotMode.init();
     }
 
     /**
-     * Runs once before disabled mode. Anything thrown inside of
-     * {@link Robot#disabledInit() } are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Initializes the disabled mode of the robot. Usually, this method "turns
+     * off" the functions of the robot, like background threads and motor
+     * controllers.
+     *
+     * Every time disabled is run, the {@code RobotMode} is updated. This only
+     * happens during the disabled period.
      */
     public void disabledInit() {
-        try {
-            robot.disabledInit();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
-        }
+        finishAndNewMode(GameMode.DISABLED);
+        robotMode.initDisabled();
     }
 
     /**
-     * Runs periodically (20ms) during disabled mode. Anything thrown inside of
-     * {@link Robot#disabledPeriodic()} are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Runs periodically during the disabled period.
+     *
+     * In the context of {@link IterativeRobot}, "periodic" means 50 times per
+     * second, or 50Hz. It is run every 0.02 seconds. This is not guaranteed,
+     * and is only run once every time the DriverStation sends packets. It can
+     * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
     public void disabledPeriodic() {
-        try {
-            robot.disabledPeriodic();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
-        }
+        robotMode.periodicDisabled();
     }
 
     /**
-     * Runs once before autonomous mode. Anything thrown inside of
-     * {@link Robot#autonomousInit()} are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Initializes anything needed for the autonomous period of the robot.
      */
     public void autonomousInit() {
-        try {
-            robot.autonomousInit();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
-        }
+        finishAndNewMode(GameMode.AUTONOMOUS);
+        robotMode.initAutonomous();
     }
 
     /**
-     * Runs periodically (20ms) during autonomous mode. Anything thrown inside
-     * of {@link Robot#autonomousPeriodic()} are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Runs periodically during the autonomous period.
+     *
+     * In the context of {@link IterativeRobot}, "periodic" means 50 times per
+     * second, or 50Hz. It is run every 0.02 seconds. This is not guaranteed,
+     * and is only run once every time the DriverStation sends packets. It can
+     * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
     public void autonomousPeriodic() {
-        try {
-            robot.autonomousPeriodic();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
-        }
+        robotMode.periodicAutonomous();
     }
 
     /**
-     * Runs once before teleoperated mode. Anything thrown inside of
-     * {@link Robot#teleopInit()} are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Initializes anything needed for the teleoperated period of the robot.
      */
     public void teleopInit() {
-        try {
-            robot.teleopInit();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
-        }
+        finishAndNewMode(GameMode.TELEOPERATED);
+        robotMode.initTeleoperated();
     }
 
     /**
-     * Runs periodically (20ms) during teleoperated mode. Anything thrown inside
-     * of {@link Robot#teleopPeriodic()} are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Runs periodically during the teleoperated period.
+     *
+     * In the context of {@link IterativeRobot}, "periodic" means 50 times per
+     * second, or 50Hz. It is run every 0.02 seconds. This is not guaranteed,
+     * and is only run once every time the DriverStation sends packets. It can
+     * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
     public void teleopPeriodic() {
-        try {
-            robot.teleopPeriodic();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
-        }
+        robotMode.periodicTeleoperated();
     }
 
     /**
-     * Runs once before test mode. Anything thrown inside of
-     * {@link Robot#testInit()} are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Initializes anything needed for the test period of the robot.
      */
     public void testInit() {
-        try {
-            robot.testInit();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
-        }
+        finishAndNewMode(GameMode.TEST);
+        robotMode.initTest();
     }
 
     /**
-     * Runs periodically (20ms) during test mode. Anything thrown inside of
-     * {@link Robot#testPeriodic()} are caught and logged as
-     * {@link Logger.Urgency#USERMESSAGE}.
+     * Runs periodically during the test period.
+     *
+     * In the context of {@link IterativeRobot}, "periodic" means 50 times per
+     * second, or 50Hz. It is run every 0.02 seconds. This is not guaranteed,
+     * and is only run once every time the DriverStation sends packets. It can
+     * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
     public void testPeriodic() {
-        try {
-            robot.testPeriodic();
-        } catch (Throwable t) {
-            Logger.log(Logger.Urgency.USERMESSAGE, "ERROR - " + t.getClass().getName() + " - " + t.getMessage());
-            t.printStackTrace();
+        robotMode.periodicTest();
+    }
+
+    /**
+     * Finishes the {@code GameMode} given the last time this method was run.
+     *
+     * @param newMode the mode that the user is headed into which will be ended
+     * the next time this method is run
+     */
+    private void finishAndNewMode(GameMode newMode) {
+        if (previousGameMode != null) {
+            previousGameMode.end();
         }
+        previousGameMode = newMode;
+    }
+
+    /**
+     * Representation of the different game modes used to end them using the
+     * methods in {@link RobotMode}.
+     */
+    private static abstract class GameMode {
+
+        static final GameMode DISABLED = new GameMode() {
+            void end() {
+                robotMode.endDisabled();
+            }
+        };
+        static final GameMode AUTONOMOUS = new GameMode() {
+            void end() {
+                robotMode.endAutonomous();
+            }
+        };
+        static final GameMode TELEOPERATED = new GameMode() {
+            void end() {
+                robotMode.endTeleoperated();
+            }
+        };
+        static final GameMode TEST = new GameMode() {
+            void end() {
+                robotMode.endTest();
+            }
+        };
+
+        /**
+         * Ends the mode selected.
+         */
+        abstract void end();
     }
 }
