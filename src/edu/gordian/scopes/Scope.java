@@ -425,7 +425,7 @@ public class Scope {
     }
 
     /**
-     * Runs the script.
+     * Runs the script. Exceptions are never caught.
      *
      * @param script full script to run
      * @throws Exception when script running encounters any kind of error
@@ -438,6 +438,28 @@ public class Scope {
         }
         if (environment.scopes != 0) {
             throw new RuntimeException("Scope was never completed. Use 'end' to complete scopes.");
+        }
+    }
+
+    /**
+     * Runs the script. Exceptions are caught and wrapped.
+     *
+     * @param script full script to run
+     * @throws Exception when script running encounters any kind of error
+     */
+    public void runChecked(String script) throws Exception {
+        RunningEnvironment environment = new RunningEnvironment();
+        StringTokenizer tokenizer = preRun(script);
+        while (tokenizer.hasMoreElements()) {
+            try {
+                environment.next(tokenizer.nextToken());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new Exception("LINE " + environment.line + " in " + getClass().getName() + " - " + ex.getClass().getName() + ": " + ex.getMessage());
+            }
+            if (environment.scopes != 0) {
+                throw new RuntimeException("Scope was never completed. Use 'end' to complete scopes.");
+            }
         }
     }
 
@@ -482,66 +504,61 @@ public class Scope {
                 return;
             }
 
-            try {
-                if (scopes == 0 && scope.startsWith("while")) {
-                    String start = scope.substring(0, scope.indexOf(';'));
-                    String s = scope.substring(scope.indexOf(';') + 1);
+            if (scopes == 0 && scope.startsWith("while")) {
+                String start = scope.substring(0, scope.indexOf(';'));
+                String s = scope.substring(scope.indexOf(';') + 1);
 
-                    // Validity check
-                    if (!Strings.contains(start, '(') || !Strings.contains(start, ')')) {
-                        throw new IllegalArgumentException("Argument was not given");
-                    }
-
-                    new While(start.substring(start.indexOf('(') + 1, start.lastIndexOf(')')), Scope.this).run(s);
-                    scope = "";
-                    return;
-                }
-                if (scopes == 0 && scope.startsWith("if")) {
-                    new If(Scope.this).run(scope);
-                    scope = "";
-                    return;
-                }
-                if (scopes == 0 && scope.startsWith("for")) {
-                    String start = scope.substring(0, scope.indexOf(';'));
-                    String s = scope.substring(scope.indexOf(';') + 1);
-
-                    // Validity check
-                    if (!Strings.contains(start, '(') || !Strings.contains(start, ')')) {
-                        throw new IllegalArgumentException("Argument was not given");
-                    }
-
-                    new For(start.substring(start.indexOf('(') + 1, start.lastIndexOf(')')), Scope.this).run(s);
-                    scope = "";
-                    return;
-                }
-                if (scopes == 0 && scope.startsWith("def")) {
-                    String name = scope.substring(scope.indexOf("def") + 3, scope.indexOf('('));
-                    String start = scope.substring(0, scope.indexOf(';'));
-                    String s = scope.substring(scope.indexOf(';') + 1);
-
-                    // Validity check
-                    if (!Strings.contains(start, '(') || !Strings.contains(start, ')')) {
-                        throw new IllegalArgumentException("Arguments were not given");
-                    }
-
-                    DefinedMethod method = new DefinedMethod(Strings.split(start.substring(start.indexOf('(') + 1, start.lastIndexOf(')')), ','), s, Scope.this);
-                    // Give method access to itself for recursion
-                    method.addMethod(name, method);
-                    addMethod(name, method);
-                    if (Strings.contains(s, "return ")) {
-                        addReturning(name, method);
-                        // Give method access to itself for recursion
-                        method.addReturning(name, method);
-                    }
-                    scope = "";
-                    return;
+                // Validity check
+                if (!Strings.contains(start, '(') || !Strings.contains(start, ')')) {
+                    throw new IllegalArgumentException("Argument was not given");
                 }
 
-                toElement(next).run();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                throw new Exception("LINE " + line + " in " + getClass().getName() + " - " + ex.getClass().getName() + ": " + ex.getMessage());
+                new While(start.substring(start.indexOf('(') + 1, start.lastIndexOf(')')), Scope.this).run(s);
+                scope = "";
+                return;
             }
+            if (scopes == 0 && scope.startsWith("if")) {
+                new If(Scope.this).run(scope);
+                scope = "";
+                return;
+            }
+            if (scopes == 0 && scope.startsWith("for")) {
+                String start = scope.substring(0, scope.indexOf(';'));
+                String s = scope.substring(scope.indexOf(';') + 1);
+
+                // Validity check
+                if (!Strings.contains(start, '(') || !Strings.contains(start, ')')) {
+                    throw new IllegalArgumentException("Argument was not given");
+                }
+
+                new For(start.substring(start.indexOf('(') + 1, start.lastIndexOf(')')), Scope.this).run(s);
+                scope = "";
+                return;
+            }
+            if (scopes == 0 && scope.startsWith("def")) {
+                String name = scope.substring(scope.indexOf("def") + 3, scope.indexOf('('));
+                String start = scope.substring(0, scope.indexOf(';'));
+                String s = scope.substring(scope.indexOf(';') + 1);
+
+                // Validity check
+                if (!Strings.contains(start, '(') || !Strings.contains(start, ')')) {
+                    throw new IllegalArgumentException("Arguments were not given");
+                }
+
+                DefinedMethod method = new DefinedMethod(Strings.split(start.substring(start.indexOf('(') + 1, start.lastIndexOf(')')), ','), s, Scope.this);
+                // Give method access to itself for recursion
+                method.addMethod(name, method);
+                addMethod(name, method);
+                if (Strings.contains(s, "return ")) {
+                    addReturning(name, method);
+                    // Give method access to itself for recursion
+                    method.addReturning(name, method);
+                }
+                scope = "";
+                return;
+            }
+
+            toElement(next).run();
         }
     }
 

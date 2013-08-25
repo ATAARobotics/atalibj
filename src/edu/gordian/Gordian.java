@@ -47,6 +47,6 @@ public final class Gordian {
      * @throws Exception when script running encounters any kind of error
      */
     public static void run(String script) throws Exception {
-        new Scope().run(script);
+        new Scope().runChecked(script);
     }
 }

@@ -35,9 +35,10 @@ final class DefinedMethod extends Scope implements MethodBase, ReturningMethodBa
             RunningEnvironment environment = new RunningEnvironment();
             StringTokenizer tokenizer = preRun(script);
             while (tokenizer.hasMoreElements()) {
-                environment.next(tokenizer.nextToken());
-                if (value != null) {
-                    // Value was returned
+                try {
+                    environment.next(tokenizer.nextToken());
+                } catch (ValueReturned ex) {
+                    this.value = ex.value;
                     break;
                 }
             }
@@ -50,7 +51,7 @@ final class DefinedMethod extends Scope implements MethodBase, ReturningMethodBa
     }
 
     public void returnValue(Object value) {
-        this.value = value;
+        throw new ValueReturned(value);
     }
 
     public Object runFor(Value[] arguments) {
@@ -59,5 +60,14 @@ final class DefinedMethod extends Scope implements MethodBase, ReturningMethodBa
             throw new RuntimeException("No value was returned");
         }
         return value;
+    }
+
+    private static class ValueReturned extends RuntimeException {
+
+        private final Object value;
+
+        public ValueReturned(Object value) {
+            this.value = value;
+        }
     }
 }
