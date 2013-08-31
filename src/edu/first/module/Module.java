@@ -190,8 +190,8 @@ public interface Module {
          * {@link #isEnabled() enabled}, it will throw an
          * {@link IllegalStateException}.
          *
-         * <p> Use this method at the start of <b>all</b> functions of the
-         * method that require the module to be enabled.
+         * <p> Use this method at the start of <b>all</b> functions that require
+         * the module to be enabled.
          *
          * @see Module for more information on contract of throwing an
          * IllegalStateException
