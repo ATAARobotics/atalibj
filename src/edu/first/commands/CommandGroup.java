@@ -68,7 +68,7 @@ public class CommandGroup implements Command {
      * @throws NullPointerException when command is null
      * @param command command to run by itself
      */
-    protected final void addSequential(Command command) {
+    public final void addSequential(Command command) {
         if (command == null) {
             throw new NullPointerException("Null command given");
         }
@@ -88,7 +88,7 @@ public class CommandGroup implements Command {
      * @throws NullPointerException when command is null
      * @param command command to run alongside other concurrent commands
      */
-    protected final void addConcurrent(Command command) {
+    public final void addConcurrent(Command command) {
         if (command == null) {
             throw new NullPointerException("Null command given");
         }
