@@ -47,6 +47,7 @@ public final class ArrayList implements List {
      */
     public ArrayList(Collection collection) {
         this.elementData = collection.toArray();
+        this.size = elementData.length;
         if (elementData.getClass() != Object[].class) {
             elementData = Arrays.copyOf(elementData, size);
         }
