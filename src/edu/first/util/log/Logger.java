@@ -1,9 +1,11 @@
 package edu.first.util.log;
 
+import edu.first.util.Arrays;
 import edu.first.util.DriverstationInfo;
 import edu.first.util.Enum;
 import edu.first.util.File;
 import edu.first.util.TextFiles;
+import edu.first.util.list.ArrayList;
 import edu.first.util.list.Iterator;
 import edu.first.util.list.List;
 import edu.first.util.list.SafeArrayList;
@@ -30,10 +32,13 @@ public final class Logger {
             System.out.println(msg);
         }
     };
+    private static final List DEFAULT_LOGS = Arrays.asList(new Object[] {
+        CONSOLE_LOG
+    });
     private static final Hashtable loggers = new Hashtable();
     private static int lineNum = 1;
     private final Class origin;
-    private final List logs = new SafeArrayList(Log.class);
+    private final List logs = new SafeArrayList(DEFAULT_LOGS, Log.class);
 
     /**
      * Returns the current logger for the origin. All loggers with the same
@@ -132,7 +137,6 @@ public final class Logger {
     // Use static factory instead
     private Logger(Class origin) {
         this.origin = origin;
-        logs.add(CONSOLE_LOG);
     }
 
     /**
