@@ -1,8 +1,9 @@
 package edu.first.module.actuators;
 
-import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
+import edu.first.module.joysticks.BindingJoystick;
+import edu.first.module.joysticks.Joystick.Axis;
 import edu.first.util.MathUtils;
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
@@ -159,7 +160,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     public double getRightSpeed() {
         return right.getSpeed();
     }
-    
+
     /**
      * Sets the left and right side speeds without any math. Usually
      * {@link #tankDrive(double, double)} is preferred to this method.
@@ -284,11 +285,13 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     /**
      * Drive the motors at "speed" and "curve".
      *
-     * <p> The speed and curve are -1.0 to +1.0 values where 0.0 represents
-     * stopped and not turning. The algorithm for adding in the direction
-     * attempts to provide a constant turn radius for differing speeds.
+     * <p>
+     * The speed and curve are -1.0 to +1.0 values where 0.0 represents stopped
+     * and not turning. The algorithm for adding in the direction attempts to
+     * provide a constant turn radius for differing speeds.
      *
-     * <p> This function will most likely be used in an autonomous routine.
+     * <p>
+     * This function will most likely be used in an autonomous routine.
      *
      * @throws IllegalStateException when module is not enabled
      * @param outputMagnitude the forward component of the output magnitude to
@@ -341,6 +344,38 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      */
     public Output getTurn() {
         return turn;
+    }
+
+    /**
+     * Returns a {@link BindingJoystick.DualAxisBind} that will drive the robot
+     * arcade style, as per {@link #arcadeDrive(double, double)}.
+     *
+     * @param speed axis associated with the speed
+     * @param turn axis associated with turning
+     * @return an axis bind to drive with
+     */
+    public BindingJoystick.DualAxisBind getArcade(Axis speed, Axis turn) {
+        return new BindingJoystick.DualAxisBind(speed, turn) {
+            public void doBind(double axis1, double axis2) {
+                arcadeDrive(axis1, axis2);
+            }
+        };
+    }
+
+    /**
+     * Returns a {@link BindingJoystick.DualAxisBind} that will drive the robot
+     * tank drive style, as per {@link #tankDrive(double, double)}.
+     *
+     * @param left axis associated with the left side
+     * @param right axis associated with the right side
+     * @return an axis bind to drive with
+     */
+    public BindingJoystick.DualAxisBind getTank(Axis left, Axis right) {
+        return new BindingJoystick.DualAxisBind(left, right) {
+            public void doBind(double axis1, double axis2) {
+                tankDrive(axis1, axis2);
+            }
+        };
     }
 
     /**
