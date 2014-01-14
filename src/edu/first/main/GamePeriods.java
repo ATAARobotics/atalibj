@@ -5,6 +5,7 @@
  */
 package edu.first.main;
 
+import ata2014.main.Robot;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.first.robot.RobotMode;
 import edu.first.robot.RobotModeSelector;
@@ -46,7 +47,7 @@ public final class GamePeriods extends IterativeRobot {
 
     public GamePeriods() {
         // Init robot mode here so that static initializing doesn't interfere with wpi code
-        robotMode = new SafeRobotMode(new IterativeRobotAdapter("Null"));
+        robotMode = new SafeRobotMode(new Robot());
     }
 
     /**
