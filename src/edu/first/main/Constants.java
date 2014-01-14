@@ -1,5 +1,9 @@
 package edu.first.main;
 
+import ata2014.main.Drivetrain;
+import ata2014.main.Joysticks;
+import ata2014.main.Ports;
+
 /**
  * The central repository for all constant values. Values here are expected to
  * be accessible to the entire program, and for anyone to view.
@@ -40,5 +44,5 @@ package edu.first.main;
  * @since May 07 13
  * @author Joel Gallant
  */
-public interface Constants {
+public interface Constants extends Ports, Drivetrain, Joysticks {
 }
