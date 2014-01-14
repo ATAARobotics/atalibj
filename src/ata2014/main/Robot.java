@@ -1,12 +1,13 @@
 package ata2014.main;
 
 import edu.first.main.Constants;
-import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
 import edu.first.robot.IterativeRobotAdapter;
 
 /**
+ * Team 4334's main robot code starting point. Everything that happens is
+ * derived from this class.
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
@@ -18,13 +19,6 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
             .add(frontRightDrive).add(backRightDrive)
             .add(drivetrain)
             .toSubsystem();
-
-    private final BindingJoystick.DualAxisBind drivingBind = new BindingJoystick.DualAxisBind(
-            joystick1.getLeftY(), joystick1.getRightX()) {
-                public void doBind(double axis1, double axis2) {
-                    drivetrain.arcadeDrive(axis1, axis2);
-                }
-            };
 
     public Robot() {
         super("2014 Robot");
@@ -38,7 +32,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     }
 
     public void initTeleoperated() {
-        joystick1.addAxisBind(drivingBind);
+        joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftY(), joystick1.getRightX()));
     }
 
     public void initDisabled() {
