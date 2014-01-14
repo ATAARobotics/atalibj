@@ -191,6 +191,22 @@ public class BindingJoystick extends JoystickModule {
     public final void addButtonBind(ButtonBind buttonBind) {
         addBind(buttonBind);
     }
+    
+    /**
+     * Removes the specific bind from this joystick.
+     * 
+     * @param b bind to remove
+     */
+    public final void removeBind(Bind b) {
+        binds.remove(b);
+    }
+    
+    /**
+     * Removes all active binds from the joystick.
+     */
+    public final void clearBinds() {
+        binds.clear();
+    }
 
     /**
      * Adds any bind to the joystick. Although there is no restriction on what
