@@ -198,7 +198,7 @@ public final class Logger {
     }
 
     /**
-     * Sends an fatal message. This sends the message to the known logs, to the
+     * Sends a fatal message. This sends the message to the known logs, to the
      * DriverStation LCD screen and prints a stack trace for the error.
      *
      * <p> This method <b>QUITS</b> the entire program with an error code of
