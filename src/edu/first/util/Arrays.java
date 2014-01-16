@@ -388,7 +388,8 @@ public final class Arrays {
      * @return the array with everything copied
      */
     public static Object[] copy(Object[] src, Object[] dest) {
-        return com.sun.squawk.util.Arrays.copy(src, 0, dest, 0, src.length);
+        com.sun.squawk.util.Arrays.copy(src, 0, dest, 0, src.length);
+        return dest;
     }
 
     /**
@@ -508,7 +509,8 @@ public final class Arrays {
      * @return the array with everything copied
      */
     public static Object[] copy(Object[] src, int srcPos, Object[] dest, int destPos, int length) {
-        return com.sun.squawk.util.Arrays.copy(src, srcPos, dest, destPos, length);
+        com.sun.squawk.util.Arrays.copy(src, srcPos, dest, destPos, length);
+        return dest;
     }
 
     /**
