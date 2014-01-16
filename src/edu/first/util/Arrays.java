@@ -33,7 +33,10 @@ public final class Arrays {
      * larger than original array)
      */
     public static Object[] copyOf(Object[] o, int size) {
-        return copy(o, new Object[MathUtils.min(o.length, size)]);
+        size = MathUtils.min(o.length, size);
+        Object[] dest = new Object[size];
+        copy(o, 0, dest, 0, size);
+        return dest;
     }
 
     /**
