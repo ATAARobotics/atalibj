@@ -20,8 +20,8 @@ public interface Drivetrain extends Ports {
             = new edu.first.module.actuators.Drivetrain(frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive);
 
     Subsystem drivetrainSubsystem = new SubsystemBuilder()
+            .add(drivetrain)
             .add(frontLeftDrive).add(backLeftDrive)
             .add(frontRightDrive).add(backRightDrive)
-            .add(drivetrain)
             .toSubsystem();
 }
