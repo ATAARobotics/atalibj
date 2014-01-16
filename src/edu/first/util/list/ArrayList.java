@@ -8,11 +8,13 @@ import java.util.NoSuchElementException;
  * to growth and decline of elements. Holds references to a list of objects and
  * gives outside access to them.
  *
- * <p> This implementation is built to give a more robust and consistent list
- * than {@link edu.wpi.first.wpilibj.networktables2.util.List}. It provides all
+ * <p>
+ * This implementation is built to give a more robust and consistent list than
+ * {@link edu.wpi.first.wpilibj.networktables2.util.List}. It provides all
  * needed methods to add, remove and get elements from the array.
  *
- * <p> <i>*A small caveat - this implementation performs at 1-5% slower than the
+ * <p>
+ * <i>*A small caveat - this implementation performs at 1-5% slower than the
  * official ArrayList implementation on JDK7. The performance differences are so
  * minimal that you should not worry about them.</i>
  *
@@ -48,9 +50,7 @@ public final class ArrayList implements List {
     public ArrayList(Collection collection) {
         this.elementData = collection.toArray();
         this.size = elementData.length;
-        if (elementData.getClass() != Object[].class) {
-            elementData = Arrays.copyOf(elementData, size);
-        }
+        elementData = Arrays.copyOf(elementData, size);
     }
 
     /**
@@ -218,7 +218,8 @@ public final class ArrayList implements List {
     /**
      * {@inheritDoc}
      *
-     * <p> The returned array will be in the order of this list.
+     * <p>
+     * The returned array will be in the order of this list.
      */
     public Object[] toArray() {
         // array is guaranteed to be the size
