@@ -2,6 +2,7 @@ package edu.first.main;
 
 import ata2014.main.Drivetrain;
 import ata2014.main.Joysticks;
+import ata2014.main.Loader;
 import ata2014.main.Ports;
 
 /**
@@ -44,5 +45,5 @@ import ata2014.main.Ports;
  * @since May 07 13
  * @author Joel Gallant
  */
-public interface Constants extends Ports, Drivetrain, Joysticks {
+public interface Constants extends Ports, Drivetrain, Joysticks, Loader {
 }

@@ -1,8 +1,6 @@
 package ata2014.main;
 
 import edu.first.main.Constants;
-import edu.first.module.actuators.VictorModule;
-import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
 import edu.first.robot.IterativeRobotAdapter;
@@ -23,8 +21,8 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     private final Subsystem FULL_ROBOT = new SubsystemBuilder()
             .add(joysticks)
             .add(drivetrainSubsystem)
+            .add(loader)
             .toSubsystem();
-    private final VictorModule loadmoter = new VictorModule(5);
 
     public Robot() {
         super("2014 Robot");
@@ -53,8 +51,10 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
         joysticks.enable();
         drivetrainSubsystem.enable();
+        loader.enable();
 
         joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftY(), joystick1.getRightX()));
+        joystick1.addAxisBind(joystick1.getTrigger(), loaderMotor);
     }
 
     public void initDisabled() {
@@ -70,7 +70,6 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     }
 
     public void periodicTeleoperated() {
-        loadmoter.setRate(joystick1.getTriggerValue());
         joystick1.doBinds();
         joystick2.doBinds();
     }
