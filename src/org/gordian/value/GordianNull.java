@@ -1,4 +1,4 @@
-package org.gordian.value;
+ package org.gordian.value;
 
 import api.gordian.Class;
 import api.gordian.Object;

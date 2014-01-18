@@ -1,6 +1,7 @@
 package ata2014.main;
 
 import edu.first.main.Constants;
+import edu.first.module.actuators.VictorModule;
 import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
@@ -18,7 +19,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
             .add(frontRightDrive).add(backRightDrive)
             .add(drivetrain)
             .toSubsystem();
-
+    private final VictorModule loadmoter = new VictorModule(5);
     private final BindingJoystick.DualAxisBind drivingBind = new BindingJoystick.DualAxisBind(
             joystick1.getLeftY(), joystick1.getRightX()) {
                 public void doBind(double axis1, double axis2) {
@@ -28,6 +29,10 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
     public Robot() {
         super("2014 Robot");
+    }
+
+    public static int getBACK_LEFT_DRIVE() {
+        return BACK_LEFT_DRIVE;
     }
 
     public void init() {
@@ -51,6 +56,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     }
 
     public void periodicTeleoperated() {
+        loadmoter.setRate(joystick1.getTriggerValue());
         joystick1.doBinds();
         joystick2.doBinds();
     }
