@@ -1,8 +1,12 @@
 package ata2014.main;
 
 import edu.first.module.actuators.VictorModule;
+import edu.first.module.subsystems.Subsystem;
+import edu.first.module.subsystems.SubsystemBuilder;
 
 /**
+ * The entirety of the robot drivetrain. Includes motor controllers and the
+ * abstraction of driving.
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
@@ -14,4 +18,10 @@ public interface Drivetrain extends Ports {
             backRightDrive = new VictorModule(BACK_RIGHT_DRIVE);
     edu.first.module.actuators.Drivetrain drivetrain
             = new edu.first.module.actuators.Drivetrain(frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive);
+
+    Subsystem drivetrainSubsystem = new SubsystemBuilder()
+            .add(drivetrain)
+            .add(frontLeftDrive).add(backLeftDrive)
+            .add(frontRightDrive).add(backRightDrive)
+            .toSubsystem();
 }

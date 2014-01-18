@@ -33,7 +33,10 @@ public final class Arrays {
      * larger than original array)
      */
     public static Object[] copyOf(Object[] o, int size) {
-        return copy(o, new Object[MathUtils.min(o.length, size)]);
+        size = MathUtils.min(o.length, size);
+        Object[] dest = new Object[size];
+        copy(o, 0, dest, 0, size);
+        return dest;
     }
 
     /**
@@ -388,7 +391,8 @@ public final class Arrays {
      * @return the array with everything copied
      */
     public static Object[] copy(Object[] src, Object[] dest) {
-        return com.sun.squawk.util.Arrays.copy(src, 0, dest, 0, src.length);
+        com.sun.squawk.util.Arrays.copy(src, 0, dest, 0, src.length);
+        return dest;
     }
 
     /**
@@ -508,7 +512,8 @@ public final class Arrays {
      * @return the array with everything copied
      */
     public static Object[] copy(Object[] src, int srcPos, Object[] dest, int destPos, int length) {
-        return com.sun.squawk.util.Arrays.copy(src, srcPos, dest, destPos, length);
+        com.sun.squawk.util.Arrays.copy(src, srcPos, dest, destPos, length);
+        return dest;
     }
 
     /**
