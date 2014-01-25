@@ -1,3 +1,6 @@
+image.suite
+image.sym
+
 ### Java ###
 *.class
 
