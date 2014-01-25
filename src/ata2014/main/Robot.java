@@ -28,10 +28,6 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         super("2014 Robot");
     }
 
-    public static int getBACK_LEFT_DRIVE() {
-        return BACK_LEFT_DRIVE;
-    }
-
     public void init() {
         Logger.addLogToAll(new Logger.FileLog(new File("2014 Log File.txt")));
 
