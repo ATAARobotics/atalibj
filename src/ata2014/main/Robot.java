@@ -22,6 +22,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
             .add(joysticks)
             .add(drivetrainSubsystem)
             .add(loader)
+            .add(shooter)
             .toSubsystem();
 
     public Robot() {
@@ -50,7 +51,6 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         loader.enable();
 
         joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftY(), joystick1.getRightX()));
-        joystick1.addAxisBind(joystick1.getTrigger(), loaderMotor);
     }
 
     public void initDisabled() {

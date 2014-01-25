@@ -1,5 +1,6 @@
 package ata2014.main;
 
+import edu.first.module.actuators.DualActionSolenoidModule;
 import edu.first.module.actuators.VictorModule;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
@@ -18,6 +19,8 @@ public interface Drivetrain extends Ports {
             backRightDrive = new VictorModule(BACK_RIGHT_DRIVE);
     edu.first.module.actuators.Drivetrain drivetrain
             = new edu.first.module.actuators.Drivetrain(frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive);
+    DualActionSolenoidModule leftShifter = new DualActionSolenoidModule(LEFT_SHIFTER_IN, LEFT_SHIFTER_OUT);
+    DualActionSolenoidModule rightShifter = new DualActionSolenoidModule(RIGHT_SHIFTER_IN, RIGHT_SHIFTER_OUT);
 
     Subsystem drivetrainSubsystem = new SubsystemBuilder()
             .add(drivetrain)

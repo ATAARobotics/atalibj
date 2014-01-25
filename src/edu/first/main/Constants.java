@@ -4,6 +4,7 @@ import ata2014.main.Drivetrain;
 import ata2014.main.Joysticks;
 import ata2014.main.Loader;
 import ata2014.main.Ports;
+import ata2014.main.Shooter;
 
 /**
  * The central repository for all constant values. Values here are expected to
@@ -45,5 +46,5 @@ import ata2014.main.Ports;
  * @since May 07 13
  * @author Joel Gallant
  */
-public interface Constants extends Ports, Drivetrain, Joysticks, Loader {
+public interface Constants extends Ports, Drivetrain, Joysticks, Loader, Shooter {
 }
