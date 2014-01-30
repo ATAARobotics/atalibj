@@ -56,7 +56,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         drivetrainSubsystem.enable();
         loader.enable();
 
-        joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftY(), joystick1.getRightX()));
+        joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
         joystick2.addAxisBind(XboxController.TRIGGERS, loaderMotors);
         joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
     }
