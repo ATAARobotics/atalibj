@@ -22,18 +22,21 @@ public interface Ports {
         Left Loader (out) - 2
         Right Loader (in) - 3
         Right Loader (out) - 4
-        Left Shifter (in) - 5
-        Left Shifter (out) - 6
-        Right Shifter (in) - 7
-        Right Shifter (out) - 8
+        Shifter (in) - 5
+        Shifter (out) - 6
+    
+    Digital Input:
+        Left Encoder: 1, 2
+        Right Encoder: 3, 4
     
     */
 
     // Drivetrain
     int FRONT_LEFT_DRIVE = 1, FRONT_RIGHT_DRIVE = 2,
             BACK_LEFT_DRIVE = 3, BACK_RIGHT_DRIVE = 4;
-    int LEFT_SHIFTER_IN = 5, LEFT_SHIFTER_OUT = 6, 
-            RIGHT_SHIFTER_IN = 7, RIGHT_SHIFTER_OUT = 8;
+    int SHIFTER_IN = 5, SHIFTER_OUT = 6;
+    int LEFT_ENCODER_A = 1, LEFT_ENCODER_B = 2,
+            RIGHT_ENCODER_A = 3, RIGHT_ENCODER_B = 4;
     
     // Loader
     int LEFT_LOADER_MOTOR = 5, RIGHT_LOADER_MOTOR = 6;

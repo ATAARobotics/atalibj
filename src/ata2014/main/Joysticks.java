@@ -11,8 +11,10 @@ import edu.first.module.subsystems.SubsystemBuilder;
  */
 public interface Joysticks {
 
-    XboxController joystick1 = new XboxController(1),
-            joystick2 = new XboxController(2);
+    double DEADBAND = 0.17;
+    
+    XboxController joystick1 = new XboxController(1, DEADBAND),
+            joystick2 = new XboxController(2, DEADBAND);
 
     Subsystem joysticks = new SubsystemBuilder()
             .add(joystick1).add(joystick2)
