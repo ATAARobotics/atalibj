@@ -50,6 +50,7 @@ public final class DrivingPID extends Module.StandardModule {
     }
 
     protected void disableModule() {
+        speedBuffer.set(0);
         pid.disable();
     }
 
