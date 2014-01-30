@@ -1,5 +1,7 @@
 package edu.first.util.dashboard;
 
+import edu.first.identifiers.Input;
+import edu.first.identifiers.Output;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 
@@ -10,7 +12,7 @@ import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
  * @since June 23 13
  * @author Joel Gallant
  */
-public class NumberDashboard {
+public class NumberDashboard implements Input, Output {
 
     private final String key;
     private final double defaultValue;
