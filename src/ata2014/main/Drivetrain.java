@@ -24,8 +24,8 @@ public interface Drivetrain extends Ports {
             backRightDrive = new VictorModule(BACK_RIGHT_DRIVE);
     edu.first.module.actuators.Drivetrain drivetrain
             = new edu.first.module.actuators.Drivetrain(frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive);
-    EncoderModule leftEncoder = new EncoderModule(LEFT_ENCODER_A, LEFT_ENCODER_B),
-            rightEncoder = new EncoderModule(RIGHT_ENCODER_A, RIGHT_ENCODER_B);
+    EncoderModule leftEncoder = new EncoderModule(LEFT_ENCODER_A, LEFT_ENCODER_B, EncoderModule.InputType.RATE),
+            rightEncoder = new EncoderModule(RIGHT_ENCODER_A, RIGHT_ENCODER_B, EncoderModule.InputType.RATE);
     DrivingPID drivingPID = new DrivingPID(drivetrain, leftEncoder, rightEncoder, P, I, D, MAX_SPEED);
     DualActionSolenoidModule shifter = new DualActionSolenoidModule(SHIFTER_IN, SHIFTER_OUT);
 
