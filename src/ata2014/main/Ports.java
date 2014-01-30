@@ -29,6 +29,9 @@ public interface Ports {
         Left Encoder: 1, 2
         Right Encoder: 3, 4
     
+    Analog Input:
+        Shooter Potentiometer: 1
+    
     */
 
     // Drivetrain
@@ -44,6 +47,7 @@ public interface Ports {
             RIGHT_LOADER_PISTON_IN = 3, RIGHT_LOADER_PISTON_OUT = 4;
     
     // Winch
+    int SHOOTER_POSITION = 1;
     int WINCH_MOTOR = 7;
     int WINCH_RELEASE = 3;
 }

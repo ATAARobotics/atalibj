@@ -1,5 +1,6 @@
 package ata2014.main;
 
+import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
 import edu.first.identifiers.OutputGroup;
 import edu.first.main.Constants;
@@ -9,6 +10,7 @@ import edu.first.module.subsystems.SubsystemBuilder;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.first.util.File;
 import edu.first.util.TextFiles;
+import edu.first.util.dashboard.NumberDashboard;
 import edu.first.util.log.Logger;
 import org.gordian.scope.GordianScope;
 
@@ -21,6 +23,7 @@ import org.gordian.scope.GordianScope;
 public final class Robot extends IterativeRobotAdapter implements Constants {
 
     private final File AUTONOMOUS = new File("2014 Autonomous.txt");
+    private final NumberDashboard winchShootingPosition = new NumberDashboard("WinchShootingPositition", 0);
     private final Subsystem FULL_ROBOT = new SubsystemBuilder()
             .add(joysticks)
             .add(drivetrainSubsystem)
@@ -55,6 +58,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
         joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftY(), joystick1.getRightX()));
         joystick2.addAxisBind(XboxController.TRIGGERS, loaderMotors);
+        joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
     }
 
     public void initDisabled() {
