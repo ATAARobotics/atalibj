@@ -1,6 +1,9 @@
 package ata2014.main;
 
+import edu.first.identifiers.Output;
+import edu.first.identifiers.OutputGroup;
 import edu.first.main.Constants;
+import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
 import edu.first.robot.IterativeRobotAdapter;
@@ -51,6 +54,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         loader.enable();
 
         joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftY(), joystick1.getRightX()));
+        joystick2.addAxisBind(XboxController.TRIGGERS, loaderMotors);
     }
 
     public void initDisabled() {
