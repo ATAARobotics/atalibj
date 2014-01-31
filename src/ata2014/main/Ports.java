@@ -9,31 +9,31 @@ public interface Ports {
     /*
     
      Speed Controllers:
-     Front Left Drive - 1
-     Front Right Drive - 2
-     Back Left Drive - 3
-     Back Right Drive - 4
-     Left Loader - 5
-     Right Loader - 6
-     Winch Motor - 7
+     /   Front Left Drive - 1
+     /   Front Right Drive - 2
+     /   Back Left Drive - 3
+     /   Back Right Drive - 4
+     /   Left Loader - 5
+     /   Right Loader - 6
+     /   Winch Motor - 7
     
      Solenoids:
-     Left Loader (in) - 1
-     Left Loader (out) - 2
-     Right Loader (in) - 3
-     Right Loader (out) - 4
-     Shifter (in) - 5
-     Shifter (out) - 6
+     /   Left Loader (in) - 1
+     /   Left Loader (out) - 2
+     /   Right Loader (in) - 3
+     /   Right Loader (out) - 4
+     /   Shifter (in) - 5
+     /   Shifter (out) - 6
     
      Digital Input:
-     Left Encoder: 1, 2
-     Right Encoder: 3, 4
+     /   Left Encoder: 1, 2
+     /   Right Encoder: 3, 4
     
      Analog Input:
-     Shooter Potentiometer: 1
+     /   Shooter Potentiometer: 1
     
      */
-
+//
     // Drivetrain
     int FRONT_LEFT_DRIVE = 1, FRONT_RIGHT_DRIVE = 2,
             BACK_LEFT_DRIVE = 3, BACK_RIGHT_DRIVE = 4;
