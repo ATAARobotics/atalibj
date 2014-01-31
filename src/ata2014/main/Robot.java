@@ -4,6 +4,7 @@ import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Output;
 import edu.first.identifiers.OutputGroup;
 import edu.first.main.Constants;
+import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
@@ -57,6 +58,18 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         loader.enable();
 
         joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
+        joystick1.addWhenPressed(XboxController.A, new Runnable() {
+            public void run() {
+                leftArmReset.enable();
+                rightArmReset.enable();
+            }
+        });
+        joystick1.addWhenReleased(XboxController.A, new Runnable() {
+            public void run() {
+                leftArmReset.disable();
+                rightArmReset.disable();
+            }
+        });
         joystick2.addAxisBind(XboxController.TRIGGERS, loaderMotors);
         joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
     }
