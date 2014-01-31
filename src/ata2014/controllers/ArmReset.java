@@ -1,23 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ata2014.controllers;
 
+import edu.first.identifiers.Position;
 import edu.first.module.actuators.VictorModule;
-import edu.first.module.sensors.DigitalInput;
+import edu.first.module.controllers.Controller;
+import edu.first.module.controllers.Controller.LoopType;
 
 /**
+ * Controller to bring arms back until they hit limit switches. This ensures
+ * that the arms are parallel.
  *
  * @author Skyler
  */
-public final class ArmReset extends edu.first.module.controllers.Controller {
+public final class ArmReset extends Controller {
 
-    private final DigitalInput armSensor;
+    private final Position armSensor;
     private final VictorModule armMotor;
 
-    public ArmReset(DigitalInput armSensor, VictorModule armMotor) {
+    public ArmReset(Position armSensor, VictorModule armMotor) {
         super(0.02, LoopType.FIXED_DELAY);
         this.armSensor = armSensor;
         this.armMotor = armMotor;
