@@ -1,10 +1,8 @@
 package ata2014.main;
 
+import com.sun.squawk.microedition.io.FileConnection;
 import edu.first.commands.common.SetOutput;
-import edu.first.identifiers.Output;
-import edu.first.identifiers.OutputGroup;
 import edu.first.main.Constants;
-import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
@@ -13,6 +11,8 @@ import edu.first.util.File;
 import edu.first.util.TextFiles;
 import edu.first.util.dashboard.NumberDashboard;
 import edu.first.util.log.Logger;
+import java.io.IOException;
+import javax.microedition.io.Connector;
 import org.gordian.scope.GordianScope;
 
 /**
@@ -37,7 +37,20 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     }
 
     public void init() {
-        Logger.addLogToAll(new Logger.FileLog(new File("2014 Log File.txt")));
+        // incrementing log file management - new log file every reboot
+        for (int x = 1; true; x++) {
+            File file = new File("Log " + x + ".txt");
+            try {
+                FileConnection log = (FileConnection) Connector.open(file.getFullPath(), Connector.READ);
+                if (!log.exists()) {
+                    Logger.addLogToAll(new Logger.FileLog(file));
+                    break;
+                }
+                log.close();
+            } catch (IOException e) {
+                Logger.getLogger(this).error("Creating a log file failed - see stack trace", e);
+            }
+        }
 
         Logger.getLogger(this).warn("Robot is initializing");
         FULL_ROBOT.init();
