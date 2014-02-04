@@ -26,6 +26,7 @@ public interface Loader extends Ports {
             rightArmReset = new ArmReset(rightLoaderSensor, rightLoaderMotor);
 
     Subsystem loader = new SubsystemBuilder()
+            .add(leftLoaderSensor).add(rightLoaderSensor)
             .add(leftLoaderMotor).add(rightLoaderMotor)
             .add(leftLoaderPiston).add(rightLoaderPiston)
             .toSubsystem();
