@@ -1,7 +1,5 @@
 package ata2014.main;
 
-import ata2014.subsystems.Preferences;
-
 /**
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
