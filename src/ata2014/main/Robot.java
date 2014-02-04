@@ -7,6 +7,7 @@ import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
 import edu.first.robot.IterativeRobotAdapter;
+import edu.first.util.DriverstationInfo;
 import edu.first.util.File;
 import edu.first.util.TextFiles;
 import edu.first.util.dashboard.NumberDashboard;
@@ -14,6 +15,7 @@ import edu.first.util.log.Logger;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 import org.gordian.scope.GordianScope;
+import org.gordian.value.GordianNumber;
 
 /**
  * Team 4334's main robot code starting point. Everything that happens is
@@ -24,7 +26,8 @@ import org.gordian.scope.GordianScope;
 public final class Robot extends IterativeRobotAdapter implements Constants {
 
     private final File AUTONOMOUS = new File("2014 Autonomous.txt");
-    private final NumberDashboard winchShootingPosition = new NumberDashboard("WinchShootingPositition", 0);
+    private final NumberDashboard winchShootingPosition = new NumberDashboard("WinchShootingPositition",
+            ((GordianNumber) Preferences.preferences.get("WinchShootingPosition")).getValue());
     private final Subsystem FULL_ROBOT = new SubsystemBuilder()
             .add(joysticks)
             .add(drivetrainSubsystem)
@@ -37,6 +40,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     }
 
     public void init() {
+        Logger.getLogger(this).warn("Robot is initializing");
         // incrementing log file management - new log file every reboot
         for (int x = 1; true; x++) {
             File file = new File("Log " + x + ".txt");
@@ -44,15 +48,16 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
                 FileConnection log = (FileConnection) Connector.open(file.getFullPath(), Connector.READ);
                 if (!log.exists()) {
                     Logger.addLogToAll(new Logger.FileLog(file));
+                    log.close();
                     break;
                 }
+
                 log.close();
             } catch (IOException e) {
                 Logger.getLogger(this).error("Creating a log file failed - see stack trace", e);
             }
         }
 
-        Logger.getLogger(this).warn("Robot is initializing");
         FULL_ROBOT.init();
         Logger.getLogger(this).warn("Robot is ready");
     }
@@ -65,6 +70,10 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
     public void initTeleoperated() {
         Logger.getLogger(this).info("Teleoperated starting...");
+
+        if (DriverstationInfo.getBatteryVoltage() < 12) {
+            Logger.getLogger(DriverstationInfo.class).warn("Battery bellow 12V - please replace");
+        }
 
         joysticks.enable();
         drivetrainSubsystem.enable();

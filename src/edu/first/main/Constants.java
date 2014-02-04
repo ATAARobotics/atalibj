@@ -4,7 +4,9 @@ import ata2014.main.Drivetrain;
 import ata2014.main.Joysticks;
 import ata2014.main.Loader;
 import ata2014.main.Ports;
+import ata2014.main.Preferences;
 import ata2014.main.Shooter;
+import edu.first.util.File;
 
 /**
  * The central repository for all constant values. Values here are expected to
