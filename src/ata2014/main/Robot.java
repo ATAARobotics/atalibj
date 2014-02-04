@@ -69,7 +69,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
     public void initAutonomous() {
         Logger.getLogger(this).info("Autonomous starting...");
-        GordianScope autonomous = new GordianScope();
+        Autonomous autonomous = new Autonomous();
         autonomous.run(TextFiles.getTextFromFile(AUTONOMOUS));
     }
 
