@@ -16,8 +16,10 @@ import edu.first.module.subsystems.SubsystemBuilder;
  */
 public interface Drivetrain extends Ports {
 
-    double MAX_SPEED = 10000;
-    double P = 1, I = 0, D = 0;
+    double MAX_SPEED = Preferences.getInstance().getDouble("MAX_SPEED", 10000);
+    double P = Preferences.getInstance().getDouble("Driving_P", 1),
+            I = Preferences.getInstance().getDouble("Driving_I", 0),
+            D = Preferences.getInstance().getDouble("Driving_D", 0);
 
     VictorModule frontLeftDrive = new VictorModule(FRONT_LEFT_DRIVE),
             backLeftDrive = new VictorModule(BACK_LEFT_DRIVE),
@@ -27,7 +29,6 @@ public interface Drivetrain extends Ports {
             = new edu.first.module.actuators.Drivetrain(frontLeftDrive, backLeftDrive, frontRightDrive, backRightDrive);
     EncoderModule leftEncoder = new EncoderModule(LEFT_ENCODER_A, LEFT_ENCODER_B, EncoderModule.InputType.RATE),
             rightEncoder = new EncoderModule(RIGHT_ENCODER_A, RIGHT_ENCODER_B, EncoderModule.InputType.RATE);
-    DrivingPID drivingPID = new DrivingPID(drivetrain, leftEncoder, rightEncoder, P, I, D, MAX_SPEED);
     DualActionSolenoidModule shifter = new DualActionSolenoidModule(SHIFTER_IN, SHIFTER_OUT);
 
     Subsystem drivetrainSubsystem = new SubsystemBuilder()
@@ -35,7 +36,8 @@ public interface Drivetrain extends Ports {
             .add(frontLeftDrive).add(backLeftDrive)
             .add(frontRightDrive).add(backRightDrive)
             .add(leftEncoder).add(rightEncoder)
-            .add(drivingPID)
             .add(shifter)
             .toSubsystem();
+
+    DrivingPID drivingPID = new DrivingPID(drivetrain, leftEncoder, rightEncoder, P, I, D, MAX_SPEED);
 }

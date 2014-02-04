@@ -1,9 +1,12 @@
 package ata2014.main;
 
+import ata2014.commands.DisableModule;
+import ata2014.commands.EnableModule;
 import ata2014.subsystems.Preferences;
 import com.sun.squawk.microedition.io.FileConnection;
 import edu.first.commands.common.SetOutput;
 import edu.first.main.Constants;
+import edu.first.module.Module;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
@@ -33,6 +36,9 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
             .add(drivetrainSubsystem)
             .add(loader)
             .add(shooter)
+            
+            .add(drivingPID)
+            .add(leftArmReset).add(rightArmReset)
             .toSubsystem();
 
     public Robot() {
@@ -78,21 +84,19 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         joysticks.enable();
         drivetrainSubsystem.enable();
         loader.enable();
+        shooter.enable();
 
+        // Driving
         joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
-        joystick1.addWhenPressed(XboxController.A, new Runnable() {
-            public void run() {
-                leftArmReset.enable();
-                rightArmReset.enable();
-            }
-        });
-        joystick1.addWhenReleased(XboxController.A, new Runnable() {
-            public void run() {
-                leftArmReset.disable();
-                rightArmReset.disable();
-            }
-        });
+        
+        // Reset the arms
+        joystick1.addWhenPressed(XboxController.A, new EnableModule(new Module[] {leftArmReset, rightArmReset}));
+        joystick1.addWhenReleased(XboxController.A, new DisableModule(new Module[] {leftArmReset, rightArmReset}));
+        
+        // Move loader
         joystick2.addAxisBind(XboxController.TRIGGERS, loaderMotors);
+        
+        // Bring winch back
         joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
     }
 
