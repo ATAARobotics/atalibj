@@ -15,7 +15,6 @@ import edu.first.util.log.Logger;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 import org.gordian.scope.GordianScope;
-import org.gordian.value.GordianNumber;
 
 /**
  * Team 4334's main robot code starting point. Everything that happens is
@@ -27,7 +26,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
     private final File AUTONOMOUS = new File("2014 Autonomous.txt");
     private final NumberDashboard winchShootingPosition = new NumberDashboard("WinchShootingPositition",
-            ((GordianNumber) Preferences.preferences.get("WinchShootingPosition")).getValue());
+            Preferences.getInstance().getDouble("WinchShootingPosition", 0));
     private final Subsystem FULL_ROBOT = new SubsystemBuilder()
             .add(joysticks)
             .add(drivetrainSubsystem)
