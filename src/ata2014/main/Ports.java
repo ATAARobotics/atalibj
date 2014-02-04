@@ -5,39 +5,36 @@ package ata2014.main;
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
 public interface Ports {
-    /*
-    
-     *****     DEFAULTS     *****
-    
-     Speed Controllers:
-     /   Front Left Drive - 1
-     /   Front Right Drive - 2
-     /   Back Left Drive - 3
-     /   Back Right Drive - 4
-     /   Left Loader - 5
-     /   Right Loader - 6
-     /   Winch Motor - 7
-    
-     Solenoids:
-     /   Left Loader (in) - 1
-     /   Left Loader (out) - 2
-     /   Right Loader (in) - 3
-     /   Right Loader (out) - 4
-     /   Shifter (in) - 5
-     /   Shifter (out) - 6
-     /   Winch Release - 7
-    
-     Digital Input:
-     /   Left Encoder: 1, 2
-     /   Right Encoder: 3, 4
-     /   Left Loader Switch: 5
-     /   Right Loader Switch: 6
-    
-     Analog Input:
-     /   Shooter Potentiometer: 1
-    
-     */
 
+//
+// *****     DEFAULTS     *****
+//
+//     Speed Controllers:
+    //   Front Left Drive - 1
+    //   Front Right Drive - 2
+    //   Back Left Drive - 3
+    //   Back Right Drive - 4
+    //   Left Loader - 5
+    //   Right Loader - 6
+    //   Winch Motor - 7
+//     Solenoids:
+    //   Left Loader (in) - 1
+    //   Left Loader (out) - 2
+    //   Right Loader (in) - 3
+    //   Right Loader (out) - 4
+    //   Shifter (in) - 5
+    //   Shifter (out) - 6
+    //   Winch Release - 7
+//     Digital Input:
+    //   Left Encoder: 1, 2
+    //   Right Encoder: 3, 4
+    //   Left Loader Switch: 5
+    //   Right Loader Switch: 6
+//     Analog Input:
+    //   Shooter Potentiometer: 1
+//
+//
+//
     // Drivetrain
     int FRONT_LEFT_DRIVE = Preferences.getInstance().getInt("FRONT_LEFT_DRIVE", 1),
             FRONT_RIGHT_DRIVE = Preferences.getInstance().getInt("FRONT_RIGHT_DRIVE", 2),
