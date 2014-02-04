@@ -1,4 +1,4 @@
-package ata2014.main;
+package ata2014.subsystems;
 
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;

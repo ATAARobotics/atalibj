@@ -1,11 +1,11 @@
 package edu.first.main;
 
-import ata2014.main.Drivetrain;
-import ata2014.main.Joysticks;
-import ata2014.main.Loader;
+import ata2014.subsystems.Drivetrain;
+import ata2014.subsystems.Joysticks;
+import ata2014.subsystems.Loader;
 import ata2014.main.Ports;
-import ata2014.main.Preferences;
-import ata2014.main.Shooter;
+import ata2014.subsystems.Preferences;
+import ata2014.subsystems.Shooter;
 import edu.first.util.File;
 
 /**

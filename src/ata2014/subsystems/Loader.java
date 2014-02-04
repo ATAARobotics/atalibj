@@ -1,6 +1,7 @@
-package ata2014.main;
+package ata2014.subsystems;
 
 import ata2014.controllers.ArmReset;
+import ata2014.main.Ports;
 import edu.first.module.actuators.DualActionSolenoidModule;
 import edu.first.module.actuators.SpeedController;
 import edu.first.module.actuators.SpeedControllerGroup;

@@ -1,5 +1,6 @@
-package ata2014.main;
+package ata2014.subsystems;
 
+import ata2014.main.Ports;
 import edu.first.module.actuators.SolenoidModule;
 import edu.first.module.actuators.TalonModule;
 import edu.first.module.controllers.BangBangController;
