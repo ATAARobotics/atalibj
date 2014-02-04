@@ -4,6 +4,7 @@ import ata2014.commands.DisableModule;
 import ata2014.commands.EnableModule;
 import com.sun.squawk.microedition.io.FileConnection;
 import edu.first.commands.common.SetOutput;
+import edu.first.identifiers.Function;
 import edu.first.main.Constants;
 import edu.first.module.Module;
 import edu.first.module.joysticks.XboxController;
@@ -12,12 +13,12 @@ import edu.first.module.subsystems.SubsystemBuilder;
 import edu.first.robot.IterativeRobotAdapter;
 import edu.first.util.DriverstationInfo;
 import edu.first.util.File;
+import edu.first.util.MathUtils;
 import edu.first.util.TextFiles;
 import edu.first.util.dashboard.NumberDashboard;
 import edu.first.util.log.Logger;
 import java.io.IOException;
 import javax.microedition.io.Connector;
-import org.gordian.scope.GordianScope;
 
 /**
  * Team 4334's main robot code starting point. Everything that happens is
@@ -30,12 +31,12 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     private final File AUTONOMOUS = new File("2014 Autonomous.txt");
     private final NumberDashboard winchShootingPosition = new NumberDashboard("WinchShootingPositition",
             Preferences.getInstance().getDouble("WinchShootingPosition", 0));
+    private final double drivingSensitivity = Preferences.getInstance().getDouble("DrivingSensitivity", 0.5);
     private final Subsystem FULL_ROBOT = new SubsystemBuilder()
             .add(joysticks)
             .add(drivetrainSubsystem)
             .add(loader)
             .add(shooter)
-            
             .add(drivingPID)
             .add(leftArmReset).add(rightArmReset)
             .toSubsystem();
@@ -63,6 +64,13 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
             }
         }
 
+        // Apply function to driving algorithm
+        joystick1.changeAxis(XboxController.LEFT_FROM_MIDDLE, new Function() {
+            public double F(double in) {
+                return drivingSensitivity * (MathUtils.pow(in, 3)) + (1 - drivingSensitivity) * in;
+            }
+        });
+
         FULL_ROBOT.init();
         Logger.getLogger(this).warn("Robot is ready");
     }
@@ -87,14 +95,14 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
         // Driving
         joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
-        
+
         // Reset the arms
-        joystick1.addWhenPressed(XboxController.A, new EnableModule(new Module[] {leftArmReset, rightArmReset}));
-        joystick1.addWhenReleased(XboxController.A, new DisableModule(new Module[] {leftArmReset, rightArmReset}));
-        
+        joystick1.addWhenPressed(XboxController.A, new EnableModule(new Module[]{leftArmReset, rightArmReset}));
+        joystick1.addWhenReleased(XboxController.A, new DisableModule(new Module[]{leftArmReset, rightArmReset}));
+
         // Move loader
         joystick2.addAxisBind(XboxController.TRIGGERS, loaderMotors);
-        
+
         // Bring winch back
         joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
     }
