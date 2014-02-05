@@ -81,6 +81,7 @@ public final class Logger {
         while (e.hasMoreElements()) {
             ((Logger) e.nextElement()).addLog(log);
         }
+        DEFAULT_LOGS.add(log);
     }
 
     /**

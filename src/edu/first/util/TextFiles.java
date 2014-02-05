@@ -49,7 +49,7 @@ public final class TextFiles {
         FileConnection fileCon = null;
         DataInputStream stream = null;
         try {
-            fileCon = (FileConnection) Connector.open(file.getFullPath(), Connector.READ);
+            fileCon = (FileConnection) Connector.open(file.getFullPath(), Connector.READ_WRITE);
             // Makes sure file exists so it doesn't try sneaky things
             if (!fileCon.exists()) {
                 throw new IOException(file + " does not exist.");
@@ -59,7 +59,7 @@ public final class TextFiles {
                 buf.append(new String(buffer));
             }
         } catch (IOException ex) {
-            Logger.getLogger(TextFiles.class).error("File could not be read", ex);
+            Logger.getLogger(TextFiles.class).error("File could not be read (" + file + ")", ex);
             // This is almost always a problem with files and not IO problems
             // User should not have to deal with it
             return null;
@@ -93,7 +93,7 @@ public final class TextFiles {
         DataOutputStream stream = null;
         BufferedWriter writer = null;
         try {
-            fileCon = (FileConnection) Connector.open(file.getFullPath(), Connector.WRITE);
+            fileCon = (FileConnection) Connector.open(file.getFullPath(), Connector.READ_WRITE);
             fileCon.create();
             stream = fileCon.openDataOutputStream();
 
