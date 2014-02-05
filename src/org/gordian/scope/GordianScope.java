@@ -272,6 +272,10 @@ public class GordianScope implements Scope {
         s = Strings.replaceAll(s, '{', "{;");
         s = Strings.replaceAll(s, '}', ";}");
         
+        if (!Strings.contains(s, ";")) {
+            s = s + ';';
+        }
+        
         while (Strings.contains(s, "#")) {
             String toRemove = s.substring(s.indexOf('#'), (s.substring(s.indexOf('#'))).indexOf(';') + s.indexOf('#'));
             s = Strings.replace(s, toRemove, "");
