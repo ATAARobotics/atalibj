@@ -22,20 +22,15 @@ public final class Arrays {
     }
 
     /**
-     * Returns an array that contains elements from the {@code o} array. Its
-     * size will either be {@code size} or the size of the given array,
-     * depending on which is smaller.
+     * Returns an array that contains elements from the {@code o} array.
      *
      * @param o array with elements to copy
-     * @param size size to use (provided it is equal to or smaller than the
-     * length of {@code o})
-     * @return a copy of the array with a minimum size (size will never be
-     * larger than original array)
+     * @param size size to use
+     * @return a copy of the array with the size
      */
     public static Object[] copyOf(Object[] o, int size) {
-        size = MathUtils.min(o.length, size);
         Object[] dest = new Object[size];
-        copy(o, 0, dest, 0, size);
+        copy(o, 0, dest, 0, MathUtils.min(size, o.length));
         return dest;
     }
 
