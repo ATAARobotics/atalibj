@@ -16,6 +16,7 @@ import edu.first.util.File;
 import edu.first.util.MathUtils;
 import edu.first.util.TextFiles;
 import edu.first.util.dashboard.NumberDashboard;
+import edu.first.util.list.ArrayList;
 import edu.first.util.log.Logger;
 import java.io.IOException;
 import javax.microedition.io.Connector;
@@ -51,10 +52,10 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         for (int x = 1; true; x++) {
             File file = new File("Log " + x + ".txt");
             try {
-                FileConnection log = (FileConnection) Connector.open(file.getFullPath(), Connector.READ);
+                FileConnection log = (FileConnection) Connector.open(file.getFullPath(), Connector.READ_WRITE);
                 if (!log.exists()) {
+                    TextFiles.writeAsFile(file, "LOG FILE\n");
                     Logger.addLogToAll(new Logger.FileLog(file));
-                    log.close();
                     break;
                 }
 

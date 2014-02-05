@@ -4,7 +4,9 @@ import api.gordian.storage.InternalNotFoundException;
 import api.gordian.storage.Variables;
 import edu.first.util.File;
 import edu.first.util.TextFiles;
+import edu.first.util.log.Logger;
 import org.gordian.scope.GordianScope;
+import org.gordian.storage.GordianVariables;
 import org.gordian.value.GordianBoolean;
 import org.gordian.value.GordianNumber;
 import org.gordian.value.GordianString;
@@ -24,8 +26,14 @@ public class Preferences {
 
     private Preferences(File file) {
         GordianScope gordian = new GordianScope();
-        gordian.run(TextFiles.getTextFromFile(file));
-        variables = gordian.variables();
+        String contents = TextFiles.getTextFromFile(file);
+        if (contents != null) {
+            gordian.run(contents);
+            variables = gordian.variables();
+        } else {
+            variables = new GordianVariables(true);
+            Logger.getLogger(this).warn("Preferences file was not found / read from");
+        }
     }
 
     public int getInt(String key, int backup) {
