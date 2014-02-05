@@ -5,7 +5,6 @@ import edu.first.util.DriverstationInfo;
 import edu.first.util.Enum;
 import edu.first.util.File;
 import edu.first.util.TextFiles;
-import edu.first.util.list.ArrayList;
 import edu.first.util.list.Iterator;
 import edu.first.util.list.List;
 import edu.first.util.list.SafeArrayList;
@@ -81,6 +80,7 @@ public final class Logger {
         while (e.hasMoreElements()) {
             ((Logger) e.nextElement()).addLog(log);
         }
+        DEFAULT_LOGS.add(log);
     }
 
     /**
