@@ -32,7 +32,8 @@ public class Preferences {
             variables = gordian.variables();
         } else {
             variables = new GordianVariables(true);
-            Logger.getLogger(this).warn("Preferences file was not found / read from");
+            TextFiles.writeAsFile(file, "# 2014 Preferences File");
+            Logger.getLogger(this).warn("Preferences file was not found / read from. Created one for you.");
         }
     }
 
