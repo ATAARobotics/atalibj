@@ -1,12 +1,17 @@
 package ata2014.main;
 
+import ata2014.commands.AddAxisBind;
 import ata2014.commands.DisableModule;
 import ata2014.commands.EnableModule;
+import ata2014.commands.RemoveAxisBind;
 import com.sun.squawk.microedition.io.FileConnection;
+import edu.first.command.Command;
 import edu.first.commands.common.SetOutput;
+import edu.first.commands.common.SetSolenoid;
 import edu.first.identifiers.Function;
 import edu.first.main.Constants;
 import edu.first.module.Module;
+import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
@@ -16,7 +21,6 @@ import edu.first.util.File;
 import edu.first.util.MathUtils;
 import edu.first.util.TextFiles;
 import edu.first.util.dashboard.NumberDashboard;
-import edu.first.util.list.ArrayList;
 import edu.first.util.log.Logger;
 import java.io.IOException;
 import javax.microedition.io.Connector;
@@ -32,6 +36,8 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     private final File AUTONOMOUS = new File("2014 Autonomous.txt");
     private final NumberDashboard winchShootingPosition = new NumberDashboard("WinchShootingPositition",
             Preferences.getInstance().getDouble("WinchShootingPosition", 0));
+    private final NumberDashboard winchNeutralPosition = new NumberDashboard("WinchNeutralPositition",
+            Preferences.getInstance().getDouble("WinchNeutralPosition", 5));
     private final double drivingSensitivity = Preferences.getInstance().getDouble("DrivingSensitivity", 0.5);
     private final Subsystem FULL_ROBOT = new SubsystemBuilder()
             .add(joysticks)
@@ -101,11 +107,25 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         joystick1.addWhenPressed(XboxController.A, new EnableModule(new Module[]{leftArmReset, rightArmReset}));
         joystick1.addWhenReleased(XboxController.A, new DisableModule(new Module[]{leftArmReset, rightArmReset}));
 
+        // Shoot
+        joystick1.addWhenPressed(XboxController.A, new SetSolenoid(winchRelease, true));
+        joystick1.addWhenReleased(XboxController.A, new SetSolenoid(winchRelease, false));
+        // after shooting, default to neutral position
+        joystick1.addWhenReleased(XboxController.A, new SetOutput(winchController, winchNeutralPosition));
+
         // Move loader
         joystick2.addAxisBind(XboxController.TRIGGERS, loaderMotors);
 
         // Bring winch back
         joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
+
+        // Turn on manual winch control
+        final BindingJoystick.AxisBind winchManual = new BindingJoystick.AxisBind(joystick2.getRightY(), winchMotor);
+        joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddAxisBind(joystick2, winchManual));
+        joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new DisableModule(winchController));
+        // Turn off manual winch control
+        joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new RemoveAxisBind(joystick2, winchManual));
+        joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new EnableModule(winchController));
     }
 
     public void initDisabled() {
