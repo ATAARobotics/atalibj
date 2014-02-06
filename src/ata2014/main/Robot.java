@@ -4,10 +4,12 @@ import ata2014.commands.AddAxisBind;
 import ata2014.commands.DisableModule;
 import ata2014.commands.EnableModule;
 import ata2014.commands.RemoveAxisBind;
+import ata2014.main.identifiers.OneWayMotor;
 import com.sun.squawk.microedition.io.FileConnection;
 import edu.first.commands.common.SetOutput;
 import edu.first.commands.common.SetSolenoid;
 import edu.first.identifiers.Function;
+import edu.first.identifiers.TransformedOutput;
 import edu.first.main.Constants;
 import edu.first.module.Module;
 import edu.first.module.joysticks.BindingJoystick;
@@ -119,7 +121,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
 
         // Turn on manual winch control
-        final BindingJoystick.AxisBind winchManual = new BindingJoystick.AxisBind(joystick2.getRightY(), winchMotor);
+        final BindingJoystick.AxisBind winchManual = new BindingJoystick.AxisBind(joystick2.getRightY(), new TransformedOutput(winchMotor, new OneWayMotor()));
         joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new DisableModule(winchController));
         joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddAxisBind(joystick2, winchManual));
         // Turn off manual winch control
