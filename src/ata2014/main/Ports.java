@@ -10,13 +10,11 @@ public interface Ports {
 // *****     DEFAULTS     *****
 //
 //     Speed Controllers:
-    //   Front Left Drive - 1
-    //   Front Right Drive - 2
-    //   Back Left Drive - 3
-    //   Back Right Drive - 4
-    //   Left Loader - 5
-    //   Right Loader - 6
-    //   Winch Motor - 7
+    //   Left Drive - 1, 2, 3
+    //   Right Drive - 4, 5, 6
+    //   Left Loader - 7
+    //   Right Loader - 8
+    //   Winch Motor - 9
 //     Solenoids:
     //   Left Loader (in) - 1
     //   Left Loader (out) - 2
@@ -36,10 +34,12 @@ public interface Ports {
 //
 //
     // Drivetrain
-    int FRONT_LEFT_DRIVE = Preferences.getInstance().getInt("FRONT_LEFT_DRIVE", 1),
-            FRONT_RIGHT_DRIVE = Preferences.getInstance().getInt("FRONT_RIGHT_DRIVE", 2),
-            BACK_LEFT_DRIVE = Preferences.getInstance().getInt("BACK_LEFT_DRIVE", 3),
-            BACK_RIGHT_DRIVE = Preferences.getInstance().getInt("BACK_RIGHT_DRIVE", 4);
+    int LEFT_DRIVE_1 = Preferences.getInstance().getInt("LEFT_DRIVE_1", 1),
+            LEFT_DRIVE_2 = Preferences.getInstance().getInt("LEFT_DRIVE_2", 2),
+            LEFT_DRIVE_3 = Preferences.getInstance().getInt("LEFT_DRIVE_3", 3),
+            RIGHT_DRIVE_1 = Preferences.getInstance().getInt("RIGHT_DRIVE_1", 4),
+            RIGHT_DRIVE_2 = Preferences.getInstance().getInt("RIGHT_DRIVE_2", 5),
+            RIGHT_DRIVE_3 = Preferences.getInstance().getInt("RIGHT_DRIVE_3", 6);
     int SHIFTER_IN = Preferences.getInstance().getInt("SHIFTER_IN", 5),
             SHIFTER_OUT = Preferences.getInstance().getInt("SHIFTER_OUT", 6);
     int LEFT_ENCODER_A = Preferences.getInstance().getInt("LEFT_ENCODER_A", 1),

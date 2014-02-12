@@ -1,5 +1,7 @@
 package edu.first.module.actuators;
 
+import edu.first.lang.OutOfSyncException;
+import edu.first.module.Module;
 import edu.first.module.subsystems.Subsystem;
 
 /**
