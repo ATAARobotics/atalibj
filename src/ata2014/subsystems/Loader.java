@@ -2,6 +2,7 @@ package ata2014.subsystems;
 
 import ata2014.controllers.ArmReset;
 import ata2014.main.Ports;
+import ata2014.modules.InversedVictor;
 import edu.first.module.actuators.DualActionSolenoidModule;
 import edu.first.module.actuators.SpeedController;
 import edu.first.module.actuators.SpeedControllerGroup;
@@ -18,7 +19,7 @@ public interface Loader extends Ports {
 
     DigitalInput leftLoaderSensor = new DigitalInput(LEFT_LOADER_SENSOR),
             rightLoaderSensor = new DigitalInput(RIGHT_LOADER_SENSOR);
-    VictorModule leftLoaderMotor = new VictorModule(LEFT_LOADER_MOTOR),
+    VictorModule leftLoaderMotor = new InversedVictor(LEFT_LOADER_MOTOR),
             rightLoaderMotor = new VictorModule(RIGHT_LOADER_MOTOR);
     SpeedControllerGroup loaderMotors = new SpeedControllerGroup(new SpeedController[]{leftLoaderMotor, rightLoaderMotor});
     DualActionSolenoidModule leftLoaderPiston = new DualActionSolenoidModule(LEFT_LOADER_PISTON_IN, LEFT_LOADER_PISTON_OUT),

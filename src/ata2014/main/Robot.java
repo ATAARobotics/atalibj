@@ -1,18 +1,11 @@
 package ata2014.main;
 
-import ata2014.commands.AddAxisBind;
-import ata2014.commands.DisableModule;
-import ata2014.commands.EnableModule;
-import ata2014.commands.RemoveAxisBind;
-import ata2014.main.identifiers.OneWayMotor;
 import com.sun.squawk.microedition.io.FileConnection;
-import edu.first.commands.common.SetOutput;
+import edu.first.commands.common.ReverseDualActionSolenoid;
 import edu.first.commands.common.SetSolenoid;
 import edu.first.identifiers.Function;
-import edu.first.identifiers.TransformedOutput;
 import edu.first.main.Constants;
-import edu.first.module.Module;
-import edu.first.module.joysticks.BindingJoystick;
+import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
@@ -79,7 +72,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
                 return drivingSensitivity * (MathUtils.pow(in, 3)) + (1 - drivingSensitivity) * in;
             }
         });
-        
+
         drivetrain.setReversedTurn(true);
 
         FULL_ROBOT.init();
@@ -104,6 +97,9 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         loader.enable();
         shooter.enable();
         compressor.enable();
+        
+        leftLoaderPiston.set(DualActionSolenoid.Direction.LEFT);
+        rightLoaderPiston.set(DualActionSolenoid.Direction.LEFT);
 
         // Driving
         joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
@@ -120,6 +116,9 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 //
 //        // Move loader
         joystick1.addAxisBind(XboxController.TRIGGERS, loaderMotors);
+
+        joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(leftLoaderPiston));
+        joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(rightLoaderPiston));
 //
 //        // Bring winch back
 //        joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
