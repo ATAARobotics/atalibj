@@ -1,12 +1,11 @@
 package edu.first.main;
 
+import ata2014.main.Compressor;
 import ata2014.subsystems.Drivetrain;
 import ata2014.subsystems.Joysticks;
 import ata2014.subsystems.Loader;
 import ata2014.main.Ports;
-import ata2014.main.Preferences;
 import ata2014.subsystems.Shooter;
-import edu.first.util.File;
 
 /**
  * The central repository for all constant values. Values here are expected to
@@ -48,5 +47,5 @@ import edu.first.util.File;
  * @since May 07 13
  * @author Joel Gallant
  */
-public interface Constants extends Ports, Drivetrain, Joysticks, Loader, Shooter {
+public interface Constants extends Ports, Drivetrain, Joysticks, Loader, Shooter, Compressor {
 }

@@ -2,6 +2,7 @@ package ata2014.subsystems;
 
 import ata2014.main.Preferences;
 import ata2014.controllers.DrivingPID;
+import ata2014.modules.InversedVictor;
 import ata2014.main.Ports;
 import edu.first.module.actuators.DualActionSolenoidModule;
 import edu.first.module.actuators.VictorModule;
@@ -23,12 +24,12 @@ public interface Drivetrain extends Ports {
             I = Preferences.getInstance().getDouble("Driving_I", 0),
             D = Preferences.getInstance().getDouble("Driving_D", 0);
 
-    VictorModuleGroup leftDrive = new VictorModuleGroup(new VictorModule[] {
-        new VictorModule(LEFT_DRIVE_1),
-        new VictorModule(LEFT_DRIVE_2),
-        new VictorModule(LEFT_DRIVE_3)
+    VictorModuleGroup leftDrive = new VictorModuleGroup(new VictorModule[]{
+        new InversedVictor(LEFT_DRIVE_1),
+        new InversedVictor(LEFT_DRIVE_2),
+        new InversedVictor(LEFT_DRIVE_3)
     });
-    VictorModuleGroup rightDrive = new VictorModuleGroup(new VictorModule[] {
+    VictorModuleGroup rightDrive = new VictorModuleGroup(new VictorModule[]{
         new VictorModule(RIGHT_DRIVE_1),
         new VictorModule(RIGHT_DRIVE_2),
         new VictorModule(RIGHT_DRIVE_3)
