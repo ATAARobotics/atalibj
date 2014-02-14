@@ -16,12 +16,10 @@ public interface Ports {
     //   Right Loader - 8
     //   Winch Motor - 9
 //     Solenoids:
-    //   Left Loader (in) - 1
-    //   Left Loader (out) - 2
-    //   Right Loader (in) - 3
-    //   Right Loader (out) - 4
-    //   Shifter (in) - 5
-    //   Shifter (out) - 6
+    //   Loader (in) - 1
+    //   Loader (out) - 2
+    //   Shifter (in) - 3
+    //   Shifter (out) - 4
     //   Winch Release - 7
 //     Digital Input:
     //   Compressor PSI: 1
@@ -29,6 +27,7 @@ public interface Ports {
     //   Right Encoder: 4, 5
     //   Left Loader Switch: 6
     //   Right Loader Switch: 7
+    //   Winch limit Switch: 8
 //     Analog Input:
     //   Shooter Potentiometer: 1
 //     Relays:
@@ -43,8 +42,8 @@ public interface Ports {
             RIGHT_DRIVE_1 = Preferences.getInstance().getInt("RIGHT_DRIVE_1", 1),
             RIGHT_DRIVE_2 = Preferences.getInstance().getInt("RIGHT_DRIVE_2", 2),
             RIGHT_DRIVE_3 = Preferences.getInstance().getInt("RIGHT_DRIVE_3", 3);
-    int SHIFTER_IN = Preferences.getInstance().getInt("SHIFTER_IN", 5),
-            SHIFTER_OUT = Preferences.getInstance().getInt("SHIFTER_OUT", 6);
+    int SHIFTER_IN = Preferences.getInstance().getInt("SHIFTER_IN", 3),
+            SHIFTER_OUT = Preferences.getInstance().getInt("SHIFTER_OUT", 4);
     int LEFT_ENCODER_A = Preferences.getInstance().getInt("LEFT_ENCODER_A", 2),
             LEFT_ENCODER_B = Preferences.getInstance().getInt("LEFT_ENCODER_B", 3),
             RIGHT_ENCODER_A = Preferences.getInstance().getInt("RIGHT_ENCODER_A", 4),
@@ -55,15 +54,14 @@ public interface Ports {
             RIGHT_LOADER_SENSOR = Preferences.getInstance().getInt("RIGHT_LOADER_SENSOR", 7);
     int LEFT_LOADER_MOTOR = Preferences.getInstance().getInt("LEFT_LOADER_MOTOR", 4),
             RIGHT_LOADER_MOTOR = Preferences.getInstance().getInt("RIGHT_LOADER_MOTOR", 8);
-    int LEFT_LOADER_PISTON_IN = Preferences.getInstance().getInt("LEFT_LOADER_PISTON_IN", 1),
-            LEFT_LOADER_PISTON_OUT = Preferences.getInstance().getInt("LEFT_LOADER_PISTON_OUT", 2),
-            RIGHT_LOADER_PISTON_IN = Preferences.getInstance().getInt("RIGHT_LOADER_PISTON_IN", 3),
-            RIGHT_LOADER_PISTON_OUT = Preferences.getInstance().getInt("RIGHT_LOADER_PISTON_OUT", 4);
+    int LOADER_PISTON_IN = Preferences.getInstance().getInt("LOADER_PISTON_IN", 1),
+            LOADER_PISTON_OUT = Preferences.getInstance().getInt("LOADER_PISTON_OUT", 2);
 
     // Winch
     int SHOOTER_POSITION = Preferences.getInstance().getInt("SHOOTER_POSITION", 1);
     int WINCH_MOTOR = Preferences.getInstance().getInt("WINCH_MOTOR", 9);
     int WINCH_RELEASE = Preferences.getInstance().getInt("WINCH_RELEASE", 7);
+    int WINCH_LIMIT = Preferences.getInstance().getInt("WINCH_LIMIT", 8);
     
     // Compressor
     int COMPRESSOR_PSI = Preferences.getInstance().getInt("COMPRESSOR_PSI", 1);

@@ -1,11 +1,20 @@
 package ata2014.main;
 
+import ata2014.commands.AddAxisBind;
+import ata2014.commands.DisableModule;
+import ata2014.commands.EnableModule;
+import ata2014.commands.RemoveAxisBind;
+import ata2014.main.identifiers.OneWayMotor;
 import com.sun.squawk.microedition.io.FileConnection;
 import edu.first.commands.common.ReverseDualActionSolenoid;
+import edu.first.commands.common.SetOutput;
 import edu.first.commands.common.SetSolenoid;
 import edu.first.identifiers.Function;
+import edu.first.identifiers.TransformedOutput;
 import edu.first.main.Constants;
+import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
+import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.module.subsystems.SubsystemBuilder;
@@ -97,39 +106,53 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         loader.enable();
         shooter.enable();
         compressor.enable();
-        
-        leftLoaderPiston.set(DualActionSolenoid.Direction.LEFT);
-        rightLoaderPiston.set(DualActionSolenoid.Direction.LEFT);
+
+        loaderPiston.set(DualActionSolenoid.Direction.LEFT);
+        shifter.set(DualActionSolenoid.Direction.LEFT);
 
         // Driving
-        joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
-//
-//        // Reset the arms
-//        joystick1.addWhenPressed(XboxController.X, new EnableModule(new Module[]{leftArmReset, rightArmReset}));
-//        joystick1.addWhenReleased(XboxController.X, new DisableModule(new Module[]{leftArmReset, rightArmReset}));
-//
-//        // Shoot
+        if (Preferences.getInstance().getBoolean("DRIVING_PID_ON", false)) {
+            joystick1.addAxisBind(drivingPID.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
+        } else {
+            joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
+        }
+        
+        joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(shifter));
+
+        if (Preferences.getInstance().getBoolean("ARM_RESET_ON", false)) {
+            // Reset the arms
+            joystick1.addWhenPressed(XboxController.X, new EnableModule(new Module[]{leftArmReset, rightArmReset}));
+            joystick1.addWhenReleased(XboxController.X, new DisableModule(new Module[]{leftArmReset, rightArmReset}));
+        }
+
+        // Shoot
         joystick1.addWhenPressed(XboxController.A, new SetSolenoid(winchRelease, true));
         joystick1.addWhenReleased(XboxController.A, new SetSolenoid(winchRelease, false));
-//        // after shooting, default to neutral position
-//        joystick1.addWhenReleased(XboxController.A, new SetOutput(winchController, winchNeutralPosition));
-//
-//        // Move loader
+        if (Preferences.getInstance().getBoolean("SHOOTING_NEUTRAL", false)) {
+            // after shooting, default to neutral position
+            joystick1.addWhenReleased(XboxController.A, new SetOutput(winchController, winchNeutralPosition));
+        }
+
+        // Move loader
         joystick1.addAxisBind(XboxController.TRIGGERS, loaderMotors);
 
-        joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(leftLoaderPiston));
-        joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(rightLoaderPiston));
-//
-//        // Bring winch back
-//        joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
-//
-//        // Turn on manual winch control
-//        final BindingJoystick.AxisBind winchManual = new BindingJoystick.AxisBind(joystick2.getRightY(), new TransformedOutput(winchMotor, new OneWayMotor()));
-//        joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new DisableModule(winchController));
-//        joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddAxisBind(joystick2, winchManual));
-//        // Turn off manual winch control
-//        joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new RemoveAxisBind(joystick2, winchManual));
-//        joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new EnableModule(winchController));
+        joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(loaderPiston));
+
+        if (Preferences.getInstance().getBoolean("WINCH_CONTROLLER_ON", false)) {
+            winchController.enable();
+            // Bring winch back
+            joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
+
+            // Turn on manual winch control
+            final BindingJoystick.AxisBind winchManual = new BindingJoystick.AxisBind(joystick2.getRightY(), new TransformedOutput(winchMotor, new OneWayMotor()));
+            joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new DisableModule(winchController));
+            joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddAxisBind(joystick2, winchManual));
+            // Turn off manual winch control
+            joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new RemoveAxisBind(joystick2, winchManual));
+            joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new EnableModule(winchController));
+        } else {
+            joystick2.addAxisBind(XboxController.TRIGGERS, winchMotor);
+        }
     }
 
     public void initDisabled() {

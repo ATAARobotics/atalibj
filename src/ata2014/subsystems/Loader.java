@@ -22,13 +22,12 @@ public interface Loader extends Ports {
     VictorModule leftLoaderMotor = new InversedVictor(LEFT_LOADER_MOTOR),
             rightLoaderMotor = new VictorModule(RIGHT_LOADER_MOTOR);
     SpeedControllerGroup loaderMotors = new SpeedControllerGroup(new SpeedController[]{leftLoaderMotor, rightLoaderMotor});
-    DualActionSolenoidModule leftLoaderPiston = new DualActionSolenoidModule(LEFT_LOADER_PISTON_IN, LEFT_LOADER_PISTON_OUT),
-            rightLoaderPiston = new DualActionSolenoidModule(RIGHT_LOADER_PISTON_IN, RIGHT_LOADER_PISTON_OUT);
+    DualActionSolenoidModule loaderPiston = new DualActionSolenoidModule(LOADER_PISTON_IN, LOADER_PISTON_OUT);
 
     Subsystem loader = new SubsystemBuilder()
             .add(leftLoaderSensor).add(rightLoaderSensor)
             .add(leftLoaderMotor).add(rightLoaderMotor)
-            .add(leftLoaderPiston).add(rightLoaderPiston)
+            .add(loaderPiston)
             .toSubsystem();
 
     ArmReset leftArmReset = new ArmReset(leftLoaderSensor, leftLoaderMotor),
