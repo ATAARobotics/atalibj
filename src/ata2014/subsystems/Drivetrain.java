@@ -19,10 +19,10 @@ import edu.first.module.subsystems.SubsystemBuilder;
  */
 public interface Drivetrain extends Ports {
 
-    double MAX_SPEED = Preferences.getInstance().getDouble("MAX_SPEED", 10000);
-    double P = Preferences.getInstance().getDouble("Driving_P", 1),
-            I = Preferences.getInstance().getDouble("Driving_I", 0),
-            D = Preferences.getInstance().getDouble("Driving_D", 0);
+    double MAX_SPEED = Preferences.getInstance().getDouble("MAXSPEED", 10000);
+    double P = Preferences.getInstance().getDouble("DrivingP", 1),
+            I = Preferences.getInstance().getDouble("DrivingI", 0),
+            D = Preferences.getInstance().getDouble("DrivingD", 0);
 
     VictorModuleGroup leftDrive = new VictorModuleGroup(new VictorModule[]{
         new InversedVictor(LEFT_DRIVE_1),

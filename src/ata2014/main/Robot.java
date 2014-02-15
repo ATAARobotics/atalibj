@@ -1,16 +1,16 @@
 package ata2014.main;
 
 import ata2014.commands.AddAxisBind;
+import ata2014.commands.AddButtonBind;
 import ata2014.commands.DisableModule;
 import ata2014.commands.EnableModule;
 import ata2014.commands.RemoveAxisBind;
-import ata2014.main.identifiers.OneWayMotor;
+import ata2014.commands.RemoveButtonBind;
 import com.sun.squawk.microedition.io.FileConnection;
 import edu.first.commands.common.ReverseDualActionSolenoid;
+import edu.first.commands.common.SetDualActionSolenoid;
 import edu.first.commands.common.SetOutput;
-import edu.first.commands.common.SetSolenoid;
 import edu.first.identifiers.Function;
-import edu.first.identifiers.TransformedOutput;
 import edu.first.main.Constants;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
@@ -25,6 +25,7 @@ import edu.first.util.MathUtils;
 import edu.first.util.TextFiles;
 import edu.first.util.dashboard.NumberDashboard;
 import edu.first.util.log.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.io.IOException;
 import javax.microedition.io.Connector;
 
@@ -49,6 +50,8 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
             .add(shooter)
             .add(drivingPID)
             .add(leftArmReset).add(rightArmReset)
+            .add(leftArmPID).add(rightArmPID)
+            .add(winchController)
             .add(compressor)
             .toSubsystem();
 
@@ -58,22 +61,9 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
     public void init() {
         Logger.getLogger(this).warn("Robot is initializing");
-        // incrementing log file management - new log file every reboot
-        for (int x = 1; true; x++) {
-            File file = new File("Log " + x + ".txt");
-            try {
-                FileConnection log = (FileConnection) Connector.open(file.getFullPath(), Connector.READ_WRITE);
-                if (!log.exists()) {
-                    TextFiles.writeAsFile(file, "LOG FILE\n");
-                    Logger.addLogToAll(new Logger.FileLog(file));
-                    break;
-                }
-
-                log.close();
-            } catch (IOException e) {
-                Logger.getLogger(this).error("Creating a log file failed - see stack trace", e);
-            }
-        }
+        File logFile = new File("Log.txt");
+        TextFiles.writeAsFile(logFile, "Log File:");
+        Logger.addLogToAll(new Logger.FileLog(logFile));
 
         // Apply function to driving algorithm
         joystick1.changeAxis(XboxController.LEFT_FROM_MIDDLE, new Function() {
@@ -109,49 +99,59 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
         loaderPiston.set(DualActionSolenoid.Direction.LEFT);
         shifter.set(DualActionSolenoid.Direction.LEFT);
+        winchRelease.set(DualActionSolenoid.Direction.RIGHT);
 
         // Driving
-        if (Preferences.getInstance().getBoolean("DRIVING_PID_ON", false)) {
+        if (Preferences.getInstance().getBoolean("DRIVINGPIDON", false)) {
             joystick1.addAxisBind(drivingPID.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
         } else {
             joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
         }
-        
+
         joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(shifter));
 
-        if (Preferences.getInstance().getBoolean("ARM_RESET_ON", false)) {
+        if (Preferences.getInstance().getBoolean("ARMRESETON", false)) {
             // Reset the arms
             joystick1.addWhenPressed(XboxController.X, new EnableModule(new Module[]{leftArmReset, rightArmReset}));
             joystick1.addWhenReleased(XboxController.X, new DisableModule(new Module[]{leftArmReset, rightArmReset}));
         }
 
         // Shoot
-        joystick1.addWhenPressed(XboxController.A, new SetSolenoid(winchRelease, true));
-        joystick1.addWhenReleased(XboxController.A, new SetSolenoid(winchRelease, false));
-        if (Preferences.getInstance().getBoolean("SHOOTING_NEUTRAL", false)) {
+        joystick1.addWhenPressed(XboxController.A, new SetDualActionSolenoid(winchRelease, DualActionSolenoid.Direction.RIGHT));
+        joystick1.addWhenPressed(XboxController.A, new SetDualActionSolenoid(loaderPiston, DualActionSolenoid.Direction.RIGHT));
+        if (Preferences.getInstance().getBoolean("SHOOTINGNEUTRAL", false)) {
             // after shooting, default to neutral position
             joystick1.addWhenReleased(XboxController.A, new SetOutput(winchController, winchNeutralPosition));
         }
 
         // Move loader
-        joystick1.addAxisBind(XboxController.TRIGGERS, loaderMotors);
+        if (Preferences.getInstance().getBoolean("ARMPID", false)) {
 
-        joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(loaderPiston));
+        } else {
+            joystick1.addAxisBind(XboxController.TRIGGERS, loaderMotors);
+        }
 
-        if (Preferences.getInstance().getBoolean("WINCH_CONTROLLER_ON", false)) {
+        joystick1.addWhenPressed(XboxController.X, new ReverseDualActionSolenoid(loaderPiston));
+
+        final BindingJoystick.AxisBind winchManual = new BindingJoystick.AxisBind(joystick2.getTrigger(), winchMotor);
+        BindingJoystick.ButtonBind engageDog = new BindingJoystick.WhenPressed(joystick2.getRawAxisAsButton(XboxController.TRIGGERS, 0.2),
+                new SetDualActionSolenoid(winchRelease, DualActionSolenoid.Direction.LEFT));
+        if (Preferences.getInstance().getBoolean("WINCHCONTROLLERON", false)) {
             winchController.enable();
             // Bring winch back
             joystick2.addWhenPressed(XboxController.A, new SetOutput(winchController, winchShootingPosition));
 
             // Turn on manual winch control
-            final BindingJoystick.AxisBind winchManual = new BindingJoystick.AxisBind(joystick2.getRightY(), new TransformedOutput(winchMotor, new OneWayMotor()));
             joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new DisableModule(winchController));
             joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddAxisBind(joystick2, winchManual));
+            joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddButtonBind(joystick2, engageDog));
             // Turn off manual winch control
             joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new RemoveAxisBind(joystick2, winchManual));
+            joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new RemoveButtonBind(joystick2, engageDog));
             joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new EnableModule(winchController));
         } else {
-            joystick2.addAxisBind(XboxController.TRIGGERS, winchMotor);
+            joystick2.addAxisBind(winchManual);
+            joystick2.addButtonBind(engageDog);
         }
     }
 

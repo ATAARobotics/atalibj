@@ -41,6 +41,7 @@ public class Preferences {
         try {
             return ((GordianNumber) variables.get(key)).getInt();
         } catch (InternalNotFoundException ex) {
+            System.out.println("Didn't find " + key);
             return backup;
         }
     }
@@ -49,6 +50,7 @@ public class Preferences {
         try {
             return ((GordianNumber) variables.get(key)).getValue();
         } catch (InternalNotFoundException ex) {
+            System.out.println("Didn't find " + key);
             return backup;
         }
     }
@@ -57,6 +59,7 @@ public class Preferences {
         try {
             return ((GordianBoolean) variables.get(key)).getValue();
         } catch (InternalNotFoundException ex) {
+            System.out.println("Didn't find " + key);
             return backup;
         }
     }
@@ -65,6 +68,7 @@ public class Preferences {
         try {
             return ((GordianString) variables.get(key)).getValue();
         } catch (InternalNotFoundException ex) {
+            System.out.println("Didn't find " + key);
             return backup;
         }
     }
