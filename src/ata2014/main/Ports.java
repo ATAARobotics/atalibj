@@ -12,8 +12,8 @@ public interface Ports {
 //     Speed Controllers:
     //   Left Drive - 1, 2, 3
     //   Right Drive - 5, 6, 7
-    //   Left Loader - 4
-    //   Right Loader - 9
+    //   Left Loader - 9
+    //   Right Loader - 4
     //   Winch Motor - 10
 //     Solenoids:
     //   Loader (in) - 1
@@ -56,8 +56,8 @@ public interface Ports {
             RIGHT_LOADER_SWITCH = Preferences.getInstance().getInt("RIGHTLOADERSWITCH", 7);
     int LEFT_LOADER_POT = Preferences.getInstance().getInt("LEFTLOADERPOT", 7),
             RIGHT_LOADER_POT = Preferences.getInstance().getInt("RIGHTLOADERPOT", 2);
-    int LEFT_LOADER_MOTOR = Preferences.getInstance().getInt("LEFTLOADERMOTOR", 4),
-            RIGHT_LOADER_MOTOR = Preferences.getInstance().getInt("RIGHTLOADERMOTOR", 9);
+    int LEFT_LOADER_MOTOR = Preferences.getInstance().getInt("LEFTLOADERMOTOR", 9),
+            RIGHT_LOADER_MOTOR = Preferences.getInstance().getInt("RIGHTLOADERMOTOR", 4);
     int LOADER_PISTON_IN = Preferences.getInstance().getInt("LOADERPISTONIN", 1),
             LOADER_PISTON_OUT = Preferences.getInstance().getInt("LOADERPISTONOUT", 2);
 

@@ -1,18 +1,14 @@
 package ata2014.main;
 
-import ata2014.commands.AddAxisBind;
 import ata2014.commands.AddButtonBind;
 import ata2014.commands.DisableModule;
 import ata2014.commands.EnableModule;
-import ata2014.commands.RemoveAxisBind;
 import ata2014.commands.RemoveButtonBind;
-import com.sun.squawk.microedition.io.FileConnection;
 import edu.first.commands.common.ReverseDualActionSolenoid;
 import edu.first.commands.common.SetDualActionSolenoid;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Function;
 import edu.first.main.Constants;
-import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.joysticks.XboxController;
@@ -25,9 +21,6 @@ import edu.first.util.MathUtils;
 import edu.first.util.TextFiles;
 import edu.first.util.dashboard.NumberDashboard;
 import edu.first.util.log.Logger;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.io.IOException;
-import javax.microedition.io.Connector;
 
 /**
  * Team 4334's main robot code starting point. Everything that happens is
@@ -49,8 +42,6 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
             .add(loader)
             .add(shooter)
             .add(drivingPID)
-            .add(leftArmReset).add(rightArmReset)
-            .add(leftArmPID).add(rightArmPID)
             .add(winchController)
             .add(compressor)
             .toSubsystem();
@@ -99,7 +90,6 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
         loaderPiston.set(DualActionSolenoid.Direction.LEFT);
         shifter.set(DualActionSolenoid.Direction.LEFT);
-        winchRelease.set(DualActionSolenoid.Direction.RIGHT);
 
         // Driving
         if (Preferences.getInstance().getBoolean("DRIVINGPIDON", false)) {
@@ -109,13 +99,6 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         }
 
         joystick1.addWhenPressed(XboxController.B, new ReverseDualActionSolenoid(shifter));
-
-        if (Preferences.getInstance().getBoolean("ARMRESETON", false)) {
-            // Reset the arms
-            joystick1.addWhenPressed(XboxController.X, new EnableModule(new Module[]{leftArmReset, rightArmReset}));
-            joystick1.addWhenReleased(XboxController.X, new DisableModule(new Module[]{leftArmReset, rightArmReset}));
-        }
-
         // Shoot
         joystick1.addWhenPressed(XboxController.A, new SetDualActionSolenoid(winchRelease, DualActionSolenoid.Direction.RIGHT));
         joystick1.addWhenPressed(XboxController.A, new SetDualActionSolenoid(loaderPiston, DualActionSolenoid.Direction.RIGHT));
@@ -125,16 +108,14 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         }
 
         // Move loader
-        if (Preferences.getInstance().getBoolean("ARMPID", false)) {
-
-        } else {
-            joystick1.addAxisBind(XboxController.TRIGGERS, loaderMotors);
-        }
+        joystick1.addAxisBind(XboxController.TRIGGERS, loaderMotors);
 
         joystick1.addWhenPressed(XboxController.X, new ReverseDualActionSolenoid(loaderPiston));
+        joystick2.addWhenPressed(XboxController.X, new ReverseDualActionSolenoid(loaderPiston));
 
-        final BindingJoystick.AxisBind winchManual = new BindingJoystick.AxisBind(joystick2.getTrigger(), winchMotor);
-        BindingJoystick.ButtonBind engageDog = new BindingJoystick.WhenPressed(joystick2.getRawAxisAsButton(XboxController.TRIGGERS, 0.2),
+        BindingJoystick.ButtonBind winchOn = new BindingJoystick.WhilePressed(joystick2.getA(), new SetOutput(winchMotor, 1));
+        BindingJoystick.ButtonBind winchOff = new BindingJoystick.WhenReleased(joystick2.getA(), new SetOutput(winchMotor, 0));
+        BindingJoystick.ButtonBind engageDog = new BindingJoystick.WhenPressed(joystick2.getA(),
                 new SetDualActionSolenoid(winchRelease, DualActionSolenoid.Direction.LEFT));
         if (Preferences.getInstance().getBoolean("WINCHCONTROLLERON", false)) {
             winchController.enable();
@@ -143,14 +124,17 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
             // Turn on manual winch control
             joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new DisableModule(winchController));
-            joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddAxisBind(joystick2, winchManual));
+            joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddButtonBind(joystick2, winchOn));
+            joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddButtonBind(joystick2, winchOff));
             joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new AddButtonBind(joystick2, engageDog));
             // Turn off manual winch control
-            joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new RemoveAxisBind(joystick2, winchManual));
+            joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new RemoveButtonBind(joystick2, winchOn));
+            joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new RemoveButtonBind(joystick2, winchOff));
             joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new RemoveButtonBind(joystick2, engageDog));
             joystick2.addWhenReleased(XboxController.RIGHT_BUMPER, new EnableModule(winchController));
         } else {
-            joystick2.addAxisBind(winchManual);
+            joystick2.addButtonBind(winchOn);
+            joystick2.addButtonBind(winchOff);
             joystick2.addButtonBind(engageDog);
         }
     }
