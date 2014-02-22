@@ -9,6 +9,7 @@ import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.joysticks.XboxController;
 import edu.first.module.subsystems.Subsystem;
 import edu.first.robot.IterativeRobotAdapter;
+import edu.first.util.File;
 import edu.first.util.TextFiles;
 import edu.first.util.log.Logger;
 
@@ -34,9 +35,11 @@ public final class Momentum extends IterativeRobotAdapter implements Constants {
 
     public Momentum() {
         super("Momentum");
+        Logger.displayLCDMessage("DO NOT ENABLE");
     }
 
     public void init() {
+        Logger.getLogger(this).info("Robot initializing...");
         TextFiles.writeAsFile(logFile, "--- Log file ---");
         Logger.addLogToAll(new Logger.FileLog(logFile));
 
@@ -47,6 +50,7 @@ public final class Momentum extends IterativeRobotAdapter implements Constants {
 
         // add joystick binds
         addBinds();
+        Logger.displayLCDMessage("Okay to enable");
     }
 
     /*
@@ -100,6 +104,7 @@ public final class Momentum extends IterativeRobotAdapter implements Constants {
         joystick2.addWhenPressed(XboxController.LEFT_BUMPER, new SetDualActionSolenoid(backLoaderPiston, DualActionSolenoid.Direction.LEFT));
         joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new SetDualActionSolenoid(backLoaderPiston, DualActionSolenoid.Direction.RIGHT));
         joystick2.addAxisBind(XboxController.TRIGGERS, loaderMotors);
+        Logger.getLogger(this).info("Binds added");
     }
 
     public void initTeleoperated() {
@@ -115,6 +120,8 @@ public final class Momentum extends IterativeRobotAdapter implements Constants {
 
         loaderPiston.set(DualActionSolenoid.Direction.LEFT);
         shifters.set(DualActionSolenoid.Direction.LEFT);
+
+        Logger.getLogger(this).info("Teleop started");
     }
 
     public void periodicTeleoperated() {
@@ -124,10 +131,14 @@ public final class Momentum extends IterativeRobotAdapter implements Constants {
 
     public void endTeleoperated() {
         TELEOP_MODULES.disable();
+        Logger.getLogger(this).info("Teleop finished");
     }
 
     public void initAutonomous() {
+        Logger.getLogger(this).info("Autonomous starting...");
         AUTO_MODULES.enable();
+        Autonomous autonomous = new Autonomous();
+        autonomous.run(TextFiles.getTextFromFile(new File(settings.getString("AutoFile", "Autonomous.txt"))));
     }
 
     public void endAutonomous() {
@@ -135,6 +146,11 @@ public final class Momentum extends IterativeRobotAdapter implements Constants {
     }
 
     public void initDisabled() {
+        Logger.getLogger(this).info("Disabled starting...");
         ALL_MODULES.disable();
+    }
+
+    public void endDisabled() {
+        settings.reload();
     }
 }

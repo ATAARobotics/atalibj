@@ -4,6 +4,7 @@ import api.gordian.storage.InternalNotFoundException;
 import api.gordian.storage.Variables;
 import edu.first.util.File;
 import edu.first.util.TextFiles;
+import edu.first.util.log.Logger;
 import org.gordian.scope.GordianScope;
 import org.gordian.value.GordianBoolean;
 import org.gordian.value.GordianNull;
@@ -24,19 +25,22 @@ public final class SettingsFile {
         reload();
     }
 
-    public void reload() {
+    public SettingsFile reload() {
         String fileContents = TextFiles.getTextFromFile(file);
         GordianScope scope = new GordianScope();
         scope.run(fileContents);
         this.settings = scope.variables();
+        return this;
     }
 
     public double getDouble(String key, double backup) {
         try {
             return ((GordianNumber) settings.get(key)).getValue();
         } catch (InternalNotFoundException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         } catch (ClassCastException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         }
     }
@@ -45,8 +49,10 @@ public final class SettingsFile {
         try {
             return ((GordianNumber) settings.get(key)).getInt();
         } catch (InternalNotFoundException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         } catch (ClassCastException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         }
     }
@@ -55,8 +61,10 @@ public final class SettingsFile {
         try {
             return ((GordianBoolean) settings.get(key)).getValue();
         } catch (InternalNotFoundException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         } catch (ClassCastException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         }
     }
@@ -65,8 +73,10 @@ public final class SettingsFile {
         try {
             return ((GordianString) settings.get(key)).getValue();
         } catch (InternalNotFoundException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         } catch (ClassCastException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         }
     }
@@ -90,6 +100,7 @@ public final class SettingsFile {
                 return o;
             }
         } catch (InternalNotFoundException e) {
+            Logger.getLogger(this).info("Could not find " + key);
             return backup;
         }
     }
