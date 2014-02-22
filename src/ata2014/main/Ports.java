@@ -4,77 +4,79 @@ package ata2014.main;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public interface Ports {
+public interface Ports extends Files {
 
-//
-// *****     DEFAULTS     *****
-//
-//     Speed Controllers:
-    //   Left Drive - 1, 2, 3
-    //   Right Drive - 5, 6, 7
-    //   Left Loader - 9
-    //   Right Loader - 4
-    //   Winch Motor - 10
-//     Solenoids:
-    //   Loader (in) - 1
-    //   Loader (out) - 2
-    //   Shifter (in) - 3
-    //   Shifter (out) - 4
-    //   Back load (in) - 5
-    //   Back load (out) - 6
-    //   Winch Release - 7
-//     Digital Input:
-    //   Compressor PSI: 1
-    //   Left Encoder: 2, 3
-    //   Right Encoder: 4, 5
-    //   Left Loader Switch: 6
-    //   Right Loader Switch: 7
-    //   Winch limit Switch: 14
-//     Analog Input:
-    //   Shooter Potentiometer: 1
-    //   Left Intake Potentiometer: 7
-    //   Right Intake Potentiometer: 2
-//     Relays:
-    //   Compressor Relay: 1
-//
-//
-//
-    // Drivetrain
-    int LEFT_DRIVE_1 = Preferences.getInstance().getInt("LEFTDRIVE1", 5),
-            LEFT_DRIVE_2 = Preferences.getInstance().getInt("LEFTDRIVE2", 6),
-            LEFT_DRIVE_3 = Preferences.getInstance().getInt("LEFTDRIVE3", 7),
-            RIGHT_DRIVE_1 = Preferences.getInstance().getInt("RIGHTDRIVE1", 1),
-            RIGHT_DRIVE_2 = Preferences.getInstance().getInt("RIGHTDRIVE2", 2),
-            RIGHT_DRIVE_3 = Preferences.getInstance().getInt("RIGHTDRIVE3", 3);
-    int SHIFTER_IN = Preferences.getInstance().getInt("SHIFTERIN", 3),
-            SHIFTER_OUT = Preferences.getInstance().getInt("SHIFTEROUT", 4);
-    int LEFT_ENCODER_A = Preferences.getInstance().getInt("LEFTENCODERA", 2),
-            LEFT_ENCODER_B = Preferences.getInstance().getInt("LEFTENCODERB", 3),
-            RIGHT_ENCODER_A = Preferences.getInstance().getInt("RIGHTENCODERA", 4),
-            RIGHT_ENCODER_B = Preferences.getInstance().getInt("RIGHTENCODERB", 5);
+    SettingsFile ports = new SettingsFile(portFile);
 
-    // Loader
-    int LEFT_LOADER_SWITCH = Preferences.getInstance().getInt("LEFTLOADERSWITCH", 6),
-            RIGHT_LOADER_SWITCH = Preferences.getInstance().getInt("RIGHTLOADERSWITCH", 7);
-    int LEFT_LOADER_POT = Preferences.getInstance().getInt("LEFTLOADERPOT", 7),
-            RIGHT_LOADER_POT = Preferences.getInstance().getInt("RIGHTLOADERPOT", 2);
-    int LEFT_LOADER_MOTOR = Preferences.getInstance().getInt("LEFTLOADERMOTOR", 9),
-            RIGHT_LOADER_MOTOR = Preferences.getInstance().getInt("RIGHTLOADERMOTOR", 4);
-    int LOADER_PISTON_IN = Preferences.getInstance().getInt("LOADERPISTONIN", 1),
-            LOADER_PISTON_OUT = Preferences.getInstance().getInt("LOADERPISTONOUT", 2);
+    // BACKUPS
+    // --- Drivetrain
+    int _leftDrive1 = 1,
+            _leftDrive2 = 2,
+            _leftDrive3 = 3;
+    int _rightDrive1 = 5,
+            _rightDrive2 = 6,
+            _rightDrive3 = 7;
+    int _shifterIn = 3,
+            _shifterOut = 4;
+    int _leftDriveEncoderA = 1,
+            _leftDriveEncoderB = 2;
+    int _rightDriveEncoderA = 3,
+            _rightDriveEncoderB = 4;
 
-    // Back loader
-    int BACK_LOADER_IN = Preferences.getInstance().getInt("BACKLOADERIN", 5);
-    int BACK_LOADER_OUT = Preferences.getInstance().getInt("BACKLOADEROUT", 6);
+    // --- Loader
+    int _leftLoaderMotor = 9,
+            _rightLoaderMotor = 4;
+    int _loaderPistonIn = 1,
+            _loaderPistonOut = 2;
 
-    // Winch
-    int SHOOTER_POSITION = Preferences.getInstance().getInt("SHOOTERPOSITION", 1);
-    int WINCH_MOTOR = Preferences.getInstance().getInt("WINCHMOTOR", 10);
-    int WINCH_RELEASE_OUT = Preferences.getInstance().getInt("WINCHRELEASEOUT", 7),
-            WINCH_RELEASE_IN = Preferences.getInstance().getInt("WINCHRELEASEIN", 8);
-    int WINCH_LIMIT = Preferences.getInstance().getInt("WINCHLIMIT", 14);
+    // --- Winch
+    int _winchPosition = 1;
+    int _winchLimit = 1;
+    int _winchMotor = 10;
+    int _winchReleaseIn = 8,
+            _winchReleaseOut = 7;
 
-    // Compressor
-    int COMPRESSOR_PSI = Preferences.getInstance().getInt("COMPRESSORPSI", 1);
-    int COMPRESSOR_RELAY = Preferences.getInstance().getInt("COMPRESSORRELAY", 1);
+    // --- Backloader
+    int _backLoaderIn = 5,
+            _backLoaderOut = 6;
+
+    // --- Compressor
+    int _compressor = 1;
+    int _compressorPSI = 1;
+
+    // PORTS
+    // --- Drivetrain
+    int LEFT_DRIVE_1 = ports.getInt("LeftDrive1", _leftDrive1),
+            LEFT_DRIVE_2 = ports.getInt("LeftDrive2", _leftDrive2),
+            LEFT_DRIVE_3 = ports.getInt("LeftDrive3", _leftDrive3);
+    int RIGHT_DRIVE_1 = ports.getInt("RightDrive1", _rightDrive1),
+            RIGHT_DRIVE_2 = ports.getInt("RightDrive2", _rightDrive2),
+            RIGHT_DRIVE_3 = ports.getInt("RightDrive3", _rightDrive3);
+    int SHIFTER_IN = ports.getInt("ShifterInt", _shifterIn),
+            SHIFTER_OUT = ports.getInt("ShifterOut", _shifterOut);
+    int LEFT_DRIVE_ENCODER_A = ports.getInt("LeftDriveEncoderA", _leftDriveEncoderA),
+            LEFT_DRIVE_ENCODER_B = ports.getInt("LeftDriveEncoderB", _leftDriveEncoderB);
+    int RIGHT_DRIVE_ENCODER_A = ports.getInt("RightDriveEncoderA", _rightDriveEncoderA),
+            RIGHT_DRIVE_ENCODER_B = ports.getInt("RightDriveEncoderB", _rightDriveEncoderB);
+
+    // --- Loader
+    int LEFT_LOADER_MOTOR = ports.getInt("LeftLoaderMotor", _leftLoaderMotor),
+            RIGHT_LOADER_MOTOR = ports.getInt("RightLoaderMotor", _rightLoaderMotor);
+    int LOADER_PISTON_IN = ports.getInt("LoaderPistonIn", _loaderPistonIn),
+            LOADER_PISTON_OUT = ports.getInt("LoaderPistonOut", _loaderPistonOut);
+
+    // --- Winch
+    int WINCH_POSITION = ports.getInt("ShooterPosition", _winchPosition);
+    int WINCH_LIMIT = ports.getInt("WinchLimit", _winchLimit);
+    int WINCH_MOTOR = ports.getInt("WinchMotor", _winchMotor);
+    int WINCH_RELEASE_IN = ports.getInt("WinchReleaseIn", _winchReleaseIn),
+            WINCH_RELEASE_OUT = ports.getInt("WinchReleaseOut", _winchReleaseOut);
+
+    // --- Back Loader
+    int BACK_LOADER_IN = ports.getInt("BackLoaderIn", _backLoaderIn),
+            BACK_LOADER_OUT = ports.getInt("BackLoaderOut", _backLoaderOut);
+
+    // --- Compressor
+    int COMPRESSOR = ports.getInt("Compressor", _compressor);
+    int COMPRESSOR_PSI = ports.getInt("CompressorPSI", _compressorPSI);
 }

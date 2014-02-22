@@ -17,35 +17,39 @@ public class WinchMotor extends TalonModule {
         this.limit = limit;
     }
 
+    public boolean atLimit() {
+        return !limit.getPosition();
+    }
+
     public void set(double value) {
-        if (limit.getPosition()) {
-            super.set(oneWay(value));
-        } else {
+        if (atLimit()) {
             super.set(0);
+        } else {
+            super.set(oneWay(value));
         }
     }
 
     public void setRate(double rate) {
-        if (limit.getPosition()) {
-            super.setRate(oneWay(rate));
-        } else {
+        if (atLimit()) {
             super.setRate(0);
+        } else {
+            super.setRate(oneWay(rate));
         }
     }
 
     public void setRawSpeed(int speed) {
-        if (limit.getPosition()) {
-            super.setRawSpeed((int) oneWay(speed));
+        if (atLimit()) {
+            super.setRawSpeed(127);
         } else {
-            super.setRawSpeed(0);
+            super.setRawSpeed((int) oneWay(speed));
         }
     }
 
     public void setSpeed(double speed) {
-        if (limit.getPosition()) {
-            super.setSpeed(oneWay(speed));
-        } else {
+        if (atLimit()) {
             super.setSpeed(0);
+        } else {
+            super.setSpeed(oneWay(speed));
         }
     }
 

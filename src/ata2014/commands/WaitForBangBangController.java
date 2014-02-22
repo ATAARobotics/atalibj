@@ -10,21 +10,21 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class WaitForBangBangController implements Command {
 
-    private final BangBangController Bang;
+    private final BangBangController controller;
     private final double delay;
 
-    public WaitForBangBangController(BangBangController Bang) {
-        this.Bang = Bang;
+    public WaitForBangBangController(BangBangController controller) {
+        this.controller = controller;
         this.delay = 0.02;
     }
 
-    public WaitForBangBangController(BangBangController Bang, double delay) {
-        this.Bang = Bang;
+    public WaitForBangBangController(BangBangController controller, double delay) {
+        this.controller = controller;
         this.delay = delay;
     }
 
     public void run() {
-        while (Bang.onTarget()) {
+        while (controller.onTarget()) {
             Timer.delay(delay);
         }
     }

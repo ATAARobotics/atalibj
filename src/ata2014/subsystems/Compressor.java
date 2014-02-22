@@ -1,10 +1,11 @@
-package ata2014.main;
+package ata2014.subsystems;
 
+import ata2014.main.Ports;
+import edu.first.module.Module;
 import edu.first.module.actuators.SpikeRelay;
 import edu.first.module.actuators.SpikeRelayModule;
 import edu.first.module.sensors.DigitalInput;
 import edu.first.module.subsystems.Subsystem;
-import edu.first.module.subsystems.SubsystemBuilder;
 
 /**
  *
@@ -12,14 +13,12 @@ import edu.first.module.subsystems.SubsystemBuilder;
  */
 public interface Compressor extends Ports {
 
-    SpikeRelayModule compressorRelay = new SpikeRelayModule(1);
-    DigitalInput compressorPSI = new DigitalInput(1);
+    SpikeRelayModule compressorRelay = new SpikeRelayModule(COMPRESSOR);
+    DigitalInput compressorPSI = new DigitalInput(COMPRESSOR_PSI);
     edu.first.module.controllers.Compressor compressorController
             = new edu.first.module.controllers.Compressor(compressorRelay, compressorPSI, SpikeRelay.Direction.FORWARDS, true);
 
-    Subsystem compressor = new SubsystemBuilder()
-            .add(compressorRelay)
-            .add(compressorPSI)
-            .add(compressorController)
-            .toSubsystem();
+    Subsystem compressor = new Subsystem(new Module[]{
+        compressorRelay, compressorPSI, compressorController
+    });
 }
