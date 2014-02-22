@@ -1,8 +1,10 @@
 package ata2014.main;
 
+import ata2014.commands.DisableModule;
 import ata2014.commands.EnableModule;
 import edu.first.commands.common.ReverseDualActionSolenoid;
 import edu.first.commands.common.SetDualActionSolenoid;
+import edu.first.commands.common.SetOutput;
 import edu.first.main.Constants;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoid;
@@ -70,7 +72,7 @@ public final class Momentum extends IterativeRobotAdapter implements Constants {
 
      Joystick 2
      .... A - Bring winch back
-     .... B - 
+     .... B - Stop winch
      .... X - Open arms
      .... Y - 
      .... Left Stick - 
@@ -100,6 +102,8 @@ public final class Momentum extends IterativeRobotAdapter implements Constants {
         joystick1.addWhenPressed(XboxController.X, new ReverseDualActionSolenoid(loaderPiston));
 
         joystick2.addWhenPressed(XboxController.A, new EnableModule(winchBack));
+        joystick2.addWhenPressed(XboxController.B, new DisableModule(winchBack));
+        joystick2.addWhenPressed(XboxController.B, new SetOutput(winchMotor, 0));
         joystick2.addWhenPressed(XboxController.X, new ReverseDualActionSolenoid(loaderPiston));
         joystick2.addWhenPressed(XboxController.LEFT_BUMPER, new SetDualActionSolenoid(backLoaderPiston, DualActionSolenoid.Direction.LEFT));
         joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new SetDualActionSolenoid(backLoaderPiston, DualActionSolenoid.Direction.RIGHT));
