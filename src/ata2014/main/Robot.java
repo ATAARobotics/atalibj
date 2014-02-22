@@ -8,6 +8,7 @@ import edu.first.commands.common.ReverseDualActionSolenoid;
 import edu.first.commands.common.SetDualActionSolenoid;
 import edu.first.commands.common.SetOutput;
 import edu.first.identifiers.Function;
+import edu.first.identifiers.TransformedOutput;
 import edu.first.main.Constants;
 import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.joysticks.BindingJoystick;
@@ -21,6 +22,7 @@ import edu.first.util.MathUtils;
 import edu.first.util.TextFiles;
 import edu.first.util.dashboard.NumberDashboard;
 import edu.first.util.log.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Team 4334's main robot code starting point. Everything that happens is
@@ -40,6 +42,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
             .add(joysticks)
             .add(drivetrainSubsystem)
             .add(loader)
+            .add(backLoader)
             .add(shooter)
             .add(drivingPID)
             .add(winchController)
@@ -85,6 +88,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         joysticks.enable();
         drivetrainSubsystem.enable();
         loader.enable();
+        backLoader.enable();
         shooter.enable();
         compressor.enable();
 
@@ -93,6 +97,7 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
 
         // Driving
         if (Preferences.getInstance().getBoolean("DRIVINGPIDON", false)) {
+            drivingPID.enable();
             joystick1.addAxisBind(drivingPID.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
         } else {
             joystick1.addAxisBind(drivetrain.getArcade(joystick1.getLeftDistanceFromMiddle(), joystick1.getRightX()));
@@ -108,10 +113,13 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
         }
 
         // Move loader
-        joystick1.addAxisBind(XboxController.TRIGGERS, loaderMotors);
-
         joystick1.addWhenPressed(XboxController.X, new ReverseDualActionSolenoid(loaderPiston));
         joystick2.addWhenPressed(XboxController.X, new ReverseDualActionSolenoid(loaderPiston));
+
+        joystick2.addAxisBind(XboxController.TRIGGERS, new TransformedOutput(loaderMotors, new Function.ProductFunction(Preferences.getInstance().getDouble("LoaderLimit", 0.5))));
+
+        joystick2.addWhenPressed(XboxController.RIGHT_BUMPER, new SetDualActionSolenoid(backLoaderPiston, DualActionSolenoid.Direction.LEFT));
+        joystick2.addWhenPressed(XboxController.LEFT_BUMPER, new SetDualActionSolenoid(backLoaderPiston, DualActionSolenoid.Direction.RIGHT));
 
         BindingJoystick.ButtonBind winchOn = new BindingJoystick.WhilePressed(joystick2.getA(), new SetOutput(winchMotor, 1));
         BindingJoystick.ButtonBind winchOff = new BindingJoystick.WhenReleased(joystick2.getA(), new SetOutput(winchMotor, 0));
@@ -154,6 +162,8 @@ public final class Robot extends IterativeRobotAdapter implements Constants {
     public void periodicTeleoperated() {
         joystick1.doBinds();
         joystick2.doBinds();
+        SmartDashboard.putNumber("LeftSpeed", leftEncoder.getRate());
+        SmartDashboard.putNumber("RightSpeed", rightEncoder.getRate());
     }
 
     public void periodicDisabled() {

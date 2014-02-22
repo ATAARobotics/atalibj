@@ -5,6 +5,7 @@ import ata2014.subsystems.Drivetrain;
 import ata2014.subsystems.Joysticks;
 import ata2014.subsystems.Loader;
 import ata2014.main.Ports;
+import ata2014.subsystems.BackLoader;
 import ata2014.subsystems.Shooter;
 
 /**
@@ -47,5 +48,5 @@ import ata2014.subsystems.Shooter;
  * @since May 07 13
  * @author Joel Gallant
  */
-public interface Constants extends Ports, Drivetrain, Joysticks, Loader, Shooter, Compressor {
+public interface Constants extends Ports, Drivetrain, Joysticks, Loader, BackLoader, Shooter, Compressor {
 }

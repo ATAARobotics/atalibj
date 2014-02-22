@@ -20,6 +20,8 @@ public interface Ports {
     //   Loader (out) - 2
     //   Shifter (in) - 3
     //   Shifter (out) - 4
+    //   Back load (in) - 5
+    //   Back load (out) - 6
     //   Winch Release - 7
 //     Digital Input:
     //   Compressor PSI: 1
@@ -60,6 +62,10 @@ public interface Ports {
             RIGHT_LOADER_MOTOR = Preferences.getInstance().getInt("RIGHTLOADERMOTOR", 4);
     int LOADER_PISTON_IN = Preferences.getInstance().getInt("LOADERPISTONIN", 1),
             LOADER_PISTON_OUT = Preferences.getInstance().getInt("LOADERPISTONOUT", 2);
+
+    // Back loader
+    int BACK_LOADER_IN = Preferences.getInstance().getInt("BACKLOADERIN", 5);
+    int BACK_LOADER_OUT = Preferences.getInstance().getInt("BACKLOADEROUT", 6);
 
     // Winch
     int SHOOTER_POSITION = Preferences.getInstance().getInt("SHOOTERPOSITION", 1);
