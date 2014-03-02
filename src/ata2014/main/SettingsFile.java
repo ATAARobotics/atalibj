@@ -6,6 +6,7 @@ import edu.first.util.File;
 import edu.first.util.TextFiles;
 import edu.first.util.log.Logger;
 import org.gordian.scope.GordianScope;
+import org.gordian.storage.GordianVariables;
 import org.gordian.value.GordianBoolean;
 import org.gordian.value.GordianNull;
 import org.gordian.value.GordianNumber;
@@ -27,9 +28,14 @@ public final class SettingsFile {
 
     public SettingsFile reload() {
         String fileContents = TextFiles.getTextFromFile(file);
-        GordianScope scope = new GordianScope();
-        scope.run(fileContents);
-        this.settings = scope.variables();
+        if (fileContents != null) {
+            GordianScope scope = new GordianScope();
+            scope.run(fileContents);
+            this.settings = scope.variables();
+        } else {
+            Logger.getLogger(this).warn(file + " was not found");
+            this.settings = new GordianVariables(true);
+        }
         return this;
     }
 

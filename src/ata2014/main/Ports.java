@@ -18,10 +18,10 @@ public interface Ports extends Files {
             _rightDrive3 = 7;
     int _shifterIn = 3,
             _shifterOut = 4;
-    int _leftDriveEncoderA = 1,
-            _leftDriveEncoderB = 2;
-    int _rightDriveEncoderA = 3,
-            _rightDriveEncoderB = 4;
+    int _leftDriveEncoderA = 3,
+            _leftDriveEncoderB = 4;
+    int _rightDriveEncoderA = 5,
+            _rightDriveEncoderB = 6;
 
     // --- Loader
     int _leftLoaderMotor = 9,
@@ -42,7 +42,7 @@ public interface Ports extends Files {
 
     // --- Compressor
     int _compressor = 1;
-    int _compressorPSI = 1;
+    int _compressorPSI = 2;
 
     // PORTS
     // --- Drivetrain
