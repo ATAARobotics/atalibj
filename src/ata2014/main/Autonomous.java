@@ -11,9 +11,10 @@ import edu.first.module.actuators.DualActionSolenoid;
 import edu.first.module.actuators.DualActionSolenoidModule;
 import edu.first.module.actuators.SpeedController;
 import edu.first.module.actuators.TalonModule;
-import edu.first.module.actuators.VictorModule;
+import edu.first.module.controllers.PIDController;
 import edu.first.module.sensors.DigitalInput;
 import edu.first.module.sensors.EncoderModule;
+import edu.first.util.DriverstationInfo;
 import org.gordian.method.GordianMethod;
 import org.gordian.scope.GordianScope;
 import org.gordian.value.GordianBoolean;
@@ -27,6 +28,7 @@ import org.gordian.value.GordianString;
 public class Autonomous extends GordianScope {
 
     private static final GordianDrivetrain DRIVETRAIN = new GordianDrivetrain(Drive.drivetrain);
+    private static final GordianPIDController STRAIGHT_DRIVING_PID = new GordianPIDController(Drive.straightDrivingPID);
     private static final GordianEncoder LEFT_DRIVE_ENCODER = new GordianEncoder(Drive.leftDriveEncoder);
     private static final GordianEncoder RIGHT_DRIVE_ENCODER = new GordianEncoder(Drive.rightDriveEncoder);
     private static final GordianLimitSwitch WINCH_LIMIT = new GordianLimitSwitch(Winch.winchLimit);
@@ -34,9 +36,16 @@ public class Autonomous extends GordianScope {
     private static final GordianDualActionSolenoid WINCH_RELEASE = new GordianDualActionSolenoid(Winch.winchRelease);
     private static final GordianSpeedController LOADER_MOTORS = new GordianSpeedController(Loader.loaderMotors);
     private static final GordianDualActionSolenoid LOADER_PISTON = new GordianDualActionSolenoid(Loader.loaderPiston);
+    private static final GordianPIDController LOADER_CONTROLLER = new GordianPIDController(Loader.loaderController);
 
     public Autonomous() {
+        methods().put("isAutonomous", new GordianMethod(new Signature()) {
+            public Object run(Object[] args) {
+                return new GordianBoolean(DriverstationInfo.isAutonomous() && DriverstationInfo.isEnabled());
+            }
+        });
         variables().put("drivetrain", DRIVETRAIN);
+        variables().put("straightDrivingPID", STRAIGHT_DRIVING_PID);
         variables().put("leftDriveEncoder", LEFT_DRIVE_ENCODER);
         variables().put("rightDriveEncoder", RIGHT_DRIVE_ENCODER);
         variables().put("winchLimit", WINCH_LIMIT);
@@ -44,6 +53,7 @@ public class Autonomous extends GordianScope {
         variables().put("winchRelease", WINCH_RELEASE);
         variables().put("loaderMotors", LOADER_MOTORS);
         variables().put("loaderPiston", LOADER_PISTON);
+        variables().put("loaderController", LOADER_CONTROLLER);
     }
 
     private static class GordianModule extends GordianScope {
@@ -113,6 +123,16 @@ public class Autonomous extends GordianScope {
                 public Object run(Object[] args) {
                     drivetrain.setReversedTurn(((GordianBoolean) args[0]).getValue());
                     return null;
+                }
+            });
+            methods().put("getLeftSpeed", new GordianMethod(new Signature()) {
+                public Object run(Object[] args) {
+                    return new GordianNumber(drivetrain.getLeftSpeed());
+                }
+            });
+            methods().put("getRightSpeed", new GordianMethod(new Signature()) {
+                public Object run(Object[] args) {
+                    return new GordianNumber(drivetrain.getRightSpeed());
                 }
             });
         }
@@ -282,6 +302,29 @@ public class Autonomous extends GordianScope {
             } else {
                 return DualActionSolenoid.Direction.OFF;
             }
+        }
+    }
+
+    private static class GordianPIDController extends GordianModule {
+
+        public GordianPIDController(final PIDController controller) {
+            super(controller);
+            methods().put("setSetpoint", new GordianMethod(new Signature(new api.gordian.Class[]{GordianNumber.CLASS})) {
+                public Object run(Object[] args) {
+                    controller.setSetpoint(((GordianNumber) args[0]).getValue());
+                    return null;
+                }
+            });
+            methods().put("getSetpoint", new GordianMethod(new Signature()) {
+                public Object run(Object[] args) {
+                    return new GordianNumber(controller.getSetpoint());
+                }
+            });
+            methods().put("atSetpoint", new GordianMethod(new Signature()) {
+                public Object run(Object[] args) {
+                    return new GordianBoolean(controller.onTarget());
+                }
+            });
         }
     }
 }

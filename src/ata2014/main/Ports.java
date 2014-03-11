@@ -28,6 +28,7 @@ public interface Ports extends Files {
             _rightLoaderMotor = 4;
     int _loaderPistonIn = 1,
             _loaderPistonOut = 2;
+    int _loaderPosition = 7;
 
     // --- Winch
     int _winchPosition = 1;
@@ -52,7 +53,7 @@ public interface Ports extends Files {
     int RIGHT_DRIVE_1 = ports.getInt("RightDrive1", _rightDrive1),
             RIGHT_DRIVE_2 = ports.getInt("RightDrive2", _rightDrive2),
             RIGHT_DRIVE_3 = ports.getInt("RightDrive3", _rightDrive3);
-    int SHIFTER_IN = ports.getInt("ShifterInt", _shifterIn),
+    int SHIFTER_IN = ports.getInt("ShifterIn", _shifterIn),
             SHIFTER_OUT = ports.getInt("ShifterOut", _shifterOut);
     int LEFT_DRIVE_ENCODER_A = ports.getInt("LeftDriveEncoderA", _leftDriveEncoderA),
             LEFT_DRIVE_ENCODER_B = ports.getInt("LeftDriveEncoderB", _leftDriveEncoderB);
@@ -64,17 +65,14 @@ public interface Ports extends Files {
             RIGHT_LOADER_MOTOR = ports.getInt("RightLoaderMotor", _rightLoaderMotor);
     int LOADER_PISTON_IN = ports.getInt("LoaderPistonIn", _loaderPistonIn),
             LOADER_PISTON_OUT = ports.getInt("LoaderPistonOut", _loaderPistonOut);
+    int LOADER_POSITION = ports.getInt("LoaderPosition", _loaderPosition);
 
     // --- Winch
-    int WINCH_POSITION = ports.getInt("ShooterPosition", _winchPosition);
+    int WINCH_POSITION = ports.getInt("WinchPosition", _winchPosition);
     int WINCH_LIMIT = ports.getInt("WinchLimit", _winchLimit);
     int WINCH_MOTOR = ports.getInt("WinchMotor", _winchMotor);
     int WINCH_RELEASE_IN = ports.getInt("WinchReleaseIn", _winchReleaseIn),
             WINCH_RELEASE_OUT = ports.getInt("WinchReleaseOut", _winchReleaseOut);
-
-    // --- Back Loader
-    int BACK_LOADER_IN = ports.getInt("BackLoaderIn", _backLoaderIn),
-            BACK_LOADER_OUT = ports.getInt("BackLoaderOut", _backLoaderOut);
 
     // --- Compressor
     int COMPRESSOR = ports.getInt("Compressor", _compressor);

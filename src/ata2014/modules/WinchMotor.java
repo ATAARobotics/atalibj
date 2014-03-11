@@ -18,7 +18,7 @@ public class WinchMotor extends TalonModule {
     }
 
     public boolean atLimit() {
-        return !limit.getPosition();
+        return limit.getPosition();
     }
 
     public void set(double value) {
