@@ -271,11 +271,11 @@ public class GordianScope implements Scope {
         s = Strings.replaceAll(s, '\n', ';');
         s = Strings.replaceAll(s, '{', "{;");
         s = Strings.replaceAll(s, '}', ";}");
-        
+
         if (!Strings.contains(s, ";")) {
             s = s + ';';
         }
-        
+
         while (Strings.contains(s, "#")) {
             String toRemove = s.substring(s.indexOf('#'), (s.substring(s.indexOf('#'))).indexOf(';') + s.indexOf('#'));
             s = Strings.replace(s, toRemove, "");
@@ -284,7 +284,7 @@ public class GordianScope implements Scope {
         s = convertStrings(s);
 
         int y = s.indexOf(" ");
-        while (y >= 0) {
+        while (y != -1) {
             boolean found = false;
             for (int k = 0; k < keywords.length; k++) {
                 if (y - keywords[k].length() >= 0 && s.substring(y - keywords[k].length(), y).equals(keywords[k])) {
@@ -297,7 +297,7 @@ public class GordianScope implements Scope {
                 s = s.substring(0, y) + s.substring(y + 1);
             }
             y += s.substring(y + 1).indexOf(" ") + 1;
-            if (s.substring(y + 1).indexOf(" ") < 0) {
+            if (s.substring(y).indexOf(" ") == -1) {
                 break;
             }
         }
@@ -598,9 +598,7 @@ public class GordianScope implements Scope {
                 try {
                     return new GordianNumber(o.result(((GordianNumber) toObject(s.substring(0, s.lastIndexOf(o.getChar())))).getValue(),
                             ((GordianNumber) toObject(s.substring(s.lastIndexOf(o.getChar()) + 1))).getValue()));
-                } catch (ClassCastException ex) {
-                    throw new RuntimeException("Calculation failed - " + s);
-                } catch (NullPointerException e) {
+                } catch (Exception e) {
                     // weren't numbers...
                 }
             }
@@ -682,9 +680,17 @@ public class GordianScope implements Scope {
 
         // object access
         if (s.indexOf(".") > 0 && s.indexOf(".") < s.length() - 1) {
-            Object call = toObject(s.substring(0, s.lastIndexOf('.')));
+            Object call = null;
+            int index = s.lastIndexOf('.');
+            while (call == null && index != -1) {
+                try {
+                    call = toObject(s.substring(0, index));
+                } catch (NullPointerException e) {
+                    index = s.substring(0, index).lastIndexOf('.');
+                }
+            }
 
-            String r = s.substring(s.lastIndexOf('.') + 1);
+            String r = s.substring(index + 1);
             if (isMethod(r)) {
                 Method[] m = call.methods().getAll(r.substring(0, r.indexOf("(")));
                 Arguments a = new Arguments(getArgs(betweenMatch(r, '(', ')')));
@@ -720,7 +726,7 @@ public class GordianScope implements Scope {
         if (s.startsWith("+")) {
             return new GordianNumber(((GordianNumber) toObject(s.substring(1))).getValue());
         }
-        
+
         // variables
         if (variables().contains(s)) {
             try {
