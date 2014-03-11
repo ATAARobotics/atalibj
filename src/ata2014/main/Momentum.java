@@ -1,7 +1,7 @@
 package ata2014.main;
 
-import ata2014.commands.DisableModule;
-import ata2014.commands.EnableModule;
+import edu.first.commands.common.DisableModule;
+import edu.first.commands.common.EnableModule;
 import edu.first.commands.common.ReverseDualActionSolenoid;
 import edu.first.commands.common.SetDualActionSolenoid;
 import edu.first.commands.common.SetOutput;

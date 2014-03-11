@@ -1,4 +1,4 @@
-package ata2014.commands;
+package edu.first.commands.common;
 
 import edu.first.command.Command;
 import edu.first.module.joysticks.BindingJoystick;

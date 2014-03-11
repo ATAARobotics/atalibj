@@ -1,4 +1,4 @@
-package ata2014.commands;
+package edu.first.commands.common;
 
 import edu.first.command.Command;
 import edu.first.module.Module;
@@ -7,21 +7,21 @@ import edu.first.module.Module;
  *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
-public class EnableModule implements Command {
+public class DisableModule implements Command {
 
     private final Module[] modules;
 
-    public EnableModule(Module[] modules) {
+    public DisableModule(Module[] modules) {
         this.modules = modules;
     }
 
-    public EnableModule(Module module) {
+    public DisableModule(Module module) {
         this.modules = new Module[]{module};
     }
 
     public void run() {
         for (int x = 0; x < modules.length; x++) {
-            modules[x].enable();
+            modules[x].disable();
         }
     }
 }
