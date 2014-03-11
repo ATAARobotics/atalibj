@@ -10,13 +10,15 @@ import edu.first.util.MathUtils;
  * Controller that uses the PID algorithm to handle input and output. This class
  * is thread safe and settings can be changed while it is running.
  *
- * <p> To understand how PID works, visit:
+ * <p>
+ * To understand how PID works, visit:
  * <p>
  * <a href="http://youtu.be/UR0hOmjaHp0">PID Control - A brief introduction</a>
  * <p>
  * <a href="http://en.wikipedia.org/wiki/PID_controller">PID Controller</a>
  *
- * <p> This PID algorithm runs like this:
+ * <p>
+ * This PID algorithm runs like this:
  * <pre>   P * error
  * + I * totalError
  * + D * (error - prevError)
@@ -423,6 +425,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
         synchronized (lock) {
             prevError = error;
             prevResult = result;
+            totalError = sTotalError;
         }
     }
 

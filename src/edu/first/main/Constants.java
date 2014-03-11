@@ -3,13 +3,11 @@ package edu.first.main;
 import ata2014.main.Files;
 import ata2014.main.Ports;
 import ata2014.main.Settings;
-import ata2014.subsystems.BackLoader;
 import ata2014.subsystems.Compressor;
 import ata2014.subsystems.Drive;
 import ata2014.subsystems.Joysticks;
 import ata2014.subsystems.Loader;
 import ata2014.subsystems.Winch;
-import edu.first.util.File;
 
 /**
  * The central repository for all constant values. Values here are expected to
@@ -51,5 +49,5 @@ import edu.first.util.File;
  * @since May 07 13
  * @author Joel Gallant
  */
-public interface Constants extends Ports, Files, Settings, Joysticks, Compressor, Drive, Loader, BackLoader, Winch {
+public interface Constants extends Ports, Files, Settings, Joysticks, Compressor, Drive, Loader, Winch {
 }

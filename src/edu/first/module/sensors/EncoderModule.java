@@ -1,5 +1,6 @@
 package edu.first.module.sensors;
 
+import edu.first.identifiers.Input;
 import edu.first.module.Module;
 import edu.first.util.Enum;
 
@@ -129,7 +130,8 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
     /**
      * {@inheritDoc}
      *
-     * <p> Starts the encoder's counting mechanism.
+     * <p>
+     * Starts the encoder's counting mechanism.
      */
     protected void enableModule() {
         encoder.start();
@@ -138,7 +140,8 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
     /**
      * {@inheritDoc}
      *
-     * <p> Resets and stops the encoder's count.
+     * <p>
+     * Resets and stops the encoder's count.
      */
     protected void disableModule() {
         encoder.reset();
@@ -192,7 +195,8 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * reductions following the encoder shaft. This distance can be in any units
      * you like, linear or angular.
      *
-     * <p> A general guideline for RPM is to set this to 1/CountsPerRev.
+     * <p>
+     * A general guideline for RPM is to set this to 1/CountsPerRev.
      *
      * @param distance how much to consider one pulse
      */
@@ -290,6 +294,22 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
         return encoder.getRate();
     }
 
+    public Input rate() {
+        return new Input() {
+            public double get() {
+                return getRate();
+            }
+        };
+    }
+
+    public Input distance() {
+        return new Input() {
+            public double get() {
+                return getDistance();
+            }
+        };
+    }
+
     /**
      * Returns the current input type that {@link #get()} should return.
      *
@@ -304,7 +324,8 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * or
      * {@link #setInputType(edu.first.module.sensors.EncoderModule.InputType)}.
      *
-     * <p> By default, input type is {@link InputType#DISTANCE}.
+     * <p>
+     * By default, input type is {@link InputType#DISTANCE}.
      *
      * @return input based on input type
      */
