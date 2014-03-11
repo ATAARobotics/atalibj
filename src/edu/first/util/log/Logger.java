@@ -31,7 +31,7 @@ public final class Logger {
             System.out.println(msg);
         }
     };
-    private static final List DEFAULT_LOGS = Arrays.asList(new Object[] {
+    private static final List DEFAULT_LOGS = Arrays.asList(new Object[]{
         CONSOLE_LOG
     });
     private static final Hashtable loggers = new Hashtable();
@@ -81,6 +81,14 @@ public final class Logger {
             ((Logger) e.nextElement()).addLog(log);
         }
         DEFAULT_LOGS.add(log);
+    }
+
+    /**
+     * Clears all messages on the driverstation LCD.
+     */
+    public static void clearLCD() {
+        lineNum = 1;
+        DriverStationLCD.getInstance().clear();
     }
 
     /**
@@ -201,8 +209,9 @@ public final class Logger {
      * Sends a fatal message. This sends the message to the known logs, to the
      * DriverStation LCD screen and prints a stack trace for the error.
      *
-     * <p> This method <b>QUITS</b> the entire program with an error code of
-     * 8001. (after logging the problem)
+     * <p>
+     * This method <b>QUITS</b> the entire program with an error code of 8001.
+     * (after logging the problem)
      *
      * @see #addLog(edu.first.util.log.Logger.Log)
      * @see #displayLCDMessage(java.lang.String)

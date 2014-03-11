@@ -1,5 +1,7 @@
 package edu.first.util.dashboard;
 
+import edu.first.identifiers.Position;
+import edu.first.identifiers.Switch;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 
@@ -10,7 +12,7 @@ import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
  * @since June 23 13
  * @author Joel Gallant
  */
-public class BooleanDashboard {
+public class BooleanDashboard implements Switch, Position {
 
     private final String key;
     private final boolean defaultValue;
@@ -34,7 +36,7 @@ public class BooleanDashboard {
     public String getKey() {
         return key;
     }
-    
+
     /**
      * Returns whether or not the value is currently stored on the CRIO.
      *
@@ -66,5 +68,24 @@ public class BooleanDashboard {
      */
     public void set(boolean val) {
         SmartDashboard.putBoolean(key, val);
+    }
+
+    /**
+     * Sets the value to be associated with the key.
+     *
+     * @param pos new value to set
+     */
+    public void setPosition(boolean pos) {
+        SmartDashboard.putBoolean(key, pos);
+    }
+
+    /**
+     * Returns the current value associated with the key. Will return the
+     * default value when it does not {@link #exists() exist}.
+     *
+     * @return current value
+     */
+    public boolean getPosition() {
+        return SmartDashboard.getBoolean(key, defaultValue);
     }
 }
