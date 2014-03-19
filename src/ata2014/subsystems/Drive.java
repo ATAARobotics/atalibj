@@ -1,8 +1,8 @@
 package ata2014.subsystems;
 
 import ata2014.controllers.DrivingPID;
-import ata2014.main.Ports;
-import ata2014.main.Settings;
+import ata2014.settings.Ports;
+import ata2014.settings.Settings;
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;
 import edu.first.identifiers.Output;
@@ -44,11 +44,5 @@ public interface Drive extends Ports, Settings {
 
     DualActionSolenoidModule shifters = new DualActionSolenoidModule(SHIFTER_IN, SHIFTER_OUT);
     DrivingPID drivingPID = new DrivingPID(drivetrain, leftDriveEncoder, rightDriveEncoder,
-            DRIVING_P, DRIVING_I, DRIVING_D, DRIVING_MAX_SPEED);
-    PIDController straightDrivingPID = new PIDController(new TransformedInput(leftDriveEncoder.distance(), new Function.SumFunction(rightDriveEncoder.distance())),
-            new Output() {
-                public void set(double value) {
-                    drivetrain.drive(value, DRIVING_CORRECTION);
-                }
-            }, DRIVING_STRAIGHT_P, DRIVING_STRAIGHT_I, DRIVING_STRAIGHT_D);
+            DRIVING_P.get(), DRIVING_I.get(), DRIVING_D.get(), DRIVING_MAX_SPEED.get());
 }

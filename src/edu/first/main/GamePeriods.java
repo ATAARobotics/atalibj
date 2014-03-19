@@ -5,7 +5,7 @@
  */
 package edu.first.main;
 
-import ata2014.main.Momentum;
+import ata2014.Momentum;
 import edu.first.robot.RobotMode;
 import edu.first.robot.RobotModeSelector;
 import edu.first.robot.SafeRobotMode;

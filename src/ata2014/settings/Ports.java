@@ -1,4 +1,4 @@
-package ata2014.main;
+package ata2014.settings;
 
 /**
  *
@@ -6,7 +6,7 @@ package ata2014.main;
  */
 public interface Ports extends Files {
 
-    SettingsFile ports = new SettingsFile(portFile);
+    SettingFile ports = new SettingFile(portFile);
 
     // BACKUPS
     // --- Drivetrain

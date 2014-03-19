@@ -1,7 +1,7 @@
 package ata2014.subsystems;
 
 import ata2014.controllers.WinchBack;
-import ata2014.main.Ports;
+import ata2014.settings.Ports;
 import ata2014.modules.WinchMotor;
 import edu.first.module.Module;
 import edu.first.module.actuators.DualActionSolenoidModule;

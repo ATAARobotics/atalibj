@@ -1,6 +1,7 @@
 package api.gordian.storage;
 
 import api.gordian.Object;
+import edu.first.util.list.List;
 
 /**
  * Storage for objects. The specific behavior of the methods is up to the
@@ -63,4 +64,11 @@ public interface Variables {
      * @return if named object is found in storage
      */
     public boolean contains(String name);
+
+    /**
+     * Returns a list of all available keys for variables.
+     *
+     * @return keys of variables stored
+     */
+    public List keys();
 }

@@ -1,6 +1,6 @@
 package ata2014.subsystems;
 
-import ata2014.main.Ports;
+import ata2014.settings.Ports;
 import edu.first.module.Module;
 import edu.first.module.actuators.SpikeRelay;
 import edu.first.module.actuators.SpikeRelayModule;

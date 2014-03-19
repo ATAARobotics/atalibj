@@ -21,7 +21,7 @@ final class GordianStorage {
         list.addAll(storage.list);
         reserved.addAll(storage.reserved);
     }
-    
+
     public void sendTo(GordianStorage storage) {
         storage.list.addAll(list);
         storage.reserved.addAll(reserved);
@@ -115,6 +115,14 @@ final class GordianStorage {
             }
         }
         return false;
+    }
+
+    public List keys() {
+        ArrayList keys = new ArrayList();
+        for (int x = 0; x < list.size(); x++) {
+            keys.add(((Node) list.get(x)).name);
+        }
+        return keys;
     }
 
     private final class Node {

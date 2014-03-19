@@ -1,7 +1,7 @@
 package ata2014.subsystems;
 
-import ata2014.main.Ports;
-import ata2014.main.Settings;
+import ata2014.settings.Ports;
+import ata2014.settings.Settings;
 import edu.first.identifiers.Function;
 import edu.first.identifiers.InversedSpeedController;
 import edu.first.identifiers.TransformedOutput;
@@ -35,5 +35,5 @@ public interface Loader extends Ports, Settings {
 
     PIDController loaderController = new PIDController(loaderPosition,
             new TransformedOutput(loaderMotors, new Function.ProductFunction(LOADER_MAX_SPEED)),
-            LOADER_P, LOADER_I, LOADER_D);
+            LOADER_P.get(), LOADER_I.get(), LOADER_D.get());
 }

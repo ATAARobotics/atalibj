@@ -1,8 +1,8 @@
 package edu.first.main;
 
-import ata2014.main.Files;
-import ata2014.main.Ports;
-import ata2014.main.Settings;
+import ata2014.settings.ConstantSettings;
+import ata2014.settings.Ports;
+import ata2014.settings.Settings;
 import ata2014.subsystems.Compressor;
 import ata2014.subsystems.Drive;
 import ata2014.subsystems.Joysticks;
@@ -49,5 +49,6 @@ import ata2014.subsystems.Winch;
  * @since May 07 13
  * @author Joel Gallant
  */
-public interface Constants extends Ports, Files, Settings, Joysticks, Compressor, Drive, Loader, Winch {
+public interface Constants extends Settings, ConstantSettings, Ports,
+        Compressor, Drive, Joysticks, Loader, Winch {
 }

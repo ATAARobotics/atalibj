@@ -3,6 +3,7 @@ package org.gordian.storage;
 import api.gordian.Object;
 import api.gordian.storage.InternalNotFoundException;
 import api.gordian.storage.Variables;
+import edu.first.util.list.List;
 import org.gordian.value.GordianBoolean;
 import org.gordian.value.GordianNull;
 
@@ -37,7 +38,7 @@ public class GordianVariables implements Variables {
     public GordianVariables(GordianVariables variables) {
         storage = new GordianStorage(variables.storage);
     }
-    
+
     public void sendTo(GordianVariables variables) {
         storage.sendTo(variables.storage);
     }
@@ -64,5 +65,9 @@ public class GordianVariables implements Variables {
 
     public boolean contains(String name) {
         return storage.contains(name);
+    }
+
+    public List keys() {
+        return storage.keys();
     }
 }

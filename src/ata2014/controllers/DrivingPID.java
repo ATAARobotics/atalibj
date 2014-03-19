@@ -21,7 +21,7 @@ import edu.first.module.sensors.Encoder;
  */
 public final class DrivingPID extends Module.StandardModule {
 
-    private final double maxSpeed;
+    private double maxSpeed = 1;
     private final Drivetrain drivetrain;
     private final Input speed;
     private final PIDController pid;
@@ -38,6 +38,14 @@ public final class DrivingPID extends Module.StandardModule {
         this.drivetrain = drivetrain;
         this.speed = new AverageInputGroup(new Input[]{leftEncoder, rightEncoder});
         this.pid = new PIDController(speed, speedBuffer, P, I, D);
+        this.maxSpeed = maxSpeed;
+    }
+
+    public PIDController getPID() {
+        return pid;
+    }
+
+    public void setMaxSpeed(double maxSpeed) {
         this.maxSpeed = maxSpeed;
     }
 

@@ -1,4 +1,4 @@
-package ata2014.main;
+package ata2014;
 
 import api.gordian.Object;
 import api.gordian.Signature;
@@ -28,7 +28,6 @@ import org.gordian.value.GordianString;
 public class Autonomous extends GordianScope {
 
     private static final GordianDrivetrain DRIVETRAIN = new GordianDrivetrain(Drive.drivetrain);
-    private static final GordianPIDController STRAIGHT_DRIVING_PID = new GordianPIDController(Drive.straightDrivingPID);
     private static final GordianEncoder LEFT_DRIVE_ENCODER = new GordianEncoder(Drive.leftDriveEncoder);
     private static final GordianEncoder RIGHT_DRIVE_ENCODER = new GordianEncoder(Drive.rightDriveEncoder);
     private static final GordianLimitSwitch WINCH_LIMIT = new GordianLimitSwitch(Winch.winchLimit);
@@ -45,7 +44,6 @@ public class Autonomous extends GordianScope {
             }
         });
         variables().put("drivetrain", DRIVETRAIN);
-        variables().put("straightDrivingPID", STRAIGHT_DRIVING_PID);
         variables().put("leftDriveEncoder", LEFT_DRIVE_ENCODER);
         variables().put("rightDriveEncoder", RIGHT_DRIVE_ENCODER);
         variables().put("winchLimit", WINCH_LIMIT);
@@ -294,7 +292,7 @@ public class Autonomous extends GordianScope {
             });
         }
 
-        private final DualActionSolenoid.Direction direction(String key) {
+        private DualActionSolenoid.Direction direction(String key) {
             if (key.equalsIgnoreCase("left")) {
                 return DualActionSolenoid.Direction.LEFT;
             } else if (key.equalsIgnoreCase("right")) {
