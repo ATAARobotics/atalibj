@@ -126,6 +126,24 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
     }
 
     /**
+     * Returns a button that represents two buttons being pressed
+     * simultaneously.
+     *
+     * @param port1 first button
+     * @param port2 second button
+     * @return button that is both buttons together
+     */
+    public final Button getComboButton(final int port1, final int port2) {
+        checkButton(port1);
+        checkButton(port2);
+        return new Button() {
+            public boolean getPosition() {
+                return getRawButtonValue(port1) && getRawButtonValue(port2);
+            }
+        };
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalStateException when module is not enabled
