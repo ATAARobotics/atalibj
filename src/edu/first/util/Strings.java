@@ -647,6 +647,9 @@ public final class Strings {
         if (replace == null || replacement == null) {
             throw new NullPointerException();
         }
+        if (!contains(string, replace)) {
+            return string;
+        }
         String[] s = split(string, replace);
         if (s.length == 0) {
             return string;
