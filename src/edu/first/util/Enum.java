@@ -33,10 +33,10 @@ package edu.first.util;
  * }
  * </pre>
  *
- * In every official enum, use this pattern:
+ * In every enum, use this pattern:
  * <ul>
  * <li> Extend {@link Enum}
- * <li> Make class final
+ * <li> Make class final (prevent subclassing)
  * <li> Create a private constructor using {@link #Enum(java.lang.String)} or
  * {@link #Enum()} as a super call.
  * <li> For every value in the enum, declare it as
