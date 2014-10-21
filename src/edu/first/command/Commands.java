@@ -33,18 +33,23 @@ public final class Commands {
      * Runs the command in a different (new) thread. Waits until the thread is
      * completed running.
      *
-     * <p> If the thread is interrupted while running, this method will finish.
+     * <p>
+     * If the thread is interrupted while running, this method will finish and
+     * return the exception.
      *
      * @param command command to run
+     * @return exception if one occurred while waiting (otherwise null)
      */
-    public static void runInNewThreadAndWait(Command command) {
+    public static Exception runInNewThreadAndWait(Command command) {
         Thread t = new Thread(command);
         t.start();
         try {
             t.join();
         } catch (InterruptedException ex) {
             Logger.getLogger(Commands.class).error("Waiting for new thread interrupted", ex);
+            return ex;
         }
+        return null;
     }
 
     // cannot be subclassed or instantiated
