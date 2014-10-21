@@ -5,6 +5,10 @@ package edu.first.command;
  * open expectations as {@link Runnable} in that a command can do anything, even
  * something non-finished. (does not complete an action)
  *
+ * Command is meant to replicate the functionality introduced in the
+ * Command-Based model of WPILibJ. The concept is great, but implementation left
+ * something to be desired.
+ *
  * @since May 26 13
  * @author Joel Gallant
  */
