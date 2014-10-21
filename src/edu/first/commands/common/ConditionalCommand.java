@@ -12,7 +12,7 @@ import edu.first.identifiers.Position;
 public class ConditionalCommand implements Command {
 
     private final Position run;
-    private final Command command;
+    private final Command command, none;
 
     /**
      * Constructs the command using the condition ({@code run}) that will
@@ -23,6 +23,19 @@ public class ConditionalCommand implements Command {
      * @param command command to run if position is true
      */
     public ConditionalCommand(Position run, Command command) {
+        this(run, command, null);
+    }
+
+    /**
+     * Constructs the command using the condition ({@code run}) that will
+     * determine if {@code command} will run.
+     *
+     * @throws NullPointerException when position or command are null
+     * @param run position to check to see if command should run
+     * @param command command to run if position is true
+     * @param none command to run if position is false
+     */
+    public ConditionalCommand(Position run, Command command, Command none) {
         if (run == null) {
             throw new NullPointerException("Null position given");
         } else if (command == null) {
@@ -30,6 +43,7 @@ public class ConditionalCommand implements Command {
         }
         this.run = run;
         this.command = command;
+        this.none = none;
     }
 
     /**
@@ -38,6 +52,8 @@ public class ConditionalCommand implements Command {
     public void run() {
         if (run.getPosition()) {
             command.run();
+        } else if (none != null) {
+            none.run();
         }
     }
 }
