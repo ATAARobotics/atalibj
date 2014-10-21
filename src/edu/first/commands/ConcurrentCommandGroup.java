@@ -55,6 +55,8 @@ public final class ConcurrentCommandGroup implements Command {
 
     /**
      * Runs all of the commands, and waits for them all to finish.
+     * 
+     * @throws RuntimeException when threads are somehow interrupted
      */
     public void run() {
         try {
@@ -70,6 +72,7 @@ public final class ConcurrentCommandGroup implements Command {
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(getClass()).error("Command Group interrupted", ex);
+            throw new RuntimeException("Command Group interrupted - " + ex.getMessage());
         }
     }
 }

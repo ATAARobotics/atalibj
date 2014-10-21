@@ -112,9 +112,11 @@ public class CommandGroup implements Command {
         if (command == null) {
             throw new NullPointerException("Null command given");
         }
-        if (!(commands.get(commands.size() - 1) instanceof ConcurrentCommandGroup)) {
+        Object lastCommand = commands.get(commands.size() - 1);
+        if (!(lastCommand instanceof ConcurrentCommandGroup)) {
             commands.add(new ConcurrentCommandGroup());
         }
+        // list is sure to end with a ConcurrentCommandGroup
         ((ConcurrentCommandGroup) commands.get(commands.size() - 1)).add(command);
     }
 
