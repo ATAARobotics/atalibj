@@ -28,7 +28,7 @@ public final class AverageInputGroup implements Input {
         for (int x = 0; x < input.length; x++) {
             total += input[x].get();
         }
-        return total / input.length;
+        return total / (double) input.length;
     }
 
 }
