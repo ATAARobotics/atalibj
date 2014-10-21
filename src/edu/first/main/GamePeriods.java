@@ -1,13 +1,11 @@
 /*
- * This software has been created by Alberta Tech Alliance, Team 4334, in 
- * Calgary, Alberta. All credit goes to them and any use of this code should be 
- * accredited to them.
+ * This software was created by Alberta Tech Alliance, Team 4334, in 
+ * Calgary, Alberta. This version is a fork by FRC Western Canada.
  */
 package edu.first.main;
 
 import edu.first.robot.IterativeRobotAdapter;
 import edu.first.robot.RobotMode;
-import edu.first.robot.RobotModeSelector;
 import edu.first.robot.SafeRobotMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -21,11 +19,9 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * {@code GamePeriods}'s usefulness because it contains all of the methods of
  * {@code GamePeriods} and more.
  *
- * {@code GamePeriods} works by using a {@link RobotModeSelector} to select from
- * {@link GamePeriods#modes}. This allows the programmer to use one mode or
- * multiple modes. The mode is selectable on the SmartDashboard under the key
- * "Robot Mode". To change this functionality, edit this class so that
- * {@link GamePeriods#updateMode()} returns the mode you want to run.
+ * Please change the static variable {@link #robotMode} to your robot. Do so
+ * however you wish, but you may experience problems if set statically (happens
+ * before some internal initialisations of WPILibJ).
  *
  * <b> If you change the name of this class or the package after creating this
  * project, you must also update the manifest file in the resource directory.
@@ -44,6 +40,9 @@ public final class GamePeriods extends IterativeRobot {
     // The current game mode - change to yours
     private static RobotMode robotMode;
 
+    /**
+     * Please never use this!
+     */
     public GamePeriods() {
         // Init robot mode here so that static initializing doesn't interfere with wpi code
         robotMode = new SafeRobotMode(new IterativeRobotAdapter("Null"));
