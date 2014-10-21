@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  * The Xbox 360 controller. Is bindable and has custom axises.
  *
- * <p> Raw buttons:
+ * <p>
+ * Raw buttons:
  *
  * <pre>
  * 1: A
@@ -98,6 +99,22 @@ public class XboxController extends BindingJoystick {
     }
 
     /**
+     * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
+     * object that this joystick gets input from. Adds a deadband to every stick
+     * input (left X, left Y, right X, right Y).
+     *
+     * @param joystick the composing instance to get input from
+     * @param stickDeadband threshold of minimum input for stick axises
+     * @param triggerDeadband threshold of minimum input for triggers
+     * @see #addDeadband(int, double)
+     */
+    protected XboxController(Joystick joystick, double stickDeadband, double triggerDeadband) {
+        this(joystick, stickDeadband);
+        
+        addDeadband(TRIGGERS, triggerDeadband);
+    }
+
+    /**
      * Constructs the joystick with a port on the DriverStation.
      *
      * @param port channel in configuration of DriverStation
@@ -121,7 +138,8 @@ public class XboxController extends BindingJoystick {
     /**
      * Returns the value of the left stick's X axis.
      *
-     * <p> Left: Negative; Right: Positive
+     * <p>
+     * Left: Negative; Right: Positive
      *
      * @return left x axis value
      */
@@ -134,7 +152,8 @@ public class XboxController extends BindingJoystick {
      * settings of the controller will not affect this object after it has
      * already been created.
      *
-     * <p> Left: Negative; Right: Positive
+     * <p>
+     * Left: Negative; Right: Positive
      *
      * @return axis object to receive input from
      */
@@ -145,7 +164,8 @@ public class XboxController extends BindingJoystick {
     /**
      * Returns the value of the left stick's Y axis.
      *
-     * <p> Up: Positive; Down: Negative
+     * <p>
+     * Up: Positive; Down: Negative
      *
      * @return left y axis value
      */
@@ -158,7 +178,8 @@ public class XboxController extends BindingJoystick {
      * settings of the controller will not affect this object after it has
      * already been created.
      *
-     * <p> Up: Positive; Down: Negative
+     * <p>
+     * Up: Positive; Down: Negative
      *
      * @return axis object to receive input from
      */
@@ -169,10 +190,12 @@ public class XboxController extends BindingJoystick {
     /**
      * Returns the value of the triggers' axis.
      *
-     * <p> Each trigger goes from 0 to 1. Triggers value is equal to
+     * <p>
+     * Each trigger goes from 0 to 1. Triggers value is equal to
      * {@code right - left}.
      *
-     * <p> Left: Negative; Right: Positive
+     * <p>
+     * Left: Negative; Right: Positive
      *
      * @return trigger axis value
      */
@@ -185,7 +208,8 @@ public class XboxController extends BindingJoystick {
      * settings of the controller will not affect this object after it has
      * already been created.
      *
-     * <p> Left: Negative; Right: Positive
+     * <p>
+     * Left: Negative; Right: Positive
      *
      * @return axis object to receive input from
      */
@@ -196,7 +220,8 @@ public class XboxController extends BindingJoystick {
     /**
      * Returns the value of the right stick's X axis.
      *
-     * <p> Left: Negative; Right: Positive
+     * <p>
+     * Left: Negative; Right: Positive
      *
      * @return right x axis value
      */
@@ -209,7 +234,8 @@ public class XboxController extends BindingJoystick {
      * settings of the controller will not affect this object after it has
      * already been created.
      *
-     * <p> Left: Negative; Right: Positive
+     * <p>
+     * Left: Negative; Right: Positive
      *
      * @return axis object to receive input from
      */
@@ -220,7 +246,8 @@ public class XboxController extends BindingJoystick {
     /**
      * Returns the value of the right stick's Y axis.
      *
-     * <p> Up: Positive; Down: Negative
+     * <p>
+     * Up: Positive; Down: Negative
      *
      * @return right y axis value
      */
@@ -233,7 +260,8 @@ public class XboxController extends BindingJoystick {
      * settings of the controller will not affect this object after it has
      * already been created.
      *
-     * <p> Up: Positive; Down: Negative
+     * <p>
+     * Up: Positive; Down: Negative
      *
      * @return axis object to receive input from
      */
@@ -244,7 +272,8 @@ public class XboxController extends BindingJoystick {
     /**
      * Returns the value of the directional pad.
      *
-     * <p> Left: -1; Right: +1
+     * <p>
+     * Left: -1; Right: +1
      *
      * @return directional pad axis value
      */
@@ -257,7 +286,8 @@ public class XboxController extends BindingJoystick {
      * settings of the controller will not affect this object after it has
      * already been created.
      *
-     * <p> Left: -1; Right: +1
+     * <p>
+     * Left: -1; Right: +1
      *
      * @return axis object to receive input from
      */
@@ -269,7 +299,8 @@ public class XboxController extends BindingJoystick {
      * Returns the distance that the right stick is relative to the absolute
      * centre.
      *
-     * <p> Up: Positive; Down: Negative
+     * <p>
+     * Up: Positive; Down: Negative
      *
      * @return right distance from middle
      */
@@ -282,7 +313,8 @@ public class XboxController extends BindingJoystick {
      * settings of the controller will not affect this object after it has
      * already been created.
      *
-     * <p> Up: Positive; Down: Negative
+     * <p>
+     * Up: Positive; Down: Negative
      *
      * @return axis object to receive input from
      */
@@ -294,7 +326,8 @@ public class XboxController extends BindingJoystick {
      * Returns the distance that the left stick is relative to the absolute
      * centre.
      *
-     * <p> Up: Positive; Down: Negative
+     * <p>
+     * Up: Positive; Down: Negative
      *
      * @return left distance from middle
      */
@@ -307,7 +340,8 @@ public class XboxController extends BindingJoystick {
      * settings of the controller will not affect this object after it has
      * already been created.
      *
-     * <p> Up: Positive; Down: Negative
+     * <p>
+     * Up: Positive; Down: Negative
      *
      * @return axis object to receive input from
      */
