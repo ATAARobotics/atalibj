@@ -1,7 +1,7 @@
 package edu.first.module.sensors;
 
 import edu.first.module.Module;
-import edu.wpi.first.wpilibj.AnalogChannel;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Gyro;
 
 /**
@@ -35,18 +35,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      * @param channel port on sidecar
      */
     public GyroscopeModule(int channel) {
-        this(new AnalogChannel(channel));
-    }
-
-    /**
-     * Constructs the module with the port on the analog sidecar and which slot
-     * the sidecar is in.
-     *
-     * @param channel port on sidecar
-     * @param slot slot in cRIO (1 = default)
-     */
-    public GyroscopeModule(int channel, int slot) {
-        this(new AnalogChannel(slot, channel));
+        this(new Gyro(channel));
     }
 
     /**
@@ -54,7 +43,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      *
      * @param channel analog channel to find gyro on
      */
-    public GyroscopeModule(AnalogChannel channel) {
+    public GyroscopeModule(AnalogInput channel) {
         this(new Gyro(channel));
     }
 

@@ -33,16 +33,6 @@ public class DigitalInput extends Module.StandardModule implements Position {
     }
 
     /**
-     * Constructs the module using the sensor's channel.
-     *
-     * @param channel channel on the digital sidecar
-     * @param slot slot on cRIO (1 = default)
-     */
-    public DigitalInput(int channel, int slot) {
-        this(new edu.wpi.first.wpilibj.DigitalInput(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected void enableModule() {

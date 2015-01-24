@@ -37,27 +37,15 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
     }
 
     /**
-     * Constructs the counter with the channel it is on.
-     *
-     * @param channel channel on the digital sidecar
-     * @param slot slot on the cRIO (1 = default)
-     */
-    public OneChannelCounter(int channel, int slot) {
-        this(new Counter(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected void enableModule() {
-        counter.start();
     }
 
     /**
      * {@inheritDoc}
      */
     protected void disableModule() {
-        counter.stop();
     }
 
     /**

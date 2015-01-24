@@ -4,7 +4,6 @@ import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;
 import edu.first.identifiers.RateActuator;
 import edu.first.identifiers.RateSensor;
-import edu.first.util.MathUtils;
 
 /**
  * Controller that uses an on-off strategy to achieve a desired input.
@@ -216,7 +215,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      */
     public void setMaxOutput(double maxOutput) {
         synchronized (lock) {
-            this.maxOutput = MathUtils.abs(maxOutput);
+            this.maxOutput = Math.abs(maxOutput);
         }
     }
 
@@ -349,7 +348,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return if controller is close enough to target
      */
     public boolean onTarget() {
-        return MathUtils.abs(getError()) < tolerance;
+        return Math.abs(getError()) < tolerance;
     }
 
     /**

@@ -34,16 +34,6 @@ public class ServoModule extends Module.StandardModule implements Servo {
     }
 
     /**
-     * Constructs the servo using its channel on the digital sidecar.
-     *
-     * @param channel port on sidecar
-     * @param slot slot in cRIO (1 = default)
-     */
-    public ServoModule(int channel, int slot) {
-        this(new edu.wpi.first.wpilibj.Servo(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected void enableModule() {

@@ -39,17 +39,6 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
     }
 
     /**
-     * Constructs the relay with the channel on the digital module and the slot
-     * that it's in.
-     *
-     * @param channel the channel on the digital sidecar
-     * @param slot slot in cRIO (1 = default)
-     */
-    public SpikeRelayModule(int channel, int slot) {
-        this(new Relay(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected void enableModule() {

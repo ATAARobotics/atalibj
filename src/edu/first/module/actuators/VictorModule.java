@@ -38,17 +38,6 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
     }
 
     /**
-     * Constructs the module with the port on the digital sidecar and which slot
-     * the sidecar is in.
-     *
-     * @param channel port on sidecar
-     * @param slot slot in cRIO (1 = default)
-     */
-    public VictorModule(int channel, int slot) {
-        this(new Victor(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected void enableModule() {

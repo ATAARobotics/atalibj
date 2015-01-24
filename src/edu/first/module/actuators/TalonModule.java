@@ -38,17 +38,6 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
     }
 
     /**
-     * Constructs the module with the port on the digital sidecar and which slot
-     * the sidecar is in.
-     *
-     * @param channel port on sidecar
-     * @param slot slot in cRIO (1 = default)
-     */
-    public TalonModule(int channel, int slot) {
-        this(new Talon(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected void enableModule() {

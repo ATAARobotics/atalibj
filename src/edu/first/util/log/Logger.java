@@ -1,16 +1,15 @@
 package edu.first.util.log;
 
-import edu.first.util.Arrays;
-import edu.first.util.DriverstationInfo;
-import edu.first.util.Enum;
-import edu.first.util.File;
-import edu.first.util.TextFiles;
-import edu.first.util.list.Iterator;
-import edu.first.util.list.List;
-import edu.first.util.list.SafeArrayList;
-import edu.wpi.first.wpilibj.DriverStationLCD;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+
+import edu.first.util.DriverstationInfo;
+import edu.first.util.TextFiles;
 
 /**
  * The logging abstraction that allows users to log messages at different
@@ -22,289 +21,232 @@ import java.util.Hashtable;
  */
 public final class Logger {
 
-    /**
-     * The log that sends messages to the console. This log object is added to
-     * every {@code Logger} by default, so there is no need to do so yourself.
-     */
-    public static final Log CONSOLE_LOG = new Log() {
-        public void send(String msg) {
-            System.out.println(msg);
-        }
-    };
-    private static final List DEFAULT_LOGS = Arrays.asList(new Object[]{
-        CONSOLE_LOG
-    });
-    private static final Hashtable loggers = new Hashtable();
-    private static int lineNum = 1;
-    private final Class origin;
-    private final List logs = new SafeArrayList(DEFAULT_LOGS, Log.class);
+	/**
+	 * The log that sends messages to the console. This log object is added to
+	 * every {@code Logger} by default, so there is no need to do so yourself.
+	 */
+	public static final Log CONSOLE_LOG = new Log() {
+		public void send(String msg) {
+			System.out.println(msg);
+		}
+	};
+	private static final List<Log> DEFAULT_LOGS = Arrays
+			.asList(new Log[] { CONSOLE_LOG });
+	private static final Hashtable<Class<?>, Logger> loggers = new Hashtable<>();
+	private final Class<?> origin;
+	private final List<Log> logs = new ArrayList<>(DEFAULT_LOGS);
 
-    /**
-     * Returns the current logger for the origin. All loggers with the same
-     * origin are technically the same logger.
-     *
-     * @param origin class that the logger is sending messages from
-     * @return an instance of {@code Logger} that can send messages from the
-     * origin
-     */
-    public static Logger getLogger(Class origin) {
-        if (!loggers.containsKey(origin)) {
-            loggers.put(origin, new Logger(origin));
-        }
-        return (Logger) loggers.get(origin);
-    }
+	/**
+	 * Returns the current logger for the origin. All loggers with the same
+	 * origin are technically the same logger.
+	 *
+	 * @param origin
+	 *            class that the logger is sending messages from
+	 * @return an instance of {@code Logger} that can send messages from the
+	 *         origin
+	 */
+	public static Logger getLogger(Class<?> origin) {
+		if (!loggers.containsKey(origin)) {
+			loggers.put(origin, new Logger(origin));
+		}
+		return (Logger) loggers.get(origin);
+	}
 
-    /**
-     * Returns the current logger for the class of the given object. Typically,
-     * you can use it like this:
-     * <pre>
-     * getLogger(this);
-     * </pre> It will deduce the class of the {@code this} object.
-     *
-     * @param o object whose class is the origin
-     * @return an instance of {@code Logger} that can send messages from the
-     * origin
-     */
-    public static Logger getLogger(Object o) {
-        return getLogger(o.getClass());
-    }
+	/**
+	 * Returns the current logger for the class of the given object. Typically,
+	 * you can use it like this:
+	 * 
+	 * <pre>
+	 * getLogger(this);
+	 * </pre>
+	 * 
+	 * It will deduce the class of the {@code this} object.
+	 *
+	 * @param o
+	 *            object whose class is the origin
+	 * @return an instance of {@code Logger} that can send messages from the
+	 *         origin
+	 */
+	public static Logger getLogger(Object o) {
+		return getLogger(o.getClass());
+	}
 
-    /**
-     * Adds the {@code log} to every logger, regardless of origin.
-     *
-     * @param log the output to send messages to
-     * @see #addLog(edu.first.util.log.Logger.Log)
-     */
-    public static void addLogToAll(Log log) {
-        Enumeration e = loggers.elements();
-        while (e.hasMoreElements()) {
-            ((Logger) e.nextElement()).addLog(log);
-        }
-        DEFAULT_LOGS.add(log);
-    }
+	/**
+	 * Adds the {@code log} to every logger, regardless of origin.
+	 *
+	 * @param log
+	 *            the output to send messages to
+	 * @see #addLog(edu.first.util.log.Logger.Log)
+	 */
+	public static void addLogToAll(Log log) {
+		Enumeration<Logger> e = loggers.elements();
+		while (e.hasMoreElements()) {
+			((Logger) e.nextElement()).addLog(log);
+		}
+		DEFAULT_LOGS.add(log);
+	}
 
-    /**
-     * Clears all messages on the driverstation LCD.
-     */
-    public static void clearLCD() {
-        lineNum = 1;
-        DriverStationLCD.getInstance().clear();
-    }
+	// Use static factory instead
+	private Logger(Class<?> origin) {
+		this.origin = origin;
+	}
 
-    /**
-     * Displays the message on the next line on the DriverStation LCD screen.
-     * This method rotates through every line, and displays the message on the
-     * line after the previous message.
-     *
-     * @throws NullPointerException when message is null
-     * @param msg message to display
-     */
-    public static void displayLCDMessage(String msg) {
-        if (msg == null) {
-            throw new NullPointerException();
-        }
-        if (msg.length() > DriverStationLCD.kLineLength) {
-            displayLCDMessage(msg.substring(0, DriverStationLCD.kLineLength));
-            displayLCDMessage(msg.substring(DriverStationLCD.kLineLength));
-            return;
-        }
-        DriverStationLCD.Line line;
-        switch (lineNum) {
-            case (1):
-                line = DriverStationLCD.Line.kUser1;
-                break;
-            case (2):
-                line = DriverStationLCD.Line.kUser2;
-                break;
-            case (3):
-                line = DriverStationLCD.Line.kUser3;
-                break;
-            case (4):
-                line = DriverStationLCD.Line.kUser4;
-                break;
-            case (5):
-                line = DriverStationLCD.Line.kUser5;
-                break;
-            case (6):
-                line = DriverStationLCD.Line.kUser6;
-                break;
-            default:
-                line = DriverStationLCD.Line.kUser1;
-        }
-        StringBuffer buf = new StringBuffer(msg);
-        while (buf.length() < DriverStationLCD.kLineLength) {
-            buf.append(' ');
-        }
-        DriverStationLCD.getInstance().println(line, 1, buf);
-        DriverStationLCD.getInstance().updateLCD();
-        if (++lineNum > 6) {
-            lineNum = 1;
-        }
-    }
+	/**
+	 * Adds a new output for log messages to be sent to. Previously given logs
+	 * will still be sent to. {@link #CONSOLE_LOG} is already added by default.
+	 *
+	 * @param log
+	 *            the output to send messages to
+	 */
+	public void addLog(Log log) {
+		logs.add(log);
+	}
 
-    // Use static factory instead
-    private Logger(Class origin) {
-        this.origin = origin;
-    }
+	/**
+	 * Sends a debug message. This only sends the message to the known logs.
+	 *
+	 * @see #addLog(edu.first.util.log.Logger.Log)
+	 * @param msg
+	 *            message to send user
+	 */
+	public void debug(String msg) {
+		send(new Message(Level.DEBUG, origin, msg));
+	}
 
-    /**
-     * Adds a new output for log messages to be sent to. Previously given logs
-     * will still be sent to. {@link #CONSOLE_LOG} is already added by default.
-     *
-     * @param log the output to send messages to
-     */
-    public void addLog(Log log) {
-        logs.add(log);
-    }
+	/**
+	 * Sends an info message. This only sends the message to the known logs.
+	 *
+	 * @see #addLog(edu.first.util.log.Logger.Log)
+	 * @param msg
+	 *            message to send user
+	 */
+	public void info(String msg) {
+		send(new Message(Level.INFO, origin, msg));
+	}
 
-    /**
-     * Sends a debug message. This only sends the message to the known logs.
-     *
-     * @see #addLog(edu.first.util.log.Logger.Log)
-     * @param msg message to send user
-     */
-    public void debug(String msg) {
-        send(new Message(Level.DEBUG, origin, msg));
-    }
+	/**
+	 * Sends a warning message. This sends the message to the known logs and to
+	 * the DriverStation LCD screen.
+	 *
+	 * @see #addLog(edu.first.util.log.Logger.Log)
+	 * @see #displayLCDMessage(java.lang.String)
+	 * @param msg
+	 *            message to send user
+	 */
+	public void warn(String msg) {
+		send(new Message(Level.WARN, origin, msg));
+	}
 
-    /**
-     * Sends an info message. This only sends the message to the known logs.
-     *
-     * @see #addLog(edu.first.util.log.Logger.Log)
-     * @param msg message to send user
-     */
-    public void info(String msg) {
-        send(new Message(Level.INFO, origin, msg));
-    }
+	/**
+	 * Sends an error message. This sends the message to the known logs, to the
+	 * DriverStation LCD screen and prints a stack trace for the error.
+	 *
+	 * @see #addLog(edu.first.util.log.Logger.Log)
+	 * @see #displayLCDMessage(java.lang.String)
+	 * @param msg
+	 *            message to send user
+	 * @param error
+	 *            the error to print stack trace of
+	 */
+	public void error(String msg, Throwable error) {
+		send(new Message(Level.ERROR, origin, msg));
+		error.printStackTrace();
+	}
 
-    /**
-     * Sends a warning message. This sends the message to the known logs and to
-     * the DriverStation LCD screen.
-     *
-     * @see #addLog(edu.first.util.log.Logger.Log)
-     * @see #displayLCDMessage(java.lang.String)
-     * @param msg message to send user
-     */
-    public void warn(String msg) {
-        send(new Message(Level.WARN, origin, msg));
-        displayLCDMessage(msg);
-    }
+	/**
+	 * Sends a fatal message. This sends the message to the known logs, to the
+	 * DriverStation LCD screen and prints a stack trace for the error.
+	 *
+	 * <p>
+	 * This method <b>QUITS</b> the entire program with an error code of 8001.
+	 * (after logging the problem)
+	 *
+	 * @see #addLog(edu.first.util.log.Logger.Log)
+	 * @see #displayLCDMessage(java.lang.String)
+	 * @param msg
+	 *            message to send user
+	 * @param error
+	 *            the error to print stack trace of
+	 */
+	public void fatal(String msg, Throwable error) {
+		send(new Message(Level.FATAL, origin, msg));
+		error.printStackTrace();
+		System.exit(8001);
+	}
 
-    /**
-     * Sends an error message. This sends the message to the known logs, to the
-     * DriverStation LCD screen and prints a stack trace for the error.
-     *
-     * @see #addLog(edu.first.util.log.Logger.Log)
-     * @see #displayLCDMessage(java.lang.String)
-     * @param msg message to send user
-     * @param error the error to print stack trace of
-     */
-    public void error(String msg, Throwable error) {
-        send(new Message(Level.ERROR, origin, msg));
-        displayLCDMessage(msg);
-        error.printStackTrace();
-    }
+	private void send(Message msg) {
+		Iterator<Log> i = logs.iterator();
+		while (i.hasNext()) {
+			i.next().send(msg.toString());
+		}
+	}
 
-    /**
-     * Sends a fatal message. This sends the message to the known logs, to the
-     * DriverStation LCD screen and prints a stack trace for the error.
-     *
-     * <p>
-     * This method <b>QUITS</b> the entire program with an error code of 8001.
-     * (after logging the problem)
-     *
-     * @see #addLog(edu.first.util.log.Logger.Log)
-     * @see #displayLCDMessage(java.lang.String)
-     * @param msg message to send user
-     * @param error the error to print stack trace of
-     */
-    public void fatal(String msg, Throwable error) {
-        send(new Message(Level.FATAL, origin, msg));
-        displayLCDMessage(msg);
-        error.printStackTrace();
-        System.exit(8001);
-    }
+	/**
+	 * A log that sends messages to the user in some way. Usually this is a
+	 * {@link #CONSOLE_LOG console}, {@link FileLog text file} or something
+	 * similar.
+	 */
+	public static interface Log {
 
-    private void send(Message msg) {
-        Iterator i = logs.iterator();
-        while (i.hasNext()) {
-            ((Log) i.next()).send(msg.toString());
-        }
-    }
+		/**
+		 * Sends the message to the log.
+		 *
+		 * @param msg
+		 *            message to send to the user
+		 */
+		public void send(String msg);
+	}
 
-    /**
-     * A log that sends messages to the user in some way. Usually this is a
-     * {@link #CONSOLE_LOG console}, {@link FileLog text file} or something
-     * similar.
-     */
-    public static interface Log {
+	/**
+	 * An implementation of {@link Log} that logs to a text file.
+	 */
+	public static final @Deprecated class FileLog implements Log {
 
-        /**
-         * Sends the message to the log.
-         *
-         * @param msg message to send to the user
-         */
-        public void send(String msg);
-    }
+		private final File file;
 
-    /**
-     * An implementation of {@link Log} that logs to a text file.
-     */
-    public static final class FileLog implements Log {
+		/**
+		 * Constructs the log with the file to log to.
+		 *
+		 * @param file
+		 *            which file messages should be logged to
+		 */
+		public FileLog(File file) {
+			this.file = file;
+		}
 
-        private final File file;
+		/**
+		 * {@inheritDoc}
+		 *
+		 * Inserts the message at the very end of the file.
+		 */
+		public void send(String msg) {
+			TextFiles.appendToNewLine(file, msg);
+		}
+	}
 
-        /**
-         * Constructs the log with the file to log to.
-         *
-         * @param file which file messages should be logged to
-         */
-        public FileLog(File file) {
-            this.file = file;
-        }
+	private static enum Level {
+		DEBUG, INFO, WARN, ERROR, FATAL;
+	}
 
-        /**
-         * {@inheritDoc}
-         *
-         * Inserts the message at the very end of the file.
-         */
-        public void send(String msg) {
-            TextFiles.appendToNewLine(file, msg);
-        }
-    }
+	private static final class Message {
 
-    private static final class Level extends Enum {
+		private final Level l;
+		private final Class<?> o;
+		private final String m;
 
-        public static final Level DEBUG = new Level("DEBUG");
-        public static final Level INFO = new Level("INFO");
-        public static final Level WARN = new Level("WARN");
-        public static final Level ERROR = new Level("ERROR");
-        public static final Level FATAL = new Level("FATAL");
+		Message(Level l, Class<?> o, String m) {
+			this.l = l;
+			this.o = o;
+			this.m = m;
+		}
 
-        private Level(String name) {
-            super(name);
-        }
-    }
-
-    private static final class Message {
-
-        private final Level l;
-        private final Class o;
-        private final String m;
-
-        Message(Level l, Class o, String m) {
-            this.l = l;
-            this.o = o;
-            this.m = m;
-        }
-
-        public String toString() {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(DriverstationInfo.getGamePeriod()).append(" - ");
-            buffer.append('[').append(l).append("] ");
-            buffer.append('@').append(o.getName()).append(' ');
-            buffer.append(" - ").append(m);
-            return buffer.toString();
-        }
-    }
+		public String toString() {
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(DriverstationInfo.getGamePeriod()).append(" - ");
+			buffer.append('[').append(l).append("] ");
+			buffer.append('@').append(o.getName()).append(' ');
+			buffer.append(" - ").append(m);
+			return buffer.toString();
+		}
+	}
 }

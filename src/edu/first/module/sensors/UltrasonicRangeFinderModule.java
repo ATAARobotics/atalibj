@@ -37,19 +37,6 @@ public class UltrasonicRangeFinderModule extends Module.StandardModule implement
     }
 
     /**
-     * Constructs the range finder using the ping and echo channel. Ping is used
-     * to send signals and echo is used to receive the reflected signal.
-     *
-     * @param pingChannel channel on digital sidecar for pinging
-     * @param pingSlot slot on the cRIO (1 = default)
-     * @param echoChannel channel on digital sidecar for receiving
-     * @param echoSlot slot on the cRIO (1 = default)
-     */
-    public UltrasonicRangeFinderModule(int pingChannel, int pingSlot, int echoChannel, int echoSlot) {
-        this(new Ultrasonic(pingSlot, pingChannel, echoSlot, echoChannel));
-    }
-
-    /**
      * {@inheritDoc}
      */
     protected void enableModule() {
