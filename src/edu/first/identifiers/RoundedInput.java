@@ -1,6 +1,5 @@
 package edu.first.identifiers;
 
-import edu.first.util.MathUtils;
 
 /**
  * Input that is rounded to the nearest integer.
@@ -27,6 +26,6 @@ public class RoundedInput implements Input {
      * @return rounded value
      */
     public double get() {
-        return MathUtils.round(input.get());
+        return Math.round(input.get());
     }
 }

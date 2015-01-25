@@ -4,7 +4,6 @@ import edu.first.identifiers.Input;
 import edu.first.identifiers.Output;
 import edu.first.identifiers.PositionalActuator;
 import edu.first.identifiers.PositionalSensor;
-import edu.first.util.MathUtils;
 
 /**
  * Controller that uses the PID algorithm to handle input and output. This class
@@ -352,7 +351,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @return if controller is close enough to target
      */
     public boolean onTarget() {
-        return MathUtils.abs(getError()) < tolerance;
+        return Math.abs(getError()) < tolerance;
     }
 
     /**

@@ -4,7 +4,6 @@ import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.joysticks.Joystick.Axis;
-import edu.first.util.MathUtils;
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 
@@ -172,8 +171,8 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     public final void set(double left, double right) {
         ensureEnabled();
         safetyHelper.feed();
-        this.left.setSpeed(MathUtils.limit(reversed ? -left : left, maxSpeed));
-        this.right.setSpeed(MathUtils.limit(reversed ? -right : right, maxSpeed));
+        this.left.setSpeed(limit(reversed ? -left : left, maxSpeed));
+        this.right.setSpeed(limit(reversed ? -right : right, maxSpeed));
         this.left.update();
         this.right.update();
     }
@@ -207,8 +206,8 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
             rotateValue = -rotateValue;
         }
 
-        moveValue = MathUtils.limit(moveValue, 1);
-        rotateValue = MathUtils.limit(rotateValue, 1);
+        moveValue = limit(moveValue, 1);
+        rotateValue = limit(rotateValue, 1);
 
         if (squaredInputs) {
             if (moveValue >= 0.0) {
@@ -264,8 +263,8 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      * @param squaredInputs if input should be squared for better response
      */
     public void tankDrive(double leftValue, double rightValue, boolean squaredInputs) {
-        leftValue = MathUtils.limit(leftValue, 1);
-        rightValue = MathUtils.limit(rightValue, 1);
+        leftValue = limit(leftValue, 1);
+        rightValue = limit(rightValue, 1);
 
         if (squaredInputs) {
             if (leftValue >= 0.0) {
@@ -306,7 +305,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
         }
 
         if (curve < 0) {
-            double value = MathUtils.log(-curve);
+            double value = Math.log(-curve);
             double ratio = (value - 0.5) / (value + 0.5);
             if (ratio == 0) {
                 ratio = .0000000001;
@@ -314,7 +313,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
             leftOutput = outputMagnitude / ratio;
             rightOutput = outputMagnitude;
         } else if (curve > 0) {
-            double value = MathUtils.log(curve);
+            double value = Math.log(curve);
             double ratio = (value - 0.5) / (value + 0.5);
             if (ratio == 0) {
                 ratio = .0000000001;
@@ -441,5 +440,13 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      */
     public final String getDescription() {
         return "Drivetrain";
+    }
+    
+    private final double limit(double in, double max) {
+        if (Math.abs(in) > max) {
+        	if (in > 0) in = max;
+        	else in = -max;
+        }
+        return in;
     }
 }

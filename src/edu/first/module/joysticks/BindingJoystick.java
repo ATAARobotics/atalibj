@@ -1,9 +1,10 @@
 package edu.first.module.joysticks;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import edu.first.identifiers.Output;
-import edu.first.util.list.Iterator;
-import edu.first.util.list.List;
-import edu.first.util.list.SafeArrayList;
 
 /**
  * A {@link JoystickModule} that can bind axises and buttons to commands and
@@ -15,7 +16,7 @@ import edu.first.util.list.SafeArrayList;
  */
 public class BindingJoystick extends JoystickModule {
 
-    private final List binds = new SafeArrayList(Bind.class);
+    private final List<Bind> binds = new ArrayList<>();
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
@@ -223,7 +224,7 @@ public class BindingJoystick extends JoystickModule {
      * Performs every bind, in the order they were given in the adding methods.
      */
     public final void doBinds() {
-        Iterator i = binds.iterator();
+        Iterator<Bind> i = binds.iterator();
         while (i.hasNext()) {
             ((Bind) i.next()).doBind();
         }

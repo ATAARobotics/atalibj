@@ -1,8 +1,9 @@
 package edu.first.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.first.command.Command;
-import edu.first.util.list.ArrayList;
-import edu.first.util.list.List;
 import edu.first.util.log.Logger;
 
 /**
@@ -14,14 +15,14 @@ import edu.first.util.log.Logger;
  */
 public final class ConcurrentCommandGroup implements Command {
 
-    private final List commands;
+    private final List<Command> commands;
 
     /**
      * Constructs the command group using an array of commands to be run at the
      * same time. There is no limit on how many commands can be run.
      */
     public ConcurrentCommandGroup() {
-    	this.commands = new ArrayList();
+    	this.commands = new ArrayList<Command>();
     }
     
     /**
@@ -33,7 +34,7 @@ public final class ConcurrentCommandGroup implements Command {
      * @throws NullPointerException when array is null
      * @param commands commands to run concurrently
      */
-    public ConcurrentCommandGroup(List commands) {
+    public ConcurrentCommandGroup(List<Command> commands) {
         if (commands == null) {
             throw new NullPointerException("Array is null");
         }

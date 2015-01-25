@@ -1,9 +1,10 @@
 package edu.first.commands;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import edu.first.command.Command;
-import edu.first.util.list.ArrayList;
-import edu.first.util.list.Iterator;
-import edu.first.util.list.List;
 
 /**
  * Command that encompasses multiple commands strung together. Runs commands
@@ -55,7 +56,7 @@ import edu.first.util.list.List;
  */
 public class CommandGroup implements Command {
 
-    private final List commands = new ArrayList();
+    private final List<Command> commands = new ArrayList<>();
 
     /**
      * Protected constructor to prevent instantiating from other classes.
@@ -147,7 +148,7 @@ public class CommandGroup implements Command {
      * {@link #appendConcurrent(edu.ATA.command.Command) appendConcurrent(Command)}.
      */
     public final void run() {
-        Iterator i = commands.iterator();
+        Iterator<Command> i = commands.iterator();
         while (i.hasNext()) {
             Command c = (Command) i.next();
             c.run();

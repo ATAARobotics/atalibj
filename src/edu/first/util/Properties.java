@@ -1,8 +1,10 @@
 package edu.first.util;
 
-import com.sun.squawk.util.StringTokenizer;
-import edu.first.util.log.Logger;
+import java.io.File;
 import java.io.IOException;
+import java.util.StringTokenizer;
+
+import edu.first.util.log.Logger;
 
 /**
  * The class representation of files on the cRIO that contain "properties". This
@@ -40,10 +42,10 @@ public final class Properties {
      *
      * @param file file to get data from
      */
-    public Properties(File file) {
+    public @Deprecated Properties(File file) {
         String f = TextFiles.getTextFromFile(file);
         propertiesContent = (f == null ? "" : f);
-
+	
         StringTokenizer tokenizer = new StringTokenizer(propertiesContent, "\n\r=");
         Property[] p = new Property[tokenizer.countTokens() / 2];
         for (int x = 0; x < p.length; x++) {

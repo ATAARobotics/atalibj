@@ -1,8 +1,8 @@
 package edu.first.identifiers;
 
-import edu.first.util.list.ArrayList;
-import edu.first.util.list.Iterator;
-import edu.first.util.list.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * General interface for classes that perform some kind of change to a number.
@@ -204,7 +204,7 @@ public interface Function {
      */
     public static final class DynamicFunction implements Function {
 
-        private final List functions = new ArrayList();
+        private final List<Function> functions = new ArrayList<>();
 
         /**
          * Constructs the function with no functions within it.
@@ -231,7 +231,7 @@ public interface Function {
         }
 
         public double F(double start) {
-            Iterator i = functions.iterator();
+            Iterator<Function> i = functions.iterator();
             while (i.hasNext()) {
                 start = ((Function) i.next()).F(start);
             }
