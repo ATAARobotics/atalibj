@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Talon;
 
 /**
  * The general purpose class that manipulates Talon speed controllers made by
- * IFI / CTRE. Should work for all models.
+ * IFI / CTRE. Should work for all models <b> through PWM</b>.
  *
  * @since May 28 13
  * @author Joel Gallant
