@@ -19,9 +19,10 @@ public class EnableModule implements Command {
         this.modules = new Module[]{module};
     }
 
+    @Override
     public void run() {
-        for (int x = 0; x < modules.length; x++) {
-            modules[x].enable();
+        for (Module module : modules) {
+            module.enable();
         }
     }
 }

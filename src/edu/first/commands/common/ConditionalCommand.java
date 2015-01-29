@@ -49,6 +49,7 @@ public class ConditionalCommand implements Command {
     /**
      * Runs the command if the condition returns true.
      */
+    @Override
     public void run() {
         if (run.getPosition()) {
             command.run();

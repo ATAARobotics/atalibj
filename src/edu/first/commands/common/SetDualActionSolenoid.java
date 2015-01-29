@@ -32,6 +32,7 @@ public final class SetDualActionSolenoid implements Command {
     /**
      * Sets the solenoid to the given direction.
      */
+    @Override
     public void run() {
         solenoid.set(direction);
     }

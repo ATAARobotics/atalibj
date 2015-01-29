@@ -13,6 +13,7 @@ public abstract class LoopingCommand implements Command {
     /**
      * Runs {@link #runLoop()} until {@link #continueLoop()} returns false.
      */
+    @Override
     public final void run() {
         while (continueLoop()) {
             runLoop();

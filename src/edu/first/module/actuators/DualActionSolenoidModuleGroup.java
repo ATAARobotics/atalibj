@@ -33,6 +33,7 @@ public class DualActionSolenoidModuleGroup extends Subsystem implements DualActi
      * @see
      * DualActionSolenoid#set(edu.first.module.actuators.DualActionSolenoid.Direction)
      */
+    @Override
     public void set(Direction direction) {
         group.set(direction);
     }
@@ -45,6 +46,7 @@ public class DualActionSolenoidModuleGroup extends Subsystem implements DualActi
      * @return state of all solenoids
      * @see DualActionSolenoid#get()
      */
+    @Override
     public Direction get() {
         return group.get();
     }
@@ -55,6 +57,7 @@ public class DualActionSolenoidModuleGroup extends Subsystem implements DualActi
      * @throws OutOfSyncException when all solenoids are not in the same state
      * @see DualActionSolenoid#reverse()
      */
+    @Override
     public void reverse() {
         group.reverse();
     }
@@ -64,6 +67,7 @@ public class DualActionSolenoidModuleGroup extends Subsystem implements DualActi
      *
      * @see DualActionSolenoid#turnOff()
      */
+    @Override
     public void turnOff() {
         group.turnOff();
     }

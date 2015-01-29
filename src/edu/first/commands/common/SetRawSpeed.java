@@ -43,6 +43,7 @@ public final class SetRawSpeed implements Command {
      *
      * @see SpeedController#setRawSpeed(int)
      */
+    @Override
     public void run() {
         speedController.set(input.get());
     }

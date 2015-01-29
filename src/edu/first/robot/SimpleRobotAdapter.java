@@ -24,30 +24,35 @@ public class SimpleRobotAdapter extends SimpleRobot {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void autonomous() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void teleoperated() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void disabled() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void test() {
     }
 }

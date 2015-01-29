@@ -18,6 +18,7 @@ public interface Servo extends PositionalActuator, PositionalSensor {
      *
      * @param position placement to move servo to
      */
+    @Override
     public void setPosition(double position);
 
     /**
@@ -26,6 +27,7 @@ public interface Servo extends PositionalActuator, PositionalSensor {
      * @param position placement to move servo to
      * @see #setPosition(double)
      */
+    @Override
     public void set(double position);
 
     /**
@@ -35,6 +37,7 @@ public interface Servo extends PositionalActuator, PositionalSensor {
      *
      * @return current position of the servo
      */
+    @Override
     public double getPosition();
 
     /**
@@ -43,5 +46,6 @@ public interface Servo extends PositionalActuator, PositionalSensor {
      * @return current position of the servo
      * @see #getPosition()
      */
+    @Override
     public double get();
 }

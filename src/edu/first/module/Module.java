@@ -40,7 +40,8 @@ import edu.first.module.subsystems.Subsystem;
  * return {@code true} when it is completely enabled.
  * </ul>
  *
- * <p> {@link Module.StartardModule} is a useful default implementation of
+ * <p>
+ * {@link Module.StartardModule} is a useful default implementation of
  * {@code Module} that fulfills most of the {@code Module} contract.
  *
  * @see StartardModule
@@ -60,13 +61,13 @@ public interface Module {
      * module's functions should work after this method is called, provided this
      * method did not throw an error.
      *
-     * <p> The contract for this method is that {@link #isEnabled()} should
-     * return {@code true} after this is called until {@link #disable()} is
-     * called. The official {@code enabled} state of a module is only
-     * technically correct by using {@link #isEnabled()} and the completion of
-     * this method does not by definition mean that the module is enabled. By
-     * contract though, completion of this method without error should mean that
-     * it is enabled.
+     * <p>
+     * The contract for this method is that {@link #isEnabled()} should return
+     * {@code true} after this is called until {@link #disable()} is called. The
+     * official {@code enabled} state of a module is only technically correct by
+     * using {@link #isEnabled()} and the completion of this method does not by
+     * definition mean that the module is enabled. By contract though,
+     * completion of this method without error should mean that it is enabled.
      */
     public void enable();
 
@@ -75,13 +76,14 @@ public interface Module {
      * module's functions should not work after this method is called, provided
      * this method did not throw an error.
      *
-     * <p> The contract for this method is that {@link #isEnabled()} should
-     * return {@code falsee} after this is called until {@link #enable()} is
-     * called. The official {@code enabled} state of a module is only
-     * technically correct by using {@link #isEnabled()} and the completion of
-     * this method does not by definition mean that the module is disabled. By
-     * contract though, completion of this method without error should mean that
-     * it is disabled.
+     * <p>
+     * The contract for this method is that {@link #isEnabled()} should return
+     * {@code falsee} after this is called until {@link #enable()} is called.
+     * The official {@code enabled} state of a module is only technically
+     * correct by using {@link #isEnabled()} and the completion of this method
+     * does not by definition mean that the module is disabled. By contract
+     * though, completion of this method without error should mean that it is
+     * disabled.
      */
     public void disable();
 
@@ -90,7 +92,8 @@ public interface Module {
      * functions should work. This method should be thread-safe and only return
      * {@code true} if the module is <i>fully</i> enabled.
      *
-     * <p> When modules are not enabled, their functions (apart from "settings",
+     * <p>
+     * When modules are not enabled, their functions (apart from "settings",
      * outlined in this {@link Module class} documentation) will throw an
      * {@link IllegalStateException}.
      *
@@ -102,7 +105,8 @@ public interface Module {
      * A default implementation of {@link Module} that provides a simpler
      * interface for building modules on.
      *
-     * <p> It fulfills theses elements of the {@link Module} contract:
+     * <p>
+     * It fulfills theses elements of the {@link Module} contract:
      * <ul>
      * <li> Between calling {@link #enable()} and
      * {@link #disable()}, {@link #isEnabled()} will return true. Only
@@ -116,7 +120,8 @@ public interface Module {
      * return {@code true} when it is completely enabled.
      * </ul>
      *
-     * <p> Parts that are not guaranteed by this class:
+     * <p>
+     * Parts that are not guaranteed by this class:
      * <ul>
      * <li> Modules contain methods specific to their purpose, but do not expose
      * their composed instances for security reasons
@@ -155,6 +160,7 @@ public interface Module {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void enable() {
             if (!isEnabled()) {
                 enableModule();
@@ -167,6 +173,7 @@ public interface Module {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void disable() {
             if (isEnabled()) {
                 disableModule();
@@ -179,6 +186,7 @@ public interface Module {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final boolean isEnabled() {
             synchronized (lock) {
                 return enabled;
@@ -190,8 +198,9 @@ public interface Module {
          * {@link #isEnabled() enabled}, it will throw an
          * {@link IllegalStateException}.
          *
-         * <p> Use this method at the start of <b>all</b> functions that require
-         * the module to be enabled.
+         * <p>
+         * Use this method at the start of <b>all</b> functions that require the
+         * module to be enabled.
          *
          * @see Module for more information on contract of throwing an
          * IllegalStateException
@@ -209,6 +218,7 @@ public interface Module {
          *
          * @return name of module's class
          */
+        @Override
         public String toString() {
             return getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1);
         }

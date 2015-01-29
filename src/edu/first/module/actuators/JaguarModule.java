@@ -40,14 +40,17 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p> Stops the jaguar from moving.
+     * <p>
+     * Stops the jaguar from moving.
      */
+    @Override
     protected void disableModule() {
         jaguar.disable();
     }
@@ -55,6 +58,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -63,6 +67,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setSpeed(double speed) {
         ensureEnabled();
         jaguar.set(speed);
@@ -73,6 +78,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setRawSpeed(int speed) {
         ensureEnabled();
         jaguar.setRaw(speed);
@@ -83,6 +89,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getSpeed() {
         ensureEnabled();
         return jaguar.getSpeed();
@@ -93,6 +100,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public int getRawSpeed() {
         return jaguar.getRaw();
     }
@@ -100,9 +108,11 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
     /**
      * {@inheritDoc}
      *
-     * <p> This method does not need to be called on a {@code Jaguar}, but if
+     * <p>
+     * This method does not need to be called on a {@code Jaguar}, but if
      * something freezes it may help relieve it.
      */
+    @Override
     public void update() {
         jaguar.Feed();
     }
@@ -112,6 +122,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setRate(double rate) {
         ensureEnabled();
         jaguar.set(rate);
@@ -122,6 +133,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void set(double value) {
         ensureEnabled();
         jaguar.set(value);
@@ -132,6 +144,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getRate() {
         ensureEnabled();
         return jaguar.getSpeed();
@@ -142,6 +155,7 @@ public class JaguarModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double get() {
         ensureEnabled();
         return jaguar.getSpeed();

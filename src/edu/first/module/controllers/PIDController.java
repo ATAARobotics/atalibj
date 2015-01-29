@@ -359,6 +359,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      *
      * @see PIDController for PID algorithm
      */
+    @Override
     public final void run() {
         double in = input.get();
         double result;
@@ -434,6 +435,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @return last result of PID algorithm
      * @see #getPrevResult()
      */
+    @Override
     public double get() {
         synchronized (lock) {
             return prevResult;
@@ -447,6 +449,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param value desired point that the input should reach
      * @see #setSetpoint(double)
      */
+    @Override
     public void set(double value) {
         synchronized (lock) {
             if (value < minimumInput) {
@@ -465,6 +468,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @return last result of PID algorithm
      * @see #getPrevResult()
      */
+    @Override
     public double getPosition() {
         synchronized (lock) {
             return prevResult;
@@ -478,6 +482,7 @@ public class PIDController extends Controller implements PositionalSensor, Posit
      * @param position desired point that the input should reach
      * @see #setSetpoint(double)
      */
+    @Override
     public void setPosition(double position) {
         synchronized (lock) {
             if (position < minimumInput) {

@@ -29,6 +29,7 @@ public interface SpikeRelay {
      * Enum with the three different kinds of directions.
      */
     public static enum Direction {
-    	FORWARDS, BACKWARDS, OFF;
+
+        FORWARDS, BACKWARDS, OFF;
     }
 }

@@ -17,11 +17,13 @@ import edu.wpi.first.wpilibj.MotorSafetyHelper;
 public class Drivetrain extends Module.StandardModule implements MotorSafety {
 
     private final Output driveStraight = new Output() {
+        @Override
         public void set(double value) {
             Drivetrain.this.set(value, value);
         }
     };
     private final Output turn = new Output() {
+        @Override
         public void set(double value) {
             Drivetrain.this.arcadeDrive(0, value);
         }
@@ -66,6 +68,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
         safetyHelper.setSafetyEnabled(true);
     }
@@ -75,6 +78,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * Turns off all motors.
      */
+    @Override
     protected void disableModule() {
         safetyHelper.setSafetyEnabled(false);
         stopMotor();
@@ -83,6 +87,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -355,6 +360,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      */
     public BindingJoystick.DualAxisBind getArcade(Axis speed, Axis turn) {
         return new BindingJoystick.DualAxisBind(speed, turn) {
+            @Override
             public void doBind(double axis1, double axis2) {
                 arcadeDrive(axis1, axis2);
             }
@@ -371,6 +377,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      */
     public BindingJoystick.DualAxisBind getTank(Axis left, Axis right) {
         return new BindingJoystick.DualAxisBind(left, right) {
+            @Override
             public void doBind(double axis1, double axis2) {
                 tankDrive(axis1, axis2);
             }
@@ -383,6 +390,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @param timeout time in seconds
      */
+    @Override
     public final void setExpiration(double timeout) {
         safetyHelper.setExpiration(timeout);
     }
@@ -393,6 +401,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @return time in seconds
      */
+    @Override
     public final double getExpiration() {
         return safetyHelper.getExpiration();
     }
@@ -404,6 +413,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      * @return if drivetrain has input
      * @see #getExpiration()
      */
+    @Override
     public final boolean isAlive() {
         return safetyHelper.isAlive();
     }
@@ -411,6 +421,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     /**
      * Stops the drivetrain cold.
      */
+    @Override
     public final void stopMotor() {
         set(0, 0);
     }
@@ -420,6 +431,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @param enabled if input is tracked
      */
+    @Override
     public final void setSafetyEnabled(boolean enabled) {
         safetyHelper.setSafetyEnabled(enabled);
     }
@@ -429,6 +441,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @return if input is tracked
      */
+    @Override
     public final boolean isSafetyEnabled() {
         return safetyHelper.isSafetyEnabled();
     }
@@ -438,14 +451,18 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @return string representing this module
      */
+    @Override
     public final String getDescription() {
         return "Drivetrain";
     }
-    
-    private final double limit(double in, double max) {
+
+    private double limit(double in, double max) {
         if (Math.abs(in) > max) {
-        	if (in > 0) in = max;
-        	else in = -max;
+            if (in > 0) {
+                in = max;
+            } else {
+                in = -max;
+            }
         }
         return in;
     }

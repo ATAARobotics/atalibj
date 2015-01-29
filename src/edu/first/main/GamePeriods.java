@@ -53,6 +53,7 @@ public final class GamePeriods extends IterativeRobot {
      * cycle, but never again. Effectively should "start the robot", in whatever
      * context it happens to be in.
      */
+    @Override
     public void robotInit() {
         robotMode.init();
     }
@@ -65,6 +66,7 @@ public final class GamePeriods extends IterativeRobot {
      * Every time disabled is run, the {@code RobotMode} is updated. This only
      * happens during the disabled period.
      */
+    @Override
     public void disabledInit() {
         finishAndNewMode(GameMode.DISABLED);
         robotMode.initDisabled();
@@ -78,6 +80,7 @@ public final class GamePeriods extends IterativeRobot {
      * and is only run once every time the DriverStation sends packets. It can
      * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
+    @Override
     public void disabledPeriodic() {
         robotMode.periodicDisabled();
     }
@@ -85,6 +88,7 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Initializes anything needed for the autonomous period of the robot.
      */
+    @Override
     public void autonomousInit() {
         finishAndNewMode(GameMode.AUTONOMOUS);
         robotMode.initAutonomous();
@@ -98,6 +102,7 @@ public final class GamePeriods extends IterativeRobot {
      * and is only run once every time the DriverStation sends packets. It can
      * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
+    @Override
     public void autonomousPeriodic() {
         robotMode.periodicAutonomous();
     }
@@ -105,6 +110,7 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Initializes anything needed for the teleoperated period of the robot.
      */
+    @Override
     public void teleopInit() {
         finishAndNewMode(GameMode.TELEOPERATED);
         robotMode.initTeleoperated();
@@ -118,6 +124,7 @@ public final class GamePeriods extends IterativeRobot {
      * and is only run once every time the DriverStation sends packets. It can
      * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
+    @Override
     public void teleopPeriodic() {
         robotMode.periodicTeleoperated();
     }
@@ -125,6 +132,7 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Initializes anything needed for the test period of the robot.
      */
+    @Override
     public void testInit() {
         finishAndNewMode(GameMode.TEST);
         robotMode.initTest();
@@ -138,6 +146,7 @@ public final class GamePeriods extends IterativeRobot {
      * and is only run once every time the DriverStation sends packets. It can
      * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
+    @Override
     public void testPeriodic() {
         robotMode.periodicTest();
     }
@@ -162,21 +171,25 @@ public final class GamePeriods extends IterativeRobot {
     private static abstract class GameMode {
 
         static final GameMode DISABLED = new GameMode() {
+            @Override
             void end() {
                 robotMode.endDisabled();
             }
         };
         static final GameMode AUTONOMOUS = new GameMode() {
+            @Override
             void end() {
                 robotMode.endAutonomous();
             }
         };
         static final GameMode TELEOPERATED = new GameMode() {
+            @Override
             void end() {
                 robotMode.endTeleoperated();
             }
         };
         static final GameMode TEST = new GameMode() {
+            @Override
             void end() {
                 robotMode.endTest();
             }

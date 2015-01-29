@@ -16,14 +16,14 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
     private final Gyro gyro;
 
     /**
-     * Constructs the module with the gyro object underneath this class to
-     * call methods from.
+     * Constructs the module with the gyro object underneath this class to call
+     * methods from.
      *
      * @throws NullPointerException when gyro is null
      * @param gyro the composing instance which will return values
      */
     protected GyroscopeModule(Gyro gyro) {
-        if(gyro == null) {
+        if (gyro == null) {
             throw new NullPointerException("Null gyro given");
         }
         this.gyro = gyro;
@@ -50,6 +50,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
     /**
      * Resets the gyro to zero.
      */
+    @Override
     public void init() {
         gyro.reset();
     }
@@ -57,6 +58,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
     /**
      * Resets the gyro to zero.
      */
+    @Override
     protected void enableModule() {
         gyro.reset();
     }
@@ -64,6 +66,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
     /*
      * Does not do anything.
      */
+    @Override
     protected void disableModule() {
     }
 
@@ -72,6 +75,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void reset() {
         ensureEnabled();
         gyro.reset();
@@ -80,6 +84,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setSensitivity(double voltsPerDegreePerSecond) {
         gyro.setSensitivity(voltsPerDegreePerSecond);
     }
@@ -90,6 +95,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      * @return cumulative angle given by gyroscope
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getAngle() {
         ensureEnabled();
         return gyro.getAngle();
@@ -101,6 +107,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      * @return cumulative angle given by gyroscope
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getPosition() {
         return getAngle();
     }
@@ -111,6 +118,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      * @return cumulative angle given by gyroscope
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double get() {
         return getAngle();
     }

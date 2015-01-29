@@ -17,6 +17,7 @@ public class AddButtonBind implements Command {
         this.bind = bind;
     }
 
+    @Override
     public void run() {
         joystick.addButtonBind(bind);
     }

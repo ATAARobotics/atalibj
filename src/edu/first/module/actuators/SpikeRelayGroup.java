@@ -28,9 +28,10 @@ public class SpikeRelayGroup implements SpikeRelay {
      * @param d direction to set every spike relay
      * @see SpikeRelay#set(edu.first.module.actuators.SpikeRelay.Direction)
      */
+    @Override
     public void set(Direction d) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].set(d);
+        for (SpikeRelay group1 : group) {
+            group1.set(d);
         }
     }
 
@@ -41,7 +42,8 @@ public class SpikeRelayGroup implements SpikeRelay {
      * @return state of all relays
      * @see SpikeRelay#getDirection()
      */
-    public Direction getDirection() {
+    @Override
+    public Direction getDirection() throws OutOfSyncException {
         Direction pos = null;
         for (int x = 0; x < group.length; x++) {
             if (x == 0) {

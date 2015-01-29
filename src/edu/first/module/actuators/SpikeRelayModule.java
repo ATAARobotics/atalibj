@@ -23,7 +23,7 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
      * @param relay the composing instance which perform the functions
      */
     protected SpikeRelayModule(Relay relay) {
-        if(relay == null) {
+        if (relay == null) {
             throw new NullPointerException("Null relay given");
         }
         this.relay = relay;
@@ -41,14 +41,17 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p> Turns the spike relay off.
+     * <p>
+     * Turns the spike relay off.
      */
+    @Override
     protected void disableModule() {
         set(Direction.OFF);
     }
@@ -56,6 +59,7 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -64,6 +68,7 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public final void set(Direction d) {
         ensureEnabled();
         relay.set(convertValue(d));
@@ -72,6 +77,7 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
     /**
      * {@inheritDoc}
      */
+    @Override
     public Direction getDirection() {
         return convertDirection(relay.get());
     }

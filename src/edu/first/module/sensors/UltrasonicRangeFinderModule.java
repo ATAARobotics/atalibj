@@ -39,18 +39,21 @@ public class UltrasonicRangeFinderModule extends Module.StandardModule implement
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void disableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -59,6 +62,7 @@ public class UltrasonicRangeFinderModule extends Module.StandardModule implement
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getInches() {
         ensureEnabled();
         pingAndWait();
@@ -70,6 +74,7 @@ public class UltrasonicRangeFinderModule extends Module.StandardModule implement
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getMillimeters() {
         ensureEnabled();
         pingAndWait();
@@ -82,6 +87,7 @@ public class UltrasonicRangeFinderModule extends Module.StandardModule implement
      * @return distance to object
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getPosition() {
         ensureEnabled();
         pingAndWait();
@@ -94,6 +100,7 @@ public class UltrasonicRangeFinderModule extends Module.StandardModule implement
      * @return distance to object
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double get() {
         ensureEnabled();
         pingAndWait();

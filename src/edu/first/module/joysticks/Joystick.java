@@ -57,6 +57,7 @@ public interface Joystick {
          *
          * @return the value of the axis
          */
+        @Override
         public double get();
     }
 
@@ -70,6 +71,7 @@ public interface Joystick {
          *
          * @return the value of the button
          */
+        @Override
         public boolean getPosition();
     }
 }

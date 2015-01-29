@@ -28,6 +28,7 @@ public final class ReverseDualActionSolenoid implements Command {
      * Reverses the direction of the solenoid. This means LEFT -> RIGHT or RIGHT
      * -> LEFT.
      */
+    @Override
     public void run() {
         solenoid.reverse();
     }

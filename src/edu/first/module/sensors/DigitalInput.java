@@ -35,18 +35,21 @@ public class DigitalInput extends Module.StandardModule implements Position {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void disableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -56,6 +59,7 @@ public class DigitalInput extends Module.StandardModule implements Position {
      * @throws IllegalStateException when module is not enabled
      * @return if input has current running
      */
+    @Override
     public boolean getPosition() {
         ensureEnabled();
         return input.get();

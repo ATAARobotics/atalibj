@@ -33,6 +33,7 @@ public interface RangeFinder extends PositionalSensor {
      * @see #getInches()
      * @see #getMillimeters()
      */
+    @Override
     public double getPosition();
 
     /**
@@ -42,5 +43,6 @@ public interface RangeFinder extends PositionalSensor {
      * @see #getInches()
      * @see #getMillimeters()
      */
+    @Override
     public double get();
 }

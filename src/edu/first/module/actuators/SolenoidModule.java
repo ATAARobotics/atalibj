@@ -19,7 +19,7 @@ public class SolenoidModule extends Module.StandardModule implements Solenoid {
      * @param solenoid the composing instance which perform the functions
      */
     protected SolenoidModule(edu.wpi.first.wpilibj.Solenoid solenoid) {
-        if(solenoid == null) {
+        if (solenoid == null) {
             throw new NullPointerException("Null solenoid given");
         }
         this.solenoid = solenoid;
@@ -47,14 +47,17 @@ public class SolenoidModule extends Module.StandardModule implements Solenoid {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p> Turns off the solenoid.
+     * <p>
+     * Turns off the solenoid.
      */
+    @Override
     protected void disableModule() {
         solenoid.set(false);
     }
@@ -62,6 +65,7 @@ public class SolenoidModule extends Module.StandardModule implements Solenoid {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -70,6 +74,7 @@ public class SolenoidModule extends Module.StandardModule implements Solenoid {
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setPosition(boolean pos) {
         ensureEnabled();
         solenoid.set(pos);
@@ -78,6 +83,7 @@ public class SolenoidModule extends Module.StandardModule implements Solenoid {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean getPosition() {
         return solenoid.get();
     }

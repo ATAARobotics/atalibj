@@ -9,38 +9,38 @@ package edu.first.module.actuators;
  */
 public interface DualActionSolenoid {
 
-	/**
-	 * Sets the direction of the solenoid.
-	 *
-	 * @param direction
-	 *            which direction to set the solenoid
-	 */
-	public void set(Direction direction);
+    /**
+     * Sets the direction of the solenoid.
+     *
+     * @param direction which direction to set the solenoid
+     */
+    public void set(Direction direction);
 
-	/**
-	 * Returns in which direction the solenoid is currently on. If both sides
-	 * are on, this method will return {@link Direction#OFF} because they will
-	 * have the same effect.
-	 *
-	 * @return current direction of solenoid
-	 */
-	public Direction get();
+    /**
+     * Returns in which direction the solenoid is currently on. If both sides
+     * are on, this method will return {@link Direction#OFF} because they will
+     * have the same effect.
+     *
+     * @return current direction of solenoid
+     */
+    public Direction get();
 
-	/**
-	 * Reverses the direction of the solenoid. This means LEFT -> RIGHT or RIGHT
-	 * -> LEFT.
-	 */
-	public void reverse();
+    /**
+     * Reverses the direction of the solenoid. This means LEFT -> RIGHT or RIGHT
+     * -> LEFT.
+     */
+    public void reverse();
 
-	/**
-	 * Turns both ends of the solenoid off.
-	 */
-	public void turnOff();
+    /**
+     * Turns both ends of the solenoid off.
+     */
+    public void turnOff();
 
-	/**
-	 * Enum representing the directions of a dual action solenoid.
-	 */
-	public static enum Direction {
-		LEFT, RIGHT, OFF;
-	}
+    /**
+     * Enum representing the directions of a dual action solenoid.
+     */
+    public static enum Direction {
+
+        LEFT, RIGHT, OFF;
+    }
 }

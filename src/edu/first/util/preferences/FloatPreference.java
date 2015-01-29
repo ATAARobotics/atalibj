@@ -36,6 +36,7 @@ public final class FloatPreference extends Preference implements Output {
         PREFERENCES.putFloat(getKey(), value);
     }
 
+    @Override
     public void set(double value) {
         set((float) value);
     }

@@ -31,9 +31,10 @@ public final class TextFiles {
      * @return contents of that file
      * @throws NullPointerException when file name is null
      */
-    public static @Deprecated String getTextFromFile(File file) {
-    	// TO DO
-    	return null;
+    public static @Deprecated
+    String getTextFromFile(File file) {
+        // TO DO
+        return null;
     }
 
     /**
@@ -42,8 +43,9 @@ public final class TextFiles {
      * @param file file to write to
      * @param msg text to set the file to
      */
-    public static @Deprecated void writeAsFile(File file, String msg) {
-       // TO DO
+    public static @Deprecated
+    void writeAsFile(File file, String msg) {
+        // TO DO
     }
 
     /**
@@ -52,7 +54,8 @@ public final class TextFiles {
      * @param file file to write to
      * @param msg text to add to the end of the file
      */
-    public static @Deprecated void appendToFile(File file, String msg) {
+    public static @Deprecated
+    void appendToFile(File file, String msg) {
         // TO DO
     }
 
@@ -62,7 +65,8 @@ public final class TextFiles {
      * @param file file to write to
      * @param msg text to add to the end of the file
      */
-    public static @Deprecated void appendToNewLine(File file, String msg) {
+    public static @Deprecated
+    void appendToNewLine(File file, String msg) {
         // TO DO
     }
 }

@@ -192,16 +192,16 @@ public class BindingJoystick extends JoystickModule {
     public final void addButtonBind(ButtonBind buttonBind) {
         addBind(buttonBind);
     }
-    
+
     /**
      * Removes the specific bind from this joystick.
-     * 
+     *
      * @param b bind to remove
      */
     public final void removeBind(Bind b) {
         binds.remove(b);
     }
-    
+
     /**
      * Removes all active binds from the joystick.
      */
@@ -265,6 +265,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind() {
             output.set(axis.get());
         }
@@ -291,6 +292,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(axis1.get(), axis2.get());
         }
@@ -327,6 +329,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(axis1.get(), axis2.get(), axis3.get());
         }
@@ -366,6 +369,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(axis1.get(), axis2.get(), axis3.get(), axis4.get());
         }
@@ -408,6 +412,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(axis1.get(), axis2.get(), axis3.get(), axis4.get(), axis5.get());
         }
@@ -447,6 +452,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(button.getPosition(), runnable);
         }
@@ -479,6 +485,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind(boolean pos, Runnable runnable) {
             if (pos) {
                 runnable.run();
@@ -505,6 +512,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind(boolean pos, Runnable runnable) {
             if (!pos) {
                 runnable.run();
@@ -533,6 +541,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind(boolean pos, Runnable runnable) {
             if (!prev && pos) {
                 runnable.run();
@@ -565,6 +574,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind(boolean pos, Runnable runnable) {
             if (prev && !pos) {
                 runnable.run();

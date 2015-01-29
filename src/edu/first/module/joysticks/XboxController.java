@@ -109,7 +109,7 @@ public class XboxController extends BindingJoystick {
      */
     protected XboxController(Joystick joystick, double stickDeadband, double triggerDeadband) {
         this(joystick, stickDeadband);
-        
+
         addDeadband(RIGHT_TRIGGER, triggerDeadband);
         addDeadband(LEFT_TRIGGER, triggerDeadband);
     }
@@ -195,7 +195,7 @@ public class XboxController extends BindingJoystick {
     public final double getLeftTriggerValue() {
         return getRawAxisValue(LEFT_TRIGGER);
     }
-    
+
     /**
      * Returns the value of the triggers' axis.
      *
@@ -215,7 +215,7 @@ public class XboxController extends BindingJoystick {
     public final Axis getLeftTrigger() {
         return getRawAxis(LEFT_TRIGGER);
     }
-    
+
     /**
      * Returns an {@link Axis} that will give values from the axis. Changed
      * settings of the controller will not affect this object after it has
@@ -544,6 +544,7 @@ public class XboxController extends BindingJoystick {
             this.X = X;
         }
 
+        @Override
         public double get() {
             double x = X.get();
             double y = Y.get();

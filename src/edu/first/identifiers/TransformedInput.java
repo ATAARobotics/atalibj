@@ -27,6 +27,7 @@ public final class TransformedInput implements Input {
      *
      * @return transformed input
      */
+    @Override
     public double get() {
         return function.F(input.get());
     }

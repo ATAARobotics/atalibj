@@ -147,6 +147,7 @@ public class CommandGroup implements Command {
      * and
      * {@link #appendConcurrent(edu.ATA.command.Command) appendConcurrent(Command)}.
      */
+    @Override
     public final void run() {
         Iterator<Command> i = commands.iterator();
         while (i.hasNext()) {

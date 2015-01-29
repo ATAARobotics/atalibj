@@ -20,38 +20,47 @@ public class InversedSpeedController implements SpeedController {
         this.speedController = speedController;
     }
 
+    @Override
     public void set(double value) {
         speedController.set(-value);
     }
 
+    @Override
     public void setRate(double rate) {
         speedController.setRate(-rate);
     }
 
+    @Override
     public void setRawSpeed(int speed) {
         speedController.setRawSpeed(255 - speed);
     }
 
+    @Override
     public void setSpeed(double speed) {
         speedController.setSpeed(-speed);
     }
 
+    @Override
     public double getSpeed() {
         return speedController.getSpeed();
     }
 
+    @Override
     public int getRawSpeed() {
         return speedController.getRawSpeed();
     }
 
+    @Override
     public void update() {
         speedController.update();
     }
 
+    @Override
     public double getRate() {
         return speedController.getRate();
     }
 
+    @Override
     public double get() {
         return speedController.get();
     }

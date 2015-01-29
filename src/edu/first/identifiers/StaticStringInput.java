@@ -18,6 +18,7 @@ public class StaticStringInput implements StringInput {
         this.input = input;
     }
 
+    @Override
     public String getValue() {
         return input;
     }

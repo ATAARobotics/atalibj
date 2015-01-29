@@ -36,18 +36,21 @@ public class ServoModule extends Module.StandardModule implements Servo {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void disableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -56,6 +59,7 @@ public class ServoModule extends Module.StandardModule implements Servo {
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setPosition(double position) {
         ensureEnabled();
         servo.set(position);
@@ -66,6 +70,7 @@ public class ServoModule extends Module.StandardModule implements Servo {
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void set(double position) {
         ensureEnabled();
         servo.set(position);
@@ -76,6 +81,7 @@ public class ServoModule extends Module.StandardModule implements Servo {
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getPosition() {
         ensureEnabled();
         return servo.get();
@@ -86,6 +92,7 @@ public class ServoModule extends Module.StandardModule implements Servo {
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double get() {
         ensureEnabled();
         return servo.get();

@@ -40,14 +40,17 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p> Stops the victor from moving.
+     * <p>
+     * Stops the victor from moving.
      */
+    @Override
     protected void disableModule() {
         victor.disable();
     }
@@ -55,6 +58,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -63,6 +67,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setSpeed(double speed) {
         ensureEnabled();
         victor.set(speed);
@@ -73,6 +78,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setRawSpeed(int speed) {
         ensureEnabled();
         victor.setRaw(speed);
@@ -83,6 +89,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getSpeed() {
         ensureEnabled();
         return victor.getSpeed();
@@ -93,6 +100,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public int getRawSpeed() {
         ensureEnabled();
         return victor.getRaw();
@@ -101,9 +109,11 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
     /**
      * {@inheritDoc}
      *
-     * <p> This method does not need to be called on a {@code Victor}, but if
+     * <p>
+     * This method does not need to be called on a {@code Victor}, but if
      * something freezes it may help relieve it.
      */
+    @Override
     public void update() {
         victor.Feed();
     }
@@ -113,6 +123,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setRate(double rate) {
         ensureEnabled();
         victor.set(rate);
@@ -123,6 +134,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void set(double value) {
         ensureEnabled();
         victor.set(value);
@@ -133,6 +145,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getRate() {
         ensureEnabled();
         return victor.getSpeed();
@@ -143,6 +156,7 @@ public class VictorModule extends Module.StandardModule implements SpeedControll
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double get() {
         ensureEnabled();
         return victor.getSpeed();

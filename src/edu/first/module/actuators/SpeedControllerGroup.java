@@ -31,9 +31,10 @@ public class SpeedControllerGroup implements SpeedController {
      * @param speed speed to set
      * @see SpeedController#setSpeed(double)
      */
+    @Override
     public void setSpeed(double speed) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].setSpeed(speed);
+        for (SpeedController group1 : group) {
+            group1.setSpeed(speed);
         }
     }
 
@@ -43,9 +44,10 @@ public class SpeedControllerGroup implements SpeedController {
      * @param speed speed to set
      * @see SpeedController#setRawSpeed(int)
      */
+    @Override
     public void setRawSpeed(int speed) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].setRawSpeed(speed);
+        for (SpeedController group1 : group) {
+            group1.setRawSpeed(speed);
         }
     }
 
@@ -57,7 +59,8 @@ public class SpeedControllerGroup implements SpeedController {
      * @return speed of all the controllers
      * @see SpeedController#getSpeed()
      */
-    public double getSpeed() {
+    @Override
+    public double getSpeed() throws OutOfSyncException {
         double speed = 0;
         for (int x = 0; x < group.length; x++) {
             if (x == 0) {
@@ -80,7 +83,8 @@ public class SpeedControllerGroup implements SpeedController {
      * @return speed of all the controllers
      * @see SpeedController#getRawSpeed()
      */
-    public int getRawSpeed() {
+    @Override
+    public int getRawSpeed() throws OutOfSyncException {
         int speed = 0;
         for (int x = 0; x < group.length; x++) {
             if (x == 0) {
@@ -100,9 +104,10 @@ public class SpeedControllerGroup implements SpeedController {
      *
      * @see SpeedController#update()
      */
+    @Override
     public void update() {
-        for (int x = 0; x < group.length; x++) {
-            group[x].update();
+        for (SpeedController group1 : group) {
+            group1.update();
         }
     }
 
@@ -112,9 +117,10 @@ public class SpeedControllerGroup implements SpeedController {
      * @param rate rate to set
      * @see SpeedController#setRate(double)
      */
+    @Override
     public void setRate(double rate) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].setRate(rate);
+        for (SpeedController group1 : group) {
+            group1.setRate(rate);
         }
     }
 
@@ -124,9 +130,10 @@ public class SpeedControllerGroup implements SpeedController {
      * @param value speed to set
      * @see SpeedController#set(double)
      */
+    @Override
     public void set(double value) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].set(value);
+        for (SpeedController group1 : group) {
+            group1.set(value);
         }
     }
 
@@ -138,6 +145,7 @@ public class SpeedControllerGroup implements SpeedController {
      * @return current rate of all controllers
      * @see SpeedController#getRate()
      */
+    @Override
     public double getRate() {
         double rate = 0;
         for (int x = 0; x < group.length; x++) {
@@ -161,6 +169,7 @@ public class SpeedControllerGroup implements SpeedController {
      * @return state of all controllers
      * @see SpeedController#get()
      */
+    @Override
     public double get() {
         double speed = 0;
         for (int x = 0; x < group.length; x++) {

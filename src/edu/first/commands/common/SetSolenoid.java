@@ -30,6 +30,7 @@ public final class SetSolenoid implements Command {
     /**
      * Sets the position of the solenoid to the value given.
      */
+    @Override
     public void run() {
         solenoid.setPosition(pos);
     }

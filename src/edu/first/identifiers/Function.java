@@ -25,6 +25,7 @@ public interface Function {
      */
     public static final class DefaultFunction implements Function {
 
+        @Override
         public double F(double start) {
             return start;
         }
@@ -55,6 +56,7 @@ public interface Function {
             this.coefficient = coefficient;
         }
 
+        @Override
         public double F(double start) {
             return start * coefficient.get();
         }
@@ -85,6 +87,7 @@ public interface Function {
             this.divisor = divisor;
         }
 
+        @Override
         public double F(double start) {
             return start / divisor.get();
         }
@@ -110,6 +113,7 @@ public interface Function {
             this.add = add;
         }
 
+        @Override
         public double F(double start) {
             return start + add.get();
         }
@@ -140,6 +144,7 @@ public interface Function {
             this.subtract = subtract;
         }
 
+        @Override
         public double F(double start) {
             return start - subtract.get();
         }
@@ -150,6 +155,7 @@ public interface Function {
      */
     public static final class OppositeFunction implements Function {
 
+        @Override
         public double F(double start) {
             return -start;
         }
@@ -160,6 +166,7 @@ public interface Function {
      */
     public static final class InverseFunction implements Function {
 
+        @Override
         public double F(double start) {
             return 1 / start;
         }
@@ -170,6 +177,7 @@ public interface Function {
      */
     public static final class SquaredFunction implements Function {
 
+        @Override
         public double F(double start) {
             return start * start;
         }
@@ -191,9 +199,10 @@ public interface Function {
             this.functions = functions;
         }
 
+        @Override
         public double F(double start) {
-            for (int x = 0; x < functions.length; x++) {
-                start = functions[x].F(start);
+            for (Function function : functions) {
+                start = function.F(start);
             }
             return start;
         }
@@ -230,6 +239,7 @@ public interface Function {
             functions.remove(function);
         }
 
+        @Override
         public double F(double start) {
             Iterator<Function> i = functions.iterator();
             while (i.hasNext()) {

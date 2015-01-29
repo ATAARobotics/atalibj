@@ -56,14 +56,17 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p> Turns dual action off.
+     * <p>
+     * Turns dual action off.
      */
+    @Override
     protected void disableModule() {
         left.set(false);
         right.set(false);
@@ -72,6 +75,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -80,6 +84,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void set(Direction direction) {
         ensureEnabled();
         if (direction == Direction.LEFT) {
@@ -99,6 +104,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public Direction get() {
         ensureEnabled();
         if (left.get() && !right.get()) {
@@ -115,6 +121,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void reverse() {
         ensureEnabled();
         if (get() == Direction.LEFT) {
@@ -129,6 +136,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void turnOff() {
         ensureEnabled();
         set(Direction.OFF);

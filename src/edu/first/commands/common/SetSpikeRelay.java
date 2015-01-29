@@ -30,6 +30,7 @@ public final class SetSpikeRelay implements Command {
     /**
      * Changes the state of the spike relay.
      */
+    @Override
     public void run() {
         relay.set(direction);
     }

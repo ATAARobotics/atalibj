@@ -35,18 +35,21 @@ public class AnalogInput extends Module.StandardModule implements Input {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void disableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -68,6 +71,7 @@ public class AnalogInput extends Module.StandardModule implements Input {
      * @throws IllegalStateException when module is not enabled
      * @return voltage measured by input
      */
+    @Override
     public double get() {
         ensureEnabled();
         return input.getVoltage();

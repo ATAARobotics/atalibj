@@ -28,9 +28,10 @@ public class SolenoidGroup implements Solenoid {
      * @param pos position to set
      * @see Solenoid#setPosition(boolean)
      */
+    @Override
     public void setPosition(boolean pos) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].setPosition(pos);
+        for (Solenoid group1 : group) {
+            group1.setPosition(pos);
         }
     }
 
@@ -41,7 +42,8 @@ public class SolenoidGroup implements Solenoid {
      * @return state of all solenoids
      * @see Solenoid#getPosition()
      */
-    public boolean getPosition() {
+    @Override
+    public boolean getPosition() throws OutOfSyncException {
         boolean pos = false;
         for (int x = 0; x < group.length; x++) {
             if (x == 0) {

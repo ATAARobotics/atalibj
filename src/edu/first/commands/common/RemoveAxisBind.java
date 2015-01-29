@@ -17,6 +17,7 @@ public class RemoveAxisBind implements Command {
         this.bind = bind;
     }
 
+    @Override
     public void run() {
         joystick.removeBind(bind);
     }

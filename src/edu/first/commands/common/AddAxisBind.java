@@ -17,6 +17,7 @@ public class AddAxisBind implements Command {
         this.bind = bind;
     }
 
+    @Override
     public void run() {
         joystick.addAxisBind(bind);
     }

@@ -39,18 +39,21 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void disableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -73,6 +76,7 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
      * @throws IllegalStateException when module is not enabled
      * @return how many rising edges have been counted
      */
+    @Override
     public double getPosition() {
         ensureEnabled();
         return counter.get();
@@ -95,6 +99,7 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
      * @throws IllegalStateException when module is not enabled
      * @return current rate of pulses
      */
+    @Override
     public double getRate() {
         ensureEnabled();
         return 60 / counter.getPeriod();
@@ -107,6 +112,7 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
      * @return current rate of pulses
      * @see #getRate()
      */
+    @Override
     public double get() {
         ensureEnabled();
         return 60 / counter.getPeriod();

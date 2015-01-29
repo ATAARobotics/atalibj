@@ -20,7 +20,8 @@ import edu.first.identifiers.RateSensor;
  * (many shooter wheels do)
  * </ul>
  *
- * <p> Speed Sensor and Decoding
+ * <p>
+ * Speed Sensor and Decoding
  * <ul>
  * <li> Use an encoder or a one-per-rev home-brew optical or magnetic sensor
  * <li> If using an encoder, connect only one channel of the encoder to the
@@ -41,7 +42,8 @@ import edu.first.identifiers.RateSensor;
  * less fuss to use a motor controller that doesn't have this limitation. If you
  * plan to use a Jag, use {@link #setSpeedUp(boolean)}.
  *
- * <p> For more information, see:
+ * <p>
+ * For more information, see:
  * <p>
  * <a href="http://en.wikipedia.org/wiki/Bang%E2%80%93bang_control">Bang-Bang
  * Control</a>
@@ -154,7 +156,8 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * {@link #getSpinupOutput()} while the input is lower than
      * {@link #getSpinupInput()}.
      *
-     * <p> This is usually only useful if there is overcurrent protection on the
+     * <p>
+     * This is usually only useful if there is overcurrent protection on the
      * controller that will not allow it to go at fast speeds quickly.
      *
      * @param speedUp if controller should be in "speed up" mode
@@ -209,7 +212,8 @@ public class BangBangController extends Controller implements RateSensor, RateAc
     /**
      * Sets the absolute maximum output of the controller.
      *
-     * <p> If you want to reverse output, use {@link #setReversed(boolean)}.
+     * <p>
+     * If you want to reverse output, use {@link #setReversed(boolean)}.
      *
      * @param maxOutput maximum output to send
      */
@@ -247,7 +251,8 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * for output. While the input is lower than this, the controller will set
      * the output to {@link #getSpinupOutput()}.
      *
-     * <p> <i> This value will only have effect in
+     * <p>
+     * <i> This value will only have effect in
      * {@link #isSpeedUp() "speed up" mode}. </i>
      *
      * @return maximum input that will be considered "spinning up"
@@ -263,7 +268,8 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * {@link #getSpinupInput()}. While the input is lower than
      * {@link #getSpinupInput()}, the controller will set the output to this.
      *
-     * <p> <i> This value will only have effect in
+     * <p>
+     * <i> This value will only have effect in
      * {@link #isSpeedUp() "speed up" mode}. </i>
      *
      * @return output to use when controller is "spinning up"
@@ -354,6 +360,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
     /**
      * Runs the bang-bang algorithm.
      */
+    @Override
     public final void run() {
         double in = input.get();
         double result;
@@ -409,6 +416,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return last input received
      * @see #getPrevInput()
      */
+    @Override
     public double get() {
         synchronized (lock) {
             return prevInput;
@@ -421,6 +429,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param value desired point that the input should reach
      * @see #setSetpoint(double)
      */
+    @Override
     public void set(double value) {
         synchronized (lock) {
             this.setpoint = value;
@@ -433,6 +442,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @return last input received
      * @see #getPrevInput()
      */
+    @Override
     public double getRate() {
         synchronized (lock) {
             return prevInput;
@@ -445,6 +455,7 @@ public class BangBangController extends Controller implements RateSensor, RateAc
      * @param rate desired point that the input should reach
      * @see #setSetpoint(double)
      */
+    @Override
     public void setRate(double rate) {
         synchronized (lock) {
             this.setpoint = rate;

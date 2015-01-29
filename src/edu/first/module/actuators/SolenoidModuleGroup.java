@@ -1,5 +1,6 @@
 package edu.first.module.actuators;
 
+import edu.first.lang.OutOfSyncException;
 import edu.first.module.subsystems.Subsystem;
 
 /**
@@ -31,6 +32,7 @@ public class SolenoidModuleGroup extends Subsystem implements Solenoid {
      * @param pos position to set
      * @see Solenoid#setPosition(boolean)
      */
+    @Override
     public void setPosition(boolean pos) {
         group.setPosition(pos);
     }
@@ -42,7 +44,8 @@ public class SolenoidModuleGroup extends Subsystem implements Solenoid {
      * @return state of all solenoids
      * @see Solenoid#getPosition()
      */
-    public boolean getPosition() {
+    @Override
+    public boolean getPosition() throws OutOfSyncException {
         return group.getPosition();
     }
 }

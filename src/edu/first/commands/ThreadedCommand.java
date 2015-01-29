@@ -25,6 +25,7 @@ public final class ThreadedCommand implements Command {
     /**
      * Runs the command in a new thread.
      */
+    @Override
     public final void run() {
         Commands.runInNewThread(command);
     }

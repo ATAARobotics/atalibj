@@ -19,5 +19,6 @@ public interface Command extends Runnable {
      * intended to do. Should document if it will take extraneous amounts of
      * time.
      */
+    @Override
     public void run();
 }

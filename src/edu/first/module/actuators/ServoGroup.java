@@ -19,7 +19,7 @@ public class ServoGroup implements Servo {
      * @param group all elements to apply things to
      */
     public ServoGroup(Servo[] group) {
-        if(group == null) {
+        if (group == null) {
             throw new NullPointerException("Null group given");
         }
         this.group = group;
@@ -31,9 +31,10 @@ public class ServoGroup implements Servo {
      * @param position position to set
      * @see Servo#setPosition(double)
      */
+    @Override
     public void setPosition(double position) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].setPosition(position);
+        for (Servo group1 : group) {
+            group1.setPosition(position);
         }
     }
 
@@ -43,9 +44,10 @@ public class ServoGroup implements Servo {
      * @param position position to set
      * @see Servo#set(double)
      */
+    @Override
     public void set(double position) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].set(position);
+        for (Servo group1 : group) {
+            group1.set(position);
         }
     }
 
@@ -56,7 +58,8 @@ public class ServoGroup implements Servo {
      * @return position of all servos
      * @see Servo#getPosition()
      */
-    public double getPosition() {
+    @Override
+    public double getPosition() throws OutOfSyncException {
         double pos = 0;
         for (int x = 0; x < group.length; x++) {
             if (x == 0) {
@@ -78,6 +81,7 @@ public class ServoGroup implements Servo {
      * @return state of all servos
      * @see Servo#get()
      */
+    @Override
     public double get() {
         double pos = 0;
         for (int x = 0; x < group.length; x++) {

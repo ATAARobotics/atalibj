@@ -10,7 +10,8 @@ import edu.first.identifiers.RateSensor;
  * controller interface, because that interface does not properly give something
  * the actual functions of a speed controller.
  *
- * <p> The only thing a speed controller can do is set the speed. All other
+ * <p>
+ * The only thing a speed controller can do is set the speed. All other
  * functionality cannot be assumed.
  *
  * @since May 28 13
@@ -23,8 +24,9 @@ public interface SpeedController extends RateActuator, RateSensor {
      * the maximum speed, and {@code -1} should be the maximum speed in the
      * opposite direction. {@code 0} should be a stopped position.
      *
-     * <p> The effect of this function is not necessarily linear, but it is
-     * useful to do so in implementation.
+     * <p>
+     * The effect of this function is not necessarily linear, but it is useful
+     * to do so in implementation.
      *
      * @param speed the speed to change to
      */
@@ -35,8 +37,9 @@ public interface SpeedController extends RateActuator, RateSensor {
      * the maximum speed, and {@code 0} should be the maximum speed in the
      * opposite direction. {@code 127} should be a stopped position.
      *
-     * <p> The effect of this function is not necessarily linear, but it is
-     * useful to do so in implementation.
+     * <p>
+     * The effect of this function is not necessarily linear, but it is useful
+     * to do so in implementation.
      *
      * @param speed the speed to change to
      */
@@ -72,6 +75,7 @@ public interface SpeedController extends RateActuator, RateSensor {
      *
      * @see #setSpeed(double)
      */
+    @Override
     public void setRate(double rate);
 
     /**
@@ -79,6 +83,7 @@ public interface SpeedController extends RateActuator, RateSensor {
      *
      * @see #setSpeed(double)
      */
+    @Override
     public void set(double value);
 
     /**
@@ -87,6 +92,7 @@ public interface SpeedController extends RateActuator, RateSensor {
      * @return speed of controller
      * @see #getSpeed()
      */
+    @Override
     public double getRate();
 
     /**
@@ -95,6 +101,7 @@ public interface SpeedController extends RateActuator, RateSensor {
      * @return speed of controller
      * @see #getSpeed()
      */
+    @Override
     public double get();
 
     /**
@@ -120,6 +127,7 @@ public interface SpeedController extends RateActuator, RateSensor {
          * @return speed
          * @see SpeedController#getSpeed()
          */
+        @Override
         public double get() {
             return controller.getSpeed();
         }
@@ -131,6 +139,7 @@ public interface SpeedController extends RateActuator, RateSensor {
          * @param syncGroup is not used
          * @see SpeedController#setSpeed(double)
          */
+        @Override
         public void set(double speed, byte syncGroup) {
             controller.setSpeed(speed);
         }
@@ -141,6 +150,7 @@ public interface SpeedController extends RateActuator, RateSensor {
          * @param speed new speed
          * @see SpeedController#setSpeed(double)
          */
+        @Override
         public void set(double speed) {
             controller.setSpeed(speed);
         }
@@ -148,6 +158,7 @@ public interface SpeedController extends RateActuator, RateSensor {
         /**
          * Stops the speed controller.
          */
+        @Override
         public void disable() {
             controller.setSpeed(0);
         }
@@ -158,6 +169,7 @@ public interface SpeedController extends RateActuator, RateSensor {
          * @param output new speed
          * @see SpeedController#setSpeed(double)
          */
+        @Override
         public void pidWrite(double output) {
             controller.setSpeed(output);
         }

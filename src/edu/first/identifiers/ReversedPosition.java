@@ -28,6 +28,7 @@ public class ReversedPosition implements Position {
      *
      * @return reversed value
      */
+    @Override
     public boolean getPosition() {
         return !position.getPosition();
     }

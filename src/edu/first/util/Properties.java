@@ -42,10 +42,11 @@ public final class Properties {
      *
      * @param file file to get data from
      */
-    public @Deprecated Properties(File file) {
+    public @Deprecated
+    Properties(File file) {
         String f = TextFiles.getTextFromFile(file);
         propertiesContent = (f == null ? "" : f);
-	
+
         StringTokenizer tokenizer = new StringTokenizer(propertiesContent, "\n\r=");
         Property[] p = new Property[tokenizer.countTokens() / 2];
         for (int x = 0; x < p.length; x++) {
@@ -96,9 +97,9 @@ public final class Properties {
      * @return {@code Property} object corresponding to key
      */
     public Property getProperty(String key) {
-        for (int x = 0; x < properties.length; x++) {
-            if (properties[x].key.equals(key)) {
-                return properties[x];
+        for (Property property : properties) {
+            if (property.key.equals(key)) {
+                return property;
             }
         }
         return null;
@@ -221,10 +222,11 @@ public final class Properties {
         }
 
         /**
-         * Returns the equivalent of {@code key} + " =  " + {@code value}.
+         * Returns the equivalent of {@code key} + " = " + {@code value}.
          *
          * @return string as would appear in a file
          */
+        @Override
         public String toString() {
             return key + " = " + value;
         }

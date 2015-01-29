@@ -27,6 +27,7 @@ public final class ReverseSolenoid implements Command {
      * Reverses the direction of the solenoid. This means OFF -> ON or ON ->
      * OFF.
      */
+    @Override
     public void run() {
         solenoid.setPosition(!solenoid.getPosition());
     }

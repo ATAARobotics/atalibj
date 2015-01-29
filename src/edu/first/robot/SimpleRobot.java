@@ -31,6 +31,7 @@ public abstract class SimpleRobot implements RobotMode {
      * Runs once when the robot is starting. Follows the same timing as
      * {@link GamePeriods#robotInit()}.
      */
+    @Override
     public abstract void init();
 
     /**
@@ -92,6 +93,7 @@ public abstract class SimpleRobot implements RobotMode {
     /**
      * Calls {@link SimpleRobot#autonomous()}.
      */
+    @Override
     public final void initAutonomous() {
         autonomous();
     }
@@ -99,6 +101,7 @@ public abstract class SimpleRobot implements RobotMode {
     /**
      * Calls {@link SimpleRobot#teleoperated()}.
      */
+    @Override
     public final void initTeleoperated() {
         teleoperated();
     }
@@ -106,6 +109,7 @@ public abstract class SimpleRobot implements RobotMode {
     /**
      * Calls {@link SimpleRobot#disabled()}.
      */
+    @Override
     public final void initDisabled() {
         disabled();
     }
@@ -113,6 +117,7 @@ public abstract class SimpleRobot implements RobotMode {
     /**
      * Calls {@link SimpleRobot#test()}.
      */
+    @Override
     public final void initTest() {
         test();
     }
@@ -120,54 +125,63 @@ public abstract class SimpleRobot implements RobotMode {
     /**
      * @deprecated not used in {@code SimpleRobot}
      */
+    @Override
     public final void periodicAutonomous() {
     }
 
     /**
      * @deprecated not used in {@code SimpleRobot}
      */
+    @Override
     public final void periodicTeleoperated() {
     }
 
     /**
      * @deprecated not used in {@code SimpleRobot}
      */
+    @Override
     public final void periodicDisabled() {
     }
 
     /**
      * @deprecated not used in {@code SimpleRobot}
      */
+    @Override
     public final void periodicTest() {
     }
 
     /**
      * @deprecated not used in {@code SimpleRobot}
      */
+    @Override
     public final void endAutonomous() {
     }
 
     /**
      * @deprecated not used in {@code SimpleRobot}
      */
+    @Override
     public final void endTeleoperated() {
     }
 
     /**
      * @deprecated not used in {@code SimpleRobot}
      */
+    @Override
     public final void endDisabled() {
     }
 
     /**
      * @deprecated not used in {@code SimpleRobot}
      */
+    @Override
     public final void endTest() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -178,6 +192,7 @@ public abstract class SimpleRobot implements RobotMode {
      * @see #getName()
      * @return easily understandable phrase to refer to the mode as
      */
+    @Override
     public String toString() {
         return getName();
     }

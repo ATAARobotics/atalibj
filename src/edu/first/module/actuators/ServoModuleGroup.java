@@ -1,5 +1,6 @@
 package edu.first.module.actuators;
 
+import edu.first.lang.OutOfSyncException;
 import edu.first.module.subsystems.Subsystem;
 
 /**
@@ -31,6 +32,7 @@ public class ServoModuleGroup extends Subsystem implements Servo {
      * @param position position to set
      * @see Servo#setPosition(double)
      */
+    @Override
     public void setPosition(double position) {
         group.setPosition(position);
     }
@@ -41,6 +43,7 @@ public class ServoModuleGroup extends Subsystem implements Servo {
      * @param position position to set
      * @see Servo#set(double)
      */
+    @Override
     public void set(double position) {
         group.set(position);
     }
@@ -52,7 +55,8 @@ public class ServoModuleGroup extends Subsystem implements Servo {
      * @return position of all servos
      * @see Servo#getPosition()
      */
-    public double getPosition() {
+    @Override
+    public double getPosition() throws OutOfSyncException {
         return group.getPosition();
     }
 
@@ -63,7 +67,8 @@ public class ServoModuleGroup extends Subsystem implements Servo {
      * @return state of all servos
      * @see Servo#get()
      */
-    public double get() {
+    @Override
+    public double get() throws OutOfSyncException {
         return group.get();
     }
 }
