@@ -27,6 +27,10 @@ public class BooleanDashboard implements Switch, Position {
         this.key = key;
         this.defaultValue = defaultValue;
     }
+    
+    public BooleanDashboard(int dashboardIndex, boolean defaultValue) {
+		this("DB/Button " + dashboardIndex, defaultValue);
+	}
 
     /**
      * Returns the key of the dashboard value that is used to access it.

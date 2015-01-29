@@ -26,6 +26,10 @@ public class StringDashboard implements StringInput {
         this.key = key;
         this.defaultValue = defaultValue;
     }
+    
+    public StringDashboard(int dashboardIndex, String defaultValue) {
+    	this("DB/String " + dashboardIndex, defaultValue);
+	}
 
     /**
      * Returns the key of the dashboard value that is used to access it.

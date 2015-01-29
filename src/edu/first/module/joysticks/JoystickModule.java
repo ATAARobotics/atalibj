@@ -16,14 +16,14 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 
 	private final edu.wpi.first.wpilibj.Joystick joystick;
 	// stores axises for quick access and not having to instantize everytime
-	private Axis[] axises = new Axis[] { new RawAxis(1), new RawAxis(2),
-			new RawAxis(3), new RawAxis(4), new RawAxis(5), new RawAxis(6) };
+	private Axis[] axises = new Axis[] { new RawAxis(0), new RawAxis(1),
+			new RawAxis(2), new RawAxis(3), new RawAxis(4), new RawAxis(5) };
 	// stores buttons for quick access and not having to instantize everytime
-	private Button[] buttons = new Button[] { new RawButton(1),
-			new RawButton(2), new RawButton(3), new RawButton(4),
-			new RawButton(5), new RawButton(6), new RawButton(7),
-			new RawButton(8), new RawButton(9), new RawButton(10),
-			new RawButton(11), new RawButton(12) };
+	private Button[] buttons = new Button[] { new RawButton(0),
+			new RawButton(1), new RawButton(2), new RawButton(3),
+			new RawButton(4), new RawButton(5), new RawButton(6),
+			new RawButton(7), new RawButton(8), new RawButton(9),
+			new RawButton(10), new RawButton(11) };
 
 	/**
 	 * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
@@ -77,7 +77,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 	 */
 	public final Axis getRawAxis(int port) {
 		checkAxis(port);
-		return axises[port - 1];
+		return axises[port];
 
 	}
 
@@ -114,7 +114,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 	 */
 	public final Button getRawButton(int port) {
 		checkButton(port);
-		return buttons[port - 1];
+		return buttons[port];
 	}
 
 	/**
@@ -184,8 +184,8 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 	 */
 	public final void changeAxis(int port, final Function function) {
 		checkAxis(port);
-		final Axis old = axises[port - 1];
-		axises[port - 1] = new Axis() {
+		final Axis old = axises[port];
+		axises[port] = new Axis() {
 			public double get() {
 				return function.F(old.get());
 			}
@@ -222,7 +222,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 	 */
 	public final void setAxis(int port, final Axis axis) {
 		checkAxis(port);
-		axises[port - 1] = axis;
+		axises[port] = axis;
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 	 */
 	public final void setButton(int port, final Button button) {
 		checkButton(port);
-		buttons[port - 1] = button;
+		buttons[port] = button;
 	}
 
 	/**
@@ -249,8 +249,8 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 	 */
 	public final void invertButton(int port) {
 		checkButton(port);
-		final Button old = buttons[port - 1];
-		buttons[port - 1] = new Button() {
+		final Button old = buttons[port];
+		buttons[port] = new Button() {
 			public boolean getPosition() {
 				return !old.getPosition();
 			}
@@ -288,14 +288,14 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 	}
 
 	private void checkAxis(int port) {
-		if (port > axises.length || port < 1) {
+		if (port > axises.length || port < 0) {
 			throw new IndexOutOfBoundsException("Axis " + port
 					+ " is not a valid axis");
 		}
 	}
 
 	private void checkButton(int port) {
-		if (port > buttons.length || port < 1) {
+		if (port > buttons.length || port < 0) {
 			throw new IndexOutOfBoundsException("Button " + port
 					+ " is not a valid button");
 		}
