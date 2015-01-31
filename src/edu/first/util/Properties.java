@@ -41,9 +41,9 @@ public final class Properties {
      * definition is subject to change outside of this class' control.
      *
      * @param file file to get data from
+     * @throws java.io.IOException when file cannot be read
      */
-    public @Deprecated
-    Properties(File file) {
+    public Properties(File file) throws IOException {
         String f = TextFiles.getTextFromFile(file);
         propertiesContent = (f == null ? "" : f);
 

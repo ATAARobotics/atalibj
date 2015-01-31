@@ -8,6 +8,7 @@ import java.util.List;
 
 import edu.first.util.DriverstationInfo;
 import edu.first.util.TextFiles;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -188,8 +189,7 @@ public final class Logger {
     /**
      * An implementation of {@link Log} that logs to a text file.
      */
-    public static final @Deprecated
-    class FileLog implements Log {
+    public static final class FileLog implements Log {
 
         private final File file;
 
@@ -209,7 +209,11 @@ public final class Logger {
          */
         @Override
         public void send(String msg) {
-            TextFiles.appendToNewLine(file, msg);
+            try {
+                TextFiles.appendToNewLine(file, msg);
+            } catch (IOException ex) {
+                Logger.getLogger(FileLog.class).error("File log failed to write to file. Ironic.", ex);
+            }
         }
     }
 
