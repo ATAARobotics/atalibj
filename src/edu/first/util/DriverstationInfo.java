@@ -43,6 +43,18 @@ public final class DriverstationInfo {
     public static int getAllianceLocation() {
         return DS.getLocation();
     }
+    
+    /**
+     * The Alliance name.
+     *
+     * <p>
+     * <i>"Red"</i>, <i>"Blue"</i> or <i>"Invalid"</i>.
+     *
+     * @return Alliance name
+     */
+    public static String getAllianceName() {
+        return DS.getAlliance().name();
+    }
 
     /**
      * Return the team number that the Driver Station is configured for.
