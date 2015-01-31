@@ -29,6 +29,7 @@ public class CANTalonSRXModule extends Module.StandardModule implements SpeedCon
         }
         this.talon = talon;
 
+        this.talon.disableControl();
         this.talon.changeControlMode(mode);
     }
 
@@ -55,68 +56,126 @@ public class CANTalonSRXModule extends Module.StandardModule implements SpeedCon
         this(new CANTalon(devNum, controlPeriodMS), mode);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init() {
     }
 
-    @Override
     /**
-     * Do not use, not implemented.
+     * {@inheritDoc}
      */
-    public @Deprecated
-    void setSpeed(double speed) {
+    @Override
+    public void setSpeed(double speed) {
+        ControlMode old = talon.getControlMode();
+        if (old != ControlMode.PercentVbus) {
+            talon.changeControlMode(ControlMode.PercentVbus);
+            set(speed);
+            talon.changeControlMode(old);
+        } else {
+            set(speed);
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setRawSpeed(int speed) {
+        if (speed >= 127) {
+            set(((double) speed - 127.0) / 127.0);
+        } else if (speed < 127) {
+            set(-1.0 + ((double) speed / 127.0));
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getSpeed() {
-        return get();
+        double speed;
+        ControlMode old = talon.getControlMode();
+        if (old != ControlMode.PercentVbus) {
+            talon.changeControlMode(ControlMode.PercentVbus);
+            speed = talon.get();
+            talon.changeControlMode(old);
+        } else {
+            speed = talon.get();
+        }
+        return speed;
     }
 
-    @Override
     /**
-     * Do not use, not implemented.
+     * {@inheritDoc}
      */
-    public @Deprecated
-    int getRawSpeed() {
-        return 0;
+    @Override
+    public int getRawSpeed() {
+        return (int) ((getSpeed() + 1) / 2 * 255);
     }
 
+    /**
+     * Has no effect on the Talon SRX.
+     */
     @Override
     public void update() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setRate(double rate) {
-        set(rate);
+        setSpeed(rate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void set(double value) {
         talon.set(value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getRate() {
-        return get();
+        return getSpeed();
     }
 
+    /**
+     * Will return different results based on the current control mode.
+     *
+     * <ul>
+     * <li> In Current mode: returns output current.
+     * <li> In Speed mode: returns current speed.
+     * <li> In Position mode: returns current sensor position.
+     * <li> In PercentVbus and Follower modes: returns current applied throttle.
+     * [-1 to +1]
+     * </ul>
+     */
     @Override
     public double get() {
         return talon.get();
     }
 
+    /**
+     * Enables the operation of the Talon. Needs to be called before output is
+     * given.
+     */
     @Override
     protected void enableModule() {
         talon.enableControl();
     }
 
+    /**
+     * Disables output from the Talon.
+     */
     @Override
     protected void disableModule() {
-        talon.disable();
         talon.disableControl();
     }
 }

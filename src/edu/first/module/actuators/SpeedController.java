@@ -74,6 +74,7 @@ public interface SpeedController extends RateActuator, RateSensor {
      * Sets the speed to {@code value}.
      *
      * @see #setSpeed(double)
+     * @param rate rate to set speed to
      */
     @Override
     public void setRate(double rate);
@@ -82,6 +83,7 @@ public interface SpeedController extends RateActuator, RateSensor {
      * Sets the speed to {@code value}.
      *
      * @see #setSpeed(double)
+     * @param value setting to apply
      */
     @Override
     public void set(double value);
@@ -96,10 +98,10 @@ public interface SpeedController extends RateActuator, RateSensor {
     public double getRate();
 
     /**
-     * Returns the speed of the controller.
+     * Returns the speed of the controller. Is not bound by obligation to any
+     * value range.
      *
      * @return speed of controller
-     * @see #getSpeed()
      */
     @Override
     public double get();
