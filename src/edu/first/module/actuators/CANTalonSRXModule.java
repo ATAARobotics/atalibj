@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.CANTalon.ControlMode;
  * See here for a much more comprehensive guide:
  * http://www.crosstheroadelectronics.com/Talon%20SRX%20Software%20Reference%20Manual.pdf
  *
- * @since May 28 13
+ * @since Jan 28 15
  * @author Joel Gallant
  */
 public class CANTalonSRXModule extends Module.StandardModule implements SpeedController {
@@ -150,6 +150,7 @@ public class CANTalonSRXModule extends Module.StandardModule implements SpeedCon
      */
     @Override
     public void set(double value) {
+        ensureEnabled();
         talon.set(value);
     }
 
