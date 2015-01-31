@@ -1,7 +1,9 @@
 package edu.first.module.joysticks;
 
 import edu.first.identifiers.Function;
+import edu.first.identifiers.Output;
 import edu.first.module.Module;
+import edu.wpi.first.wpilibj.Joystick.RumbleType;
 
 /**
  * A joystick that the user controls functions with. Attaches through the
@@ -16,14 +18,16 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
 
     private final edu.wpi.first.wpilibj.Joystick joystick;
     // stores axises for quick access and not having to instantize everytime
-    private Axis[] axises = new Axis[]{new RawAxis(0), new RawAxis(1),
-        new RawAxis(2), new RawAxis(3), new RawAxis(4), new RawAxis(5)};
+    private Axis[] axises = new Axis[]{
+        new RawAxis(0), new RawAxis(1), new RawAxis(2),
+        new RawAxis(3), new RawAxis(4), new RawAxis(5)
+    };
     // stores buttons for quick access and not having to instantize everytime
-    private Button[] buttons = new Button[]{new RawButton(0),
-        new RawButton(1), new RawButton(2), new RawButton(3),
-        new RawButton(4), new RawButton(5), new RawButton(6),
-        new RawButton(7), new RawButton(8), new RawButton(9),
-        new RawButton(10), new RawButton(11)};
+    private Button[] buttons = new Button[]{
+        new RawButton(0), new RawButton(1), new RawButton(2), new RawButton(3),
+        new RawButton(4), new RawButton(5), new RawButton(6), new RawButton(7),
+        new RawButton(8), new RawButton(9), new RawButton(10), new RawButton(11)
+    };
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
@@ -245,6 +249,10 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
         };
     }
 
+    public final Output getRumble(RumbleType type) {
+        return new Rumble(type);
+    }
+
     /**
      * Increases the capacity of the axises on this joystick. The new axises
      * will not function at all until
@@ -334,6 +342,20 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
             } else {
                 return getRawAxisValue(port) < threshold;
             }
+        }
+    }
+
+    private class Rumble implements Output {
+
+        private final RumbleType type;
+
+        public Rumble(RumbleType type) {
+            this.type = type;
+        }
+
+        @Override
+        public void set(double value) {
+            joystick.setRumble(type, (float) value);
         }
     }
 }
