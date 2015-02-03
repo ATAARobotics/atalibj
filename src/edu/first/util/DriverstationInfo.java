@@ -43,7 +43,7 @@ public final class DriverstationInfo {
     public static int getAllianceLocation() {
         return DS.getLocation();
     }
-    
+
     /**
      * The Alliance name.
      *

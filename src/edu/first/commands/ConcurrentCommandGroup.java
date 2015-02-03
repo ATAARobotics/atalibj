@@ -2,7 +2,6 @@ package edu.first.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import edu.first.command.Command;
 import edu.first.util.log.Logger;
 

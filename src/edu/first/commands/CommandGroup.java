@@ -3,7 +3,6 @@ package edu.first.commands;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import edu.first.command.Command;
 
 /**
@@ -23,8 +22,8 @@ import edu.first.command.Command;
  *
  * <p>
  * To add sequential command, use
- * {@link #appendSequential(edu.ATA.command.Command)}, and to add concurrent
- * commands, use {@link #appendConcurrent(edu.ATA.command.Command)}.
+ * {@link #appendSequential(edu.first.command.Command)}, and to add concurrent
+ * commands, use {@link #appendConcurrent(edu.first.command.Command)}.
  *
  * <p>
  * Command Groups look like this:
@@ -75,6 +74,16 @@ public class CommandGroup implements Command {
      * instead
      */
     public final void addSequential(Command command) {
+        appendSequential(command);
+    }
+
+    /**
+     * Adds a command to part of the queue in this command group.
+     *
+     * @throws NullPointerException when command is null
+     * @param command command to run by itself
+     */
+    public final void appendSequential(Command command) {
         if (command == null) {
             throw new NullPointerException("Null command given");
         }
@@ -82,27 +91,8 @@ public class CommandGroup implements Command {
     }
 
     /**
-     * Adds a command to part of the queue in this command group. Sequential
-     * commands are run after the command before it, and are done before the
-     * next command.
-     *
-     * @throws NullPointerException when command is null
-     * @param command command to run by itself
-     */
-    public final void appendSequential(Command command) {
-        addSequential(command);
-    }
-
-    /**
      * Adds a command to part of the queue in this command group, that will be
      * run at the same time as all other concurrent commands around it.
-     * Concurrent commands are run at the same time as all concurrent commands
-     * around it.
-     *
-     * <p>
-     * <i> The connotation of "commands around it" is commands the are added
-     * before and after this command, that are added using
-     * {@link #appendConcurrent(edu.ATA.command.Command)}.</i>
      *
      * @throws NullPointerException when command is null
      * @param command command to run alongside other concurrent commands
@@ -110,15 +100,7 @@ public class CommandGroup implements Command {
      * instead
      */
     public final void addConcurrent(Command command) {
-        if (command == null) {
-            throw new NullPointerException("Null command given");
-        }
-        Object lastCommand = commands.get(commands.size() - 1);
-        if (!(lastCommand instanceof ConcurrentCommandGroup)) {
-            commands.add(new ConcurrentCommandGroup());
-        }
-        // list is sure to end with a ConcurrentCommandGroup
-        ((ConcurrentCommandGroup) commands.get(commands.size() - 1)).add(command);
+        appendConcurrent(command);
     }
 
     /**
@@ -136,7 +118,15 @@ public class CommandGroup implements Command {
      * @param command command to run alongside other concurrent commands
      */
     public final void appendConcurrent(Command command) {
-        addConcurrent(command);
+        if (command == null) {
+            throw new NullPointerException("Null command given");
+        }
+        Object lastCommand = commands.get(commands.size() - 1);
+        if (!(lastCommand instanceof ConcurrentCommandGroup)) {
+            commands.add(new ConcurrentCommandGroup());
+        }
+        // list is sure to end with a ConcurrentCommandGroup
+        ((ConcurrentCommandGroup) commands.get(commands.size() - 1)).add(command);
     }
 
     /**

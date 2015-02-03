@@ -1,5 +1,6 @@
 package edu.first.module.actuators;
 
+import edu.first.command.Command;
 import edu.first.module.Module;
 
 /**
@@ -78,6 +79,44 @@ public class SolenoidModule extends Module.StandardModule implements Solenoid {
     public void setPosition(boolean pos) {
         ensureEnabled();
         solenoid.set(pos);
+    }
+
+    /**
+     * Returns a command that calls {@link #setPosition(boolean)}.
+     *
+     * @param pos the new position of the solenoid
+     * @return command that sets position
+     */
+    public Command setPositionCommand(final boolean pos) {
+        return new Command() {
+            @Override
+            public void run() {
+                setPosition(pos);
+            }
+        };
+    }
+
+    /**
+     * Reverses the position of the solenoid.
+     *
+     * @throws IllegalStateException when module is not enabled
+     */
+    public void reverse() {
+        setPosition(!getPosition());
+    }
+
+    /**
+     * Returns a command that calls {@link #reverse()}.
+     *
+     * @return command that reverses
+     */
+    public Command reverseCommand() {
+        return new Command() {
+            @Override
+            public void run() {
+                reverse();
+            }
+        };
     }
 
     /**

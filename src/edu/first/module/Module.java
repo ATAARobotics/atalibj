@@ -1,5 +1,6 @@
 package edu.first.module;
 
+import edu.first.command.Command;
 import edu.first.module.subsystems.Subsystem;
 
 /**
@@ -142,6 +143,34 @@ public interface Module {
         // uses lock and not "this" in case module uses "this" lock
         private final Object lock = new Object();
         private boolean enabled;
+
+        /**
+         * Command that enables this module.
+         * 
+         * @return command that enables the module
+         */
+        public final Command _enable() {
+            return new Command() {
+                @Override
+                public void run() {
+                    enable();
+                }
+            };
+        }
+
+        /**
+         * Command that disables this module.
+         * 
+         * @return command that disables the module
+         */
+        public final Command _disable() {
+            return new Command() {
+                @Override
+                public void run() {
+                    disable();
+                }
+            };
+        }
 
         /**
          * Performs the necessary actions to ensure the module is operational.

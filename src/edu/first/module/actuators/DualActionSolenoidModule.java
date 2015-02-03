@@ -1,5 +1,6 @@
 package edu.first.module.actuators;
 
+import edu.first.command.Command;
 import edu.first.module.Module;
 
 /**
@@ -100,6 +101,22 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
     }
 
     /**
+     * Returns a command that calls
+     * {@link #set(edu.first.module.actuators.DualActionSolenoid.Direction)}.
+     *
+     * @param direction which direction to set the solenoid
+     * @return setting command
+     */
+    public Command setCommand(final Direction direction) {
+        return new Command() {
+            @Override
+            public void run() {
+                set(direction);
+            }
+        };
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalStateException when module is not enabled
@@ -129,6 +146,20 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
         } else if (get() == Direction.RIGHT) {
             set(Direction.LEFT);
         }
+    }
+
+    /**
+     * Returns a command that calls {@link #reverse()}.
+     *
+     * @return reversing command
+     */
+    public Command reverseCommand() {
+        return new Command() {
+            @Override
+            public void run() {
+                reverse();
+            }
+        };
     }
 
     /**
