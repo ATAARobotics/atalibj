@@ -79,12 +79,11 @@ public interface Module {
      *
      * <p>
      * The contract for this method is that {@link #isEnabled()} should return
-     * {@code falsee} after this is called until {@link #enable()} is called.
-     * The official {@code enabled} state of a module is only technically
-     * correct by using {@link #isEnabled()} and the completion of this method
-     * does not by definition mean that the module is disabled. By contract
-     * though, completion of this method without error should mean that it is
-     * disabled.
+     * {@code false} after this is called until {@link #enable()} is called. The
+     * official {@code enabled} state of a module is only technically correct by
+     * using {@link #isEnabled()} and the completion of this method does not by
+     * definition mean that the module is disabled. By contract though,
+     * completion of this method without error should mean that it is disabled.
      */
     public void disable();
 
@@ -140,16 +139,17 @@ public interface Module {
      */
     public static abstract class StandardModule implements Module {
 
-        // uses lock and not "this" in case module uses "this" lock
+        // uses lock and not "this" in case module uses "this/super" lock
         private final Object lock = new Object();
         private boolean enabled;
 
         /**
          * Command that enables this module.
-         * 
+         *
+         * @see #enable()
          * @return command that enables the module
          */
-        public final Command _enable() {
+        public final Command enableCommand() {
             return new Command() {
                 @Override
                 public void run() {
@@ -160,10 +160,11 @@ public interface Module {
 
         /**
          * Command that disables this module.
-         * 
+         *
+         * @see #disable()
          * @return command that disables the module
          */
-        public final Command _disable() {
+        public final Command disableCommand() {
             return new Command() {
                 @Override
                 public void run() {

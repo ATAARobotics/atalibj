@@ -8,7 +8,6 @@ import java.util.List;
 import edu.first.util.DriverstationInfo;
 import edu.first.util.TextFiles;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 
 /**
