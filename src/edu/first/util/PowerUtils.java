@@ -23,7 +23,7 @@ public final class PowerUtils {
      * @param channel channel to monitor
      * @return The current of one of the PDP channels (channels 0-15) in Amperes
      */
-    public double getCurrent(int channel) {
+    public static double getCurrent(int channel) {
         return panel.getCurrent(channel);
     }
 
@@ -32,7 +32,7 @@ public final class PowerUtils {
      *
      * @return The voltage of the PDP in volts
      */
-    public double getVoltage() {
+    public static double getVoltage() {
         return panel.getVoltage();
     }
 
@@ -41,7 +41,7 @@ public final class PowerUtils {
      *
      * @return The current of all the channels in Amperes
      */
-    public double getTotalCurrent() {
+    public static double getTotalCurrent() {
         return panel.getTotalCurrent();
     }
 
@@ -50,7 +50,7 @@ public final class PowerUtils {
      *
      * @return The temperature of the PDP in degrees Celsius
      */
-    public double getTemperature() {
+    public static double getTemperature() {
         return panel.getTemperature();
     }
 
