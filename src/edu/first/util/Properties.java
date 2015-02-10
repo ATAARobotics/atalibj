@@ -138,6 +138,17 @@ public final class Properties {
     public double toDouble(String key) {
         return Double.parseDouble(getValue(key));
     }
+    
+    /**
+     * Converts the {@link #getValue(java.lang.String)} value to a boolean.
+     *
+     * @param key string used to declare the property
+     * @return value given to the key in the file (returns false unless specifically "true")
+     * @throws NullPointerException when key does not exist
+     */
+    public boolean toBoolean(String key) {
+		return Boolean.parseBoolean(getValue(key));
+	}
 
     /**
      * Returns the actual value designated in the file under the key.
@@ -187,6 +198,22 @@ public final class Properties {
             return backup;
         }
     }
+    
+    /**
+     * Converts the {@link #getValue(java.lang.String)} value to a boolean.
+     *
+     * @param key string used to declare the property
+     * @param backup value used if it did not exist in the file
+     * @return value given to the key in the file (returns false unless specifically "true")
+     */
+    public boolean toBoolean(String key, boolean backup) {
+		try {
+			return toBoolean(key);
+		} catch (Exception ex) {
+			Logger.getLogger(getClass()).debug(key + " property not found - using " + backup);
+			return backup;
+		}
+	}
 
     /**
      * A class used to represent properties inside of a file. Uses an internal
