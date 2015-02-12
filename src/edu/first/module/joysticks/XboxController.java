@@ -57,7 +57,7 @@ public class XboxController extends BindingJoystick {
      * Port for axis.
      */
     public static final int LEFT_X = 0, LEFT_Y = 1, LEFT_TRIGGER = 2, RIGHT_TRIGGER = 3,
-            RIGHT_X = 4, RIGHT_Y = 5, RIGHT_FROM_MIDDLE = 6, LEFT_FROM_MIDDLE = 7;
+            RIGHT_X = 4, RIGHT_Y = 5, RIGHT_FROM_MIDDLE = 6, LEFT_FROM_MIDDLE = 7, TRIGGERS = 8;
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
@@ -68,9 +68,10 @@ public class XboxController extends BindingJoystick {
     protected XboxController(Joystick joystick) {
         super(joystick);
 
-        increaseAxisCapacity(2);
+        increaseAxisCapacity(3);
         setAxis(RIGHT_FROM_MIDDLE, new FromMiddle(getRightY(), getRightX()));
         setAxis(LEFT_FROM_MIDDLE, new FromMiddle(getLeftY(), getLeftX()));
+        setAxis(TRIGGERS, new Combination(getLeftTrigger(), getRightTrigger()));
         invertAxis(LEFT_Y);
         invertAxis(RIGHT_Y);
         invertAxis(LEFT_FROM_MIDDLE);
@@ -157,7 +158,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return axis object to receive input from
      */
-    public final Axis getLeftX() {
+    public final edu.first.module.joysticks.Joystick.Axis getLeftX() {
         return getRawAxis(LEFT_X);
     }
 
@@ -183,7 +184,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return axis object to receive input from
      */
-    public final Axis getLeftY() {
+    public final edu.first.module.joysticks.Joystick.Axis getLeftY() {
         return getRawAxis(LEFT_Y);
     }
 
@@ -212,7 +213,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return axis object to receive input from
      */
-    public final Axis getLeftTrigger() {
+    public final edu.first.module.joysticks.Joystick.Axis getLeftTrigger() {
         return getRawAxis(LEFT_TRIGGER);
     }
 
@@ -223,7 +224,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return axis object to receive input from
      */
-    public final Axis getRightTrigger() {
+    public final edu.first.module.joysticks.Joystick.Axis getRightTrigger() {
         return getRawAxis(RIGHT_TRIGGER);
     }
 
@@ -249,7 +250,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return axis object to receive input from
      */
-    public final Axis getRightX() {
+    public final edu.first.module.joysticks.Joystick.Axis getRightX() {
         return getRawAxis(RIGHT_X);
     }
 
@@ -275,7 +276,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return axis object to receive input from
      */
-    public final Axis getRightY() {
+    public final edu.first.module.joysticks.Joystick.Axis getRightY() {
         return getRawAxis(RIGHT_Y);
     }
 
@@ -302,8 +303,34 @@ public class XboxController extends BindingJoystick {
      *
      * @return axis object to receive input from
      */
-    public final Axis getRightDistanceFromMiddle() {
+    public final edu.first.module.joysticks.Joystick.Axis getRightDistanceFromMiddle() {
         return getRawAxis(RIGHT_FROM_MIDDLE);
+    }
+
+    /**
+     * Returns the triggers value.
+     *
+     * <p>
+     * Right: Positive; Left: Negative
+     *
+     * @return triggers together
+     */
+    public final double getTriggersValue() {
+        return getRawAxisValue(TRIGGERS);
+    }
+
+    /**
+     * Returns an {@link Axis} that will give values from the axis. Changed
+     * settings of the controller will not affect this object after it has
+     * already been created.
+     *
+     * <p>
+     * Right: Positive; Left: Negative
+     *
+     * @return axis object to receive input from
+     */
+    public final edu.first.module.joysticks.Joystick.Axis getTriggers() {
+        return getRawAxis(TRIGGERS);
     }
 
     /**
@@ -329,7 +356,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return axis object to receive input from
      */
-    public final Axis getLeftDistanceFromMiddle() {
+    public final edu.first.module.joysticks.Joystick.Axis getLeftDistanceFromMiddle() {
         return getRawAxis(LEFT_FROM_MIDDLE);
     }
 
@@ -349,7 +376,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getA() {
+    public final edu.first.module.joysticks.Joystick.Button getA() {
         return getRawButton(A);
     }
 
@@ -369,7 +396,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getB() {
+    public final edu.first.module.joysticks.Joystick.Button getB() {
         return getRawButton(B);
     }
 
@@ -389,7 +416,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getX() {
+    public final edu.first.module.joysticks.Joystick.Button getX() {
         return getRawButton(X);
     }
 
@@ -409,7 +436,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getY() {
+    public final edu.first.module.joysticks.Joystick.Button getY() {
         return getRawButton(Y);
     }
 
@@ -429,7 +456,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getLeftBumper() {
+    public final edu.first.module.joysticks.Joystick.Button getLeftBumper() {
         return getRawButton(LEFT_BUMPER);
     }
 
@@ -449,7 +476,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getRightBumper() {
+    public final edu.first.module.joysticks.Joystick.Button getRightBumper() {
         return getRawButton(RIGHT_BUMPER);
     }
 
@@ -469,7 +496,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getBack() {
+    public final edu.first.module.joysticks.Joystick.Button getBack() {
         return getRawButton(BACK);
     }
 
@@ -489,7 +516,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getStart() {
+    public final edu.first.module.joysticks.Joystick.Button getStart() {
         return getRawButton(START);
     }
 
@@ -509,7 +536,7 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getLeftStick() {
+    public final edu.first.module.joysticks.Joystick.Button getLeftStick() {
         return getRawButton(LEFT_STICK);
     }
 
@@ -529,17 +556,17 @@ public class XboxController extends BindingJoystick {
      *
      * @return button object to receive input from
      */
-    public final Button getRightStick() {
+    public final edu.first.module.joysticks.Joystick.Button getRightStick() {
         return getRawButton(RIGHT_STICK);
     }
 
     // Uses A^2 + B^2 = C^2 to solve distance from the middle of the joystick
-    private static final class FromMiddle implements Axis {
+    private static final class FromMiddle implements edu.first.module.joysticks.Joystick.Axis {
 
-        private final Axis X;
-        private final Axis Y;
+        private final edu.first.module.joysticks.Joystick.Axis X;
+        private final edu.first.module.joysticks.Joystick.Axis Y;
 
-        public FromMiddle(Axis Y, Axis X) {
+        public FromMiddle(edu.first.module.joysticks.Joystick.Axis Y, edu.first.module.joysticks.Joystick.Axis X) {
             this.Y = Y;
             this.X = X;
         }
@@ -551,6 +578,23 @@ public class XboxController extends BindingJoystick {
 
             double distance = Math.sqrt((x * x) + (y * y));
             return (y > 0) ? distance : -distance;
+        }
+    }
+
+    private static final class Combination implements edu.first.module.joysticks.Joystick.Axis {
+
+        private final edu.first.module.joysticks.Joystick.Axis left;
+        private final edu.first.module.joysticks.Joystick.Axis right;
+
+        public Combination(edu.first.module.joysticks.Joystick.Axis left, edu.first.module.joysticks.Joystick.Axis right) {
+            this.left = left;
+            this.right = right;
+        }
+
+        @Override
+        public double get() {
+            // left is negative
+            return -left.get() + right.get();
         }
     }
 }
