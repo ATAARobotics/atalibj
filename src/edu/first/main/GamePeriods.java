@@ -1,13 +1,11 @@
 /*
- * This software has been created by Alberta Tech Alliance, Team 4334, in 
- * Calgary, Alberta. All credit goes to them and any use of this code should be 
- * accredited to them.
+ * This software was created by Alberta Tech Alliance, Team 4334, in 
+ * Calgary, Alberta. This version is a fork by FRC Western Canada.
  */
 package edu.first.main;
 
 import edu.first.robot.IterativeRobotAdapter;
 import edu.first.robot.RobotMode;
-import edu.first.robot.RobotModeSelector;
 import edu.first.robot.SafeRobotMode;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -21,11 +19,9 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * {@code GamePeriods}'s usefulness because it contains all of the methods of
  * {@code GamePeriods} and more.
  *
- * {@code GamePeriods} works by using a {@link RobotModeSelector} to select from
- * {@link GamePeriods#modes}. This allows the programmer to use one mode or
- * multiple modes. The mode is selectable on the SmartDashboard under the key
- * "Robot Mode". To change this functionality, edit this class so that
- * {@link GamePeriods#updateMode()} returns the mode you want to run.
+ * Please change the static variable {@link #robotMode} to your robot. Do so
+ * however you wish, but you may experience problems if set statically (happens
+ * before some internal initialisations of WPILibJ).
  *
  * <b> If you change the name of this class or the package after creating this
  * project, you must also update the manifest file in the resource directory.
@@ -44,6 +40,9 @@ public final class GamePeriods extends IterativeRobot {
     // The current game mode - change to yours
     private static RobotMode robotMode;
 
+    /**
+     * Please never use this!
+     */
     public GamePeriods() {
         // Init robot mode here so that static initializing doesn't interfere with wpi code
         robotMode = new SafeRobotMode(new IterativeRobotAdapter("Null"));
@@ -54,6 +53,7 @@ public final class GamePeriods extends IterativeRobot {
      * cycle, but never again. Effectively should "start the robot", in whatever
      * context it happens to be in.
      */
+    @Override
     public void robotInit() {
         robotMode.init();
     }
@@ -66,6 +66,7 @@ public final class GamePeriods extends IterativeRobot {
      * Every time disabled is run, the {@code RobotMode} is updated. This only
      * happens during the disabled period.
      */
+    @Override
     public void disabledInit() {
         finishAndNewMode(GameMode.DISABLED);
         robotMode.initDisabled();
@@ -79,6 +80,7 @@ public final class GamePeriods extends IterativeRobot {
      * and is only run once every time the DriverStation sends packets. It can
      * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
+    @Override
     public void disabledPeriodic() {
         robotMode.periodicDisabled();
     }
@@ -86,6 +88,7 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Initializes anything needed for the autonomous period of the robot.
      */
+    @Override
     public void autonomousInit() {
         finishAndNewMode(GameMode.AUTONOMOUS);
         robotMode.initAutonomous();
@@ -99,6 +102,7 @@ public final class GamePeriods extends IterativeRobot {
      * and is only run once every time the DriverStation sends packets. It can
      * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
+    @Override
     public void autonomousPeriodic() {
         robotMode.periodicAutonomous();
     }
@@ -106,6 +110,7 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Initializes anything needed for the teleoperated period of the robot.
      */
+    @Override
     public void teleopInit() {
         finishAndNewMode(GameMode.TELEOPERATED);
         robotMode.initTeleoperated();
@@ -119,6 +124,7 @@ public final class GamePeriods extends IterativeRobot {
      * and is only run once every time the DriverStation sends packets. It can
      * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
+    @Override
     public void teleopPeriodic() {
         robotMode.periodicTeleoperated();
     }
@@ -126,6 +132,7 @@ public final class GamePeriods extends IterativeRobot {
     /**
      * Initializes anything needed for the test period of the robot.
      */
+    @Override
     public void testInit() {
         finishAndNewMode(GameMode.TEST);
         robotMode.initTest();
@@ -139,6 +146,7 @@ public final class GamePeriods extends IterativeRobot {
      * and is only run once every time the DriverStation sends packets. It can
      * be roughly assumed that it runs at 50Hz, but should not be depended on.
      */
+    @Override
     public void testPeriodic() {
         robotMode.periodicTest();
     }
@@ -163,21 +171,25 @@ public final class GamePeriods extends IterativeRobot {
     private static abstract class GameMode {
 
         static final GameMode DISABLED = new GameMode() {
+            @Override
             void end() {
                 robotMode.endDisabled();
             }
         };
         static final GameMode AUTONOMOUS = new GameMode() {
+            @Override
             void end() {
                 robotMode.endAutonomous();
             }
         };
         static final GameMode TELEOPERATED = new GameMode() {
+            @Override
             void end() {
                 robotMode.endTeleoperated();
             }
         };
         static final GameMode TEST = new GameMode() {
+            @Override
             void end() {
                 robotMode.endTest();
             }

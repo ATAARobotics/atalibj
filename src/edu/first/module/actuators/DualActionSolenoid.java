@@ -1,7 +1,5 @@
 package edu.first.module.actuators;
 
-import edu.first.util.Enum;
-
 /**
  * General interface representing dual action solenoids. Dual action solenoids
  * have two sides that change the direction of airflow (left or right).
@@ -41,23 +39,8 @@ public interface DualActionSolenoid {
     /**
      * Enum representing the directions of a dual action solenoid.
      */
-    public static final class Direction extends Enum {
+    public static enum Direction {
 
-        /**
-         * The left side of the solenoid is on.
-         */
-        public static final Direction LEFT = new Direction("LEFT");
-        /**
-         * The right side of the solenoid is on.
-         */
-        public static final Direction RIGHT = new Direction("RIGHT");
-        /**
-         * Both solenoids are off.
-         */
-        public static final Direction OFF = new Direction("OFF");
-
-        private Direction(String name) {
-            super(name);
-        }
+        LEFT, RIGHT, OFF;
     }
 }

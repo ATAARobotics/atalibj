@@ -1,16 +1,14 @@
 package edu.first.util.log;
 
-import edu.first.util.Arrays;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import edu.first.util.DriverstationInfo;
-import edu.first.util.Enum;
-import edu.first.util.File;
 import edu.first.util.TextFiles;
-import edu.first.util.list.Iterator;
-import edu.first.util.list.List;
-import edu.first.util.list.SafeArrayList;
-import edu.wpi.first.wpilibj.DriverStationLCD;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * The logging abstraction that allows users to log messages at different
@@ -27,17 +25,16 @@ public final class Logger {
      * every {@code Logger} by default, so there is no need to do so yourself.
      */
     public static final Log CONSOLE_LOG = new Log() {
+        @Override
         public void send(String msg) {
             System.out.println(msg);
         }
     };
-    private static final List DEFAULT_LOGS = Arrays.asList(new Object[]{
-        CONSOLE_LOG
-    });
-    private static final Hashtable loggers = new Hashtable();
-    private static int lineNum = 1;
-    private final Class origin;
-    private final List logs = new SafeArrayList(DEFAULT_LOGS, Log.class);
+    private static final List<Log> DEFAULT_LOGS = Arrays
+            .asList(new Log[]{CONSOLE_LOG});
+    private static final HashMap<Class<?>, Logger> loggers = new HashMap<>();
+    private final Class<?> origin;
+    private final List<Log> logs = new ArrayList<>(DEFAULT_LOGS);
 
     /**
      * Returns the current logger for the origin. All loggers with the same
@@ -47,7 +44,7 @@ public final class Logger {
      * @return an instance of {@code Logger} that can send messages from the
      * origin
      */
-    public static Logger getLogger(Class origin) {
+    public static Logger getLogger(Class<?> origin) {
         if (!loggers.containsKey(origin)) {
             loggers.put(origin, new Logger(origin));
         }
@@ -57,9 +54,12 @@ public final class Logger {
     /**
      * Returns the current logger for the class of the given object. Typically,
      * you can use it like this:
+     *
      * <pre>
      * getLogger(this);
-     * </pre> It will deduce the class of the {@code this} object.
+     * </pre>
+     *
+     * It will deduce the class of the {@code this} object.
      *
      * @param o object whose class is the origin
      * @return an instance of {@code Logger} that can send messages from the
@@ -76,74 +76,14 @@ public final class Logger {
      * @see #addLog(edu.first.util.log.Logger.Log)
      */
     public static void addLogToAll(Log log) {
-        Enumeration e = loggers.elements();
-        while (e.hasMoreElements()) {
-            ((Logger) e.nextElement()).addLog(log);
+        for (Logger l : loggers.values()) {
+            l.addLog(log);
         }
         DEFAULT_LOGS.add(log);
     }
 
-    /**
-     * Clears all messages on the driverstation LCD.
-     */
-    public static void clearLCD() {
-        lineNum = 1;
-        DriverStationLCD.getInstance().clear();
-    }
-
-    /**
-     * Displays the message on the next line on the DriverStation LCD screen.
-     * This method rotates through every line, and displays the message on the
-     * line after the previous message.
-     *
-     * @throws NullPointerException when message is null
-     * @param msg message to display
-     */
-    public static void displayLCDMessage(String msg) {
-        if (msg == null) {
-            throw new NullPointerException();
-        }
-        if (msg.length() > DriverStationLCD.kLineLength) {
-            displayLCDMessage(msg.substring(0, DriverStationLCD.kLineLength));
-            displayLCDMessage(msg.substring(DriverStationLCD.kLineLength));
-            return;
-        }
-        DriverStationLCD.Line line;
-        switch (lineNum) {
-            case (1):
-                line = DriverStationLCD.Line.kUser1;
-                break;
-            case (2):
-                line = DriverStationLCD.Line.kUser2;
-                break;
-            case (3):
-                line = DriverStationLCD.Line.kUser3;
-                break;
-            case (4):
-                line = DriverStationLCD.Line.kUser4;
-                break;
-            case (5):
-                line = DriverStationLCD.Line.kUser5;
-                break;
-            case (6):
-                line = DriverStationLCD.Line.kUser6;
-                break;
-            default:
-                line = DriverStationLCD.Line.kUser1;
-        }
-        StringBuffer buf = new StringBuffer(msg);
-        while (buf.length() < DriverStationLCD.kLineLength) {
-            buf.append(' ');
-        }
-        DriverStationLCD.getInstance().println(line, 1, buf);
-        DriverStationLCD.getInstance().updateLCD();
-        if (++lineNum > 6) {
-            lineNum = 1;
-        }
-    }
-
     // Use static factory instead
-    private Logger(Class origin) {
+    private Logger(Class<?> origin) {
         this.origin = origin;
     }
 
@@ -187,7 +127,6 @@ public final class Logger {
      */
     public void warn(String msg) {
         send(new Message(Level.WARN, origin, msg));
-        displayLCDMessage(msg);
     }
 
     /**
@@ -201,7 +140,6 @@ public final class Logger {
      */
     public void error(String msg, Throwable error) {
         send(new Message(Level.ERROR, origin, msg));
-        displayLCDMessage(msg);
         error.printStackTrace();
     }
 
@@ -220,15 +158,14 @@ public final class Logger {
      */
     public void fatal(String msg, Throwable error) {
         send(new Message(Level.FATAL, origin, msg));
-        displayLCDMessage(msg);
         error.printStackTrace();
         System.exit(8001);
     }
 
     private void send(Message msg) {
-        Iterator i = logs.iterator();
+        Iterator<Log> i = logs.iterator();
         while (i.hasNext()) {
-            ((Log) i.next()).send(msg.toString());
+            i.next().send(msg.toString());
         }
     }
 
@@ -268,38 +205,36 @@ public final class Logger {
          *
          * Inserts the message at the very end of the file.
          */
+        @Override
         public void send(String msg) {
-            TextFiles.appendToNewLine(file, msg);
+            try {
+                TextFiles.appendToNewLine(file, msg);
+            } catch (IOException ex) {
+                Logger.getLogger(FileLog.class).error("File log failed to write to file. Ironic.", ex);
+            }
         }
     }
 
-    private static final class Level extends Enum {
+    private static enum Level {
 
-        public static final Level DEBUG = new Level("DEBUG");
-        public static final Level INFO = new Level("INFO");
-        public static final Level WARN = new Level("WARN");
-        public static final Level ERROR = new Level("ERROR");
-        public static final Level FATAL = new Level("FATAL");
-
-        private Level(String name) {
-            super(name);
-        }
+        DEBUG, INFO, WARN, ERROR, FATAL;
     }
 
     private static final class Message {
 
         private final Level l;
-        private final Class o;
+        private final Class<?> o;
         private final String m;
 
-        Message(Level l, Class o, String m) {
+        Message(Level l, Class<?> o, String m) {
             this.l = l;
             this.o = o;
             this.m = m;
         }
 
+        @Override
         public String toString() {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             buffer.append(DriverstationInfo.getGamePeriod()).append(" - ");
             buffer.append('[').append(l).append("] ");
             buffer.append('@').append(o.getName()).append(' ');

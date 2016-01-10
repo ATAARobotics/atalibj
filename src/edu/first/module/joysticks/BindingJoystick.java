@@ -1,9 +1,10 @@
 package edu.first.module.joysticks;
 
+import edu.first.command.Command;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import edu.first.identifiers.Output;
-import edu.first.util.list.Iterator;
-import edu.first.util.list.List;
-import edu.first.util.list.SafeArrayList;
 
 /**
  * A {@link JoystickModule} that can bind axises and buttons to commands and
@@ -15,7 +16,7 @@ import edu.first.util.list.SafeArrayList;
  */
 public class BindingJoystick extends JoystickModule {
 
-    private final List binds = new SafeArrayList(Bind.class);
+    private final List<Bind> binds = new ArrayList<>();
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
@@ -191,16 +192,16 @@ public class BindingJoystick extends JoystickModule {
     public final void addButtonBind(ButtonBind buttonBind) {
         addBind(buttonBind);
     }
-    
+
     /**
      * Removes the specific bind from this joystick.
-     * 
+     *
      * @param b bind to remove
      */
     public final void removeBind(Bind b) {
         binds.remove(b);
     }
-    
+
     /**
      * Removes all active binds from the joystick.
      */
@@ -223,10 +224,152 @@ public class BindingJoystick extends JoystickModule {
      * Performs every bind, in the order they were given in the adding methods.
      */
     public final void doBinds() {
-        Iterator i = binds.iterator();
+        Iterator<Bind> i = binds.iterator();
         while (i.hasNext()) {
             ((Bind) i.next()).doBind();
         }
+    }
+
+    /**
+     * Returns a command that will add a bind to this joystick.
+     *
+     * @param bind the bind to add
+     * @return command that does the operation
+     */
+    public final Command addBindCommand(final Bind bind) {
+        return new Command() {
+            @Override
+            public void run() {
+                addBind(bind);
+            }
+        };
+    }
+    
+    /**
+     * Adds a single bind that binds one port to an output.
+     *
+     * @param port the axis to read
+     * @param output binded output to set from axis
+     * @return command that does the operation
+     */
+    public final Command addAxisBindCommand(int port, Output output) {
+        return addBindCommand(new AxisBind(getRawAxis(port), output));
+    }
+
+    /**
+     * Adds a single bind that binds one axis to an output.
+     *
+     * @param axis the axis to read
+     * @param output binded output to set from axis
+     * @return command that does the operation
+     */
+    public final Command addAxisBindCommand(Joystick.Axis axis, Output output) {
+        return addBindCommand(new AxisBind(axis, output));
+    }
+
+    /**
+     * Adds a bind that will run in a loop as long as the button is pressed.
+     *
+     * @param port the button to read
+     * @param runnable runs while button is pressed
+     * @return command that does the operation
+     */
+    public final Command addWhilePressedCommand(int port, Runnable runnable) {
+        return addBindCommand(new WhilePressed(getRawButton(port), runnable));
+    }
+
+    /**
+     * Adds a bind that will run in a loop as long as the button is pressed.
+     *
+     * @param button the button to read
+     * @param runnable runs while button is pressed
+     * @return command that does the operation
+     */
+    public final Command addWhilePressedCommand(Button button, Runnable runnable) {
+        return addBindCommand(new WhilePressed(button, runnable));
+    }
+
+    /**
+     * Adds a bind that will run in a loop as long as the button is not pressed.
+     *
+     * @param port the button to read
+     * @param runnable runs while button is not pressed
+     * @return command that does the operation
+     */
+    public final Command addWhileReleasedCommand(int port, Runnable runnable) {
+        return addBindCommand(new WhileReleased(getRawButton(port), runnable));
+    }
+
+    /**
+     * Adds a bind that will run in a loop as long as the button is not pressed.
+     *
+     * @param button the button to read
+     * @param runnable runs while button is not pressed
+     * @return command that does the operation
+     */
+    public final Command addWhileReleasedCommand(Button button, Runnable runnable) {
+        return addBindCommand(new WhileReleased(button, runnable));
+    }
+
+    /**
+     * Adds a bind that will run once every time the button is pressed.
+     *
+     * @param port the button to read
+     * @param runnable runs when button is pressed
+     * @return command that does the operation
+     */
+    public final Command addWhenPressedCommand(int port, Runnable runnable) {
+        return addBindCommand(new WhenPressed(getRawButton(port), runnable));
+    }
+
+    /**
+     * Adds a bind that will run once every time the button is pressed.
+     *
+     * @param button the button to read
+     * @param runnable runs when button is pressed
+     * @return command that does the operation
+     */
+    public final Command addWhenPressedCommand(Button button, Runnable runnable) {
+        return addBindCommand(new WhenPressed(button, runnable));
+    }
+
+    /**
+     * Adds a bind that will run once every time the button is released from a
+     * pressed position.
+     *
+     * @param port the button to read
+     * @param runnable runs when button is released
+     * @return command that does the operation
+     */
+    public final Command addWhenReleasedCommand(int port, Runnable runnable) {
+        return addBindCommand(new WhenReleased(getRawButton(port), runnable));
+    }
+
+    /**
+     * Adds a bind that will run once every time the button is released from a
+     * pressed position.
+     *
+     * @param button the button to read
+     * @param runnable runs when button is released
+     * @return command that does the operation
+     */
+    public final Command addWhenReleasedCommand(Button button, Runnable runnable) {
+        return addBindCommand(new WhenReleased(button, runnable));
+    }
+
+    /**
+     * Returns a command that will remove a bind from this joystick.
+     *
+     * @param bind the bind to remove
+     * @return command that does the operation
+     */
+    public final Command removeBindCommand(final Bind bind) {
+        return new Command() {
+            @Override
+            public void run() {
+                removeBind(bind);
+            }
+        };
     }
 
     /**
@@ -264,6 +407,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind() {
             output.set(axis.get());
         }
@@ -290,6 +434,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(axis1.get(), axis2.get());
         }
@@ -326,6 +471,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(axis1.get(), axis2.get(), axis3.get());
         }
@@ -365,6 +511,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(axis1.get(), axis2.get(), axis3.get(), axis4.get());
         }
@@ -407,6 +554,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(axis1.get(), axis2.get(), axis3.get(), axis4.get(), axis5.get());
         }
@@ -446,6 +594,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final void doBind() {
             doBind(button.getPosition(), runnable);
         }
@@ -478,6 +627,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind(boolean pos, Runnable runnable) {
             if (pos) {
                 runnable.run();
@@ -504,6 +654,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind(boolean pos, Runnable runnable) {
             if (!pos) {
                 runnable.run();
@@ -532,6 +683,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind(boolean pos, Runnable runnable) {
             if (!prev && pos) {
                 runnable.run();
@@ -564,6 +716,7 @@ public class BindingJoystick extends JoystickModule {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void doBind(boolean pos, Runnable runnable) {
             if (prev && !pos) {
                 runnable.run();

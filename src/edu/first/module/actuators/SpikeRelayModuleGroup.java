@@ -1,5 +1,6 @@
 package edu.first.module.actuators;
 
+import edu.first.lang.OutOfSyncException;
 import edu.first.module.subsystems.Subsystem;
 
 /**
@@ -18,7 +19,7 @@ public class SpikeRelayModuleGroup extends Subsystem implements SpikeRelay {
      * Constructs the group using an array of all the elements to use.
      *
      * @throws NullPointerException when array is null
-     * @param group all elements to apply things to
+     * @param modules all elements to apply things to
      */
     public SpikeRelayModuleGroup(SpikeRelayModule[] modules) {
         super(modules);
@@ -31,6 +32,7 @@ public class SpikeRelayModuleGroup extends Subsystem implements SpikeRelay {
      * @param d direction to set every spike relay
      * @see SpikeRelay#set(edu.first.module.actuators.SpikeRelay.Direction)
      */
+    @Override
     public void set(Direction d) {
         group.set(d);
     }
@@ -42,7 +44,8 @@ public class SpikeRelayModuleGroup extends Subsystem implements SpikeRelay {
      * @return state of all relays
      * @see SpikeRelay#getDirection()
      */
-    public Direction getDirection() {
+    @Override
+    public Direction getDirection() throws OutOfSyncException {
         return group.getDirection();
     }
 }

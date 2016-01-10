@@ -37,32 +37,23 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
     }
 
     /**
-     * Constructs the counter with the channel it is on.
-     *
-     * @param channel channel on the digital sidecar
-     * @param slot slot on the cRIO (1 = default)
-     */
-    public OneChannelCounter(int channel, int slot) {
-        this(new Counter(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
-        counter.start();
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void disableModule() {
-        counter.stop();
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -85,6 +76,7 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
      * @throws IllegalStateException when module is not enabled
      * @return how many rising edges have been counted
      */
+    @Override
     public double getPosition() {
         ensureEnabled();
         return counter.get();
@@ -107,6 +99,7 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
      * @throws IllegalStateException when module is not enabled
      * @return current rate of pulses
      */
+    @Override
     public double getRate() {
         ensureEnabled();
         return 60 / counter.getPeriod();
@@ -119,6 +112,7 @@ public class OneChannelCounter extends Module.StandardModule implements RateSens
      * @return current rate of pulses
      * @see #getRate()
      */
+    @Override
     public double get() {
         ensureEnabled();
         return 60 / counter.getPeriod();

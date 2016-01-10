@@ -1,7 +1,5 @@
 package edu.first.module.actuators;
 
-import edu.first.util.Enum;
-
 /**
  * General interface that signifies that the class controls a VEX spike relay.
  * Has two directions, as well as an off position. The directions change which
@@ -30,23 +28,8 @@ public interface SpikeRelay {
     /**
      * Enum with the three different kinds of directions.
      */
-    public static final class Direction extends Enum {
+    public static enum Direction {
 
-        /**
-         * Forwards direction of the relay. Sets + to 12V and - to 0V.
-         */
-        public static final Direction FORWARDS = new Direction("FORWARDS");
-        /**
-         * Backwards direction of the relay. Sets + to 0V and - to 12V.
-         */
-        public static final Direction BACKWARDS = new Direction("BACKWARDS");
-        /**
-         * Turns off the spike relay. Sets + to 0V and - to 0V.
-         */
-        public static final Direction OFF = new Direction("OFF");
-
-        private Direction(String name) {
-            super(name);
-        }
+        FORWARDS, BACKWARDS, OFF;
     }
 }

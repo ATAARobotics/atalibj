@@ -6,9 +6,7 @@
 *.war
 *.ear
 
-### NetBeans ###
-nbproject/
-build/
-dist/
-build.properties
-build.xml
+bin/*
+/nbproject/private/
+/build/
+/dist/

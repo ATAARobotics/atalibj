@@ -33,6 +33,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
         try {
             mode.init();
@@ -44,6 +45,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initAutonomous() {
         try {
             mode.initAutonomous();
@@ -55,6 +57,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTeleoperated() {
         try {
             mode.initTeleoperated();
@@ -66,6 +69,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initDisabled() {
         try {
             mode.initDisabled();
@@ -77,6 +81,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTest() {
         try {
             mode.initTest();
@@ -88,6 +93,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void periodicAutonomous() {
         try {
             mode.periodicAutonomous();
@@ -99,6 +105,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void periodicTeleoperated() {
         try {
             mode.periodicTeleoperated();
@@ -110,6 +117,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void periodicDisabled() {
         try {
             mode.periodicDisabled();
@@ -121,6 +129,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void periodicTest() {
         try {
             mode.periodicTest();
@@ -132,6 +141,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void endAutonomous() {
         try {
             mode.endAutonomous();
@@ -143,6 +153,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void endTeleoperated() {
         try {
             mode.endTeleoperated();
@@ -154,6 +165,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void endDisabled() {
         try {
             mode.endDisabled();
@@ -165,6 +177,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void endTest() {
         try {
             mode.endTest();
@@ -176,6 +189,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getName() {
         return mode.getName();
     }
@@ -183,6 +197,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         int hash = 5;
         hash = 79 * hash + (this.mode != null ? this.mode.hashCode() : 0);
@@ -192,10 +207,11 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * Returns whether the underlying {@code RobotMode} is equal to that of
      * another safe robot mode.
-     * 
+     *
      * @param obj object to compare
      * @return if mode is equivalent
      */
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof SafeRobotMode) {
             return mode.equals(((SafeRobotMode) obj).mode);
@@ -207,6 +223,7 @@ public final class SafeRobotMode implements RobotMode {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         return getName();
     }

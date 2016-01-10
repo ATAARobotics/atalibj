@@ -40,8 +40,9 @@ public final class BooleanPreference extends Preference implements Position, Swi
     /**
      * Sets the value of the preference. Will not save over reboot.
      *
-     * @param value new value of preference
+     * @param pos new value of preference
      */
+    @Override
     public void setPosition(boolean pos) {
         set(pos);
     }
@@ -55,6 +56,7 @@ public final class BooleanPreference extends Preference implements Position, Swi
         return PREFERENCES.getBoolean(getKey(), defaultValue);
     }
 
+    @Override
     public boolean getPosition() {
         return get();
     }

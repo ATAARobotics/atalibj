@@ -23,9 +23,10 @@ public final class OutputGroup implements Output {
      *
      * @param value value to use
      */
+    @Override
     public void set(double value) {
-        for (int x = 0; x < outputs.length; x++) {
-            outputs[x].set(value);
+        for (Output output : outputs) {
+            output.set(value);
         }
     }
 }

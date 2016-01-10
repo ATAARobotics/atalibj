@@ -23,5 +23,6 @@ public interface Accelerometer extends Input {
      * @return acceleration in G's
      * @see #getAcceleration()
      */
+    @Override
     public double get();
 }

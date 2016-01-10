@@ -27,6 +27,10 @@ public class StringDashboard implements StringInput {
         this.defaultValue = defaultValue;
     }
 
+    public StringDashboard(int dashboardIndex, String defaultValue) {
+        this("DB/String " + dashboardIndex, defaultValue);
+    }
+
     /**
      * Returns the key of the dashboard value that is used to access it.
      *
@@ -66,6 +70,7 @@ public class StringDashboard implements StringInput {
      *
      * @return current value
      */
+    @Override
     public String getValue() {
         return SmartDashboard.getString(key, defaultValue);
     }

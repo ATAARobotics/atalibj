@@ -4,7 +4,6 @@ import edu.first.identifiers.Output;
 import edu.first.module.Module;
 import edu.first.module.joysticks.BindingJoystick;
 import edu.first.module.joysticks.Joystick.Axis;
-import edu.first.util.MathUtils;
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 
@@ -18,11 +17,13 @@ import edu.wpi.first.wpilibj.MotorSafetyHelper;
 public class Drivetrain extends Module.StandardModule implements MotorSafety {
 
     private final Output driveStraight = new Output() {
+        @Override
         public void set(double value) {
             Drivetrain.this.set(value, value);
         }
     };
     private final Output turn = new Output() {
+        @Override
         public void set(double value) {
             Drivetrain.this.arcadeDrive(0, value);
         }
@@ -67,6 +68,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
         safetyHelper.setSafetyEnabled(true);
     }
@@ -76,14 +78,16 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * Turns off all motors.
      */
+    @Override
     protected void disableModule() {
         safetyHelper.setSafetyEnabled(false);
-        set(0, 0);
+        stopMotor();
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -172,8 +176,8 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     public final void set(double left, double right) {
         ensureEnabled();
         safetyHelper.feed();
-        this.left.setSpeed(MathUtils.limit(reversed ? -left : left, maxSpeed));
-        this.right.setSpeed(MathUtils.limit(reversed ? -right : right, maxSpeed));
+        this.left.setSpeed(limit(reversed ? -left : left, maxSpeed));
+        this.right.setSpeed(limit(reversed ? -right : right, maxSpeed));
         this.left.update();
         this.right.update();
     }
@@ -207,8 +211,8 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
             rotateValue = -rotateValue;
         }
 
-        moveValue = MathUtils.limit(moveValue, 1);
-        rotateValue = MathUtils.limit(rotateValue, 1);
+        moveValue = limit(moveValue, 1);
+        rotateValue = limit(rotateValue, 1);
 
         if (squaredInputs) {
             if (moveValue >= 0.0) {
@@ -264,8 +268,8 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      * @param squaredInputs if input should be squared for better response
      */
     public void tankDrive(double leftValue, double rightValue, boolean squaredInputs) {
-        leftValue = MathUtils.limit(leftValue, 1);
-        rightValue = MathUtils.limit(rightValue, 1);
+        leftValue = limit(leftValue, 1);
+        rightValue = limit(rightValue, 1);
 
         if (squaredInputs) {
             if (leftValue >= 0.0) {
@@ -306,7 +310,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
         }
 
         if (curve < 0) {
-            double value = MathUtils.log(-curve);
+            double value = Math.log(-curve);
             double ratio = (value - 0.5) / (value + 0.5);
             if (ratio == 0) {
                 ratio = .0000000001;
@@ -314,7 +318,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
             leftOutput = outputMagnitude / ratio;
             rightOutput = outputMagnitude;
         } else if (curve > 0) {
-            double value = MathUtils.log(curve);
+            double value = Math.log(curve);
             double ratio = (value - 0.5) / (value + 0.5);
             if (ratio == 0) {
                 ratio = .0000000001;
@@ -356,6 +360,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      */
     public BindingJoystick.DualAxisBind getArcade(Axis speed, Axis turn) {
         return new BindingJoystick.DualAxisBind(speed, turn) {
+            @Override
             public void doBind(double axis1, double axis2) {
                 arcadeDrive(axis1, axis2);
             }
@@ -372,6 +377,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      */
     public BindingJoystick.DualAxisBind getTank(Axis left, Axis right) {
         return new BindingJoystick.DualAxisBind(left, right) {
+            @Override
             public void doBind(double axis1, double axis2) {
                 tankDrive(axis1, axis2);
             }
@@ -384,6 +390,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @param timeout time in seconds
      */
+    @Override
     public final void setExpiration(double timeout) {
         safetyHelper.setExpiration(timeout);
     }
@@ -394,6 +401,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @return time in seconds
      */
+    @Override
     public final double getExpiration() {
         return safetyHelper.getExpiration();
     }
@@ -405,6 +413,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      * @return if drivetrain has input
      * @see #getExpiration()
      */
+    @Override
     public final boolean isAlive() {
         return safetyHelper.isAlive();
     }
@@ -412,6 +421,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
     /**
      * Stops the drivetrain cold.
      */
+    @Override
     public final void stopMotor() {
         set(0, 0);
     }
@@ -421,6 +431,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @param enabled if input is tracked
      */
+    @Override
     public final void setSafetyEnabled(boolean enabled) {
         safetyHelper.setSafetyEnabled(enabled);
     }
@@ -430,6 +441,7 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @return if input is tracked
      */
+    @Override
     public final boolean isSafetyEnabled() {
         return safetyHelper.isSafetyEnabled();
     }
@@ -439,7 +451,19 @@ public class Drivetrain extends Module.StandardModule implements MotorSafety {
      *
      * @return string representing this module
      */
+    @Override
     public final String getDescription() {
         return "Drivetrain";
+    }
+
+    private double limit(double in, double max) {
+        if (Math.abs(in) > max) {
+            if (in > 0) {
+                in = max;
+            } else {
+                in = -max;
+            }
+        }
+        return in;
     }
 }

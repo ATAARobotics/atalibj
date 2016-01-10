@@ -1,5 +1,6 @@
 package edu.first.module.actuators;
 
+import edu.first.command.Command;
 import edu.first.module.Module;
 import edu.wpi.first.wpilibj.Relay;
 
@@ -23,7 +24,7 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
      * @param relay the composing instance which perform the functions
      */
     protected SpikeRelayModule(Relay relay) {
-        if(relay == null) {
+        if (relay == null) {
             throw new NullPointerException("Null relay given");
         }
         this.relay = relay;
@@ -39,27 +40,19 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
     }
 
     /**
-     * Constructs the relay with the channel on the digital module and the slot
-     * that it's in.
-     *
-     * @param channel the channel on the digital sidecar
-     * @param slot slot in cRIO (1 = default)
-     */
-    public SpikeRelayModule(int channel, int slot) {
-        this(new Relay(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p> Turns the spike relay off.
+     * <p>
+     * Turns the spike relay off.
      */
+    @Override
     protected void disableModule() {
         set(Direction.OFF);
     }
@@ -67,6 +60,7 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -75,14 +69,32 @@ public class SpikeRelayModule extends Module.StandardModule implements SpikeRela
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public final void set(Direction d) {
         ensureEnabled();
         relay.set(convertValue(d));
     }
 
     /**
+     * Returns a command that calls
+     * {@link #set(edu.first.module.actuators.SpikeRelay.Direction)}.
+     *
+     * @param d the direction of the relay
+     * @return command that sets position
+     */
+    public Command setCommand(final Direction d) {
+        return new Command() {
+            @Override
+            public void run() {
+                set(d);
+            }
+        };
+    }
+
+    /**
      * {@inheritDoc}
      */
+    @Override
     public Direction getDirection() {
         return convertDirection(relay.get());
     }

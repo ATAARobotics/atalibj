@@ -2,7 +2,6 @@ package edu.first.module.sensors;
 
 import edu.first.identifiers.Input;
 import edu.first.module.Module;
-import edu.first.util.Enum;
 
 /**
  * Module for standard encoders. Measures the distance and rate of something
@@ -26,7 +25,8 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * @param inputType which kind of input to accept
      * @param reverseDirection if input should be reversed
      */
-    protected EncoderModule(edu.wpi.first.wpilibj.Encoder encoder, InputType inputType, boolean reverseDirection) {
+    protected EncoderModule(edu.wpi.first.wpilibj.Encoder encoder,
+            InputType inputType, boolean reverseDirection) {
         if (encoder == null) {
             throw new NullPointerException("Null encoder given");
         }
@@ -42,7 +42,8 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * @param encoder underlying object to get input from
      * @param inputType which kind of input to accept
      */
-    protected EncoderModule(edu.wpi.first.wpilibj.Encoder encoder, InputType inputType) {
+    protected EncoderModule(edu.wpi.first.wpilibj.Encoder encoder,
+            InputType inputType) {
         this(encoder, inputType, false);
     }
 
@@ -65,8 +66,10 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * @param inputType which kind of input to accept
      * @param reverseDirection if input should be reversed
      */
-    public EncoderModule(int aChannel, int bChannel, InputType inputType, boolean reverseDirection) {
-        this(new edu.wpi.first.wpilibj.Encoder(aChannel, bChannel), inputType, reverseDirection);
+    public EncoderModule(int aChannel, int bChannel, InputType inputType,
+            boolean reverseDirection) {
+        this(new edu.wpi.first.wpilibj.Encoder(aChannel, bChannel), inputType,
+                reverseDirection);
     }
 
     /**
@@ -91,89 +94,28 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
     }
 
     /**
-     * Constructs the encoder using its address, input type and if input should
-     * be reversed.
-     *
-     * @param aChannel first channel in digital sidecar
-     * @param bChannel second channel in digital sidecar
-     * @param slot slot in cRIO (1 = default)
-     * @param inputType which kind of input to accept
-     * @param reverseDirection if input should be reversed
-     */
-    public EncoderModule(int aChannel, int bChannel, int slot, InputType inputType, boolean reverseDirection) {
-        this(new edu.wpi.first.wpilibj.Encoder(slot, aChannel, slot, bChannel), inputType, reverseDirection);
-    }
-
-    /**
-     * Constructs the encoder using its address and input type.
-     *
-     * @param aChannel first channel in digital sidecar
-     * @param bChannel second channel in digital sidecar
-     * @param slot slot in cRIO (1 = default)
-     * @param inputType which kind of input to accept
-     */
-    public EncoderModule(int aChannel, int bChannel, int slot, InputType inputType) {
-        this(aChannel, bChannel, slot, inputType, false);
-    }
-
-    /**
-     * Constructs the encoder using its address.
-     *
-     * @param aChannel first channel in digital sidecar
-     * @param bChannel second channel in digital sidecar
-     * @param slot slot in cRIO (1 = default)
-     */
-    public EncoderModule(int aChannel, int bChannel, int slot) {
-        this(aChannel, bChannel, slot, DEFAULT_INPUT_TYPE);
-    }
-
-    /**
      * {@inheritDoc}
-     *
-     * <p>
-     * Starts the encoder's counting mechanism.
      */
+    @Override
     protected void enableModule() {
-        encoder.start();
     }
 
     /**
      * {@inheritDoc}
      *
      * <p>
-     * Resets and stops the encoder's count.
+     * Resets the encoder's count.
      */
+    @Override
     protected void disableModule() {
         encoder.reset();
-        encoder.stop();
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
-    }
-
-    /**
-     * Stops the encoder's counting mechanism. {@link #getDistance()} will not
-     * change values until {@link #unpause()} is called.
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    public void pause() {
-        ensureEnabled();
-        encoder.stop();
-    }
-
-    /**
-     * Starts the encoder's counting mechanism. Reverses effects of
-     * {@link #pause()}.
-     *
-     * @throws IllegalStateException when module is not enabled
-     */
-    public void unpause() {
-        ensureEnabled();
-        encoder.start();
     }
 
     /**
@@ -181,6 +123,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void reset() {
         ensureEnabled();
         encoder.reset();
@@ -252,6 +195,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * @throws IllegalStateException when module is not enabled
      * @return ticks counted by the encoder
      */
+    @Override
     public int getRaw() {
         ensureEnabled();
         return encoder.getRaw();
@@ -276,6 +220,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * @throws IllegalStateException when module is not enabled
      * @return current distance
      */
+    @Override
     public double getPosition() {
         ensureEnabled();
         return encoder.getDistance();
@@ -289,6 +234,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * @throws IllegalStateException when module is not enabled
      * @return current rate calculated by encoder
      */
+    @Override
     public double getRate() {
         ensureEnabled();
         return encoder.getRate();
@@ -296,6 +242,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
 
     public Input rate() {
         return new Input() {
+            @Override
             public double get() {
                 return getRate();
             }
@@ -304,6 +251,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
 
     public Input distance() {
         return new Input() {
+            @Override
             public double get() {
                 return getDistance();
             }
@@ -329,6 +277,7 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      *
      * @return input based on input type
      */
+    @Override
     public double get() {
         if (inputType.equals(InputType.DISTANCE)) {
             return getPosition();
@@ -343,19 +292,8 @@ public class EncoderModule extends Module.StandardModule implements Encoder {
      * Enum representing which input type the encoder should return in
      * {@link EncoderModule#get()}.
      */
-    public static final class InputType extends Enum {
+    public static enum InputType {
 
-        /**
-         * Returns {@link EncoderModule#getPosition()}.
-         */
-        public static final InputType DISTANCE = new InputType("DISTANCE");
-        /**
-         * Returns {@link EncoderModule#getRate()}.
-         */
-        public static final InputType RATE = new InputType("RATE");
-
-        private InputType(String name) {
-            super(name);
-        }
+        DISTANCE, RATE;
     }
 }

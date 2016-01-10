@@ -35,6 +35,7 @@ public abstract class IterativeRobot implements RobotMode {
      *
      * @return easily understandable phrase to refer to the mode as
      */
+    @Override
     public final String getName() {
         return name;
     }
@@ -45,6 +46,7 @@ public abstract class IterativeRobot implements RobotMode {
      * @see IterativeRobot#getName()
      * @return easily understandable phrase to refer to the mode as
      */
+    @Override
     public final String toString() {
         return getName();
     }

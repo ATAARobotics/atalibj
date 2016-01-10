@@ -8,9 +8,10 @@ package edu.first.identifiers;
  * with a number. This makes it possible to quickly change between things like
  * different kinds of speed controllers.
  *
- * <p> <b> If the only function you are using from an object is
- * {@code set(double)}, use this interface to reference it. </b> Otherwise just
- * be as general in type as possible.
+ * <p>
+ * <b> If the only function you are using from an object is {@code set(double)},
+ * use this interface to reference it. </b> Otherwise just be as general in type
+ * as possible.
  *
  * @since May 22 13
  * @author Joel Gallant
@@ -22,8 +23,9 @@ public interface Output {
      * no delay between the time this method is called, and when the value is
      * actually set.
      *
-     * <p> It is possible that this method needs to be called frequently to have
-     * a noticeable effect on the system, but is not always the case. Be sure to
+     * <p>
+     * It is possible that this method needs to be called frequently to have a
+     * noticeable effect on the system, but is not always the case. Be sure to
      * fully document what the behavior of this method is.
      *
      * @param value output to change to

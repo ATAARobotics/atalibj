@@ -1,8 +1,9 @@
 package edu.first.module.joysticks;
 
 import edu.first.identifiers.Function;
+import edu.first.identifiers.Output;
 import edu.first.module.Module;
-import edu.first.util.MathUtils;
+import edu.wpi.first.wpilibj.Joystick.RumbleType;
 
 /**
  * A joystick that the user controls functions with. Attaches through the
@@ -18,27 +19,14 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
     private final edu.wpi.first.wpilibj.Joystick joystick;
     // stores axises for quick access and not having to instantize everytime
     private Axis[] axises = new Axis[]{
-        new RawAxis(1),
-        new RawAxis(2),
-        new RawAxis(3),
-        new RawAxis(4),
-        new RawAxis(5),
-        new RawAxis(6)
+        new RawAxis(0), new RawAxis(1), new RawAxis(2),
+        new RawAxis(3), new RawAxis(4), new RawAxis(5)
     };
     // stores buttons for quick access and not having to instantize everytime
     private Button[] buttons = new Button[]{
-        new RawButton(1),
-        new RawButton(2),
-        new RawButton(3),
-        new RawButton(4),
-        new RawButton(5),
-        new RawButton(6),
-        new RawButton(7),
-        new RawButton(8),
-        new RawButton(9),
-        new RawButton(10),
-        new RawButton(11),
-        new RawButton(12)
+        new RawButton(0), new RawButton(1), new RawButton(2), new RawButton(3),
+        new RawButton(4), new RawButton(5), new RawButton(6), new RawButton(7),
+        new RawButton(8), new RawButton(9), new RawButton(10), new RawButton(11)
     };
 
     /**
@@ -67,18 +55,21 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void disableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -87,9 +78,10 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      *
      * @throws IndexOutOfBoundsException when port is not available
      */
+    @Override
     public final Axis getRawAxis(int port) {
         checkAxis(port);
-        return axises[port - 1];
+        return axises[port];
 
     }
 
@@ -98,6 +90,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public final double getRawAxisValue(int port) {
         return getRawAxis(port).get();
     }
@@ -120,9 +113,10 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      *
      * @throws IndexOutOfBoundsException when port is not available
      */
+    @Override
     public final Button getRawButton(int port) {
         checkButton(port);
-        return buttons[port - 1];
+        return buttons[port];
     }
 
     /**
@@ -137,6 +131,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
         checkButton(port1);
         checkButton(port2);
         return new Button() {
+            @Override
             public boolean getPosition() {
                 return getRawButtonValue(port1) && getRawButtonValue(port2);
             }
@@ -148,6 +143,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public final boolean getRawButtonValue(int port) {
         return getRawButton(port).getPosition();
     }
@@ -162,8 +158,9 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      */
     public final void addDeadband(int port, final double deadband) {
         changeAxis(port, new Function() {
+            @Override
             public double F(double in) {
-                if (MathUtils.abs(in) < deadband) {
+                if (Math.abs(in) < deadband) {
                     return 0;
                 } else {
                     return in;
@@ -183,8 +180,9 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      */
     public final void changeAxis(int port, final Function function) {
         checkAxis(port);
-        final Axis old = axises[port - 1];
-        axises[port - 1] = new Axis() {
+        final Axis old = axises[port];
+        axises[port] = new Axis() {
+            @Override
             public double get() {
                 return function.F(old.get());
             }
@@ -200,6 +198,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      */
     public final void invertAxis(int port) {
         changeAxis(port, new Function() {
+            @Override
             public double F(double in) {
                 return -in;
             }
@@ -217,7 +216,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      */
     public final void setAxis(int port, final Axis axis) {
         checkAxis(port);
-        axises[port - 1] = axis;
+        axises[port] = axis;
     }
 
     /**
@@ -230,7 +229,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      */
     public final void setButton(int port, final Button button) {
         checkButton(port);
-        buttons[port - 1] = button;
+        buttons[port] = button;
     }
 
     /**
@@ -241,12 +240,17 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
      */
     public final void invertButton(int port) {
         checkButton(port);
-        final Button old = buttons[port - 1];
-        buttons[port - 1] = new Button() {
+        final Button old = buttons[port];
+        buttons[port] = new Button() {
+            @Override
             public boolean getPosition() {
                 return !old.getPosition();
             }
         };
+    }
+
+    public final Output getRumble(RumbleType type) {
+        return new Rumble(type);
     }
 
     /**
@@ -278,14 +282,16 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
     }
 
     private void checkAxis(int port) {
-        if (port > axises.length || port < 1) {
-            throw new IndexOutOfBoundsException("Axis " + port + " is not a valid axis");
+        if (port > axises.length || port < 0) {
+            throw new IndexOutOfBoundsException("Axis " + port
+                    + " is not a valid axis");
         }
     }
 
     private void checkButton(int port) {
-        if (port > buttons.length || port < 1) {
-            throw new IndexOutOfBoundsException("Button " + port + " is not a valid button");
+        if (port > buttons.length || port < 0) {
+            throw new IndexOutOfBoundsException("Button " + port
+                    + " is not a valid button");
         }
     }
 
@@ -297,6 +303,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
             this.port = port;
         }
 
+        @Override
         public double get() {
             ensureEnabled();
             return joystick.getRawAxis(port);
@@ -311,6 +318,7 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
             this.port = port;
         }
 
+        @Override
         public boolean getPosition() {
             ensureEnabled();
             return joystick.getRawButton(port);
@@ -327,12 +335,27 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
             this.threshold = threshold;
         }
 
+        @Override
         public boolean getPosition() {
             if (threshold >= 0) {
                 return getRawAxisValue(port) > threshold;
             } else {
                 return getRawAxisValue(port) < threshold;
             }
+        }
+    }
+
+    private class Rumble implements Output {
+
+        private final RumbleType type;
+
+        public Rumble(RumbleType type) {
+            this.type = type;
+        }
+
+        @Override
+        public void set(double value) {
+            joystick.setRumble(type, (float) value);
         }
     }
 }

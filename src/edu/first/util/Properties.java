@@ -1,8 +1,9 @@
 package edu.first.util;
 
-import com.sun.squawk.util.StringTokenizer;
-import edu.first.util.log.Logger;
+import java.io.File;
 import java.io.IOException;
+import java.util.StringTokenizer;
+import edu.first.util.log.Logger;
 
 /**
  * The class representation of files on the cRIO that contain "properties". This
@@ -41,7 +42,12 @@ public final class Properties {
      * @param file file to get data from
      */
     public Properties(File file) {
-        String f = TextFiles.getTextFromFile(file);
+        String f;
+        try {
+            f = TextFiles.getTextFromFile(file);
+        } catch (IOException ex) {
+            f = null;
+        }
         propertiesContent = (f == null ? "" : f);
 
         StringTokenizer tokenizer = new StringTokenizer(propertiesContent, "\n\r=");
@@ -94,9 +100,9 @@ public final class Properties {
      * @return {@code Property} object corresponding to key
      */
     public Property getProperty(String key) {
-        for (int x = 0; x < properties.length; x++) {
-            if (properties[x].key.equals(key)) {
-                return properties[x];
+        for (Property property : properties) {
+            if (property.key.equals(key)) {
+                return property;
             }
         }
         return null;
@@ -135,6 +141,18 @@ public final class Properties {
      */
     public double toDouble(String key) {
         return Double.parseDouble(getValue(key));
+    }
+
+    /**
+     * Converts the {@link #getValue(java.lang.String)} value to a boolean.
+     *
+     * @param key string used to declare the property
+     * @return value given to the key in the file (returns false unless
+     * specifically "true")
+     * @throws NullPointerException when key does not exist
+     */
+    public boolean toBoolean(String key) {
+        return Boolean.parseBoolean(getValue(key));
     }
 
     /**
@@ -187,6 +205,23 @@ public final class Properties {
     }
 
     /**
+     * Converts the {@link #getValue(java.lang.String)} value to a boolean.
+     *
+     * @param key string used to declare the property
+     * @param backup value used if it did not exist in the file
+     * @return value given to the key in the file (returns false unless
+     * specifically "true")
+     */
+    public boolean toBoolean(String key, boolean backup) {
+        try {
+            return toBoolean(key);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).debug(key + " property not found - using " + backup);
+            return backup;
+        }
+    }
+
+    /**
      * A class used to represent properties inside of a file. Uses an internal
      * key to identify itself.
      */
@@ -219,10 +254,11 @@ public final class Properties {
         }
 
         /**
-         * Returns the equivalent of {@code key} + " =  " + {@code value}.
+         * Returns the equivalent of {@code key} + " = " + {@code value}.
          *
          * @return string as would appear in a file
          */
+        @Override
         public String toString() {
             return key + " = " + value;
         }

@@ -32,9 +32,10 @@ public class DualActionSolenoidGroup implements DualActionSolenoid {
      * @see
      * DualActionSolenoid#set(edu.first.module.actuators.DualActionSolenoid.Direction)
      */
+    @Override
     public void set(Direction direction) {
-        for (int x = 0; x < group.length; x++) {
-            group[x].set(direction);
+        for (DualActionSolenoid group1 : group) {
+            group1.set(direction);
         }
     }
 
@@ -46,10 +47,11 @@ public class DualActionSolenoidGroup implements DualActionSolenoid {
      * @return state of all solenoids
      * @see DualActionSolenoid#get()
      */
+    @Override
     public Direction get() {
         Direction d = null;
-        for (int x = 0; x < group.length; x++) {
-            Direction b = group[x].get();
+        for (DualActionSolenoid group1 : group) {
+            Direction b = group1.get();
             if (d == null) {
                 d = b;
             } else {
@@ -67,6 +69,7 @@ public class DualActionSolenoidGroup implements DualActionSolenoid {
      * @throws OutOfSyncException when all solenoids are not in the same state
      * @see DualActionSolenoid#reverse()
      */
+    @Override
     public void reverse() {
         Direction current = get();
         if (current.equals(Direction.LEFT)) {
@@ -81,9 +84,10 @@ public class DualActionSolenoidGroup implements DualActionSolenoid {
      *
      * @see DualActionSolenoid#turnOff()
      */
+    @Override
     public void turnOff() {
-        for (int x = 0; x < group.length; x++) {
-            group[x].turnOff();
+        for (DualActionSolenoid group1 : group) {
+            group1.turnOff();
         }
     }
 }

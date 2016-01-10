@@ -42,6 +42,7 @@ public final class SetSwitch implements Command {
     /**
      * Changes the position of the switch to the input given.
      */
+    @Override
     public void run() {
         s.setPosition(position.getPosition());
     }

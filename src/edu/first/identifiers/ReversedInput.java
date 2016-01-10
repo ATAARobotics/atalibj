@@ -28,6 +28,7 @@ public class ReversedInput implements Input {
      *
      * @return reversed value
      */
+    @Override
     public double get() {
         return -input.get();
     }

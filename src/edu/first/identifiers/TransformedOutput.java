@@ -28,6 +28,7 @@ public final class TransformedOutput implements Output {
      *
      * @param value original value changed by function
      */
+    @Override
     public void set(double value) {
         output.set(function.F(value));
     }

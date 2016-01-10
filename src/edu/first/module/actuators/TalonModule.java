@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Talon;
 
 /**
  * The general purpose class that manipulates Talon speed controllers made by
- * IFI / CTRE. Should work for all models.
+ * IFI / CTRE. Should work for all models <b> through PWM</b>.
  *
  * @since May 28 13
  * @author Joel Gallant
@@ -38,27 +38,19 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
     }
 
     /**
-     * Constructs the module with the port on the digital sidecar and which slot
-     * the sidecar is in.
-     *
-     * @param channel port on sidecar
-     * @param slot slot in cRIO (1 = default)
-     */
-    public TalonModule(int channel, int slot) {
-        this(new Talon(slot, channel));
-    }
-
-    /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p> Stops the talon from moving.
+     * <p>
+     * Stops the talon from moving.
      */
+    @Override
     protected void disableModule() {
         talon.disable();
     }
@@ -66,6 +58,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -74,6 +67,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setSpeed(double speed) {
         ensureEnabled();
         talon.set(speed);
@@ -84,6 +78,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setRawSpeed(int speed) {
         ensureEnabled();
         talon.setRaw(speed);
@@ -94,6 +89,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getSpeed() {
         ensureEnabled();
         return talon.getSpeed();
@@ -104,6 +100,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public int getRawSpeed() {
         ensureEnabled();
         return talon.getRaw();
@@ -112,9 +109,11 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
     /**
      * {@inheritDoc}
      *
-     * <p> This method does not need to be called on a {@code Talon}, but if
+     * <p>
+     * This method does not need to be called on a {@code Talon}, but if
      * something freezes it may help relieve it.
      */
+    @Override
     public void update() {
         talon.Feed();
     }
@@ -124,6 +123,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void setRate(double rate) {
         ensureEnabled();
         talon.set(rate);
@@ -134,6 +134,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void set(double value) {
         ensureEnabled();
         talon.set(value);
@@ -144,6 +145,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double getRate() {
         ensureEnabled();
         return talon.getSpeed();
@@ -154,6 +156,7 @@ public class TalonModule extends Module.StandardModule implements SpeedControlle
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public double get() {
         ensureEnabled();
         return talon.getSpeed();

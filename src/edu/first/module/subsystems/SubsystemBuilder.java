@@ -1,9 +1,9 @@
 package edu.first.module.subsystems;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import edu.first.module.Module;
-import edu.first.util.list.Collections;
-import edu.first.util.list.List;
-import edu.first.util.list.SafeArrayList;
 
 /**
  * A builder class for subsystems, so that the user can dynamically add modules
@@ -16,7 +16,7 @@ import edu.first.util.list.SafeArrayList;
  */
 public final class SubsystemBuilder {
 
-    private final List modules = new SafeArrayList(Module.class);
+    private final List<Module> modules = new ArrayList<>();
     private Subsystem subsystem;
     private boolean changed;
 

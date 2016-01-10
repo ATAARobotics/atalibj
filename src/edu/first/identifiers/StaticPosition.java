@@ -13,7 +13,7 @@ public final class StaticPosition implements Position {
     /**
      * Constructs the position using the value to use.
      *
-     * @param input value that will always be returned
+     * @param position value that will always be returned
      */
     public StaticPosition(boolean position) {
         this.position = position;
@@ -24,6 +24,7 @@ public final class StaticPosition implements Position {
      *
      * @return value that will always be used
      */
+    @Override
     public boolean getPosition() {
         return position;
     }

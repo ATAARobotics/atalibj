@@ -24,78 +24,91 @@ public class IterativeRobotAdapter extends IterativeRobot {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initAutonomous() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTeleoperated() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initDisabled() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void initTest() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void periodicAutonomous() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void periodicTeleoperated() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void periodicDisabled() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void periodicTest() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void endAutonomous() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void endTeleoperated() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void endDisabled() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void endTest() {
     }
 }

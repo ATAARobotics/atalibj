@@ -24,6 +24,7 @@ public final class StaticInput implements Input {
      *
      * @return value that will always be used
      */
+    @Override
     public double get() {
         return input;
     }

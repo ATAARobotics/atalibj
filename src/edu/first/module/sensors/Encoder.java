@@ -29,6 +29,7 @@ public interface Encoder extends PositionalSensor, RateSensor {
      *
      * @return distance measured
      */
+    @Override
     public double getPosition();
 
     /**
@@ -36,6 +37,7 @@ public interface Encoder extends PositionalSensor, RateSensor {
      *
      * @return current speed of pulses
      */
+    @Override
     public double getRate();
 
     /**
@@ -44,5 +46,6 @@ public interface Encoder extends PositionalSensor, RateSensor {
      *
      * @return value of encoder
      */
+    @Override
     public double get();
 }

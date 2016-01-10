@@ -34,6 +34,7 @@ public class Adjust implements Command {
     /**
      * Sets the output to the adjusted value.
      */
+    @Override
     public void run() {
         output.set(adjustment.F(input.get()));
     }

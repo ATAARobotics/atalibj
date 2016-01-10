@@ -41,6 +41,7 @@ public final class LongPreference extends Preference implements Output {
      *
      * @param value new value of preference
      */
+    @Override
     public void set(double value) {
         set((long) value);
     }

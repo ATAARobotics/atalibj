@@ -2,7 +2,6 @@ package edu.first.module.sensors;
 
 import edu.first.identifiers.Input;
 import edu.first.module.Module;
-import edu.wpi.first.wpilibj.AnalogChannel;
 
 /**
  * Basic module that takes input from an analog input.
@@ -12,7 +11,7 @@ import edu.wpi.first.wpilibj.AnalogChannel;
  */
 public class AnalogInput extends Module.StandardModule implements Input {
 
-    private final AnalogChannel input;
+    private final edu.wpi.first.wpilibj.AnalogInput input;
 
     /**
      * Constructs the module with the analog channel object underneath this
@@ -20,7 +19,7 @@ public class AnalogInput extends Module.StandardModule implements Input {
      *
      * @param input underlying object to get input from
      */
-    protected AnalogInput(AnalogChannel input) {
+    protected AnalogInput(edu.wpi.first.wpilibj.AnalogInput input) {
         this.input = input;
     }
 
@@ -30,34 +29,27 @@ public class AnalogInput extends Module.StandardModule implements Input {
      * @param channel channel on the analog breakout
      */
     public AnalogInput(int channel) {
-        this(new AnalogChannel(channel));
-    }
-
-    /**
-     * Constructs the module using the sensor's channel.
-     *
-     * @param channel channel on the analog breakout
-     * @param slot slot on cRIO (1 = default)
-     */
-    public AnalogInput(int channel, int slot) {
-        this(new AnalogChannel(slot, channel));
+        this(new edu.wpi.first.wpilibj.AnalogInput(channel));
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void disableModule() {
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -79,6 +71,7 @@ public class AnalogInput extends Module.StandardModule implements Input {
      * @throws IllegalStateException when module is not enabled
      * @return voltage measured by input
      */
+    @Override
     public double get() {
         ensureEnabled();
         return input.getVoltage();

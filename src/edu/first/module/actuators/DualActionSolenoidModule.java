@@ -1,5 +1,6 @@
 package edu.first.module.actuators;
 
+import edu.first.command.Command;
 import edu.first.module.Module;
 
 /**
@@ -56,14 +57,17 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void enableModule() {
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p> Turns dual action off.
+     * <p>
+     * Turns dual action off.
      */
+    @Override
     protected void disableModule() {
         left.set(false);
         right.set(false);
@@ -72,6 +76,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() {
     }
 
@@ -80,6 +85,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void set(Direction direction) {
         ensureEnabled();
         if (direction == Direction.LEFT) {
@@ -95,10 +101,27 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
     }
 
     /**
+     * Returns a command that calls
+     * {@link #set(edu.first.module.actuators.DualActionSolenoid.Direction)}.
+     *
+     * @param direction which direction to set the solenoid
+     * @return setting command
+     */
+    public Command setCommand(final Direction direction) {
+        return new Command() {
+            @Override
+            public void run() {
+                set(direction);
+            }
+        };
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public Direction get() {
         ensureEnabled();
         if (left.get() && !right.get()) {
@@ -115,6 +138,7 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void reverse() {
         ensureEnabled();
         if (get() == Direction.LEFT) {
@@ -125,10 +149,25 @@ public class DualActionSolenoidModule extends Module.StandardModule implements D
     }
 
     /**
+     * Returns a command that calls {@link #reverse()}.
+     *
+     * @return reversing command
+     */
+    public Command reverseCommand() {
+        return new Command() {
+            @Override
+            public void run() {
+                reverse();
+            }
+        };
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws IllegalStateException when module is not enabled
      */
+    @Override
     public void turnOff() {
         ensureEnabled();
         set(Direction.OFF);

@@ -6,8 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.tables.TableKeyNotDefinedException;
 
 /**
- * General class that interacts with number values on the
- * {@link SmartDashboard}.
+ * General class that interacts with number values on the {@link SmartDashboard}
  *
  * @since June 23 13
  * @author Joel Gallant
@@ -26,6 +25,10 @@ public class NumberDashboard implements Input, Output {
     public NumberDashboard(String key, double defaultValue) {
         this.key = key;
         this.defaultValue = defaultValue;
+    }
+
+    public NumberDashboard(int dashboardIndex, double defaultValue) {
+        this("DB/Slider " + dashboardIndex, defaultValue);
     }
 
     /**
@@ -57,6 +60,7 @@ public class NumberDashboard implements Input, Output {
      *
      * @return current value
      */
+    @Override
     public double get() {
         return SmartDashboard.getNumber(key, defaultValue);
     }
@@ -66,6 +70,7 @@ public class NumberDashboard implements Input, Output {
      *
      * @param val new value to set
      */
+    @Override
     public void set(double val) {
         SmartDashboard.putNumber(key, val);
     }

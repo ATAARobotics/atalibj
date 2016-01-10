@@ -17,6 +17,7 @@ public interface Solenoid extends Switch, Position {
      *
      * @param pos the new position of the solenoid
      */
+    @Override
     public void setPosition(boolean pos);
 
     /**
@@ -25,5 +26,6 @@ public interface Solenoid extends Switch, Position {
      *
      * @return current position of solenoid
      */
+    @Override
     public boolean getPosition();
 }

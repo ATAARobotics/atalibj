@@ -15,6 +15,11 @@ public class WaitCommand implements Command {
         this.period = period;
     }
 
+    public WaitCommand(double seconds) {
+        this.period = (long) (seconds * 1000);
+    }
+
+    @Override
     public void run() {
         try {
             Thread.sleep(period);

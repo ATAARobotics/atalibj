@@ -2,7 +2,7 @@ package edu.first.identifiers;
 
 /**
  * An input group that averages multiple inputs.
- * 
+ *
  * @author Joel Gallant <joelgallant236@gmail.com>
  */
 public final class AverageInputGroup implements Input {
@@ -11,7 +11,7 @@ public final class AverageInputGroup implements Input {
 
     /**
      * Construct the group with multiple inputs.
-     * 
+     *
      * @param input array of inputs to use
      */
     public AverageInputGroup(Input[] input) {
@@ -20,15 +20,16 @@ public final class AverageInputGroup implements Input {
 
     /**
      * Returns the average of all inputs.
-     * 
+     *
      * @return average value
      */
+    @Override
     public double get() {
         double total = 0;
-        for (int x = 0; x < input.length; x++) {
-            total += input[x].get();
+        for (Input input1 : input) {
+            total += input1.get();
         }
-        return total / input.length;
+        return total / (double) input.length;
     }
 
 }

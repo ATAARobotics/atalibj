@@ -32,6 +32,7 @@ public final class DoublePreference extends Preference implements Input, Output 
      *
      * @param value new value of preference
      */
+    @Override
     public void set(double value) {
         Logger.getLogger(getClass()).debug("Setting " + getKey() + " to " + value);
         PREFERENCES.putDouble(getKey(), value);
@@ -42,6 +43,7 @@ public final class DoublePreference extends Preference implements Input, Output 
      *
      * @return value of preference
      */
+    @Override
     public double get() {
         return PREFERENCES.getDouble(getKey(), defaultValue);
     }

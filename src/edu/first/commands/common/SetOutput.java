@@ -42,6 +42,7 @@ public final class SetOutput implements Command {
     /**
      * Sets the output to the given input.
      */
+    @Override
     public void run() {
         output.set(input.get());
     }
