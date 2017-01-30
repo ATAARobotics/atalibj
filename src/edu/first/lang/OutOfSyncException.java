@@ -10,6 +10,11 @@ package edu.first.lang;
 public class OutOfSyncException extends IllegalStateException {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructs an OutOfSyncException with no detail message. A detail message
      * is a String that describes this particular exception.
      */

@@ -47,7 +47,7 @@ public class StringDashboard implements StringInput {
      */
     public boolean exists() {
         try {
-            SmartDashboard.getString(key);
+            SmartDashboard.getString(key, defaultValue);
             return true;
         } catch (TableKeyNotDefinedException ex) {
             return false;

@@ -141,7 +141,7 @@ public interface SpeedController extends RateActuator, RateSensor {
          * @param syncGroup is not used
          * @see SpeedController#setSpeed(double)
          */
-        @Override
+
         public void set(double speed, byte syncGroup) {
             controller.setSpeed(speed);
         }
@@ -175,5 +175,23 @@ public interface SpeedController extends RateActuator, RateSensor {
         public void pidWrite(double output) {
             controller.setSpeed(output);
         }
+
+		@Override
+		public void setInverted(boolean isInverted) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public boolean getInverted() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public void stopMotor() {
+			// TODO Auto-generated method stub
+			
+		}
     }
 }

@@ -48,7 +48,7 @@ public class BooleanDashboard implements Switch, Position {
      */
     public boolean exists() {
         try {
-            SmartDashboard.getBoolean(key);
+            SmartDashboard.getBoolean(key, false);
             return true;
         } catch (TableKeyNotDefinedException ex) {
             return false;
