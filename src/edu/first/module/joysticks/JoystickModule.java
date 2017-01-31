@@ -3,7 +3,7 @@ package edu.first.module.joysticks;
 import edu.first.identifiers.Function;
 import edu.first.identifiers.Output;
 import edu.first.module.Module;
-import edu.wpi.first.wpilibj.Joystick.RumbleType;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 /**
  * A joystick that the user controls functions with. Attaches through the

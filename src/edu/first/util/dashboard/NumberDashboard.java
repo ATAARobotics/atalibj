@@ -47,7 +47,7 @@ public class NumberDashboard implements Input, Output {
      */
     public boolean exists() {
         try {
-            SmartDashboard.getNumber(key);
+            SmartDashboard.getNumber(key, defaultValue);
             return true;
         } catch (TableKeyNotDefinedException ex) {
             return false;

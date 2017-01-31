@@ -1,8 +1,9 @@
 package edu.first.module.sensors;
 
 import edu.first.module.Module;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 /**
  * Module implementation of the KoP gyroscope. Composes and wraps {@link Gyro},
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj.Gyro;
  */
 public class GyroscopeModule extends Module.StandardModule implements Gyroscope {
 
-    private final Gyro gyro;
+    private final AnalogGyro gyro;
 
     /**
      * Constructs the module with the gyro object underneath this class to call
@@ -22,7 +23,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      * @throws NullPointerException when gyro is null
      * @param gyro the composing instance which will return values
      */
-    protected GyroscopeModule(Gyro gyro) {
+    protected GyroscopeModule(AnalogGyro gyro) {
         if (gyro == null) {
             throw new NullPointerException("Null gyro given");
         }
@@ -35,7 +36,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      * @param channel port on sidecar
      */
     public GyroscopeModule(int channel) {
-        this(new Gyro(channel));
+        this(new AnalogGyro(channel));
     }
 
     /**
@@ -44,7 +45,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
      * @param channel analog channel to find gyro on
      */
     public GyroscopeModule(AnalogInput channel) {
-        this(new Gyro(channel));
+        this(new AnalogGyro(channel));
     }
 
     /**
@@ -87,7 +88,7 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
     @Override
     public void setSensitivity(double voltsPerDegreePerSecond) {
         gyro.setSensitivity(voltsPerDegreePerSecond);
-    }
+  }
 
     /**
      * Returns the angle of the gyroscope, provided this method is enabled.
@@ -122,4 +123,18 @@ public class GyroscopeModule extends Module.StandardModule implements Gyroscope 
     public double get() {
         return getAngle();
     }
+
+	public void calibrate() {
+		gyro.calibrate(); //TODO add custom functionality
+		
+	}
+
+	public double getRate() {
+		return gyro.getRate(); //TODO add custom functionality
+	}
+
+	public void free() {
+		gyro.free(); //TODO add custom functionality
+		
+	}
 }
