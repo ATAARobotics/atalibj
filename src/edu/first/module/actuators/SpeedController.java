@@ -133,19 +133,7 @@ public interface SpeedController extends RateActuator, RateSensor {
         public double get() {
             return controller.getSpeed();
         }
-
-        /**
-         * Sets the speed of the speed controller.
-         *
-         * @param speed new speed
-         * @param syncGroup is not used
-         * @see SpeedController#setSpeed(double)
-         */
-
-        public void set(double speed, byte syncGroup) {
-            controller.setSpeed(speed);
-        }
-
+        
         /**
          * Sets the speed of the speed controller.
          *
@@ -178,20 +166,17 @@ public interface SpeedController extends RateActuator, RateSensor {
 
 		@Override
 		public void setInverted(boolean isInverted) {
-			// TODO Auto-generated method stub
-			
+			throw new UnsupportedOperationException(); //TODO add functionality		
 		}
 
 		@Override
 		public boolean getInverted() {
-			// TODO Auto-generated method stub
-			return false;
+			throw new UnsupportedOperationException(); //TODO add functionality	
 		}
 
 		@Override
 		public void stopMotor() {
-			// TODO Auto-generated method stub
-			
+			throw new UnsupportedOperationException(); //TODO add functionality
 		}
     }
 }

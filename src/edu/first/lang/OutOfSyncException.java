@@ -7,12 +7,8 @@ package edu.first.lang;
  * @since June 15 13
  * @author Joel Gallant
  */
+@SuppressWarnings("serial")
 public class OutOfSyncException extends IllegalStateException {
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
      * Constructs an OutOfSyncException with no detail message. A detail message
