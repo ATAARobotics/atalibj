@@ -56,8 +56,8 @@ public class XboxController extends BindingJoystick {
     /**
      * Port for axis.
      */
-    public static final int LEFT_X = 0, LEFT_Y = 1, LEFT_TRIGGER = 2, RIGHT_TRIGGER = 3,
-            RIGHT_X = 4, RIGHT_Y = 5, RIGHT_FROM_MIDDLE = 6, LEFT_FROM_MIDDLE = 7, TRIGGERS = 8;
+    public static final int LEFT_X = 1, LEFT_Y = 2, LEFT_TRIGGER = 3, RIGHT_TRIGGER = 4,
+            RIGHT_X = 5, RIGHT_Y = 6, RIGHT_FROM_MIDDLE = 7, LEFT_FROM_MIDDLE = 8, TRIGGERS = 9;
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
