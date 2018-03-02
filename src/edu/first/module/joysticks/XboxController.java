@@ -9,36 +9,36 @@ import edu.wpi.first.wpilibj.Joystick;
  * Raw buttons:
  *
  * <pre>
- * 0: A
- * 1: B
- * 2: X
- * 3: Y
- * 4: Left Bumper
- * 5: Right Bumper
- * 6: Back
- * 7: Start
- * 8: Left Joystick
- * 9: Right Joystick
+ * 1: A
+ * 2: B
+ * 3: X
+ * 4: Y
+ * 5: Left Bumper
+ * 6: Right Bumper
+ * 7: Back
+ * 8: Start
+ * 9: Left Joystick
+ * 10: Right Joystick
  * </pre>
  *
  * Raw axes:
  *
  * <pre>
- * 1: Left Stick X Axis
+ * 0: Left Stick X Axis
  *     Left: Negative; Right: Positive
- * 2: Left Stick Y Axis
+ * 1: Left Stick Y Axis
  *     Up: Positive; Down: Negative
- * 3: Left Trigger
- * 4: Right Trigger
- * 5: Right Stick X Axis
+ * 2: Left Trigger
+ * 3: Right Trigger
+ * 4: Right Stick X Axis
  *     Left: Negative; Right: Positive
- * 6: Right Stick Y Axis
+ * 5: Right Stick Y Axis
  *     Up: Positive; Down: Negative
  * N/A: Directional Pad (Not recommended, buggy)
  *     Left: -1; Right: +1
- * 7: Right distance from the middle
+ * 6: Right distance from the middle
  *     Up: Positive; Down: Negative
- * 8: Left distance from the middle
+ * 7: Left distance from the middle
  *     Up: Positive; Down: Negative
  * </pre>
  *
@@ -50,15 +50,15 @@ public class XboxController extends BindingJoystick {
     /**
      * Port for button.
      */
-    public static final int A = 0, B = 1, X = 2,
-            Y = 3, LEFT_BUMPER = 4, RIGHT_BUMPER = 5,
-            BACK = 6, START = 7, LEFT_STICK = 8, RIGHT_STICK = 9;
+    public static final int A = 1, B = 2, X = 3,
+            Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
+            BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10;
     /**
      * Port for axis.
      */
-    public static final int LEFT_X = 1, LEFT_Y = 2, LEFT_TRIGGER = 3, RIGHT_TRIGGER = 4,
-            RIGHT_X = 5, RIGHT_Y = 6, RIGHT_FROM_MIDDLE = 7, LEFT_FROM_MIDDLE = 8, TRIGGERS = 9, 
-            DPAD = 10;
+    public static final int LEFT_X = 0, LEFT_Y = 1, LEFT_TRIGGER = 2, RIGHT_TRIGGER = 3,
+            RIGHT_X = 4, RIGHT_Y = 5, RIGHT_FROM_MIDDLE = 6, LEFT_FROM_MIDDLE = 7, TRIGGERS = 8, 
+            DPAD = 9;
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
