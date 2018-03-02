@@ -24,17 +24,17 @@ import edu.wpi.first.wpilibj.Joystick;
  * Raw axes:
  *
  * <pre>
- * 0: Left Stick X Axis
+ * 1: Left Stick X Axis
  *     Left: Negative; Right: Positive
- * 1: Left Stick Y Axis
+ * 2: Left Stick Y Axis
  *     Up: Positive; Down: Negative
- * 2: Left Trigger
- * 3: Right Trigger
- * 4: Right Stick X Axis
+ * 3: Left Trigger
+ * 4: Right Trigger
+ * 5: Right Stick X Axis
  *     Left: Negative; Right: Positive
- * 5: Right Stick Y Axis
+ * 6: Right Stick Y Axis
  *     Up: Positive; Down: Negative
- * 6: Directional Pad (Not recommended, buggy)
+ * N/A: Directional Pad (Not recommended, buggy)
  *     Left: -1; Right: +1
  * 7: Right distance from the middle
  *     Up: Positive; Down: Negative
@@ -57,7 +57,8 @@ public class XboxController extends BindingJoystick {
      * Port for axis.
      */
     public static final int LEFT_X = 1, LEFT_Y = 2, LEFT_TRIGGER = 3, RIGHT_TRIGGER = 4,
-            RIGHT_X = 5, RIGHT_Y = 6, RIGHT_FROM_MIDDLE = 7, LEFT_FROM_MIDDLE = 8, TRIGGERS = 9;
+            RIGHT_X = 5, RIGHT_Y = 6, RIGHT_FROM_MIDDLE = 7, LEFT_FROM_MIDDLE = 8, TRIGGERS = 9, 
+            DPAD = 10;
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
