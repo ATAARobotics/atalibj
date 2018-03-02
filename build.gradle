@@ -12,18 +12,10 @@ sourceSets {
 }
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    // api 'org.apache.commons:commons-math3:3.6.1'
-
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     compile "edu.wpi.first.wpilibj:athena-jni:+"
     compile "edu.wpi.first.wpilibj:athena:+"
-
-    // Use JUnit test framework
-    // testImplementation 'junit:junit:4.12'
 }
 
-// In this section you declare where to find the dependencies of your project
 repositories {
     maven {
         url "http://first.wpi.edu/FRC/roborio/maven/"
