@@ -52,13 +52,13 @@ public class XboxController extends BindingJoystick {
      */
     public static final int A = 1, B = 2, X = 3,
             Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
-            BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10;
+            BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10,
+            DPAD_UP = 11, DPAD_DOWN = 12, DPAD_LEFT = 13, DPAD_RIGHT = 14;
     /**
      * Port for axis.
      */
     public static final int LEFT_X = 0, LEFT_Y = 1, LEFT_TRIGGER = 2, RIGHT_TRIGGER = 3,
-            RIGHT_X = 4, RIGHT_Y = 5, RIGHT_FROM_MIDDLE = 6, LEFT_FROM_MIDDLE = 7, TRIGGERS = 8, 
-            DPAD = 9;
+            RIGHT_X = 4, RIGHT_Y = 5, RIGHT_FROM_MIDDLE = 6, LEFT_FROM_MIDDLE = 7, TRIGGERS = 8;
 
     /**
      * Constructs the joystick with the {@link edu.wpi.first.wpilibj.Joystick}
@@ -73,6 +73,10 @@ public class XboxController extends BindingJoystick {
         setAxis(RIGHT_FROM_MIDDLE, new FromMiddle(getRightY(), getRightX()));
         setAxis(LEFT_FROM_MIDDLE, new FromMiddle(getLeftY(), getLeftX()));
         setAxis(TRIGGERS, new Combination(getLeftTrigger(), getRightTrigger()));
+        setButton(DPAD_UP, this.getPOVAsButton(0));
+        setButton(DPAD_DOWN, this.getPOVAsButton(180));
+        setButton(DPAD_LEFT, this.getPOVAsButton(270));
+        setButton(DPAD_RIGHT, this.getPOVAsButton(90));
         invertAxis(LEFT_Y);
         invertAxis(RIGHT_Y);
         invertAxis(LEFT_FROM_MIDDLE);

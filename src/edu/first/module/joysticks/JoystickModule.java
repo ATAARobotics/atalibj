@@ -107,6 +107,14 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
     public final Button getRawAxisAsButton(int port, double threshold) {
         return new RawAxisButton(port, threshold);
     }
+    
+    public final Button getPOVAsButton(int minAngle, int maxAngle) {
+    	return new POVButton(minAngle, maxAngle);
+    }
+    
+    public final Button getPOVAsButton(int angle) {
+    	return new POVButton(angle, angle);
+    }
 
     /**
      * {@inheritDoc}
@@ -343,6 +351,22 @@ public class JoystickModule extends Module.StandardModule implements Joystick {
                 return getRawAxisValue(port) < threshold;
             }
         }
+    }
+    
+    private class POVButton implements Button {
+    	
+    	private final int min, max;
+    	
+    	public POVButton(int minAngle, int maxAngle) {
+    		this.min = minAngle;
+    		this.max = maxAngle;
+		}
+    	
+    	@Override
+    	public boolean getPosition() {
+    		int angle = joystick.getPOV();
+    		return (angle <= min) && (angle <= max);
+    	}
     }
 
     private class Rumble implements Output {
