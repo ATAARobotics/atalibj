@@ -1,8 +1,5 @@
 package edu.first.robot;
 
-import edu.first.main.Constants;
-import edu.first.main.GamePeriods;
-
 /**
  * The framework for all "modes" a robot can perform, this is the basic class
  * that tells the robot what it should do and when it should do it.
@@ -42,7 +39,7 @@ import edu.first.main.GamePeriods;
  * @see SimpleRobot
  * @author Joel Gallant
  */
-public interface RobotMode extends Constants {
+public interface RobotMode {
 
     /**
      * Initializes the robot. This means that after this method is run,

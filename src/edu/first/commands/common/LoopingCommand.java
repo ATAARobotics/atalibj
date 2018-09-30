@@ -9,26 +9,44 @@ import edu.first.command.Command;
  * @author Joel Gallant
  */
 public abstract class LoopingCommand implements Command {
+    private boolean first = true;
+
+    public LoopingCommand() {
+    }
 
     /**
      * Runs {@link #runLoop()} until {@link #continueLoop()} returns false.
      */
     @Override
     public final void run() {
-        while (continueLoop()) {
-            runLoop();
+        while(this.continueLoop()) {
+            if (this.first) {
+                this.first = false;
+
+                try {
+                    if (this.getClass().getMethod("firstLoop").getDeclaringClass().getTypeName().endsWith("LoopingCommand")) {
+                        this.runLoop();
+                    } else {
+                        this.firstLoop();
+                    }
+                } catch (SecurityException | NoSuchMethodException var2) {
+                    throw new RuntimeException(var2);
+                }
+            } else {
+                this.runLoop();
+            }
         }
+
+        this.end();
     }
 
-    /**
-     * Returns whether the loop should run again.
-     *
-     * @return if loop should continue
-     */
+    public void firstLoop() {
+    }
+
+    public void end() {
+    }
+
     public abstract boolean continueLoop();
 
-    /**
-     * Runs the actual instructions of the command.
-     */
     public abstract void runLoop();
 }

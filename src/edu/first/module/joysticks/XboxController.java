@@ -9,16 +9,16 @@ import edu.wpi.first.wpilibj.Joystick;
  * Raw buttons:
  *
  * <pre>
- * 0: A
- * 1: B
- * 2: X
- * 3: Y
- * 4: Left Bumper
- * 5: Right Bumper
- * 6: Back
- * 7: Start
- * 8: Left Joystick
- * 9: Right Joystick
+ * 1: A
+ * 2: B
+ * 3: X
+ * 4: Y
+ * 5: Left Bumper
+ * 6: Right Bumper
+ * 7: Back
+ * 8: Start
+ * 9: Left Joystick
+ * 10: Right Joystick
  * </pre>
  *
  * Raw axes:
@@ -34,11 +34,11 @@ import edu.wpi.first.wpilibj.Joystick;
  *     Left: Negative; Right: Positive
  * 5: Right Stick Y Axis
  *     Up: Positive; Down: Negative
- * 6: Directional Pad (Not recommended, buggy)
+ * N/A: Directional Pad (Not recommended, buggy)
  *     Left: -1; Right: +1
- * 7: Right distance from the middle
+ * 6: Right distance from the middle
  *     Up: Positive; Down: Negative
- * 8: Left distance from the middle
+ * 7: Left distance from the middle
  *     Up: Positive; Down: Negative
  * </pre>
  *
@@ -50,9 +50,10 @@ public class XboxController extends BindingJoystick {
     /**
      * Port for button.
      */
-    public static final int A = 0, B = 1, X = 2,
-            Y = 3, LEFT_BUMPER = 4, RIGHT_BUMPER = 5,
-            BACK = 6, START = 7, LEFT_STICK = 8, RIGHT_STICK = 9;
+    public static final int A = 1, B = 2, X = 3,
+            Y = 4, LEFT_BUMPER = 5, RIGHT_BUMPER = 6,
+            BACK = 7, START = 8, LEFT_STICK = 9, RIGHT_STICK = 10,
+            DPAD_UP = 11, DPAD_DOWN = 12, DPAD_LEFT = 13, DPAD_RIGHT = 14;
     /**
      * Port for axis.
      */
@@ -72,6 +73,10 @@ public class XboxController extends BindingJoystick {
         setAxis(RIGHT_FROM_MIDDLE, new FromMiddle(getRightY(), getRightX()));
         setAxis(LEFT_FROM_MIDDLE, new FromMiddle(getLeftY(), getLeftX()));
         setAxis(TRIGGERS, new Combination(getLeftTrigger(), getRightTrigger()));
+        setButton(DPAD_UP, this.getPOVAsButton(0));
+        setButton(DPAD_DOWN, this.getPOVAsButton(180));
+        setButton(DPAD_LEFT, this.getPOVAsButton(270));
+        setButton(DPAD_RIGHT, this.getPOVAsButton(90));
         invertAxis(LEFT_Y);
         invertAxis(RIGHT_Y);
         invertAxis(LEFT_FROM_MIDDLE);

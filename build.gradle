@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+    id "jaci.openrio.gradle.GradleRIO" version "2018.01.22"
+}
+
+sourceSets {
+   main {
+      java {
+         srcDir 'src'
+      }
+   }
+}
+
+dependencies {
+    compile "edu.wpi.first.wpilibj:athena-jni:+"
+    compile "edu.wpi.first.wpilibj:athena:+"
+}
+
+repositories {
+    maven {
+        url "http://first.wpi.edu/FRC/roborio/maven/"
+    }
+}

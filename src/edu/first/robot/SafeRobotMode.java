@@ -1,6 +1,5 @@
 package edu.first.robot;
 
-import edu.first.main.GamePeriods;
 import edu.first.util.log.Logger;
 
 /**
